@@ -1,2 +1,2 @@
-# metabolabpy
+# MetaboLabPy
 NMR data processing
