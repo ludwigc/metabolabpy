@@ -17,7 +17,8 @@ import matplotlib
 import time
 import platform
 import math
-from metabolabpy.nmr import nmrConfig 
+from metabolabpy.nmr import nmrConfig
+import os
 
 
 # ------------------ MplWidget ------------------
@@ -56,10 +57,11 @@ class main_w(object):
         self.phCorr = phCorr.PhCorr()
         # load ui; create w
         if(platform.system()=='Darwin'):
-            self.file = QFile("metabolabpy/ui/pymetabolab_mainwindow_mac.ui")
+            fName = os.path.join(os.path.dirname(__file__),"ui","pymetabolab_mainwindow_mac.ui")
         else:
-            self.file = QFile("metabolabpy/ui/pymetabolab_mainwindow.ui")
+            fName = os.path.join(os.path.dirname(__file__),"ui","pymetabolab_mainwindow.ui")
             
+        self.file = QFile(fName)
         self.file.open(QFile.ReadOnly)
         self.loader = QUiLoader()
         self.loader.registerCustomWidget(MplWidget)
@@ -1606,14 +1608,15 @@ def main():
     ap.add_argument("-s", "--script",      required = False, help = "optional script argument")
     ap.add_argument("-noSplash",           required = False, help = "turn splash screen off",              action = "store_true")
     ap.add_argument("-fs", "--FullScreen", required = False, help = "open applicatin in full screen mode", action = "store_true")
-    args = vars(ap.parse_args())
-    app    = QApplication(['pyMetaboLab']) #sys.argv)
-    icon   = QIcon()
-    icon.addFile('metabolabpy/icon/icon-16.png', QtCore.QSize(16,16))
-    icon.addFile('metabolabpy/icon/icon-24.png', QtCore.QSize(24,24))
-    icon.addFile('metabolabpy/icon/icon-32.png', QtCore.QSize(32,32))
-    icon.addFile('metabolabpy/icon/icon-48.png', QtCore.QSize(48,48))
-    icon.addFile('metabolabpy/icon/icon-256.png', QtCore.QSize(256,256))
+    args  = vars(ap.parse_args())
+    app   = QApplication(['pyMetaboLab']) #sys.argv)
+    icon  = QIcon()
+    pName = os.path.join(os.path.dirname(__file__),"icon")
+    icon.addFile(os.path.join(pName,"icon-16.png"), QtCore.QSize(16,16))
+    icon.addFile(os.path.join(pName,"icon-24.png"), QtCore.QSize(24,24))
+    icon.addFile(os.path.join(pName,"icon-32.png"), QtCore.QSize(32,32))
+    icon.addFile(os.path.join(pName,"icon-48.png"), QtCore.QSize(48,48))
+    icon.addFile(os.path.join(pName,"icon-256.png"), QtCore.QSize(256,256))
     app.setWindowIcon(icon)
     app.setApplicationDisplayName("pyMetaboLab")
     w      = main_w()
@@ -1624,7 +1627,8 @@ def main():
     if(args["noSplash"]==False):
         ##
         # Create and display the splash screen
-        splash_pix = QPixmap('metabolabpy/png/pyMetabolab.png')
+        pName = os.path.join(os.path.dirname(__file__),"png")
+        splash_pix = QPixmap(os.path.join(pName,"pyMetabolab.png"))
         splash = QSplashScreen(splash_pix)
         splash.setMask(splash_pix.mask())
         # adding progress bar
@@ -1652,6 +1656,6 @@ def main():
     sys.exit(app.exec_())
     
 
-#if __name__ == "__main__":
+if __name__ == "__main__":
 #    #print("hello!")
-#    main()    
+    main()    
