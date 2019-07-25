@@ -11,13 +11,13 @@ import matplotlib.pyplot                  as     pl
 import numpy                              as     np
 import io
 import sys
-from nmr import nmrDataSet 
-from GUI import phCorr 
+from metabolabpy.nmr import nmrDataSet 
+from metabolabpy.GUI import phCorr 
 import matplotlib
 import time
 import platform
 import math
-from nmr import nmrConfig 
+from metabolabpy.nmr import nmrConfig 
 
 
 # ------------------ MplWidget ------------------
@@ -56,9 +56,9 @@ class main_w(object):
         self.phCorr = phCorr.PhCorr()
         # load ui; create w
         if(platform.system()=='Darwin'):
-            self.file = QFile("ui/pymetabolab_mainwindow_mac.ui")
+            self.file = QFile("metabolabpy/ui/pymetabolab_mainwindow_mac.ui")
         else:
-            self.file = QFile("ui/pymetabolab_mainwindow.ui")
+            self.file = QFile("metabolabpy/ui/pymetabolab_mainwindow.ui")
             
         self.file.open(QFile.ReadOnly)
         self.loader = QUiLoader()
@@ -1151,8 +1151,7 @@ class main_w(object):
         
     def quit_app(self):
         # some actions to perform before actually quitting:
-        print('Bye')
-        app.exit()
+        self.w.close()
         # end quit_app
 
     def readBrukerSpc(self):
@@ -1601,52 +1600,58 @@ class main_w(object):
         
         # end zoomPhCorr        
     
-
-ap = argparse.ArgumentParser()
-ap.add_argument("-s", "--script",      required = False, help = "optional script argument")
-ap.add_argument("-noSplash",           required = False, help = "turn splash screen off",              action = "store_true")
-ap.add_argument("-fs", "--FullScreen", required = False, help = "open applicatin in full screen mode", action = "store_true")
-args = vars(ap.parse_args())
-app    = QApplication(['pyMetaboLab']) #sys.argv)
-icon   = QIcon()
-icon.addFile('icon/icon-16.png', QtCore.QSize(16,16))
-icon.addFile('icon/icon-24.png', QtCore.QSize(24,24))
-icon.addFile('icon/icon-32.png', QtCore.QSize(32,32))
-icon.addFile('icon/icon-48.png', QtCore.QSize(48,48))
-icon.addFile('icon/icon-256.png', QtCore.QSize(256,256))
-app.setWindowIcon(icon)
-app.setApplicationDisplayName("pyMetaboLab")
-w      = main_w()
-w.show()
-if(args["FullScreen"]==True):
-    w.w.showFullScreen()
-
-if(args["noSplash"]==False):
-    ##
-    # Create and display the splash screen
-    splash_pix = QPixmap('png/pyMetabolab.png')
-    splash = QSplashScreen(splash_pix)
-    splash.setMask(splash_pix.mask())
-    # adding progress bar
-    progressBar = QProgressBar(splash)
-    splash.show()
-    progressBar.show()
-    app.processEvents()
-    maxTime  = 2.0
-    maxRange = 1000
-    timeInc  = maxRange
-    for i in range(maxRange):
-        progressBar.setValue(1.0*float(i+1)/float(maxRange))
-        # Simulate something that takes time
-        time.sleep(maxTime/float(maxRange))
-        progressBar.repaint()
     
-    splash.close()
-    ## End of splash screen
-
-if(args["script"]!=None):
-    w.openScript(args["script"])
-    w.scriptEditor()
-    w.execScript()
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("-s", "--script",      required = False, help = "optional script argument")
+    ap.add_argument("-noSplash",           required = False, help = "turn splash screen off",              action = "store_true")
+    ap.add_argument("-fs", "--FullScreen", required = False, help = "open applicatin in full screen mode", action = "store_true")
+    args = vars(ap.parse_args())
+    app    = QApplication(['pyMetaboLab']) #sys.argv)
+    icon   = QIcon()
+    icon.addFile('metabolabpy/icon/icon-16.png', QtCore.QSize(16,16))
+    icon.addFile('metabolabpy/icon/icon-24.png', QtCore.QSize(24,24))
+    icon.addFile('metabolabpy/icon/icon-32.png', QtCore.QSize(32,32))
+    icon.addFile('metabolabpy/icon/icon-48.png', QtCore.QSize(48,48))
+    icon.addFile('metabolabpy/icon/icon-256.png', QtCore.QSize(256,256))
+    app.setWindowIcon(icon)
+    app.setApplicationDisplayName("pyMetaboLab")
+    w      = main_w()
+    w.show()
+    if(args["FullScreen"]==True):
+        w.w.showFullScreen()
     
-sys.exit(app.exec_())
+    if(args["noSplash"]==False):
+        ##
+        # Create and display the splash screen
+        splash_pix = QPixmap('metabolabpy/png/pyMetabolab.png')
+        splash = QSplashScreen(splash_pix)
+        splash.setMask(splash_pix.mask())
+        # adding progress bar
+        progressBar = QProgressBar(splash)
+        splash.show()
+        progressBar.show()
+        app.processEvents()
+        maxTime  = 2.0
+        maxRange = 1000
+        timeInc  = maxRange
+        for i in range(maxRange):
+            progressBar.setValue(1.0*float(i+1)/float(maxRange))
+            # Simulate something that takes time
+            time.sleep(maxTime/float(maxRange))
+            progressBar.repaint()
+        
+        splash.close()
+        ## End of splash screen
+    
+    if(args["script"]!=None):
+        w.openScript(args["script"])
+        w.scriptEditor()
+        w.execScript()
+        
+    sys.exit(app.exec_())
+    
+
+#if __name__ == "__main__":
+#    #print("hello!")
+#    main()    

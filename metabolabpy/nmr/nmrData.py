@@ -1,17 +1,17 @@
 import numpy as np
-from nmr import wdwf
-from nmr import acqPars
-from nmr import procPars
-from nmr import dispPars
+from metabolabpy.nmr import wdwf
+from metabolabpy.nmr import acqPars
+from metabolabpy.nmr import procPars
+from metabolabpy.nmr import dispPars
 import os
 from scipy.fftpack import fft, ifft, fftshift
 import math
 import matplotlib.pyplot as pl
 from scipy import signal
 import time
-from nmr import nmrpipeData
+from metabolabpy.nmr import nmrpipeData
 from scipy.optimize import leastsq
-from nmr import apcbc
+from metabolabpy.nmr import apcbc
 
 class NmrData:
     

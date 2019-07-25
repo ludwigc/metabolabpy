@@ -1,6 +1,6 @@
 import numpy as np
 
-from nmr import nmrData as nd
+from metabolabpy.nmr import nmrData as nd
 
 
 class NmrDataSet:

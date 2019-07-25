@@ -4,7 +4,7 @@ NMR spectrum processing parameters
 
 import numpy as np
 import os
-from nmr import procRegEx
+from metabolabpy.nmr import procRegEx
 
 class ProcPars:
     

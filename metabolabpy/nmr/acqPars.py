@@ -4,7 +4,7 @@ NMR spectrum acquisition parameters
 
 import numpy as np
 import os
-from nmr import acqRegEx
+from metabolabpy.nmr import acqRegEx
 
 class AcqPars:
     

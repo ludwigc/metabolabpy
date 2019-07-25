@@ -5,7 +5,7 @@ Using the histogram method
 '''
 
 
-from nmr import nmrData
+from metabolabpy.nmr import nmrData
 import numpy as np
 import matplotlib.pyplot as pl
 from scipy.optimize import fmin

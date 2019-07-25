@@ -2,7 +2,7 @@
 NMR spectrum display parameters
 '''
 
-from nmr import nmrConfig
+from metabolabpy.nmr import nmrConfig
 
 class DispPars:
     
