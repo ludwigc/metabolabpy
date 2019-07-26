@@ -5,6 +5,8 @@ from   PySide2.QtCore                     import QFile
 from   PySide2.QtWidgets                  import *
 from   PySide2.QtGui                      import *
 from   PySide2                            import QtCore
+import matplotlib
+matplotlib.use('Qt5Agg')
 from   matplotlib.backends.backend_qt5agg import (FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 from   matplotlib.figure                  import Figure
 import matplotlib.pyplot                  as     pl
