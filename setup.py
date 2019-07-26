@@ -7,8 +7,8 @@ import metabolabpy
 
 def main():
 
-    if sys.version_info[0] != 3 and sys.version_info[1] <= 6:
-        sys.exit("Python-3.6.8 is required ")
+    if sys.version_info[0] != 3 and sys.version_info[1] <= 7:
+        sys.exit("Python-3.7.3 is required ")
 
     setuptools.setup(name="metabolabpy",
         version=metabolabpy.__version__,

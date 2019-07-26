@@ -57,9 +57,9 @@ class main_w(object):
         self.phCorr = phCorr.PhCorr()
         # load ui; create w
         if(platform.system()=='Darwin'):
-            fName = os.path.join(os.path.dirname(__file__),"ui","pymetabolab_mainwindow_mac.ui")
+            fName = os.path.join(os.path.dirname(__file__),"ui","metabolabpy_mainwindow_mac.ui")
         else:
-            fName = os.path.join(os.path.dirname(__file__),"ui","pymetabolab_mainwindow.ui")
+            fName = os.path.join(os.path.dirname(__file__),"ui","metabolabpy_mainwindow.ui")
             
         self.file = QFile(fName)
         self.file.open(QFile.ReadOnly)
@@ -1443,7 +1443,7 @@ class main_w(object):
         # end showTitleFileInformation
 
     def showVersion(self):
-        self.w.statusBar().showMessage("pyMetaboLab " + self.__version__)
+        self.w.statusBar().showMessage("MetaboLabPy " + self.__version__)
         # end showVersion
         
     def startStopPhCorr(self):
@@ -1618,7 +1618,7 @@ def main():
     icon.addFile(os.path.join(pName,"icon-48.png"), QtCore.QSize(48,48))
     icon.addFile(os.path.join(pName,"icon-256.png"), QtCore.QSize(256,256))
     app.setWindowIcon(icon)
-    app.setApplicationDisplayName("pyMetaboLab")
+    app.setApplicationDisplayName("MetaboLabPy")
     w      = main_w()
     w.show()
     if(args["FullScreen"]==True):
@@ -1628,7 +1628,7 @@ def main():
         ##
         # Create and display the splash screen
         pName = os.path.join(os.path.dirname(__file__),"png")
-        splash_pix = QPixmap(os.path.join(pName,"pyMetabolab.png"))
+        splash_pix = QPixmap(os.path.join(pName,"metabolabpy.png"))
         splash = QSplashScreen(splash_pix)
         splash.setMask(splash_pix.mask())
         # adding progress bar
@@ -1636,7 +1636,7 @@ def main():
         splash.show()
         progressBar.show()
         app.processEvents()
-        maxTime  = 2.0
+        maxTime  = 0.5
         maxRange = 1000
         timeInc  = maxRange
         for i in range(maxRange):
@@ -1657,5 +1657,4 @@ def main():
     
 
 if __name__ == "__main__":
-#    #print("hello!")
     main()    
