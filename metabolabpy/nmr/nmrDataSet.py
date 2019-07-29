@@ -1,6 +1,7 @@
 import numpy as np
 
 from metabolabpy.nmr import nmrData as nd
+from metabolabpy.nmr import nmrPreProc as npp
 
 
 class NmrDataSet:
@@ -9,6 +10,7 @@ class NmrDataSet:
         self.nmrdat = [[]]
         self.s      = 0
         self.e      = -1
+        self.pp     = npp.NmrPreProc()
         # end __init__
 
     def __str__(self):
@@ -119,6 +121,10 @@ class NmrDataSet:
         self.e = origExp
         return "Finished ftAll"
         # end ftAll
+        
+    def preProcInit(self):
+        self.pp.init(len(self.nmrdat[self.s]))
+        # end preProcInit
         
     def readSpc(self, dataSetName, dataSetNumber):
         self.e = len(self.nmrdat[self.s])

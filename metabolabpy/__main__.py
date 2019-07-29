@@ -70,7 +70,9 @@ class main_w(object):
         self.w = self.loader.load(self.file)
         self.zoom = False
         
+        self.hidePreProcessing()        
         # connections
+        self.w.cmdLine.returnPressed.connect(self.execCmd)
         self.w.actionCorrect_Phase.triggered.connect(self.startStopPhCorr)
         self.w.actionZoomCorrect_Phase.triggered.connect(self.zoomPhCorr)
         self.w.actionClear.triggered.connect(self.clear)
@@ -118,6 +120,7 @@ class main_w(object):
         self.w.xLabel.returnPressed.connect(lambda: self.getDispPars12())
         self.w.yLabel.returnPressed.connect(lambda: self.getDispPars13())
         self.w.spcLabel.returnPressed.connect(lambda: self.getDispPars14())
+        self.w.preProcessingSelect.currentIndexChanged.connect(lambda: self.setPreProcessingOptions())
         self.w.windowFunction.currentIndexChanged.connect(lambda: self.getProcPars1())
         self.w.windowFunction_2.currentIndexChanged.connect(lambda: self.getProcPars2())
         self.w.phaseCorrection.currentIndexChanged.connect(lambda: self.getProcPars3())
@@ -150,6 +153,7 @@ class main_w(object):
         # Quit Button
         self.w.quitButton.clicked.connect(self.quit_app)
         self.w.saveButton.clicked.connect(self.saveButton)
+        self.w.exportPathSelectButton.clicked.connect(lambda: self.setExportTable())
         self.w.actionQuit.triggered.connect(lambda: self.quit_app())
         self.w.dispPlotButton.clicked.connect(self.plotSpcDisp)
         self.w.openScript.clicked.connect(self.openScript)
@@ -452,6 +456,24 @@ class main_w(object):
         return "baselineCorrection enabled"
         # end enableBaseline
         
+    def execCmd(self):
+        cmdText = self.w.cmdLine.text()
+        self.w.cmdLine.setText("")
+        codeOut = io.StringIO()
+        sys.stdout = codeOut
+        print(">>> " + cmdText)
+        try:
+            output = eval(cmdText)
+            print(output)
+        except:
+            exec(cmdText)
+
+        self.w.console.append(codeOut.getvalue())
+        sys.stdout = sys.__stdout__
+        codeOut.close()
+        self.w.console.verticalScrollBar().setValue(self.w.console.verticalScrollBar().maximum())
+        # end execCmd
+        
     def execScript(self):
         codeOut = io.StringIO()
         codeErr = io.StringIO()
@@ -471,6 +493,7 @@ class main_w(object):
         self.w.console.setTextColor('Red')
         self.w.console.append('Errors:\n')
         self.w.console.append(codeErr.getvalue())
+        self.w.console.setTextColor('Black')
         codeOut.close()
         codeErr.close()
         self.updateGUI()
@@ -816,6 +839,14 @@ class main_w(object):
         self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc = i
         # end get_iSpc_p6
         
+    def hidePreProcessing(self):
+        self.w.preProcessingGroupBox.setHidden(True)
+        self.w.preProcessingSelect.setHidden(True)
+        self.w.preProcessingWidget.setHidden(True)
+        self.w.runPreProcessingButton.setHidden(True)
+        self.w.writeScriptButton.setHidden(True)
+        # end hidePreProcessing
+
     def loadConfig(self):
         self.cf.readConfig()
         self.w.phRefColour.setCurrentIndex(self.nd.nmrdat[0][0].disp.colours2.get(self.cf.phaseReferenceColour))
@@ -1164,23 +1195,25 @@ class main_w(object):
             self.w.keepZoom.setChecked(False)
             
         selected_directory = QFileDialog.getExistingDirectory()
-        # Use the selected directory...
-        idx     = selected_directory.rfind('/')
-        dsName  = selected_directory[:idx]
-        expName = selected_directory[idx+1:]
-        self.nd.readSpc(dsName, expName)
-        self.nd.ft()
-        self.nd.autoref()
-        self.nd.e = len(self.nd.nmrdat[self.nd.s]) - 1
-        self.plotSpc()
-        self.w.keepZoom.setChecked(kz)
-        self.setProcPars()
-        self.setAcqPars()
-        self.setTitleFile()
-        self.setPulseProgram()
-        self.w.expBox.setValue(self.nd.e+1)
-        self.setDispPars()
-        self.updateGUI()
+        if(len(selected_directory)>0):
+            # Use the selected directory...
+            idx     = selected_directory.rfind('/')
+            dsName  = selected_directory[:idx]
+            expName = selected_directory[idx+1:]
+            self.nd.readSpc(dsName, expName)
+            self.nd.ft()
+            self.nd.autoref()
+            self.nd.e = len(self.nd.nmrdat[self.nd.s]) - 1
+            self.plotSpc()
+            self.w.keepZoom.setChecked(kz)
+            self.setProcPars()
+            self.setAcqPars()
+            self.setTitleFile()
+            self.setPulseProgram()
+            self.w.expBox.setValue(self.nd.e+1)
+            self.setDispPars()
+            self.updateGUI()
+    
         # end readBrukerSpc
         
     def resetConfig(self):
@@ -1314,6 +1347,14 @@ class main_w(object):
         self.w.phRefExp.setValue(d.phRefExp)
         # end setDispPars
         
+    def setExportTable(self):
+        pfName = QFileDialog.getSaveFileName()
+        pfName = pfName[0]
+        pfName = os.path.split(pfName)
+        self.w.exportPath.setText(pfName[0])
+        self.w.exportFileName.setText(pfName[1])
+        # end setExportTable
+
     def setFontSize(self):
         fontSize = self.w.fontSize.value()
         f        = self.w.acqPars.font()
@@ -1332,11 +1373,33 @@ class main_w(object):
         
     def setPreProcessing(self):
         if(self.w.preprocessing.isChecked() == True):
-            print("Checked")
+            self.showPreProcessing()
+            self.nd.preProcInit()
+            self.fillPreProcessingNumbers()
         else:
-            print("Not checked!")
+            self.hidePreProcessing()
             
         # end setPreProcessing
+        
+    def fillPreProcessingNumbers(self):
+        nSpc = len(self.nd.pp.plotSelect)
+        self.w.selectClassTW.setRowCount(nSpc)
+        for k in range(nSpc):
+            spcNumber = QTableWidgetItem(str(self.nd.pp.plotSelect[k]))
+            spcNumber.setTextAlignment(QtCore.Qt.AlignHCenter)
+            self.w.selectClassTW.setItem(k, 0, spcNumber)
+            classNumber = QTableWidgetItem(self.nd.pp.classSelect[k])
+            classNumber.setTextAlignment(QtCore.Qt.AlignHCenter)
+            self.w.selectClassTW.setItem(k, 1, classNumber)
+        
+        self.w.selectClassTW.setRangeSelected(QTableWidgetSelectionRange(0,0,nSpc-1,0),True)
+            
+        # end fillPreProcessingNumbers
+        
+    def setPreProcessingOptions(self):
+        curIdx = self.w.preProcessingSelect.currentIndex()
+        self.w.preProcessingWidget.setCurrentIndex(curIdx)
+        # end setPreProcessingOption
         
     def setProcPars(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
@@ -1436,6 +1499,14 @@ class main_w(object):
         self.w.statusBar().showMessage("Left Mouse Button (MB) for rectangular zoom, Right MB to unzoom        |        Press Alt+z to exit to phase correction")
         # end showPhZoom
         
+    def showPreProcessing(self):
+        self.w.preProcessingGroupBox.setHidden(False)
+        self.w.preProcessingSelect.setHidden(False)
+        self.w.preProcessingWidget.setHidden(False)
+        self.w.runPreProcessingButton.setHidden(False)
+        self.w.writeScriptButton.setHidden(False)
+        # end showPreProcessing
+
     def showPulseProgram(self):
         self.w.nmrSpectrum.setCurrentIndex(5)
         # end showPulseProgram
