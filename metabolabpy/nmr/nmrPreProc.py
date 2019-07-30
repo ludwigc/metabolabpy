@@ -25,7 +25,8 @@ class NmrPreProc:
         self.fName                 =""
         self.samplesInRows         = True
         self.plotSelect            = np.array([])
-        self.classSelect           = np.array([""])
+        self.classSelect           = np.array([])
+        self.plotColours           = []
         # end __init__
 
     def __str__(self):
@@ -39,9 +40,23 @@ class NmrPreProc:
         for k in range(nspc):
             self.classSelect[k] = "1"
             
+        self.initPlotColours()
         return "pre-processing initialised"
         # end init
         
-        
+    def initPlotColours(self, int1 = 0.4, int2 = 0.8, int3 = 0.4):
+        self.plotColours = [( 0.0,  0.0, int1),
+                            (int1,  0.0,  0.0),
+                            ( 0.0, int1,  0.0),
+                            ( 0.0, int1, int1),
+                            (int1, int1,  0.0),
+                            (int1,  0.0, int1),
+                            (int3, int3, int2),
+                            (int2, int3, int3),
+                            (int3, int2, int3),
+                            (int3, int2, int2),
+                            (int2, int2, int3),
+                            (int2, int3, int2)]
+        # end initPlotColours
         
     

@@ -75,6 +75,8 @@ class main_w(object):
         
         self.hidePreProcessing()        
         # connections
+        self.w.selectClassTW.itemSelectionChanged.connect(self.plotSpcPreProc)
+        #self.w.plotPreProcButton.clicked.connect(self.plotSpcPreProc)
         self.w.cmdLine.returnPressed.connect(self.execCmd)
         self.w.actionPrevious_command.triggered.connect(self.previousCommand)
         self.w.actionNext_command.triggered.connect(self.nextCommand)
@@ -265,7 +267,6 @@ class main_w(object):
         # end autoref
         
     def baseline1d(self):
-        print("doing it!")
         self.nd.baseline1d()
         self.w.nmrSpectrum.setCurrentIndex(0)
         self.changeDataSetExp()
@@ -526,7 +527,6 @@ class main_w(object):
     def ft(self):
         self.nd.ft()
         if(self.w.baselineCorrection.currentIndex() > 0):
-            print("baseline!")
             self.baseline1d()
             
         self.w.nmrSpectrum.setCurrentIndex(0)
@@ -869,6 +869,7 @@ class main_w(object):
         self.w.preProcessingWidget.setHidden(True)
         self.w.runPreProcessingButton.setHidden(True)
         self.w.writeScriptButton.setHidden(True)
+        self.plotSpc()
         # end hidePreProcessing
 
     def loadConfig(self):
@@ -1221,6 +1222,47 @@ class main_w(object):
             
         # end plotSpcDisp
         
+    def plotSpcPreProc(self):
+        sel  = self.w.selectClassTW.selectedIndexes()
+        if(len(self.nd.pp.classSelect) == 0):
+            self.nd.preProcInit()
+            self.fillPreProcessingNumbers()
+            sel  = self.w.selectClassTW.selectedIndexes()
+            
+        cls  = np.array([])
+        for k in range(len(self.nd.nmrdat[self.nd.s])):
+            cls = np.append(cls,self.w.selectClassTW.item(k,1).text())
+            
+        self.nd.pp.classSelect = cls
+        cls2 = np.unique(cls)
+        sel2 = np.array([], dtype = 'int')
+        for k in range(len(sel)):
+            if(sel[k].column() == 0):
+                sel2 = np.append(sel2, int(sel[k].row()))
+            
+        self.nd.pp.plotSelect = sel2
+        self.keepZoom = self.w.keepZoom.isChecked()
+        xlim = self.w.MplWidget.canvas.axes.get_xlim()
+        ylim = self.w.MplWidget.canvas.axes.get_ylim()
+        self.w.nmrSpectrum.setCurrentIndex(0)
+        self.w.MplWidget.canvas.axes.clear()
+        for k in range(len(self.nd.pp.plotSelect)):
+            colIdx  = np.where(cls2 == cls[self.nd.pp.plotSelect[k]])[0][0]
+            plotCol = matplotlib.colors.to_hex(self.nd.pp.plotColours[colIdx])
+            self.w.MplWidget.canvas.axes.plot(self.nd.nmrdat[self.nd.s][self.nd.pp.plotSelect[k]].ppm1, self.nd.nmrdat[self.nd.s][self.nd.pp.plotSelect[k]].spc[0].real, color = plotCol)            
+                
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        xlabel = d.xLabel + " [" + d.axisType1 + "]"
+        self.w.MplWidget.canvas.axes.set_xlabel(xlabel)
+        self.w.MplWidget.canvas.axes.autoscale()
+        self.w.MplWidget.canvas.axes.invert_xaxis()
+        if(self.keepZoom==True):
+            self.w.MplWidget.canvas.axes.set_xlim(xlim)
+            self.w.MplWidget.canvas.axes.set_ylim(ylim)
+
+        self.w.MplWidget.canvas.toolbar.update()
+        self.w.MplWidget.canvas.draw()
+            
     def previousCommand(self):
         if(self.w.cmdLine.hasFocus() == True):
             if(self.cmdIdx>0):
@@ -1420,7 +1462,7 @@ class main_w(object):
     def setPreProcessing(self):
         if(self.w.preprocessing.isChecked() == True):
             self.showPreProcessing()
-            self.nd.preProcInit()
+            #self.nd.preProcInit()
             self.fillPreProcessingNumbers()
         else:
             self.hidePreProcessing()
@@ -1496,6 +1538,12 @@ class main_w(object):
         self.w.pulseProgram.setText(self.nd.nmrdat[self.nd.s][self.nd.e].pulseProgram)
         # end setPulseProgram
         
+    def setSelectClass(self):
+        for k in range(len(self.nd.pp.classSelect)):
+            self.w.selectClassTW.item(k,1).setText(self.nd.pp.classSelect[k])
+            
+        # end setSelectClass
+        
     def setTitleFile(self):
         self.w.titleFile.setText(self.nd.nmrdat[self.nd.s][self.nd.e].title)
         # end setTitleFile
@@ -1551,6 +1599,8 @@ class main_w(object):
         self.w.preProcessingWidget.setHidden(False)
         self.w.runPreProcessingButton.setHidden(False)
         self.w.writeScriptButton.setHidden(False)
+        #self.setSelectClass()
+        self.plotSpcPreProc()
         # end showPreProcessing
 
     def showPulseProgram(self):
