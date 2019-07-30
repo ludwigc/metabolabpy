@@ -2556,30 +2556,6 @@
         <item row="0" column="0">
          <widget class="QTextBrowser" name="console"/>
         </item>
-        <item row="1" column="0">
-         <layout class="QHBoxLayout" name="horizontalLayout_30">
-          <item>
-           <spacer name="horizontalSpacer_8">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="saveLogs">
-            <property name="text">
-             <string>Save Logs</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
        </layout>
       </widget>
      </widget>
@@ -2827,10 +2803,18 @@
     <addaction name="separator"/>
     <addaction name="actionToggle_FullScreen"/>
    </widget>
+   <widget class="QMenu" name="menuCommand_Line">
+    <property name="title">
+     <string>Command Line</string>
+    </property>
+    <addaction name="actionPrevious_command"/>
+    <addaction name="actionNext_command"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlot"/>
    <addaction name="menuData"/>
    <addaction name="menuConfiguration"/>
+   <addaction name="menuCommand_Line"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="mainToolBar">
@@ -3123,6 +3107,22 @@
   <action name="actionClear_All">
    <property name="text">
     <string>Clear All</string>
+   </property>
+  </action>
+  <action name="actionPrevious_command">
+   <property name="text">
+    <string>Previous command</string>
+   </property>
+   <property name="shortcut">
+    <string>Up</string>
+   </property>
+  </action>
+  <action name="actionNext_command">
+   <property name="text">
+    <string>Next command</string>
+   </property>
+   <property name="shortcut">
+    <string>Down</string>
    </property>
   </action>
  </widget>

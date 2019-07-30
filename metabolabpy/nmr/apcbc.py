@@ -43,7 +43,7 @@ class Apcbc:
         hi  = self.hist(spc.imag)
         n1  = -self.qr(hr)
         n2  =  self.qi(hi)
-        print("%4.2f & %4.2f" % (n1, n2))
+        #print("%4.2f & %4.2f" % (n1, n2))
         return 1.0*n1 + 100.0*n2
         # end baselineFitFunc
     
@@ -222,7 +222,7 @@ class Apcbc:
         hi  = self.hist(spc.imag)
         n1  = -self.qr(hr)
         n2  =  self.qi(hi)
-        print("%4.2f & %4.2f | %4.8f & %4.8f" % (n1, n2, ph0, ph1))
+        #print("%4.2f & %4.2f | %4.8f & %4.8f" % (n1, n2, ph0, ph1))
         return 1.0*n1 + 100.0*n2
         # end phaseFitFunc
     

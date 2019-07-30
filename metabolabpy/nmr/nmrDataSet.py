@@ -18,14 +18,14 @@ class NmrDataSet:
         for k in range(len(self.nmrdat)):
             mmax = max(mmax,len(self.nmrdat[k]))
             
-        rString  = 'pyMetaboLab NMR Data Set (v. 0.1)\n'
+        rString  = 'MetaboLabPy NMR Data Set (v. 0.1)\n'
         rString += '__________________________________________________________________\n'
         rString += ' Number of data sets\t\t\t: {:0.0f}\n'.format(len(self.nmrdat))
         rString += ' max number of NMR spectra per data set\t: {:0.0f}\n'.format(mmax)
         if(mmax>0):
-            rString += ' Current data set/exp\t\t\t: {:0.0f}/{:0.0f}\n\n'.format(self.s + 1,self.e + 1)
-            rString += 'Current title file: \n'
+            rString += ' Current data set/exp\t\t\t: {:0.0f}/{:0.0f}\n'.format(self.s + 1,self.e + 1)
             rString += '__________________________________________________________________\n'
+            rString += 'Current title file: \n'
             rString += self.nmrdat[self.s][self.e].title
         return rString
         # end __str__

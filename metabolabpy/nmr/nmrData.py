@@ -42,7 +42,7 @@ class NmrData:
         # end __init__
 
     def __str__(self):
-        rString  = 'pyMetaboLab Data Set (v. 0.1)\n'
+        rString  = 'MetaboLabPy NMR Data (v. 0.1)\n'
         rString += '__________________________________________________________________\n'
         rString += self.title
         return rString

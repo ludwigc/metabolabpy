@@ -21,6 +21,7 @@ import platform
 import math
 from metabolabpy.nmr import nmrConfig
 import os
+import traceback
 
 
 # ------------------ MplWidget ------------------
@@ -54,9 +55,11 @@ class MplWidget(QWidget):
 # ------------------ MplWidget ------------------
 class main_w(object):
     def __init__(self):
+        self.cmdBuffer   = np.array([])
+        self.cmdIdx      = -1
         self.__version__ = '2019.07101730'
-        self.nd = nmrDataSet.NmrDataSet()
-        self.phCorr = phCorr.PhCorr()
+        self.nd          = nmrDataSet.NmrDataSet()
+        self.phCorr      = phCorr.PhCorr()
         # load ui; create w
         if(platform.system()=='Darwin'):
             fName = os.path.join(os.path.dirname(__file__),"ui","metabolabpy_mainwindow_mac.ui")
@@ -73,6 +76,8 @@ class main_w(object):
         self.hidePreProcessing()        
         # connections
         self.w.cmdLine.returnPressed.connect(self.execCmd)
+        self.w.actionPrevious_command.triggered.connect(self.previousCommand)
+        self.w.actionNext_command.triggered.connect(self.nextCommand)
         self.w.actionCorrect_Phase.triggered.connect(self.startStopPhCorr)
         self.w.actionZoomCorrect_Phase.triggered.connect(self.zoomPhCorr)
         self.w.actionClear.triggered.connect(self.clear)
@@ -457,41 +462,60 @@ class main_w(object):
         # end enableBaseline
         
     def execCmd(self):
-        cmdText = self.w.cmdLine.text()
-        self.w.cmdLine.setText("")
-        codeOut = io.StringIO()
-        sys.stdout = codeOut
-        print(">>> " + cmdText)
-        try:
-            output = eval(cmdText)
-            print(output)
-        except:
-            exec(cmdText)
-
-        self.w.console.append(codeOut.getvalue())
-        sys.stdout = sys.__stdout__
-        codeOut.close()
-        self.w.console.verticalScrollBar().setValue(self.w.console.verticalScrollBar().maximum())
+        cmdText        = self.w.cmdLine.text()
+        if(len(cmdText) > 0):
+            self.w.nmrSpectrum.setCurrentIndex(7)
+            self.w.cmdLine.setText("")
+            self.cmdBuffer = np.append(self.cmdBuffer, cmdText)
+            self.cmdIdx    = len(self.cmdBuffer)
+            codeOut        = io.StringIO()
+            codeErr        = io.StringIO()
+            sys.stdout     = codeOut
+            sys.stderr     = codeErr
+            print(">>> " + cmdText)
+            try:
+                output = eval(cmdText)
+                print(output)
+                self.w.console.setTextColor('Black')
+                self.w.console.append(codeOut.getvalue())
+            except: #(SyntaxError, NameError, TypeError, ZeroDivisionError, AttributeError, ArithmeticError, BufferError, LookupError):
+                traceback.print_exc()
+                self.w.console.setTextColor('Red')
+                self.w.console.append(codeOut.getvalue())
+                self.w.console.append(codeErr.getvalue())
+                        
+    
+            sys.stdout = sys.__stdout__
+            sys.stderr = sys.__stderr__
+            codeOut.close()
+            codeErr.close()
+            self.w.console.verticalScrollBar().setValue(self.w.console.verticalScrollBar().maximum())
+            
         # end execCmd
         
     def execScript(self):
         codeOut = io.StringIO()
         codeErr = io.StringIO()
         code = self.w.script.toPlainText()
-        exec(code)
+        try:
+            exec(code)
+        except: # (SyntaxError, NameError, TypeError, ZeroDivisionError, AttributeError):
+            traceback.print_exc()
+            self.w.console.setTextColor('Red')
+            self.w.console.append(codeOut.getvalue())
+            self.w.console.append(codeErr.getvalue())
+                        
         sys.stdout = codeOut
         sys.stderr = codeErr
         # restore stdout and stderr
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
-        self.w.console.setTextColor('Black')
-        self.w.console.append('Executing script...\n\n')
-        self.w.console.append(code)
         self.w.console.setTextColor('Blue')
-        self.w.console.append('\n\nOutput:\n')
+        self.w.console.append('Executing script...\n')
+        self.w.console.append(code)
+        self.w.console.setTextColor('Black')
         self.w.console.append(codeOut.getvalue())
         self.w.console.setTextColor('Red')
-        self.w.console.append('Errors:\n')
         self.w.console.append(codeErr.getvalue())
         self.w.console.setTextColor('Black')
         codeOut.close()
@@ -855,6 +879,19 @@ class main_w(object):
         self.w.fontSize.setValue(self.cf.fontSize)
         # end loadConfig
         
+    def nextCommand(self):
+        if(self.w.cmdLine.hasFocus() == True):
+            if(self.cmdIdx<len(self.cmdBuffer)):
+                self.cmdIdx += 1
+                if(self.cmdIdx == len(self.cmdBuffer)):
+                    self.w.cmdLine.setText("")
+                else:
+                    self.w.cmdLine.setText(self.cmdBuffer[self.cmdIdx])
+                
+            
+        
+        # end nextCommand
+
     def onPhCorrClick(self,event):
         s = self.nd.s
         e = self.nd.e
@@ -1184,6 +1221,14 @@ class main_w(object):
             
         # end plotSpcDisp
         
+    def previousCommand(self):
+        if(self.w.cmdLine.hasFocus() == True):
+            if(self.cmdIdx>0):
+                self.cmdIdx -= 1
+                self.w.cmdLine.setText(self.cmdBuffer[self.cmdIdx])
+            
+        
+        # end previousCommand
     def quit_app(self):
         # some actions to perform before actually quitting:
         self.w.close()
@@ -1364,6 +1409,7 @@ class main_w(object):
         self.w.pulseProgram.setFont(f)
         self.w.script.setFont(f)
         self.w.console.setFont(f)
+        self.w.cmdLine.setFont(f)
         # end setFontSize
         
     def setPhRefExp(self, phRefExp, phRefDS = 1):
