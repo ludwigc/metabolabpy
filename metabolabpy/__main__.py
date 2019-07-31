@@ -75,8 +75,8 @@ class main_w(object):
         
         self.hidePreProcessing()        
         # connections
-        self.w.selectClassTW.itemSelectionChanged.connect(self.plotSpcPreProc)
-        #self.w.plotPreProcButton.clicked.connect(self.plotSpcPreProc)
+        self.w.selectClassTW.itemSelectionChanged.connect(self.setPlotPreProc)
+        self.w.plotPreProcButton.clicked.connect(self.plotSpcPreProc)
         self.w.cmdLine.returnPressed.connect(self.execCmd)
         self.w.actionPrevious_command.triggered.connect(self.previousCommand)
         self.w.actionNext_command.triggered.connect(self.nextCommand)
@@ -480,12 +480,19 @@ class main_w(object):
                 self.w.console.setTextColor('Black')
                 self.w.console.append(codeOut.getvalue())
             except: #(SyntaxError, NameError, TypeError, ZeroDivisionError, AttributeError, ArithmeticError, BufferError, LookupError):
-                traceback.print_exc()
-                self.w.console.setTextColor('Red')
-                self.w.console.append(codeOut.getvalue())
-                self.w.console.append(codeErr.getvalue())
+                cmdText2 = "self." + cmdText
+                try:
+                    output = eval(cmdText2)
+                    print(output)
+                    self.w.console.setTextColor('Black')
+                    self.w.console.append(codeOut.getvalue())
+                except:
+                    traceback.print_exc()
+                    self.w.console.setTextColor('Red')
+                    self.w.console.append(codeOut.getvalue())
+                    self.w.console.append(codeErr.getvalue())
                         
-    
+            
             sys.stdout = sys.__stdout__
             sys.stderr = sys.__stderr__
             codeOut.close()
@@ -523,6 +530,47 @@ class main_w(object):
         codeErr.close()
         self.updateGUI()
         # end execScript
+        
+    def fillPreProcessingNumbers(self):
+        nSpc = len(self.nd.pp.classSelect)
+        self.w.selectClassTW.setRowCount(nSpc)
+        for k in range(nSpc):
+            spcNumber = QTableWidgetItem(str(k))
+            spcNumber.setTextAlignment(QtCore.Qt.AlignHCenter)
+            self.w.selectClassTW.setItem(k, 0, spcNumber)
+            #self.w.selectClassTW.setItemSelected(spcNumber, False)
+            classNumber = QTableWidgetItem(self.nd.pp.classSelect[k])
+            classNumber.setTextAlignment(QtCore.Qt.AlignHCenter)
+            self.w.selectClassTW.setItem(k, 1, classNumber)
+        
+        self.w.selectClassTW.selectAll()
+        selIt = self.w.selectClassTW.selectedItems()
+        for k in np.arange(len(selIt)-1,-1,-1):
+            if(self.w.selectClassTW.selectedItems()[k].column() == 1):
+                self.w.selectClassTW.selectedItems()[k].setSelected(False)
+                
+                
+        selIt = self.w.selectClassTW.selectedItems()
+        for k in np.arange(len(selIt)-1,-1,-1):
+            if(np.isin(self.w.selectClassTW.selectedItems()[k].row(),self.nd.pp.plotSelect)):
+                self.w.selectClassTW.selectedItems()[k].setSelected(True)
+            else:
+                self.w.selectClassTW.selectedItems()[k].setSelected(False)
+                
+                
+        #    
+        #d  = np.arange(nSpc)
+        #dd = np.isin(d, self.nd.pp.plotSelect, invert = True)
+        #e  = d[dd]
+        #for k in range(len(e)):
+        #    self.w.selectClassTW.selectedItems()[2*e[k]].setSelected(False)
+        #    
+        #self.w.selectClassTW.setRangeSelected(QTableWidgetSelectionRange(0,0,nSpc-1,0),True)
+        #for k in range(len(self.nd.pp.plotSelect)):
+        #    self.w.selectClassTW.selectionModel().select((self.nd.pp.plotSelect[k],0), True)
+        #    #self.w.selectClassTW.setItemSelected(spcNumber, True)
+        #    
+        # end fillPreProcessingNumbers
         
     def ft(self):
         self.nd.ft()
@@ -1223,18 +1271,20 @@ class main_w(object):
         # end plotSpcDisp
         
     def plotSpcPreProc(self):
-        sel  = self.w.selectClassTW.selectedIndexes()
+        print("plotting")
         if(len(self.nd.pp.classSelect) == 0):
             self.nd.preProcInit()
-            self.fillPreProcessingNumbers()
-            sel  = self.w.selectClassTW.selectedIndexes()
-            
+
+        self.fillPreProcessingNumbers()
+        sel  = self.w.selectClassTW.selectedIndexes()    
         cls  = np.array([])
         for k in range(len(self.nd.nmrdat[self.nd.s])):
             cls = np.append(cls,self.w.selectClassTW.item(k,1).text())
             
         self.nd.pp.classSelect = cls
         cls2 = np.unique(cls)
+        print(cls)
+        print(cls2)
         sel2 = np.array([], dtype = 'int')
         for k in range(len(sel)):
             if(sel[k].column() == 0):
@@ -1459,6 +1509,13 @@ class main_w(object):
         self.w.phRefExp.setValue(phRefExp)
         # end setPhRefExp
         
+    def setPlotPreProc(self):
+        sel = np.array([])
+        sel  = self.w.selectClassTW.selectedIndexes()
+        #for k in range(len(self.nd.nmrdat[self.nd.s])):
+        #    a = 3
+        # end setPlotPreProc
+        
     def setPreProcessing(self):
         if(self.w.preprocessing.isChecked() == True):
             self.showPreProcessing()
@@ -1468,21 +1525,6 @@ class main_w(object):
             self.hidePreProcessing()
             
         # end setPreProcessing
-        
-    def fillPreProcessingNumbers(self):
-        nSpc = len(self.nd.pp.plotSelect)
-        self.w.selectClassTW.setRowCount(nSpc)
-        for k in range(nSpc):
-            spcNumber = QTableWidgetItem(str(self.nd.pp.plotSelect[k]))
-            spcNumber.setTextAlignment(QtCore.Qt.AlignHCenter)
-            self.w.selectClassTW.setItem(k, 0, spcNumber)
-            classNumber = QTableWidgetItem(self.nd.pp.classSelect[k])
-            classNumber.setTextAlignment(QtCore.Qt.AlignHCenter)
-            self.w.selectClassTW.setItem(k, 1, classNumber)
-        
-        self.w.selectClassTW.setRangeSelected(QTableWidgetSelectionRange(0,0,nSpc-1,0),True)
-            
-        # end fillPreProcessingNumbers
         
     def setPreProcessingOptions(self):
         curIdx = self.w.preProcessingSelect.currentIndex()
