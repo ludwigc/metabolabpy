@@ -27,6 +27,7 @@ class NmrPreProc:
         self.plotSelect            = np.array([])
         self.classSelect           = np.array([])
         self.plotColours           = []
+        self.preProcFill           = False
         # end __init__
 
     def __str__(self):

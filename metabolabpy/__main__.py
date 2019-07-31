@@ -76,6 +76,7 @@ class main_w(object):
         self.hidePreProcessing()        
         # connections
         self.w.selectClassTW.itemSelectionChanged.connect(self.setPlotPreProc)
+        self.w.selectClassTW.cellChanged.connect(self.setChangePreProc)
         self.w.plotPreProcButton.clicked.connect(self.plotSpcPreProc)
         self.w.cmdLine.returnPressed.connect(self.execCmd)
         self.w.actionPrevious_command.triggered.connect(self.previousCommand)
@@ -532,6 +533,7 @@ class main_w(object):
         # end execScript
         
     def fillPreProcessingNumbers(self):
+        self.nd.pp.preProcFill = True
         nSpc = len(self.nd.pp.classSelect)
         self.w.selectClassTW.setRowCount(nSpc)
         for k in range(nSpc):
@@ -558,6 +560,7 @@ class main_w(object):
                 self.w.selectClassTW.selectedItems()[k].setSelected(False)
                 
                 
+        self.nd.pp.preProcFill = False
         #    
         #d  = np.arange(nSpc)
         #dd = np.isin(d, self.nd.pp.plotSelect, invert = True)
@@ -1271,11 +1274,10 @@ class main_w(object):
         # end plotSpcDisp
         
     def plotSpcPreProc(self):
-        print("plotting")
         if(len(self.nd.pp.classSelect) == 0):
             self.nd.preProcInit()
-
-        self.fillPreProcessingNumbers()
+            
+        self.fillPreProcessingNumbers()    
         sel  = self.w.selectClassTW.selectedIndexes()    
         cls  = np.array([])
         for k in range(len(self.nd.nmrdat[self.nd.s])):
@@ -1283,8 +1285,6 @@ class main_w(object):
             
         self.nd.pp.classSelect = cls
         cls2 = np.unique(cls)
-        print(cls)
-        print(cls2)
         sel2 = np.array([], dtype = 'int')
         for k in range(len(sel)):
             if(sel[k].column() == 0):
@@ -1458,6 +1458,16 @@ class main_w(object):
         self.w.acqPars.setText(acqStr)
         # end setAcqPars
         
+    def setChangePreProc(self):
+        if(self.nd.pp.preProcFill == False):
+            cls = np.array([])
+            for k in range(len(self.nd.pp.classSelect)):
+                cls = np.append(cls, self.w.selectClassTW.item(k,1).text())
+            
+            self.nd.pp.classSelect = cls
+            
+        # end setChangePreProc
+        
     def setDispPars(self):
         d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
         self.w.posColR.setText(str(d.posColRGB[0]))
@@ -1510,10 +1520,18 @@ class main_w(object):
         # end setPhRefExp
         
     def setPlotPreProc(self):
-        sel = np.array([])
-        sel  = self.w.selectClassTW.selectedIndexes()
-        #for k in range(len(self.nd.nmrdat[self.nd.s])):
-        #    a = 3
+        if(self.nd.pp.preProcFill == False):
+            sel  = np.array([])
+            sel  = self.w.selectClassTW.selectedIndexes()
+            sel2 = np.array([])
+            for k in range(len(sel)):
+                if(sel[k].column() == 0):
+                    sel2 = np.append(sel2, sel[k].row())
+            
+        
+            self.nd.pp.plotSelect = sel2
+            self.plotSpcPreProc()
+        
         # end setPlotPreProc
         
     def setPreProcessing(self):
