@@ -14,6 +14,8 @@ class NmrPreProc:
         self.segStart              = np.array([])
         self.segEnd                = np.array([])
         self.noiseThreshold        = 4                            # [%]
+        self.noiseStart            = 10.0
+        self.noiseEnd              = 10.5
         self.bucketPoints          = 0
         self.bucketPPM             = 0
         self.compressBuckets       = False
@@ -28,6 +30,8 @@ class NmrPreProc:
         self.classSelect           = np.array([])
         self.plotColours           = []
         self.preProcFill           = False
+        self.alpha                 = 1.0
+        self.colour                = 'gray'
         # end __init__
 
     def __str__(self):
@@ -59,5 +63,10 @@ class NmrPreProc:
                             (int2, int2, int3),
                             (int2, int3, int2)]
         # end initPlotColours
+    
+    def setAlpha(self, alpha):
+        self.alpha = alpha
+        return "Alpha set"
+        # end setAlpha
         
     

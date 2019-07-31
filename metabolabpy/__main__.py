@@ -76,8 +76,11 @@ class main_w(object):
         
         self.hidePreProcessing()        
         # connections
+        self.w.excludeRegionTW.cellChanged.connect(self.setExcludePreProc)
         self.w.selectClassTW.itemSelectionChanged.connect(self.setPlotPreProc)
         self.w.selectClassTW.cellChanged.connect(self.setChangePreProc)
+        self.w.excludeClearButton.clicked.connect(self.selectClearExcludePreProc)
+        #self.w.excludeAddButton.clicked.connect(self.selectAddExcludePreProc)
         self.w.selectAllButton.clicked.connect(self.selectAllPreProc)
         self.w.selectEvenButton.clicked.connect(self.selectEvenPreProc)
         self.w.selectOddButton.clicked.connect(self.selectOddPreProc)
@@ -572,6 +575,16 @@ class main_w(object):
                 self.w.selectClassTW.selectedItems()[k].setSelected(False)
                 
                 
+        for k in range(len(self.nd.pp.excludeStart)):
+            exclNumber1 = QTableWidgetItem(str(2*k))
+            exclNumber1.setTextAlignment(QtCore.Qt.AlignHCenter)
+            exclNumber2 = QTableWidgetItem(str(2*k+1))
+            exclNumber2.setTextAlignment(QtCore.Qt.AlignHCenter)
+            self.w.excludeRegionTW.setItem(k, 0, exclNumber1)
+            self.w.excludeRegionTW.setItem(k, 1, exclNumber2)
+            self.w.excludeRegionTW.item(k,0).setText(str(self.nd.pp.excludeStart[k]))
+            self.w.excludeRegionTW.item(k,1).setText(str(self.nd.pp.excludeEnd[k]))
+            
         self.nd.pp.preProcFill = False
         #    
         #d  = np.arange(nSpc)
@@ -1318,6 +1331,11 @@ class main_w(object):
         ylim = self.w.MplWidget.canvas.axes.get_ylim()
         self.w.nmrSpectrum.setCurrentIndex(0)
         self.w.MplWidget.canvas.axes.clear()
+        if(self.w.preProcessingWidget.currentIndex() == 1):
+            for k in range(len(self.nd.pp.excludeStart)):
+                self.w.MplWidget.canvas.axes.axvspan(self.nd.pp.excludeStart[k], self.nd.pp.excludeEnd[k], alpha=self.nd.pp.alpha, color=self.nd.pp.colour)
+                
+            
         for k in range(len(self.nd.pp.plotSelect)):
             colIdx  = np.where(cls2 == cls[self.nd.pp.plotSelect[k]])[0][0]
             plotCol = matplotlib.colors.to_hex(self.nd.pp.plotColours[colIdx])
@@ -1433,6 +1451,26 @@ class main_w(object):
         self.plotSpcPreProc()
         self.w.selectClassTW.setFocus()
         # end selectClassPreProc
+        
+    def selectClearExcludePreProc(self):
+        self.nd.pp.preProcFill = True
+        for k in range(len(self.nd.pp.excludeStart)):
+            self.w.excludeRegionTW.item(k,0).setText("")
+            self.w.excludeRegionTW.setFocus()
+            self.w.excludeRegionTW.item(k,1).setText("")
+            self.w.excludeRegionTW.setFocus()
+            
+        self.nd.pp.preProcFill = False
+        self.nd.pp.excludeStart = np.array([])
+        self.nd.pp.excludeEnd   = np.array([])
+        self.w.excludeRegionTW.setFocus()
+        self.fillPreProcessingNumbers()
+        self.w.excludeRegionTW.setFocus()
+        self.setPlotPreProc()
+        self.w.excludeRegionTW.setFocus()
+        self.plotSpcPreProc()
+        self.setExcludePreProc()
+        # end selectAllPreProc
         
     def selectEvenPreProc(self):
         nSpc = len(self.nd.pp.classSelect)
@@ -1564,6 +1602,37 @@ class main_w(object):
         self.w.phRefExp.setValue(d.phRefExp)
         # end setDispPars
         
+    def setExcludePreProc(self):
+        if(self.nd.pp.preProcFill == False):
+            nRows   = self.w.excludeRegionTW.rowCount()
+            exStart = np.array([])
+            exEnd   = np.array([])
+            for k in range(nRows):
+                tStart = np.array([])
+                tEnd   = np.array([])
+                try:
+                    tStart = np.append(tStart, float(self.w.excludeRegionTW.item(k,0).text()))
+                    tEnd   = np.append(tEnd,   float(self.w.excludeRegionTW.item(k,1).text()))
+                except:
+                    pass
+                
+                if((len(tStart)>0)&(len(tEnd)>0)):
+                    tMin   = min(tStart, tEnd)
+                    tEnd   = max(tStart, tEnd)
+                    tStart = tMin
+                    print("tStart/End: %4.2f | %4.2f" % (tStart[0], tEnd[0]))
+                    self.w.excludeRegionTW.item(k,0).setText(str(tStart[0]))
+                    self.w.excludeRegionTW.item(k,1).setText(str(tEnd[0]))
+                    exStart = np.append(exStart, tStart[0])
+                    exEnd   = np.append(exEnd,   tEnd[0])
+                
+            
+            self.nd.pp.excludeStart = exStart
+            self.nd.pp.excludeEnd   = exEnd
+            self.plotSpcPreProc()
+            
+        # end setExcludePreProc
+        
     def setExportTable(self):
         pfName = QFileDialog.getSaveFileName()
         pfName = pfName[0]
@@ -1617,6 +1686,7 @@ class main_w(object):
     def setPreProcessingOptions(self):
         curIdx = self.w.preProcessingSelect.currentIndex()
         self.w.preProcessingWidget.setCurrentIndex(curIdx)
+        self.plotSpcPreProc()
         # end setPreProcessingOption
         
     def setProcPars(self):
