@@ -48,7 +48,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <layout class="QVBoxLayout" name="verticalLayout_10">
+         <layout class="QVBoxLayout" name="verticalLayout_14">
           <item>
            <widget class="QGroupBox" name="preProcessingGroupBox">
             <property name="title">
@@ -200,7 +200,7 @@
             <property name="currentIndex">
              <number>0</number>
             </property>
-            <widget class="QWidget" name="emptyTab">
+            <widget class="QWidget" name="selectClassTab">
              <layout class="QHBoxLayout" name="horizontalLayout_42">
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -216,6 +216,20 @@
                    </size>
                   </property>
                  </spacer>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="selectClassLE">
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="selectClassButton">
+                  <property name="text">
+                   <string>Class</string>
+                  </property>
+                 </widget>
                 </item>
                 <item>
                  <widget class="QPushButton" name="selectEvenButton">
@@ -265,17 +279,35 @@
             <widget class="QWidget" name="excludeRegionTab">
              <layout class="QGridLayout" name="gridLayout_2">
               <item row="0" column="0">
-               <spacer name="horizontalSpacer_26">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>54</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
+               <layout class="QVBoxLayout" name="verticalLayout_13">
+                <item>
+                 <spacer name="verticalSpacer_5">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="excludeClearButton">
+                  <property name="text">
+                   <string>Clear</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="excludeAddButton">
+                  <property name="text">
+                   <string>Add</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
               <item row="0" column="1">
                <widget class="QTableWidget" name="excludeRegionTW">
@@ -506,6 +538,52 @@
                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                   </property>
                  </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_44">
+                <item>
+                 <widget class="QLabel" name="label_58">
+                  <property name="text">
+                   <string>Delimeter</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayout_10">
+                  <item>
+                   <widget class="QRadioButton" name="radioButton">
+                    <property name="text">
+                     <string>Tab</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_30">
+                    <item>
+                     <widget class="QRadioButton" name="radioButton_2">
+                      <property name="text">
+                       <string>Character</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="lineEdit">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="text">
+                       <string>,</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
                 </item>
                </layout>
               </item>
@@ -2550,7 +2628,7 @@
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
-        <string>Console</string>
+        <string>cOnsole</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_12">
         <item row="0" column="0">
@@ -2790,6 +2868,7 @@
     <addaction name="actionShow_Title_File_Information"/>
     <addaction name="actionShow_pulseProgram"/>
     <addaction name="actionScript_Editor"/>
+    <addaction name="actionConsole"/>
     <addaction name="separator"/>
     <addaction name="actionClear"/>
    </widget>
@@ -2809,6 +2888,7 @@
     </property>
     <addaction name="actionPrevious_command"/>
     <addaction name="actionNext_command"/>
+    <addaction name="actionActivate_Command_Line"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlot"/>
@@ -3123,6 +3203,22 @@
    </property>
    <property name="shortcut">
     <string>Down</string>
+   </property>
+  </action>
+  <action name="actionActivate_Command_Line">
+   <property name="text">
+    <string>Activate Command Line</string>
+   </property>
+   <property name="shortcut">
+    <string>Esc</string>
+   </property>
+  </action>
+  <action name="actionConsole">
+   <property name="text">
+    <string>Console</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+O</string>
    </property>
   </action>
  </widget>
