@@ -218,6 +218,20 @@
                  </spacer>
                 </item>
                 <item>
+                 <widget class="QLineEdit" name="selectClassLE">
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="selectClassButton">
+                  <property name="text">
+                   <string>Class</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QPushButton" name="selectEvenButton">
                   <property name="text">
                    <string>Even</string>
@@ -265,17 +279,35 @@
             <widget class="QWidget" name="excludeRegionTab">
              <layout class="QGridLayout" name="gridLayout_2">
               <item row="0" column="0">
-               <spacer name="horizontalSpacer_26">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>54</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
+               <layout class="QVBoxLayout" name="verticalLayout_13">
+                <item>
+                 <spacer name="verticalSpacer_5">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="excludeClearButton">
+                  <property name="text">
+                   <string>Clear</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="excludeAddButton">
+                  <property name="text">
+                   <string>Add</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
               <item row="0" column="1">
                <widget class="QTableWidget" name="excludeRegionTW">
@@ -2550,7 +2582,7 @@
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
-        <string>Console</string>
+        <string>cOnsole</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_12">
         <item row="0" column="0">
@@ -2790,6 +2822,7 @@
     <addaction name="actionShow_Title_File_Information"/>
     <addaction name="actionShow_pulseProgram"/>
     <addaction name="actionScript_Editor"/>
+    <addaction name="actionConsole"/>
     <addaction name="separator"/>
     <addaction name="actionClear"/>
    </widget>
@@ -2809,6 +2842,7 @@
     </property>
     <addaction name="actionPrevious_command"/>
     <addaction name="actionNext_command"/>
+    <addaction name="actionActivate_Command_Line"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlot"/>
@@ -3123,6 +3157,22 @@
    </property>
    <property name="shortcut">
     <string>Down</string>
+   </property>
+  </action>
+  <action name="actionActivate_Command_Line">
+   <property name="text">
+    <string>Activate Command Line</string>
+   </property>
+   <property name="shortcut">
+    <string>Esc</string>
+   </property>
+  </action>
+  <action name="actionConsole">
+   <property name="text">
+    <string>Console</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+O</string>
    </property>
   </action>
  </widget>

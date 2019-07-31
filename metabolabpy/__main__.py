@@ -81,7 +81,10 @@ class main_w(object):
         self.w.selectAllButton.clicked.connect(self.selectAllPreProc)
         self.w.selectEvenButton.clicked.connect(self.selectEvenPreProc)
         self.w.selectOddButton.clicked.connect(self.selectOddPreProc)
+        self.w.selectClassButton.clicked.connect(self.selectClassPreProc)
+        self.w.selectClassLE.returnPressed.connect(self.selectClassPreProc)
         self.w.cmdLine.returnPressed.connect(self.execCmd)
+        self.w.actionActivate_Command_Line.triggered.connect(self.activateCommandLine)
         self.w.actionPrevious_command.triggered.connect(self.previousCommand)
         self.w.actionNext_command.triggered.connect(self.nextCommand)
         self.w.actionCorrect_Phase.triggered.connect(self.startStopPhCorr)
@@ -106,6 +109,7 @@ class main_w(object):
         self.w.actionAutomatic_Baseline_Correction.triggered.connect(lambda: self.autobaseline1d())
         self.w.actionSelect_All.triggered.connect(lambda: self.selectPlotAll())
         self.w.actionClear_All.triggered.connect(lambda: self.selectPlotClear())
+        self.w.actionConsole.triggered.connect(lambda: self.showConsole())
         self.w.actionToggle_FullScreen.triggered.connect(lambda: self.showMainWindow())
         self.w.setBox.valueChanged.connect(lambda: self.changeDataSetExp())
         self.w.expBox.valueChanged.connect(lambda: self.changeDataSetExp())
@@ -198,6 +202,10 @@ class main_w(object):
         # end __init__
 
 
+    def activateCommandLine(self):
+        self.w.cmdLine.setFocus()
+        # end activateCommandLine
+        
     def autobaseline1d(self):
         self.showAutoBaseline()
         self.nd.ft()
@@ -307,6 +315,7 @@ class main_w(object):
                         if(self.w.autoPlot.isChecked()):
                             self.plotSpc()
                         elif(self.w.nmrSpectrum.currentIndex()==0):
+                            print("a")
                             self.plotSpc()
                         
                     else:
@@ -917,6 +926,15 @@ class main_w(object):
         self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc = i
         # end get_iSpc_p6
         
+    def h(self):
+        print("Command history: ")
+        print(">>><<<")
+        for k in range(len(self.cmdBuffer)):
+            print(self.cmdBuffer[k])
+            
+        return(">>><<<")
+        # end h
+        
     def hidePreProcessing(self):
         self.w.preProcessingGroupBox.setHidden(True)
         self.w.preProcessingSelect.setHidden(True)
@@ -1270,6 +1288,7 @@ class main_w(object):
         self.w.nmrSpectrum.setCurrentIndex(0)
         self.changeDataSetExp()
         if(self.phCorrActive==False):
+            print("b")
             self.plotSpc()
         else:
             self.phCorrPlotSpc()
@@ -1395,6 +1414,25 @@ class main_w(object):
         self.plotSpcPreProc()
         self.w.selectClassTW.setFocus()
         # end selectAllPreProc
+        
+    def selectClassPreProc(self):
+        cls  = self.w.selectClassLE.text()
+        cls2 = self.nd.pp.classSelect
+        sel  = np.array([])
+        for k in range(len(cls2)):
+            if(cls2[k] == cls):
+                sel = np.append(sel, k)
+            
+        
+        if(len(sel) == 0):
+            sel = np.arange(len(cls2))
+            
+        self.nd.pp.plotSelect = sel
+        self.fillPreProcessingNumbers()
+        self.setPlotPreProc()
+        self.plotSpcPreProc()
+        self.w.selectClassTW.setFocus()
+        # end selectClassPreProc
         
     def selectEvenPreProc(self):
         nSpc = len(self.nd.pp.classSelect)
@@ -1660,6 +1698,10 @@ class main_w(object):
         self.w.statusBar().showMessage("Automatic phase correction in progress...")
         # end showAutoPhase
         
+    def showConsole(self):
+        self.w.nmrSpectrum.setCurrentIndex(7)
+        # end showConsole
+
     def showDisplayParameters(self):
         self.w.nmrSpectrum.setCurrentIndex(2)
         # end showDisplayParameters
@@ -1674,7 +1716,8 @@ class main_w(object):
         
     def showNMRSpectrum(self):
         self.w.nmrSpectrum.setCurrentIndex(0)
-        self.plotSpc()
+        if(self.w.preprocessing.isChecked() == False):
+            self.plotSpc()
         # end showNMRSpectrum
 
     def showPhCorr(self):
@@ -1748,7 +1791,9 @@ class main_w(object):
 
     def tabIndexChanged(self):
         if(self.w.nmrSpectrum.currentIndex()==0):
-            self.plotSpc()
+            if(self.w.preprocessing.isChecked() == False):
+                self.plotSpc()
+            
         
         # end tabIndexChanged
             
