@@ -4,6 +4,7 @@ from   PySide2.QtUiTools                  import QUiLoader
 from   PySide2.QtCore                     import QFile
 from   PySide2.QtWidgets                  import *
 from   PySide2.QtGui                      import *
+from   PySide2                            import QtGui
 from   PySide2                            import QtCore
 import matplotlib
 matplotlib.use('Qt5Agg')
@@ -77,7 +78,9 @@ class main_w(object):
         # connections
         self.w.selectClassTW.itemSelectionChanged.connect(self.setPlotPreProc)
         self.w.selectClassTW.cellChanged.connect(self.setChangePreProc)
-        self.w.plotPreProcButton.clicked.connect(self.plotSpcPreProc)
+        self.w.selectAllButton.clicked.connect(self.selectAllPreProc)
+        self.w.selectEvenButton.clicked.connect(self.selectEvenPreProc)
+        self.w.selectOddButton.clicked.connect(self.selectOddPreProc)
         self.w.cmdLine.returnPressed.connect(self.execCmd)
         self.w.actionPrevious_command.triggered.connect(self.previousCommand)
         self.w.actionNext_command.triggered.connect(self.nextCommand)
@@ -1383,6 +1386,35 @@ class main_w(object):
     def scriptEditor(self):
         self.w.nmrSpectrum.setCurrentIndex(6)
         # end scriptEditor
+        
+    def selectAllPreProc(self):
+        nSpc = len(self.nd.pp.classSelect)
+        self.nd.pp.plotSelect = np.arange(nSpc)
+        self.fillPreProcessingNumbers()
+        self.setPlotPreProc()
+        self.plotSpcPreProc()
+        self.w.selectClassTW.setFocus()
+        # end selectAllPreProc
+        
+    def selectEvenPreProc(self):
+        nSpc = len(self.nd.pp.classSelect)
+        self.nd.pp.plotSelect = np.arange(nSpc)
+        self.nd.pp.plotSelect = self.nd.pp.plotSelect[1::2]
+        self.fillPreProcessingNumbers()
+        self.setPlotPreProc()
+        self.plotSpcPreProc()
+        self.w.selectClassTW.setFocus()
+        # end selectEvenPreProc
+        
+    def selectOddPreProc(self):
+        nSpc = len(self.nd.pp.classSelect)
+        self.nd.pp.plotSelect = np.arange(nSpc)
+        self.nd.pp.plotSelect = self.nd.pp.plotSelect[0::2]
+        self.fillPreProcessingNumbers()
+        self.setPlotPreProc()
+        self.plotSpcPreProc()
+        self.w.selectClassTW.setFocus()
+        # end selectOddPreProc
         
     def selectPlotAll(self):
         for k in range(len(self.nd.nmrdat[self.nd.s])):
