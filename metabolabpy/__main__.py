@@ -52,7 +52,7 @@ class MplWidget(QWidget):
         NavigationToolbar.home = new_home
         self.phCorr = phCorr.PhCorr()
         # end __init__
-
+        
 # ------------------ MplWidget ------------------
 class main_w(object):
     def __init__(self):
@@ -76,17 +76,31 @@ class main_w(object):
         
         self.hidePreProcessing()        
         # connections
+        self.w.excludeRegion.stateChanged.connect(self.setExcludeRegion)
+        #self.w.segmentalAlignment.stateChanged.connect(self.setSegmentalAlignment)
+        self.w.noiseFiltering.stateChanged.connect(self.setNoiseFiltering)
+        self.w.bucketSpectra.stateChanged.connect(self.setBucketSpectra)
+        #self.w.compressBuckets.stateChanged.connect(self.setCompressBuckets)
+        #self.w.scaleSpectra.stateChanged.connect(self.setScaleSpectra)
+        #self.w.varianceStabilisation.stateChanged.connect(self.setVarianceStabilisation)
+        self.w.exportDataSet.stateChanged.connect(self.setExportDataSet)
         self.w.excludeRegionTW.cellChanged.connect(self.setExcludePreProc)
         self.w.selectClassTW.itemSelectionChanged.connect(self.setPlotPreProc)
         self.w.selectClassTW.cellChanged.connect(self.setChangePreProc)
         self.w.excludeClearButton.clicked.connect(self.selectClearExcludePreProc)
-        #self.w.excludeAddButton.clicked.connect(self.selectAddExcludePreProc)
+        self.w.excludeAddButton.clicked.connect(self.selectAddExcludePreProc)
         self.w.selectAllButton.clicked.connect(self.selectAllPreProc)
         self.w.selectEvenButton.clicked.connect(self.selectEvenPreProc)
         self.w.selectOddButton.clicked.connect(self.selectOddPreProc)
         self.w.selectClassButton.clicked.connect(self.selectClassPreProc)
         self.w.selectClassLE.returnPressed.connect(self.selectClassPreProc)
         self.w.cmdLine.returnPressed.connect(self.execCmd)
+        self.w.noiseThresholdLE.returnPressed.connect(self.setnoiseRegPreProc)
+        self.w.noiseRegionStartLE.returnPressed.connect(self.setnoiseRegPreProc)
+        self.w.noiseRegionEndLE.returnPressed.connect(self.setnoiseRegPreProc)
+        self.w.thLineWidthLE.returnPressed.connect(self.setnoiseRegPreProc)
+        self.w.bucketPpmLE.returnPressed.connect(self.setBucketPPMPreProc)
+        self.w.bucketDataPointsLE.returnPressed.connect(self.setBucketPointsPreProc)
         self.w.actionActivate_Command_Line.triggered.connect(self.activateCommandLine)
         self.w.actionPrevious_command.triggered.connect(self.previousCommand)
         self.w.actionNext_command.triggered.connect(self.nextCommand)
@@ -585,6 +599,20 @@ class main_w(object):
             self.w.excludeRegionTW.item(k,0).setText(str(self.nd.pp.excludeStart[k]))
             self.w.excludeRegionTW.item(k,1).setText(str(self.nd.pp.excludeEnd[k]))
             
+        self.w.noiseThresholdLE.setText(str(self.nd.pp.noiseThreshold))
+        self.w.noiseRegionStartLE.setText(str(self.nd.pp.noiseStart))
+        self.w.noiseRegionEndLE.setText(str(self.nd.pp.noiseEnd))
+        self.w.thLineWidthLE.setText(str(self.nd.pp.thLineWidth))
+        self.w.bucketPpmLE.setText(str(self.nd.pp.bucketPPM))
+        self.setBucketPPMPreProc()
+        self.w.excludeRegion.setChecked(self.nd.pp.flagExcludeRegion)
+        self.w.segmentalAlignment.setChecked(self.nd.pp.flagSegmentalAlignment)
+        self.w.noiseFiltering.setChecked(self.nd.pp.flagNoiseFiltering)
+        self.w.bucketSpectra.setChecked(self.nd.pp.flagBucketSpectra)
+        self.w.compressBuckets.setChecked(self.nd.pp.flagCompressBuckets)
+        self.w.scaleSpectra.setChecked(self.nd.pp.flagScaleSpectra)
+        self.w.varianceStabilisation.setChecked(self.nd.pp.flagVarianceStabilisation)
+        self.w.exportDataSet.setChecked(self.nd.pp.flagExportDataSet)
         self.nd.pp.preProcFill = False
         #    
         #d  = np.arange(nSpc)
@@ -1341,6 +1369,12 @@ class main_w(object):
             plotCol = matplotlib.colors.to_hex(self.nd.pp.plotColours[colIdx])
             self.w.MplWidget.canvas.axes.plot(self.nd.nmrdat[self.nd.s][self.nd.pp.plotSelect[k]].ppm1, self.nd.nmrdat[self.nd.s][self.nd.pp.plotSelect[k]].spc[0].real, color = plotCol)            
                 
+        if(self.w.preProcessingWidget.currentIndex() == 3):
+            self.w.MplWidget.canvas.axes.axvspan(self.nd.pp.noiseStart, self.nd.pp.noiseEnd, alpha=self.nd.pp.alpha, color=self.nd.pp.colour)
+            spcIdx = np.where((self.nd.nmrdat[self.nd.s][0].ppm1>self.nd.pp.noiseStart) & (self.nd.nmrdat[self.nd.s][0].ppm1<self.nd.pp.noiseEnd))
+            stdVal = np.std(self.nd.nmrdat[self.nd.s][0].spc[0].real)
+            self.w.MplWidget.canvas.axes.plot([self.nd.nmrdat[self.nd.s][0].ppm1[0], self.nd.nmrdat[self.nd.s][0].ppm1[-1]],[self.nd.pp.noiseThreshold*stdVal, self.nd.pp.noiseThreshold*stdVal], color = self.nd.pp.thColour, linewidth = self.nd.pp.thLineWidth)
+        
         d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
         xlabel = d.xLabel + " [" + d.axisType1 + "]"
         self.w.MplWidget.canvas.axes.set_xlabel(xlabel)
@@ -1424,6 +1458,19 @@ class main_w(object):
         self.w.nmrSpectrum.setCurrentIndex(6)
         # end scriptEditor
         
+    def selectAddExcludePreProc(self):
+        xy = self.w.MplWidget.canvas.axes.figure.ginput(2)
+        t  = np.round(1e4*np.array([xy[0][0], xy[1][0]]))/1e4
+        self.nd.pp.excludeStart = np.append(self.nd.pp.excludeStart, min(t))
+        self.nd.pp.excludeEnd   = np.append(self.nd.pp.excludeEnd,   max(t))
+        self.fillPreProcessingNumbers()
+        self.w.excludeRegionTW.setFocus()
+        self.setPlotPreProc()
+        self.w.excludeRegionTW.setFocus()
+        self.plotSpcPreProc()
+        self.setExcludePreProc()
+        # end selectAddExcludePreProc
+        
     def selectAllPreProc(self):
         nSpc = len(self.nd.pp.classSelect)
         self.nd.pp.plotSelect = np.arange(nSpc)
@@ -1470,7 +1517,7 @@ class main_w(object):
         self.w.excludeRegionTW.setFocus()
         self.plotSpcPreProc()
         self.setExcludePreProc()
-        # end selectAllPreProc
+        # end selectClearExcludePreProc
         
     def selectEvenPreProc(self):
         nSpc = len(self.nd.pp.classSelect)
@@ -1566,6 +1613,47 @@ class main_w(object):
         self.w.acqPars.setText(acqStr)
         # end setAcqPars
         
+    def setBucketPPMPreProc(self):
+        try:
+            bucketPPM = float(self.w.bucketPpmLE.text())
+        except:
+            bucketPPM = self.nd.pp.bucketPPM
+        
+        ppmPerPoint  = abs(self.nd.nmrdat[self.nd.s][0].ppm1[0] - self.nd.nmrdat[self.nd.s][0].ppm1[1])
+        bucketPoints = round(bucketPPM/ppmPerPoint)
+        bucketPPM    = np.round(1e4*bucketPoints*ppmPerPoint)/1e4
+        self.w.bucketPpmLE.setText(str(bucketPPM))
+        self.w.bucketDataPointsLE.setText(str(int(bucketPoints)))
+        self.nd.pp.bucketPoints = bucketPoints
+        self.nd.pp.bucketPPM    = bucketPPM
+        # end setBucketPPMPreProc
+        
+    def setBucketPointsPreProc(self):
+        try:
+            bucketPoints = float(self.w.bucketDataPointsLE.text())
+        except:
+            bucketPoints = self.nd.pp.bucketPoints
+        
+        ppmPerPoint  = abs(self.nd.nmrdat[self.nd.s][0].ppm1[0] - self.nd.nmrdat[self.nd.s][0].ppm1[1])
+        bucketPoints = round(bucketPoints)
+        bucketPPM    = np.round(1e4*bucketPoints*ppmPerPoint)/1e4
+        self.w.bucketPpmLE.setText(str(bucketPPM))
+        self.w.bucketDataPointsLE.setText(str(int(bucketPoints)))
+        self.nd.pp.bucketPoints = bucketPoints
+        self.nd.pp.bucketPPM    = bucketPPM
+        # end setBucketPointsPreProc
+        
+    def setBucketSpectra(self):
+        if(self.nd.pp.preProcFill == False):
+            if(self.w.bucketSpectra.isChecked() == True):
+                self.nd.pp.flagBucketSpectra = True
+                self.w.preProcessingSelect.setCurrentIndex(4)
+            else:
+                self.nd.pp.flagBucketSpectra = False
+            
+            
+        # end setBucketSpectra
+        
     def setChangePreProc(self):
         if(self.nd.pp.preProcFill == False):
             cls = np.array([])
@@ -1607,31 +1695,87 @@ class main_w(object):
             nRows   = self.w.excludeRegionTW.rowCount()
             exStart = np.array([])
             exEnd   = np.array([])
+            tStart = np.array([])
+            tEnd   = np.array([])
             for k in range(nRows):
-                tStart = np.array([])
-                tEnd   = np.array([])
+                #tStart = np.array([])
+                #tEnd   = np.array([])
                 try:
                     tStart = np.append(tStart, float(self.w.excludeRegionTW.item(k,0).text()))
-                    tEnd   = np.append(tEnd,   float(self.w.excludeRegionTW.item(k,1).text()))
+                    #self.w.excludeRegionTW.item(k,0).clearContents()
                 except:
-                    pass
+                    tStart = np.append(tStart, -10000.0)
                 
-                if((len(tStart)>0)&(len(tEnd)>0)):
-                    tMin   = min(tStart, tEnd)
-                    tEnd   = max(tStart, tEnd)
-                    tStart = tMin
-                    print("tStart/End: %4.2f | %4.2f" % (tStart[0], tEnd[0]))
-                    self.w.excludeRegionTW.item(k,0).setText(str(tStart[0]))
-                    self.w.excludeRegionTW.item(k,1).setText(str(tEnd[0]))
-                    exStart = np.append(exStart, tStart[0])
-                    exEnd   = np.append(exEnd,   tEnd[0])
+                try:
+                    tEnd   = np.append(tEnd,   float(self.w.excludeRegionTW.item(k,1).text()))
+                    #self.w.excludeRegionTW.item(k,1).clearContents()
+                except:
+                    tEnd = np.append(tEnd, -10000.0)
                 
+                
+            #self.w.excludeRegionTW.clearContents()
+            self.w.excludeRegionTW.setRowCount(0)
+            self.w.excludeRegionTW.setRowCount(20)
+            self.nd.pp.preProcFill = True
+            for k in np.arange(len(tStart)-1,-1,-1): #range(len(tStart)): 
+                exclNumber1 = QTableWidgetItem(2*k)
+                exclNumber1.setTextAlignment(QtCore.Qt.AlignHCenter)
+                self.w.excludeRegionTW.setItem(k,0,exclNumber1)
+                exclNumber2 = QTableWidgetItem(2*k+1)
+                exclNumber2.setTextAlignment(QtCore.Qt.AlignHCenter)
+                self.w.excludeRegionTW.setItem(k,1,exclNumber2)
+                if((tStart[k]>-10000.0) & (tEnd[k]>-10000.0)):
+                    tMin      = min(tStart[k], tEnd[k])
+                    tEnd[k]   = max(tStart[k], tEnd[k])
+                    tStart[k] = tMin
+                    exStart   = np.append(exStart, tStart[k])
+                    exEnd     = np.append(exEnd,   tEnd[k])
+                    tStart    = np.delete(tStart, k)
+                    tEnd      = np.delete(tEnd, k)
+                
+                if(tStart[k]>-10000.0):
+                    self.w.excludeRegionTW.item(k,0).setText(str(tStart[k]))
+                    self.w.excludeRegionTW.setFocus()
+                else:
+                    self.w.excludeRegionTW.item(k,0).setText("")
+                    self.w.excludeRegionTW.setFocus()
+                
+                if(tEnd[k]>-10000.0):
+                    self.w.excludeRegionTW.item(k,1).setText(str(tEnd[k]))
+                    self.w.excludeRegionTW.setFocus()
+                else:
+                    self.w.excludeRegionTW.item(k,1).setText("")
+                    self.w.excludeRegionTW.setFocus()
             
-            self.nd.pp.excludeStart = exStart
-            self.nd.pp.excludeEnd   = exEnd
+            self.nd.pp.preProcFill  = False
+            sortIdx                 = np.argsort(exStart)
+            self.nd.pp.excludeStart = exStart[sortIdx]
+            self.nd.pp.excludeEnd   = exEnd[sortIdx]
             self.plotSpcPreProc()
             
         # end setExcludePreProc
+        
+    def setExcludeRegion(self):
+        if(self.nd.pp.preProcFill == False):
+            if(self.w.excludeRegion.isChecked() == True):
+                self.nd.pp.flagExcludeRegion = True
+                self.w.preProcessingSelect.setCurrentIndex(1)
+            else:
+                self.nd.pp.flagExcludeRegion = False
+            
+            
+        # end setExcludeRegion
+        
+    def setExportDataSet(self):
+        if(self.nd.pp.preProcFill == False):
+            if(self.w.exportDataSet.isChecked() == True):
+                self.nd.pp.flagExportDataSet = True
+                self.w.preProcessingSelect.setCurrentIndex(8)
+            else:
+                self.nd.pp.flagExportDataSet = False
+            
+            
+        # end setExportDataSet
         
     def setExportTable(self):
         pfName = QFileDialog.getSaveFileName()
@@ -1652,6 +1796,52 @@ class main_w(object):
         self.w.console.setFont(f)
         self.w.cmdLine.setFont(f)
         # end setFontSize
+        
+    def setNoiseFiltering(self):
+        if(self.nd.pp.preProcFill == False):
+            if(self.w.noiseFiltering.isChecked() == True):
+                self.nd.pp.flagNoiseFiltering = True
+                self.w.preProcessingSelect.setCurrentIndex(3)
+            else:
+                self.nd.pp.flagNoiseFiltering = False
+            
+            
+        # end setNoiseFiltering
+        
+    def setnoiseRegPreProc(self):
+        try:
+            th = float(self.w.noiseThresholdLE.text())
+        except:
+            th = self.nd.pp.noiseThreshold
+            
+        try:
+            ns = float(self.w.noiseRegionStartLE.text())
+        except:
+            ns = self.nd.pp.noiseStart
+            
+        try:
+            ne = float(self.w.noiseRegionEndLE.text())
+        except:
+            ne = self.nd.pp.noiseEnd
+            
+        try:
+            lw = float(self.w.thLineWidthLE.text())
+        except:
+            lw = self.nd.pp.thLineWidth
+            
+        tm = min(ns,ne)
+        ne = max(ns,ne)
+        ns = tm
+        self.nd.pp.noiseThreshold = th
+        self.nd.pp.noiseStart     = ns
+        self.nd.pp.noiseEnd       = ne
+        self.nd.pp.thLineWidth    = lw
+        self.w.noiseThresholdLE.setText(str(th))
+        self.w.noiseRegionStartLE.setText(str(ns))
+        self.w.noiseRegionEndLE.setText(str(ne))
+        self.w.thLineWidthLE.setText(str(lw))
+        self.plotSpcPreProc()
+        # end setnoiseRegPreProc
         
     def setPhRefExp(self, phRefExp, phRefDS = 1):
         self.w.phRefDS.setValue(phRefDS)

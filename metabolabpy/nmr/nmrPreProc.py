@@ -9,29 +9,39 @@ import numpy as np
 class NmrPreProc:
     
     def __init__(self):
-        self.excludeStart          = np.array([])
-        self.excludeEnd            = np.array([])
-        self.segStart              = np.array([])
-        self.segEnd                = np.array([])
-        self.noiseThreshold        = 4                            # [%]
-        self.noiseStart            = 10.0
-        self.noiseEnd              = 10.5
-        self.bucketPoints          = 0
-        self.bucketPPM             = 0
-        self.compressBuckets       = False
-        self.scaleSpc              = ""
-        self.varianceStabilisation = ""
-        self.varLambda             = 1e-5
-        self.varX0                 = 0.0
-        self.pName                 = ""
-        self.fName                 =""
-        self.samplesInRows         = True
-        self.plotSelect            = np.array([])
-        self.classSelect           = np.array([])
-        self.plotColours           = []
-        self.preProcFill           = False
-        self.alpha                 = 1.0
-        self.colour                = 'gray'
+        self.excludeStart              = np.array([])
+        self.excludeEnd                = np.array([])
+        self.segStart                  = np.array([])
+        self.segEnd                    = np.array([])
+        self.noiseThreshold            = 0.03                         # times std of noise region
+        self.noiseStart                = 10.0
+        self.noiseEnd                  = 10.5
+        self.bucketPoints              = 0
+        self.bucketPPM                 = 0.005
+        self.compressBuckets           = False
+        self.scaleSpc                  = ""
+        self.varianceStabilisation     = ""
+        self.varLambda                 = 1e-5
+        self.varX0                     = 0.0
+        self.pName                     = ""
+        self.fName                     =""
+        self.samplesInRows             = True
+        self.plotSelect                = np.array([])
+        self.classSelect               = np.array([])
+        self.plotColours               = []
+        self.preProcFill               = False
+        self.alpha                     = 1.0
+        self.colour                    = 'gray'
+        self.thColour                  = 'red'
+        self.thLineWidth               = 2.0
+        self.flagExcludeRegion         = False
+        self.flagSegmentalAlignment    = False
+        self.flagNoiseFiltering        = False
+        self.flagBucketSpectra         = False
+        self.flagCompressBuckets       = False
+        self.flagScaleSpectra          = False
+        self.flagVarianceStabilisation = False
+        self.flagExportDataSet         = False
         # end __init__
 
     def __str__(self):
