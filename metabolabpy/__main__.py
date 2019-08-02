@@ -76,6 +76,12 @@ class main_w(object):
         
         self.hidePreProcessing()        
         # connections
+        self.w.exportPath.returnPressed.connect(self.setExportPath)
+        self.w.exportFileName.returnPressed.connect(self.setExportFileName)
+        self.w.exportDelimiterTab.toggled.connect(self.setExportDelimiterTab)
+        self.w.exportCharacter.returnPressed.connect(self.setExportCharacter)
+        self.w.samplesInComboBox.currentIndexChanged.connect(self.setSamplesInComboBox)
+        self.w.runPreProcessingButton.clicked.connect(self.dataPreProcessing)
         self.w.excludeRegion.stateChanged.connect(self.setExcludeRegion)
         #self.w.segmentalAlignment.stateChanged.connect(self.setSegmentalAlignment)
         self.w.noiseFiltering.stateChanged.connect(self.setNoiseFiltering)
@@ -618,6 +624,12 @@ class main_w(object):
         self.w.scaleSpectra.setChecked(self.nd.pp.flagScaleSpectra)
         self.w.varianceStabilisation.setChecked(self.nd.pp.flagVarianceStabilisation)
         self.w.exportDataSet.setChecked(self.nd.pp.flagExportDataSet)
+        self.w.exportPath.setText(self.nd.pp.exportPathName)
+        self.w.exportFileName.setText(self.nd.pp.exportFileName)
+        self.w.exportDelimiterTab.setChecked(self.nd.pp.exportDelimiterTab)
+        self.w.exportDelimiterCharacter.setChecked(not self.nd.pp.exportDelimiterTab)
+        self.w.exportCharacter.setText(self.nd.pp.exportCharacter)
+        self.w.samplesInComboBox.setCurrentIndex(self.nd.pp.exportSamplesInRowsCols)
         self.nd.pp.preProcFill = False
         #    
         #d  = np.arange(nSpc)
@@ -1334,7 +1346,6 @@ class main_w(object):
         self.w.nmrSpectrum.setCurrentIndex(0)
         self.changeDataSetExp()
         if(self.phCorrActive==False):
-            print("b")
             self.plotSpc()
         else:
             self.phCorrPlotSpc()
@@ -1376,9 +1387,10 @@ class main_w(object):
                 
         if(self.w.preProcessingWidget.currentIndex() == 3):
             self.w.MplWidget.canvas.axes.axvspan(self.nd.pp.noiseStart, self.nd.pp.noiseEnd, alpha=self.nd.pp.alpha, color=self.nd.pp.colour)
-            spcIdx = np.where((self.nd.nmrdat[self.nd.s][0].ppm1>self.nd.pp.noiseStart) & (self.nd.nmrdat[self.nd.s][0].ppm1<self.nd.pp.noiseEnd))
-            stdVal = np.std(self.nd.nmrdat[self.nd.s][0].spc[0][spcIdx].real)
-            self.w.MplWidget.canvas.axes.plot([self.nd.nmrdat[self.nd.s][0].ppm1[0], self.nd.nmrdat[self.nd.s][0].ppm1[-1]],[self.nd.pp.noiseThreshold*stdVal, self.nd.pp.noiseThreshold*stdVal], color = self.nd.pp.thColour, linewidth = self.nd.pp.thLineWidth)
+            val    = self.nd.pp.noiseThreshold*self.nd.pp.stdVal
+            x      = [self.nd.nmrdat[self.nd.s][0].ppm1[0],self.nd.nmrdat[self.nd.s][0].ppm1[-1]]
+            y      = [val, val]
+            self.w.MplWidget.canvas.axes.plot(x,y, color = self.nd.pp.thColour, linewidth = self.nd.pp.thLineWidth)
         
         d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
         xlabel = d.xLabel + " [" + d.axisType1 + "]"
@@ -1771,6 +1783,26 @@ class main_w(object):
             
         # end setExcludeRegion
         
+    def setExportCharacter(self):
+        tt = self.w.exportCharacter.text()
+        if(len(tt) > 0):
+            self.nd.pp.exportCharacter = tt[0]
+            self.w.exportCharacter.setText(tt[0])
+            
+        # end setExportCharacter
+        
+    def setExportDelimiterTab(self):
+        self.nd.pp.exportDelimiterTab = self.w.exportDelimiterTab.isChecked()
+        # end setExportDelimiterTab
+        
+    def setExportFileName(self):
+        self.nd.pp.exportFileName = self.w.exportFileName.text()
+        # end setExportFileName
+        
+    def setExportPath(self):
+        self.nd.pp.exportPathName = self.w.exportPath.text()
+        # end setExportPath
+        
     def setExportDataSet(self):
         if(self.nd.pp.preProcFill == False):
             if(self.w.exportDataSet.isChecked() == True):
@@ -1785,9 +1817,13 @@ class main_w(object):
     def setExportTable(self):
         pfName = QFileDialog.getSaveFileName()
         pfName = pfName[0]
-        pfName = os.path.split(pfName)
-        self.w.exportPath.setText(pfName[0])
-        self.w.exportFileName.setText(pfName[1])
+        if(len(pfName) > 0):
+            pfName = os.path.split(pfName)
+            self.w.exportPath.setText(pfName[0])
+            self.w.exportFileName.setText(pfName[1])
+            self.nd.pp.exportPathName = pfName[0]
+            self.nd.pp.exportFileName = pfName[1]
+
         # end setExportTable
 
     def setFontSize(self):
@@ -1873,6 +1909,7 @@ class main_w(object):
             self.showPreProcessing()
             #self.nd.preProcInit()
             self.fillPreProcessingNumbers()
+            self.nd.noiseFilteringInit()
         else:
             self.hidePreProcessing()
             
@@ -1932,6 +1969,10 @@ class main_w(object):
     def setPulseProgram(self):
         self.w.pulseProgram.setText(self.nd.nmrdat[self.nd.s][self.nd.e].pulseProgram)
         # end setPulseProgram
+        
+    def setSamplesInComboBox(self):
+        self.nd.pp.exportSamplesInRowsCols = self.w.samplesInComboBox.currentIndex()
+        # end setSamplesInComboBox
         
     def setSelectClass(self):
         for k in range(len(self.nd.pp.classSelect)):

@@ -688,14 +688,14 @@
                 <item>
                  <widget class="QLabel" name="label_58">
                   <property name="text">
-                   <string>Delimeter</string>
+                   <string>Delimiter</string>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <layout class="QVBoxLayout" name="verticalLayout_10">
                   <item>
-                   <widget class="QRadioButton" name="radioButton">
+                   <widget class="QRadioButton" name="exportDelimiterTab">
                     <property name="text">
                      <string>Tab</string>
                     </property>
@@ -707,16 +707,16 @@
                   <item>
                    <layout class="QHBoxLayout" name="horizontalLayout_30">
                     <item>
-                     <widget class="QRadioButton" name="radioButton_2">
+                     <widget class="QRadioButton" name="exportDelimiterCharacter">
                       <property name="text">
                        <string>Character</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="lineEdit">
+                     <widget class="QLineEdit" name="exportCharacter">
                       <property name="enabled">
-                       <bool>false</bool>
+                       <bool>true</bool>
                       </property>
                       <property name="text">
                        <string>,</string>
@@ -730,6 +730,31 @@
                </layout>
               </item>
               <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_47">
+                <item>
+                 <widget class="QLabel" name="label_65">
+                  <property name="text">
+                   <string>Samples in</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="samplesInComboBox">
+                  <item>
+                   <property name="text">
+                    <string>Rows</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Columns</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
                <spacer name="verticalSpacer_4">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -737,7 +762,7 @@
                 <property name="sizeHint" stdset="0">
                  <size>
                   <width>20</width>
-                  <height>204</height>
+                  <height>40</height>
                  </size>
                 </property>
                </spacer>

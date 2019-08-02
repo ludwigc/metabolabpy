@@ -1,4 +1,5 @@
 import numpy as np
+import os
 
 from metabolabpy.nmr import nmrData as nd
 from metabolabpy.nmr import nmrPreProc as npp
@@ -11,7 +12,8 @@ class NmrDataSet:
         self.s        = 0
         self.e        = -1
         self.pp       = npp.NmrPreProc()
-        self.deselect = np.array([])
+        self.deselect  = np.array([])
+        self.deselect2 = np.array([])
         # end __init__
 
     def __str__(self):
@@ -108,33 +110,50 @@ class NmrDataSet:
         self.e = origExp
         # end baseline1dAll
         
+    def bucketSpectra(self):
+        idx1 = np.arange(len(self.nmrdat[self.s][0].ppm1))
+        idx2 = idx1[::int(self.pp.bucketPoints)]
+        idx2 = np.append(idx2, len(idx1))
+        ppm  = np.array([])
+        for k in range(len(idx2)-1):
+            ppm = np.append(ppm, np.mean(self.nmrdat[self.s][0].ppm1[idx2[k]:idx2[k+1]]))
+            
+        for k in range(len(self.nmrdat[self.s])):
+            spc = np.array([])
+            for l in range(len(idx2)-1):
+                spc = np.append(spc, np.sum(self.nmrdat[self.s][k].spc[0][idx2[l]:idx2[l+1]].real/self.pp.bucketPoints))
+            
+            self.nmrdat[self.s][k].ppm1   = ppm
+            self.nmrdat[self.s][k].spc    = np.resize(self.nmrdat[self.s][k].spc,(1,len(spc)))
+            self.nmrdat[self.s][k].spc[0] = np.copy(spc)
+        
+        # end bucketSpectra
+        
     def dataPreProcessing(self):
         self.ftAll()
         self.baseline1dAll()
         self.autorefAll()
         self.shiftRef()
-        self.deselect = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
-        print(sum(self.deselect))
+        self.noiseFilteringInit()
+        self.deselect  = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
+        self.deselect2 = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
         if(self.pp.flagExcludeRegion == True):
             self.excludeRegion()
             
-        print(sum(self.deselect))
         if(self.pp.flagSegmentalAlignment == True):
             print("segmentalAlignment")
         
-        print(sum(self.deselect))
         if(self.pp.flagNoiseFiltering == True):
             self.noiseFiltering()
             
-        print(sum(self.deselect))
-        idx = np.where(self.deselect == 1)
+        idx  = np.where(self.deselect  == 1)
+        idx2 = np.where(self.deselect2 == len(self.nmrdat[self.s]))
         for k in range(len(self.nmrdat[self.s])):
-            #print(idx)
-            self.nmrdat[self.s][k].spc[0][idx].real = np.zeros(len(idx))
+            self.nmrdat[self.s][k].spc[0][idx]  = np.zeros(len(idx))
+            self.nmrdat[self.s][k].spc[0][idx2] = np.zeros(len(idx2))
         
-        print(sum(self.deselect))
         if(self.pp.flagBucketSpectra == True):
-            print("bucketSpectra")
+            self.bucketSpectra()
         
         if(self.pp.flagCompressBuckets == True):
             print("compressBuckets")
@@ -146,7 +165,7 @@ class NmrDataSet:
             print("varianceStabilisation")
             
         if(self.pp.flagExportDataSet == True):
-            print("exportDataSet")
+            self.exportDataSet()
         
         # end dataPreProcessing
         
@@ -159,6 +178,18 @@ class NmrDataSet:
             self.deselect[idx]                 = np.ones(len(idx))
         
         # end excludeRegion
+        
+    def exportDataSet(self):
+        fName = os.path.join(self.pp.exportPathName, self.pp.exportFileName)
+        try:
+            f = open(fName,'w')
+        except:
+            print("No")
+            return
+        
+        print("Yes")
+        f.close()
+        # end exportDataSet
         
     def ft(self):
         if(self.nmrdat[self.s][self.e].dim == 1):
@@ -185,14 +216,17 @@ class NmrDataSet:
         # end ftAll
         
     def noiseFiltering(self):
-        spcIdx = np.where((self.nmrdat[self.s][0].ppm1>self.pp.noiseStart) & (self.nmrdat[self.s][0].ppm1<self.pp.noiseEnd))
-        stdVal = np.std(self.nmrdat[self.s][0].spc[0][spcIdx].real)
-        val    = self.pp.noiseThreshold*stdVal
+        val    = self.pp.noiseThreshold*self.pp.stdVal
         for k in range(len(self.nmrdat[self.s])):
             idx = np.where(self.nmrdat[self.s][k].spc[0].real < val)
-            self.deselect[idx] = np.ones(len(idx))
+            self.deselect2[idx] += np.ones(len(idx))
             
         # end noiseFiltering
+        
+    def noiseFilteringInit(self):
+        spcIdx         = np.where((self.nmrdat[self.s][0].ppm1>self.pp.noiseStart) & (self.nmrdat[self.s][0].ppm1<self.pp.noiseEnd))
+        self.pp.stdVal = np.std(self.nmrdat[self.s][0].spc[0][spcIdx].real)
+        # end noiseFilteringInit
         
     def preProcInit(self):
         self.pp.init(len(self.nmrdat[self.s]))

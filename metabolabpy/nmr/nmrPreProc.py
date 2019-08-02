@@ -42,6 +42,12 @@ class NmrPreProc:
         self.flagScaleSpectra          = False
         self.flagVarianceStabilisation = False
         self.flagExportDataSet         = False
+        self.stdVal                    = 0.0
+        self.exportPathName            = ""
+        self.exportFileName            = ""
+        self.exportDelimiterTab        = True
+        self.exportCharacter           = ","
+        self.exportSamplesInRowsCols   = 0
         # end __init__
 
     def __str__(self):
