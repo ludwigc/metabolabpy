@@ -483,6 +483,11 @@ class main_w(object):
         return "Workspace cleared"
         #end clear
     
+    def dataPreProcessing(self):
+        self.nd.dataPreProcessing()
+        self.plotSpcPreProc()
+        # end dataPreProcessing
+        
     def enableBaseline(self):
         for k in range(len(self.nd.nmrdat[self.nd.s])):
             self.nd.nmrdat[self.nd.s][k].apc.correctBaseline = 1
@@ -1372,7 +1377,7 @@ class main_w(object):
         if(self.w.preProcessingWidget.currentIndex() == 3):
             self.w.MplWidget.canvas.axes.axvspan(self.nd.pp.noiseStart, self.nd.pp.noiseEnd, alpha=self.nd.pp.alpha, color=self.nd.pp.colour)
             spcIdx = np.where((self.nd.nmrdat[self.nd.s][0].ppm1>self.nd.pp.noiseStart) & (self.nd.nmrdat[self.nd.s][0].ppm1<self.nd.pp.noiseEnd))
-            stdVal = np.std(self.nd.nmrdat[self.nd.s][0].spc[0].real)
+            stdVal = np.std(self.nd.nmrdat[self.nd.s][0].spc[0][spcIdx].real)
             self.w.MplWidget.canvas.axes.plot([self.nd.nmrdat[self.nd.s][0].ppm1[0], self.nd.nmrdat[self.nd.s][0].ppm1[-1]],[self.nd.pp.noiseThreshold*stdVal, self.nd.pp.noiseThreshold*stdVal], color = self.nd.pp.thColour, linewidth = self.nd.pp.thLineWidth)
         
         d = self.nd.nmrdat[self.nd.s][self.nd.e].disp

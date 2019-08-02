@@ -7,10 +7,11 @@ from metabolabpy.nmr import nmrPreProc as npp
 class NmrDataSet:
 
     def __init__(self):
-        self.nmrdat = [[]]
-        self.s      = 0
-        self.e      = -1
-        self.pp     = npp.NmrPreProc()
+        self.nmrdat   = [[]]
+        self.s        = 0
+        self.e        = -1
+        self.pp       = npp.NmrPreProc()
+        self.deselect = np.array([])
         # end __init__
 
     def __str__(self):
@@ -98,6 +99,67 @@ class NmrDataSet:
             
         # end baseline1d
         
+    def baseline1dAll(self):
+        origExp = self.e
+        for k in range(len(self.nmrdat[self.s])):
+            self.e = k
+            self.baseline1d()
+            
+        self.e = origExp
+        # end baseline1dAll
+        
+    def dataPreProcessing(self):
+        self.ftAll()
+        self.baseline1dAll()
+        self.autorefAll()
+        self.shiftRef()
+        self.deselect = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
+        print(sum(self.deselect))
+        if(self.pp.flagExcludeRegion == True):
+            self.excludeRegion()
+            
+        print(sum(self.deselect))
+        if(self.pp.flagSegmentalAlignment == True):
+            print("segmentalAlignment")
+        
+        print(sum(self.deselect))
+        if(self.pp.flagNoiseFiltering == True):
+            self.noiseFiltering()
+            
+        print(sum(self.deselect))
+        idx = np.where(self.deselect == 1)
+        for k in range(len(self.nmrdat[self.s])):
+            #print(idx)
+            self.nmrdat[self.s][k].spc[0][idx].real = np.zeros(len(idx))
+        
+        print(sum(self.deselect))
+        if(self.pp.flagBucketSpectra == True):
+            print("bucketSpectra")
+        
+        if(self.pp.flagCompressBuckets == True):
+            print("compressBuckets")
+            
+        if(self.pp.flagScaleSpectra == True):
+            print("scaleSpectra")
+        
+        if(self.pp.flagVarianceStabilisation == True):
+            print("varianceStabilisation")
+            
+        if(self.pp.flagExportDataSet == True):
+            print("exportDataSet")
+        
+        # end dataPreProcessing
+        
+    def excludeRegion(self):
+        if(len(self.pp.excludeStart) != len(self.pp.excludeEnd)):
+            return
+        
+        for k in range(len(self.pp.excludeStart)):
+            idx                                = np.where((self.nmrdat[self.s][0].ppm1 > self.pp.excludeStart[k]) & (self.nmrdat[self.s][0].ppm1 < self.pp.excludeEnd[k]))
+            self.deselect[idx]                 = np.ones(len(idx))
+        
+        # end excludeRegion
+        
     def ft(self):
         if(self.nmrdat[self.s][self.e].dim == 1):
             self.nmrdat[self.s][self.e].procSpc1D()
@@ -121,6 +183,16 @@ class NmrDataSet:
         self.e = origExp
         return "Finished ftAll"
         # end ftAll
+        
+    def noiseFiltering(self):
+        spcIdx = np.where((self.nmrdat[self.s][0].ppm1>self.pp.noiseStart) & (self.nmrdat[self.s][0].ppm1<self.pp.noiseEnd))
+        stdVal = np.std(self.nmrdat[self.s][0].spc[0][spcIdx].real)
+        val    = self.pp.noiseThreshold*stdVal
+        for k in range(len(self.nmrdat[self.s])):
+            idx = np.where(self.nmrdat[self.s][k].spc[0].real < val)
+            self.deselect[idx] = np.ones(len(idx))
+            
+        # end noiseFiltering
         
     def preProcInit(self):
         self.pp.init(len(self.nmrdat[self.s]))
@@ -231,4 +303,12 @@ class NmrDataSet:
     
         return "setZeroFill"
     # end setZeroFill
+    
+    def shiftRef(self):
+        for k in range(len(self.nmrdat[self.s])):
+            shiftDelta = self.nmrdat[self.s][k].refPoint[0] - self.nmrdat[self.s][0].refPoint[0]
+            self.nmrdat[self.s][k].spc[0] = np.roll(self.nmrdat[self.s][k].spc[0],shiftDelta)
+            self.nmrdat[self.s][k].ppm1   = self.nmrdat[self.s][0].ppm1
+            self.nmrdat[self.s][k].refShift = self.nmrdat[self.s][0].refShift
+    # end shiftRef
         

@@ -164,7 +164,7 @@ class NmrData:
         xaxis             = np.linspace(-self.apc.nMax, self.apc.nMax, self.apc.npts)
         parEval           = np.copy(self.apc.rSpc)
         parEval           = np.append(parEval, self.apc.iSpc)
-        print(parEval)
+        #print(parEval)
         spc2              = self.apc.baselineFitFuncEval(parEval, spc, xaxis, False)
         self.spc[0]       = spc2 #*scaleFact
         # end baseline1d

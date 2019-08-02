@@ -13,7 +13,7 @@ class NmrPreProc:
         self.excludeEnd                = np.array([])
         self.segStart                  = np.array([])
         self.segEnd                    = np.array([])
-        self.noiseThreshold            = 0.03                         # times std of noise region
+        self.noiseThreshold            = 4.0                         # times std of noise region
         self.noiseStart                = 10.0
         self.noiseEnd                  = 10.5
         self.bucketPoints              = 0
