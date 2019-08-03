@@ -184,10 +184,61 @@ class NmrDataSet:
         try:
             f = open(fName,'w')
         except:
-            print("No")
             return
         
-        print("Yes")
+        if(self.pp.exportDelimiterTab == True):
+            delim = '\t'
+        else:
+            delim = self.pp.exportCharacter
+            
+        spc = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
+        for k in range(len(self.nmrdat[self.s])):
+            spc += self.nmrdat[self.s][k].spc[0].real
+        
+        deselect      = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
+        idx           = np.where(spc == 0)
+        deselect[idx] = np.ones(len(idx))
+        if(self.pp.exportSamplesInRowsCols == 0): # samples in rows
+            f.write("ppm" + delim + " ")
+            for k in range(len(self.nmrdat[self.s][0].ppm1)):
+                if(deselect[k] == 0):
+                    f.write(delim + str(self.nmrdat[self.s][0].ppm1[k]))
+                
+                
+            f.write("\n")
+            for k in range(len(self.nmrdat[self.s])):
+                dse = os.path.split(self.nmrdat[self.s][k].origDataSet)
+                ds  = os.path.split(dse[0])
+                f.write(ds[1] + " " + dse[1] + delim + self.pp.classSelect[k])
+                for l in range(len(self.nmrdat[self.s][k].spc[0])):
+                    if(deselect[l] == 0):
+                        f.write(delim + str(self.nmrdat[self.s][k].spc[0][l].real))
+                        
+                f.write("\n")
+                
+        else:                                     # samples in cols
+            f.write("ppm")
+            for k in range(len(self.nmrdat[self.s])):
+                dse = os.path.split(self.nmrdat[self.s][k].origDataSet)
+                ds  = os.path.split(dse[0])
+                f.write(delim + ds[1] + " " + dse[1])
+                
+            f.write("\n")
+            f.write(" ")
+            for k in range(len(self.pp.classSelect)):
+                f.write(delim + self.pp.classSelect[k])
+                
+            f.write("\n")
+            for k in range(len(self.nmrdat[self.s][0].spc[0])):
+                if(deselect[k] == 0):
+                    f.write(str(self.nmrdat[self.s][0].ppm1[k]))
+                    for l in range(len(self.nmrdat[self.s])):
+                        f.write(delim + str(self.nmrdat[self.s][l].spc[0][k].real))
+
+                    f.write("\n")
+
+            
+        
         f.close()
         # end exportDataSet
         

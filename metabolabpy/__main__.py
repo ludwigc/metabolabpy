@@ -23,6 +23,7 @@ import math
 from metabolabpy.nmr import nmrConfig
 import os
 import traceback
+#import pandas as pd
 
 
 # ------------------ MplWidget ------------------
