@@ -23,6 +23,7 @@ import math
 from metabolabpy.nmr import nmrConfig
 import os
 import traceback
+import shutil
 #import pandas as pd
 
 
@@ -57,8 +58,6 @@ class MplWidget(QWidget):
 # ------------------ MplWidget ------------------
 class main_w(object):
     def __init__(self):
-        self.cmdBuffer   = np.array([])
-        self.cmdIdx      = -1
         self.__version__ = '2019.07101730'
         self.nd          = nmrDataSet.NmrDataSet()
         self.phCorr      = phCorr.PhCorr()
@@ -192,6 +191,7 @@ class main_w(object):
         # Quit Button
         self.w.quitButton.clicked.connect(self.quit_app)
         self.w.saveButton.clicked.connect(self.saveButton)
+        self.w.loadButton.clicked.connect(self.loadButton)
         self.w.exportPathSelectButton.clicked.connect(lambda: self.setExportTable())
         self.w.actionQuit.triggered.connect(lambda: self.quit_app())
         self.w.dispPlotButton.clicked.connect(self.plotSpcDisp)
@@ -227,7 +227,11 @@ class main_w(object):
 
 
     def activateCommandLine(self):
-        self.w.cmdLine.setFocus()
+        if(self.w.cmdLine.hasFocus() == True):
+            self.w.cmdLine.clearFocus()
+        else:
+              self.w.cmdLine.setFocus()
+              
         # end activateCommandLine
         
     def autobaseline1d(self):
@@ -339,7 +343,6 @@ class main_w(object):
                         if(self.w.autoPlot.isChecked()):
                             self.plotSpc()
                         elif(self.w.nmrSpectrum.currentIndex()==0):
-                            print("a")
                             self.plotSpc()
                         
                     else:
@@ -505,16 +508,16 @@ class main_w(object):
         # end enableBaseline
         
     def execCmd(self):
-        cmdText        = self.w.cmdLine.text()
+        cmdText               = self.w.cmdLine.text()
         if(len(cmdText) > 0):
             self.w.nmrSpectrum.setCurrentIndex(7)
             self.w.cmdLine.setText("")
-            self.cmdBuffer = np.append(self.cmdBuffer, cmdText)
-            self.cmdIdx    = len(self.cmdBuffer)
-            codeOut        = io.StringIO()
-            codeErr        = io.StringIO()
-            sys.stdout     = codeOut
-            sys.stderr     = codeErr
+            self.nd.cmdBuffer = np.append(self.nd.cmdBuffer, cmdText)
+            self.nd.cmdIdx    = len(self.nd.cmdBuffer)
+            codeOut           = io.StringIO()
+            codeErr           = io.StringIO()
+            sys.stdout        = codeOut
+            sys.stderr        = codeErr
             print(">>> " + cmdText)
             try:
                 output = eval(cmdText)
@@ -988,8 +991,8 @@ class main_w(object):
     def h(self):
         print("Command history: ")
         print(">>><<<")
-        for k in range(len(self.cmdBuffer)):
-            print(self.cmdBuffer[k])
+        for k in range(len(self.nd.cmdBuffer)):
+            print(self.nd.cmdBuffer[k])
             
         return(">>><<<")
         # end h
@@ -1003,6 +1006,18 @@ class main_w(object):
         self.plotSpc()
         # end hidePreProcessing
 
+    def loadButton(self):
+        selectedDirectory = QFileDialog.getExistingDirectory()
+        if(len(selectedDirectory)>0):
+            self.clear()
+        else:
+            return
+            
+        self.nd.load(selectedDirectory)
+        self.updateGUI()
+        self.resetPlot()
+        # end saveButton
+        
     def loadConfig(self):
         self.cf.readConfig()
         self.w.phRefColour.setCurrentIndex(self.nd.nmrdat[0][0].disp.colours2.get(self.cf.phaseReferenceColour))
@@ -1013,12 +1028,12 @@ class main_w(object):
         
     def nextCommand(self):
         if(self.w.cmdLine.hasFocus() == True):
-            if(self.cmdIdx<len(self.cmdBuffer)):
-                self.cmdIdx += 1
-                if(self.cmdIdx == len(self.cmdBuffer)):
+            if(self.nd.cmdIdx<len(self.nd.cmdBuffer)):
+                self.nd.cmdIdx += 1
+                if(self.nd.cmdIdx == len(self.nd.cmdBuffer)):
                     self.w.cmdLine.setText("")
                 else:
-                    self.w.cmdLine.setText(self.cmdBuffer[self.cmdIdx])
+                    self.w.cmdLine.setText(self.nd.cmdBuffer[self.nd.cmdIdx])
                 
             
         
@@ -1407,9 +1422,9 @@ class main_w(object):
             
     def previousCommand(self):
         if(self.w.cmdLine.hasFocus() == True):
-            if(self.cmdIdx>0):
-                self.cmdIdx -= 1
-                self.w.cmdLine.setText(self.cmdBuffer[self.cmdIdx])
+            if(self.nd.cmdIdx>0):
+                self.nd.cmdIdx -= 1
+                self.w.cmdLine.setText(self.nd.cmdBuffer[self.nd.cmdIdx])
             
         
         # end previousCommand
@@ -1461,8 +1476,15 @@ class main_w(object):
         # end resetPlot
         
     def saveButton(self):
-        print('save')
-        # end save
+        pfName = QFileDialog.getSaveFileName()
+        if(os.path.isfile(pfName[0])):
+            os.remove(pfName[0])
+            
+        if(os.path.isdir(pfName[0])):
+            shutil.rmtree(pfName[0])
+            
+        self.nd.save(pfName[0])
+        # end saveButton
         
     def saveConfig(self):
         self.cf.autoPlot             = self.w.autoPlot.isChecked()

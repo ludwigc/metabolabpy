@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import pickle
 
 from metabolabpy.nmr import nmrData as nd
 from metabolabpy.nmr import nmrPreProc as npp
@@ -14,6 +15,8 @@ class NmrDataSet:
         self.pp       = npp.NmrPreProc()
         self.deselect  = np.array([])
         self.deselect2 = np.array([])
+        self.cmdBuffer = np.array([])
+        self.cmdIdx    = -1
         # end __init__
 
     def __str__(self):
@@ -284,8 +287,8 @@ class NmrDataSet:
         # end preProcInit
         
     def readSpc(self, dataSetName, dataSetNumber):
-        self.e = len(self.nmrdat[self.s])
-        nd1    = nd.NmrData()
+        self.e            = len(self.nmrdat[self.s])
+        nd1               = nd.NmrData()
         nd1.dataSetName   = dataSetName
         nd1.dataSetNumber = dataSetNumber
         nd1.readSpc()
@@ -298,6 +301,157 @@ class NmrDataSet:
     
     # end readSpcs
 
+    def load(self,dataSetName):
+        dataSets = np.array([])
+        lDir     = os.listdir(dataSetName)
+        curDataNotFound = True
+        for k in range(len(lDir)):
+            if(lDir[k] == 'curPars.dat'):
+                curDataNotFound = False
+            
+        
+        if(curDataNotFound == True):
+            return
+        
+        fName          = os.path.join(dataSetName, 'curPars.dat')
+        f              = open(fName, 'rb')
+        curPars        = pickle.load(f)
+        f.close()
+        self.s         = curPars[0]
+        self.e         = curPars[1]
+        self.pp        = curPars[2]
+        self.deselect  = curPars[3]
+        self.deselect2 = curPars[4]
+        self.cmdBuffer = curPars[5]
+        self.cmdIdx    = curPars[6]
+        for k in range(len(lDir)):
+            if(os.path.isdir(os.path.join(dataSetName,lDir[k]))):
+                dataSets = np.append(dataSets, lDir[k])
+            
+        
+        dataSets = np.sort(dataSets)
+        dataSetExps = []
+        for k in range(len(dataSets)):
+            dirName  = os.listdir(os.path.join(dataSetName,dataSets[k]))
+            dataExps = np.array([])
+            for l in range(len(dirName)):
+                if(os.path.isdir(os.path.join(os.path.join(dataSetName,dataSets[k]), dirName[l]))):
+                    if(os.path.isfile(os.path.join(os.path.join(os.path.join(dataSetName,dataSets[k]),dirName[l]),'titleFile.txt')) and
+                       os.path.isfile(os.path.join(os.path.join(os.path.join(dataSetName,dataSets[k]),dirName[l]),'acqusText.txt')) and
+                       os.path.isfile(os.path.join(os.path.join(os.path.join(dataSetName,dataSets[k]),dirName[l]),'acqu2sText.txt')) and
+                       os.path.isfile(os.path.join(os.path.join(os.path.join(dataSetName,dataSets[k]),dirName[l]),'acqu3sText.txt')) and
+                       os.path.isfile(os.path.join(os.path.join(os.path.join(dataSetName,dataSets[k]),dirName[l]),'procsText.txt')) and
+                       os.path.isfile(os.path.join(os.path.join(os.path.join(dataSetName,dataSets[k]),dirName[l]),'proc2sText.txt')) and
+                       os.path.isfile(os.path.join(os.path.join(os.path.join(dataSetName,dataSets[k]),dirName[l]),'proc3sText.txt')) and
+                       os.path.isfile(os.path.join(os.path.join(os.path.join(dataSetName,dataSets[k]),dirName[l]),'nmrDataSet.dat'))):
+                        dataExps = np.append(dataExps, dirName[l])
+                    
+                
+            dataExps = np.sort(dataExps)
+            dataSetExps.append(dataExps)
+        
+        self.nmrdat = []
+        for k in range(len(dataSetExps)):
+            self.nmrdat.append([])
+            for l in range(len(dataSetExps[k])):
+                fName = os.path.join(os.path.join(os.path.join(dataSetName,dataSets[k]),dataSetExps[k][l]),'nmrDataSet.dat')
+                f     = open(fName, 'rb')
+                nd    = pickle.load(f)
+                f.close()
+                self.nmrdat[k].append(nd)
+                fName = os.path.join(os.path.join(os.path.join(dataSetName,dataSets[k]),dataSetExps[k][l]),'titleFile.txt')
+                f     = open(fName, 'r')
+                self.nmrdat[k][l].title = f.read()
+                f.close()
+                fName = os.path.join(os.path.join(os.path.join(dataSetName,dataSets[k]),dataSetExps[k][l]),'acqusText.txt')
+                f     = open(fName, 'r')
+                self.nmrdat[k][l].acq.acqusText = f.read()
+                f.close()
+                fName = os.path.join(os.path.join(os.path.join(dataSetName,dataSets[k]),dataSetExps[k][l]),'acqu2sText.txt')
+                f     = open(fName, 'r')
+                self.nmrdat[k][l].acq.acqu2sText = f.read()
+                f.close()
+                fName = os.path.join(os.path.join(os.path.join(dataSetName,dataSets[k]),dataSetExps[k][l]),'acqu3sText.txt')
+                f     = open(fName, 'r')
+                self.nmrdat[k][l].acq.acqu3sText = f.read()
+                f.close()
+                fName = os.path.join(os.path.join(os.path.join(dataSetName,dataSets[k]),dataSetExps[k][l]),'procsText.txt')
+                f     = open(fName, 'r')
+                self.nmrdat[k][l].proc.procsText = f.read()
+                f.close()
+                fName = os.path.join(os.path.join(os.path.join(dataSetName,dataSets[k]),dataSetExps[k][l]),'proc2sText.txt')
+                f     = open(fName, 'r')
+                self.nmrdat[k][l].proc.proc2sText = f.read()
+                f.close()
+                fName = os.path.join(os.path.join(os.path.join(dataSetName,dataSets[k]),dataSetExps[k][l]),'proc3sText.txt')
+                f     = open(fName, 'r')
+                self.nmrdat[k][l].proc.proc2sText = f.read()
+                f.close()
+            
+        
+        # end load
+        
+    def save(self,dataSetName):
+        if(len(dataSetName) == 0):
+            return
+        
+        try:
+            os.makedirs(dataSetName)
+        except:
+            pass
+        
+        fName = os.path.join(dataSetName,'curPars.dat')
+        f     = open(fName,'wb')
+        pickle.dump([self.s,self.e,self.pp,self.deselect,self.deselect2,self.cmdBuffer,self.cmdIdx],f)
+        f.close()
+        for k in range(len(self.nmrdat)):
+            setPath = os.path.join(dataSetName,str(k+1))
+            try:
+                os.makedirs(setPath)
+            except:
+                pass
+            
+            for l in range(len(self.nmrdat[k])):
+                expPath = os.path.join(setPath,str(l+1))
+                try:
+                    os.makedirs(expPath)
+                except:
+                    pass
+                
+                fName   = os.path.join(expPath,'nmrDataSet.dat')
+                f       = open(fName,'wb')
+                pickle.dump(self.nmrdat[k][l],f)
+                f.close()
+                fName   = os.path.join(expPath,'titleFile.txt')
+                f       = open(fName,'w')
+                f.write(self.nmrdat[k][l].title)
+                f.close()
+                fName   = os.path.join(expPath, 'procsText.txt')
+                f       = open(fName,'w')
+                f.write(self.nmrdat[k][l].proc.procsText)
+                f.close()
+                fName   = os.path.join(expPath, 'proc2sText.txt')
+                f       = open(fName,'w')
+                f.write(self.nmrdat[k][l].proc.proc2sText)
+                f.close()
+                fName   = os.path.join(expPath, 'proc3sText.txt')
+                f       = open(fName,'w')
+                f.write(self.nmrdat[k][l].proc.proc3sText)
+                f.close()
+                fName   = os.path.join(expPath, 'acqusText.txt')
+                f       = open(fName,'w')
+                f.write(self.nmrdat[k][l].acq.acqusText)
+                f.close()
+                fName   = os.path.join(expPath, 'acqu2sText.txt')
+                f       = open(fName,'w')
+                f.write(self.nmrdat[k][l].acq.acqu2sText)
+                f.close()
+                fName   = os.path.join(expPath, 'acqu3sText.txt')
+                f       = open(fName,'w')
+                f.write(self.nmrdat[k][l].acq.acqu3sText)
+                f.close()
+        # end save
+        
     def setGb(self, gb):
         nExp = len(self.nmrdat[self.s])
         for k in range(nExp):

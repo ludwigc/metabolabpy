@@ -2933,6 +2933,13 @@
        </spacer>
       </item>
       <item>
+       <widget class="QPushButton" name="loadButton">
+        <property name="text">
+         <string>Load</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="saveButton">
         <property name="text">
          <string>Save</string>
@@ -2978,6 +2985,7 @@
      <string>File</string>
     </property>
     <addaction name="actionSave"/>
+    <addaction name="actionLoad"/>
     <addaction name="actionRead_Bruker_Spectrum"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -3386,6 +3394,11 @@
    </property>
    <property name="shortcut">
     <string>Meta+O</string>
+   </property>
+  </action>
+  <action name="actionLoad">
+   <property name="text">
+    <string>Load</string>
    </property>
   </action>
  </widget>
