@@ -426,8 +426,150 @@
              </layout>
             </widget>
             <widget class="QWidget" name="segmentalAlignmentTab"/>
-            <widget class="QWidget" name="noiseFilteringTab"/>
-            <widget class="QWidget" name="bucketSpectraTab"/>
+            <widget class="QWidget" name="noiseFilteringTab">
+             <layout class="QGridLayout" name="gridLayout_15">
+              <item row="0" column="0">
+               <spacer name="horizontalSpacer_8">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>136</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="1">
+               <layout class="QHBoxLayout" name="horizontalLayout_45">
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayout_16">
+                  <item>
+                   <widget class="QLabel" name="label_59">
+                    <property name="text">
+                     <string>Noise Threshold</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_60">
+                    <property name="text">
+                     <string>Noise Region Start</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_61">
+                    <property name="text">
+                     <string>Noise Region End</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_62">
+                    <property name="text">
+                     <string>Line Width</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayout_15">
+                  <item>
+                   <widget class="QLineEdit" name="noiseThresholdLE"/>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="noiseRegionStartLE"/>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="noiseRegionEndLE"/>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="thLineWidthLE"/>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </item>
+              <item row="1" column="1">
+               <spacer name="verticalSpacer_6">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>198</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="bucketSpectraTab">
+             <layout class="QGridLayout" name="gridLayout_16">
+              <item row="0" column="1">
+               <spacer name="verticalSpacer_7">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>229</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="1" column="0">
+               <spacer name="horizontalSpacer_26">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>136</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="1" column="1">
+               <layout class="QHBoxLayout" name="horizontalLayout_46">
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayout_17">
+                  <item>
+                   <widget class="QLabel" name="label_63">
+                    <property name="text">
+                     <string>Bucket ppm</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_64">
+                    <property name="text">
+                     <string>Bucket data points</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayout_18">
+                  <item>
+                   <widget class="QLineEdit" name="bucketPpmLE"/>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="bucketDataPointsLE"/>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
             <widget class="QWidget" name="compressBucketsTab"/>
             <widget class="QWidget" name="scaleSpectraTab"/>
             <widget class="QWidget" name="varianceStabilisationTab"/>
@@ -546,14 +688,14 @@
                 <item>
                  <widget class="QLabel" name="label_58">
                   <property name="text">
-                   <string>Delimeter</string>
+                   <string>Delimiter</string>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <layout class="QVBoxLayout" name="verticalLayout_10">
                   <item>
-                   <widget class="QRadioButton" name="radioButton">
+                   <widget class="QRadioButton" name="exportDelimiterTab">
                     <property name="text">
                      <string>Tab</string>
                     </property>
@@ -565,16 +707,16 @@
                   <item>
                    <layout class="QHBoxLayout" name="horizontalLayout_30">
                     <item>
-                     <widget class="QRadioButton" name="radioButton_2">
+                     <widget class="QRadioButton" name="exportDelimiterCharacter">
                       <property name="text">
                        <string>Character</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="lineEdit">
+                     <widget class="QLineEdit" name="exportCharacter">
                       <property name="enabled">
-                       <bool>false</bool>
+                       <bool>true</bool>
                       </property>
                       <property name="text">
                        <string>,</string>
@@ -588,6 +730,31 @@
                </layout>
               </item>
               <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_47">
+                <item>
+                 <widget class="QLabel" name="label_65">
+                  <property name="text">
+                   <string>Samples in</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="samplesInComboBox">
+                  <item>
+                   <property name="text">
+                    <string>Rows</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Columns</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
                <spacer name="verticalSpacer_4">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -595,7 +762,7 @@
                 <property name="sizeHint" stdset="0">
                  <size>
                   <width>20</width>
-                  <height>204</height>
+                  <height>40</height>
                  </size>
                 </property>
                </spacer>
@@ -2766,6 +2933,13 @@
        </spacer>
       </item>
       <item>
+       <widget class="QPushButton" name="loadButton">
+        <property name="text">
+         <string>Load</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="saveButton">
         <property name="text">
          <string>Save</string>
@@ -2811,6 +2985,7 @@
      <string>File</string>
     </property>
     <addaction name="actionSave"/>
+    <addaction name="actionLoad"/>
     <addaction name="actionRead_Bruker_Spectrum"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -3219,6 +3394,11 @@
    </property>
    <property name="shortcut">
     <string>Meta+O</string>
+   </property>
+  </action>
+  <action name="actionLoad">
+   <property name="text">
+    <string>Load</string>
    </property>
   </action>
  </widget>
