@@ -659,6 +659,16 @@ class main_w(object):
         self.plotSpc()
         # end ft
         
+    def ftAll(self):
+        self.nd.ftAll()
+        if(self.w.baselineCorrection.currentIndex() > 0):
+            self.baseline1dAll()
+            
+        self.w.nmrSpectrum.setCurrentIndex(0)
+        self.changeDataSetExp()
+        self.plotSpc()
+        # end ftAll
+        
     def getDispPars1(self):
         d            = self.nd.nmrdat[self.nd.s][self.nd.e].disp
         d.posCol     = d.colours.get(self.w.posCol.currentIndex())
