@@ -1020,12 +1020,11 @@ class main_w(object):
         selectedDirectory = QFileDialog.getExistingDirectory()
         if(len(selectedDirectory)>0):
             self.clear()
+            self.zeroScript()
         else:
             return
             
-        self.nd.load(selectedDirectory)
-        self.updateGUI()
-        self.resetPlot()
+        self.loadFile(selectedDirectory)
         # end saveButton
         
     def loadConfig(self):
@@ -1035,6 +1034,16 @@ class main_w(object):
         self.w.keepZoom.setChecked(self.cf.keepZoom)
         self.w.fontSize.setValue(self.cf.fontSize)
         # end loadConfig
+        
+    def loadFile(self,fileName):
+        self.nd.load(fileName)
+        self.w.script.insertHtml(self.nd.script)
+        self.w.console.insertHtml(self.nd.console)
+        self.plotSpc()
+        self.resetPlot()
+        self.updateGUI()
+        self.w.console.verticalScrollBar().setValue(self.w.console.verticalScrollBar().maximum())
+        # end loadFile
         
     def nextCommand(self):
         if(self.w.cmdLine.hasFocus() == True):
@@ -1207,7 +1216,10 @@ class main_w(object):
         
         # end onPhCorrRelease
     
-    def openScript(self,fName=''):
+    def openScript(self,fName=""):
+        if(fName == False):
+            fName = ""
+            
         if(len(fName)==0):
             fName      = QFileDialog.getOpenFileName()
             fName      = fName[0]
@@ -1486,13 +1498,15 @@ class main_w(object):
         # end resetPlot
         
     def saveButton(self):
-        pfName = QFileDialog.getSaveFileName()
+        pfName = QFileDialog.getSaveFileName(None, "Save MetaboLabPy DataSet","","*.mlpy","*.mlpy")
         if(os.path.isfile(pfName[0])):
             os.remove(pfName[0])
             
         if(os.path.isdir(pfName[0])):
             shutil.rmtree(pfName[0])
             
+        self.nd.script  = self.w.script.toHtml()
+        self.nd.console = self.w.console.toHtml()
         self.nd.save(pfName[0])
         # end saveButton
         
@@ -2217,6 +2231,10 @@ class main_w(object):
         self.w.pulseProgram.setText("")
         # end zeroPulseProgram
         
+    def zeroScript(self):
+        self.w.script.setText("")
+        # end zeroConsole
+        
     def zeroTitleFile(self):
         self.w.titleFile.setText("")
         # end zeroTitleFile
@@ -2249,10 +2267,16 @@ class main_w(object):
     
     
 def main():
+    sys.argv.append('None')
     ap = argparse.ArgumentParser()
     ap.add_argument("-s", "--script",      required = False, help = "optional script argument")
     ap.add_argument("-noSplash",           required = False, help = "turn splash screen off",              action = "store_true")
     ap.add_argument("-fs", "--FullScreen", required = False, help = "open applicatin in full screen mode", action = "store_true")
+    ap.add_argument('fileName', metavar = 'fileName', type=str, help = "load MetaboLabPy DataSet File")
+    dd   = ap.parse_known_intermixed_args()
+    if(len(dd[1])>0):
+        sys.argv.pop()
+        
     args  = vars(ap.parse_args())
     app   = QApplication(['pyMetaboLab']) #sys.argv)
     icon  = QIcon()
@@ -2293,10 +2317,21 @@ def main():
         splash.close()
         ## End of splash screen
     
-    if(args["script"]!=None):
-        w.openScript(args["script"])
-        w.scriptEditor()
-        w.execScript()
+    if(args["fileName"]!="None"):
+        try:
+            w.loadFile(args["fileName"])
+        except:
+            if(args["script"]!=None):
+                w.openScript(args["script"])
+                w.scriptEditor()
+                w.execScript()
+            
+    else:
+        if(args["script"]!=None):
+            w.openScript(args["script"])
+            w.scriptEditor()
+            w.execScript()
+            
         
     sys.exit(app.exec_())
     

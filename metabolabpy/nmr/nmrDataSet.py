@@ -17,6 +17,8 @@ class NmrDataSet:
         self.deselect2 = np.array([])
         self.cmdBuffer = np.array([])
         self.cmdIdx    = -1
+        self.script    = ""
+        self.console   = ""
         # end __init__
 
     def __str__(self):
@@ -324,6 +326,8 @@ class NmrDataSet:
         self.deselect2 = curPars[4]
         self.cmdBuffer = curPars[5]
         self.cmdIdx    = curPars[6]
+        self.script    = curPars[7]
+        self.console   = curPars[8]
         for k in range(len(lDir)):
             if(os.path.isdir(os.path.join(dataSetName,lDir[k]))):
                 dataSets = np.append(dataSets, lDir[k])
@@ -347,7 +351,15 @@ class NmrDataSet:
                         dataExps = np.append(dataExps, dirName[l])
                     
                 
-            dataExps = np.sort(dataExps)
+            dataExps2 = []
+            for k in range(len(dataExps)):
+                try:
+                    dataExps2.append(int(dataExps[k]))
+                except:
+                    pass
+                
+            dataExps2.sort()
+            dataExps  = list(map(str, dataExps2))
             dataSetExps.append(dataExps)
         
         self.nmrdat = []
@@ -402,7 +414,7 @@ class NmrDataSet:
         
         fName = os.path.join(dataSetName,'curPars.dat')
         f     = open(fName,'wb')
-        pickle.dump([self.s,self.e,self.pp,self.deselect,self.deselect2,self.cmdBuffer,self.cmdIdx],f)
+        pickle.dump([self.s,self.e,self.pp,self.deselect,self.deselect2,self.cmdBuffer,self.cmdIdx,self.script,self.console],f)
         f.close()
         for k in range(len(self.nmrdat)):
             setPath = os.path.join(dataSetName,str(k+1))
