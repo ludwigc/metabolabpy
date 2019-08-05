@@ -1877,9 +1877,17 @@ class main_w(object):
         f.setPointSize(fontSize)
         self.w.acqPars.setFont(f)
         self.w.titleFile.setFont(f)
+        cursor = self.w.script.textCursor()
+        self.w.script.selectAll()
+        self.w.script.setFontPointSize(fontSize)
+        self.w.script.setTextCursor(cursor)
+        #self.w.script.setFont(f)
+        cursor = self.w.console.textCursor()
+        self.w.console.selectAll()
+        self.w.console.setFontPointSize(fontSize)
+        self.w.console.setTextCursor(cursor)
+        #self.w.console.setFont(f)
         self.w.pulseProgram.setFont(f)
-        self.w.script.setFont(f)
-        self.w.console.setFont(f)
         self.w.cmdLine.setFont(f)
         # end setFontSize
         
@@ -2267,10 +2275,10 @@ class main_w(object):
 def main():
     sys.argv.append('None')
     ap = argparse.ArgumentParser()
-    ap.add_argument("-s", "--script",      required = False, help = "optional script argument")
-    ap.add_argument("-noSplash",           required = False, help = "turn splash screen off",              action = "store_true")
+    ap.add_argument("-s",  "--script",     required = False, help = "optional script argument")
+    ap.add_argument("-ns", "--noSplash",   required = False, help = "turn splash screen off",              action = "store_true")
     ap.add_argument("-fs", "--FullScreen", required = False, help = "open applicatin in full screen mode", action = "store_true")
-    ap.add_argument('fileName', metavar = 'fileName', type=str, help = "load MetaboLabPy DataSet File")
+    ap.add_argument("fileName", metavar = "fileName", type=str, help = "load MetaboLabPy DataSet File")
     dd   = ap.parse_known_intermixed_args()
     if(len(dd[1])>0):
         sys.argv.pop()

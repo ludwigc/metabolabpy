@@ -2750,6 +2750,9 @@
         <string>Script</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_11">
+        <item row="0" column="0">
+         <widget class="QTextBrowser" name="script"/>
+        </item>
         <item row="1" column="0">
          <layout class="QHBoxLayout" name="horizontalLayout_28">
           <item>
@@ -2787,9 +2790,6 @@
            </widget>
           </item>
          </layout>
-        </item>
-        <item row="0" column="0">
-         <widget class="QTextEdit" name="script"/>
         </item>
        </layout>
       </widget>
