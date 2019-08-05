@@ -3176,7 +3176,7 @@
     <string>Show Processing Parameters</string>
    </property>
    <property name="shortcut">
-    <string>Meta+P</string>
+    <string>Ctrl+Shift+P</string>
    </property>
   </action>
   <action name="actionShow_Title_File_Information">
@@ -3184,7 +3184,7 @@
     <string>Show Title File Information</string>
    </property>
    <property name="shortcut">
-    <string>Meta+T</string>
+    <string>Ctrl+Shift+T</string>
    </property>
   </action>
   <action name="actionShow_Acquisition_Parameters">
@@ -3192,7 +3192,7 @@
     <string>Show Acquisition Parameters</string>
    </property>
    <property name="shortcut">
-    <string>Meta+A</string>
+    <string>Ctrl+Shift+A</string>
    </property>
   </action>
   <action name="actionShow_Display_Parameters">
@@ -3200,7 +3200,7 @@
     <string>Show Display Parameters</string>
    </property>
    <property name="shortcut">
-    <string>Meta+D</string>
+    <string>Ctrl+Shift+D</string>
    </property>
    <property name="shortcutVisibleInContextMenu">
     <bool>true</bool>
@@ -3211,7 +3211,7 @@
     <string>Show NMR Spetcrum</string>
    </property>
    <property name="shortcut">
-    <string>Meta+N</string>
+    <string>Ctrl+Shift+N</string>
    </property>
   </action>
   <action name="actionCorrect_Phase">
@@ -3251,7 +3251,7 @@
     <string>Script Editor</string>
    </property>
    <property name="shortcut">
-    <string>Meta+S</string>
+    <string>Ctrl+Shift+S</string>
    </property>
   </action>
   <action name="actionPlot_apodized_fid">
@@ -3291,7 +3291,7 @@
     <string>Show pulseProgram</string>
    </property>
    <property name="shortcut">
-    <string>Meta+U</string>
+    <string>Ctrl+Shift+U</string>
    </property>
   </action>
   <action name="actionClear">
@@ -3299,7 +3299,7 @@
     <string>Clear</string>
    </property>
    <property name="shortcut">
-    <string>Meta+C</string>
+    <string>Ctrl+Shift+C</string>
    </property>
   </action>
   <action name="actionChange_to_next_DS">
@@ -3396,7 +3396,7 @@
     <string>Console</string>
    </property>
    <property name="shortcut">
-    <string>Meta+O</string>
+    <string>Ctrl+Shift+O</string>
    </property>
   </action>
   <action name="actionLoad">
