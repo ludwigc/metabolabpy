@@ -62,11 +62,7 @@ class main_w(object):
         self.nd          = nmrDataSet.NmrDataSet()
         self.phCorr      = phCorr.PhCorr()
         # load ui; create w
-        if(platform.system()=='Darwin'):
-            fName = os.path.join(os.path.dirname(__file__),"ui","metabolabpy_mainwindow_mac.ui")
-        else:
-            fName = os.path.join(os.path.dirname(__file__),"ui","metabolabpy_mainwindow.ui")
-            
+        fName = os.path.join(os.path.dirname(__file__),"ui","metabolabpy_mainwindow.ui")
         self.file = QFile(fName)
         self.file.open(QFile.ReadOnly)
         self.loader = QUiLoader()

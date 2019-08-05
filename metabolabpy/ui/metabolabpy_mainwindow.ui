@@ -2994,8 +2994,6 @@
      <string>Plot</string>
     </property>
     <addaction name="actionReset"/>
-    <addaction name="actionHorizontal_Zoom"/>
-    <addaction name="actionVertical_Zoom"/>
     <addaction name="actionPlot_FID"/>
     <addaction name="actionPlot_spc"/>
     <addaction name="actionChange_to_next_Exp"/>
@@ -3097,7 +3095,7 @@
   </action>
   <action name="actionReset">
    <property name="text">
-    <string>Reset</string>
+    <string>Reset Plot</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
@@ -3175,7 +3173,7 @@
     <string>Show Processing Parameters</string>
    </property>
    <property name="shortcut">
-    <string>Meta+Shift+P</string>
+    <string>Ctrl+Shift+P</string>
    </property>
   </action>
   <action name="actionShow_Title_File_Information">
@@ -3183,7 +3181,7 @@
     <string>Show Title File Information</string>
    </property>
    <property name="shortcut">
-    <string>Meta+Shift+T</string>
+    <string>Ctrl+Shift+T</string>
    </property>
   </action>
   <action name="actionShow_Acquisition_Parameters">
@@ -3191,7 +3189,7 @@
     <string>Show Acquisition Parameters</string>
    </property>
    <property name="shortcut">
-    <string>Meta+Shift+A</string>
+    <string>Ctrl+Shift+A</string>
    </property>
   </action>
   <action name="actionShow_Display_Parameters">
@@ -3199,7 +3197,7 @@
     <string>Show Display Parameters</string>
    </property>
    <property name="shortcut">
-    <string>Meta+Shift+D</string>
+    <string>Ctrl+Shift+D</string>
    </property>
    <property name="shortcutVisibleInContextMenu">
     <bool>true</bool>
@@ -3210,7 +3208,7 @@
     <string>Show NMR Spetcrum</string>
    </property>
    <property name="shortcut">
-    <string>Meta+Shift+N</string>
+    <string>Ctrl+Shift+N</string>
    </property>
   </action>
   <action name="actionCorrect_Phase">
@@ -3250,7 +3248,7 @@
     <string>Script Editor</string>
    </property>
    <property name="shortcut">
-    <string>Meta+Shift+S</string>
+    <string>Ctrl+Shift+S</string>
    </property>
   </action>
   <action name="actionChange_to_next_Exp">
@@ -3282,7 +3280,7 @@
     <string>Show pulseProgram</string>
    </property>
    <property name="shortcut">
-    <string>Meta+Shift+U</string>
+    <string>Ctrl+Shift+U</string>
    </property>
   </action>
   <action name="actionClear">
@@ -3290,7 +3288,7 @@
     <string>Clear</string>
    </property>
    <property name="shortcut">
-    <string>Meta+Shift+C</string>
+    <string>Ctrl+Shift+C</string>
    </property>
   </action>
   <action name="actionChange_to_next_DS">
@@ -3350,18 +3348,18 @@
   </action>
   <action name="actionSelect_All">
    <property name="text">
-    <string>Select All</string>
+    <string>Select All Spc for Plot</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+S</string>
+    <string>Alt+Shift+A</string>
    </property>
   </action>
   <action name="actionClear_All">
    <property name="text">
-    <string>Clear All</string>
+    <string>Clear All Selected Spc for Plot</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+C</string>
+    <string>Alt+Shift+C</string>
    </property>
   </action>
   <action name="actionPrevious_command">
@@ -3393,7 +3391,7 @@
     <string>Console</string>
    </property>
    <property name="shortcut">
-    <string>Meta+Shift+O</string>
+    <string>Ctrl+Shift+O</string>
    </property>
   </action>
   <action name="actionLoad">
