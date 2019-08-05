@@ -107,6 +107,8 @@ class main_w(object):
         self.w.thLineWidthLE.returnPressed.connect(self.setnoiseRegPreProc)
         self.w.bucketPpmLE.returnPressed.connect(self.setBucketPPMPreProc)
         self.w.bucketDataPointsLE.returnPressed.connect(self.setBucketPointsPreProc)
+        self.w.actionSave.triggered.connect(self.saveButton)
+        self.w.actionLoad.triggered.connect(self.loadButton)
         self.w.actionActivate_Command_Line.triggered.connect(self.activateCommandLine)
         self.w.actionPrevious_command.triggered.connect(self.previousCommand)
         self.w.actionNext_command.triggered.connect(self.nextCommand)
