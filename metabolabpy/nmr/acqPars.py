@@ -120,10 +120,14 @@ class AcqPars:
         self.o2               = float(self.regEx.o2.findall(self.acqusText)[0])
         self.o3               = float(self.regEx.o3.findall(self.acqusText)[0])
         self.o4               = float(self.regEx.o4.findall(self.acqusText)[0])
-        self.o5               = float(self.regEx.o5.findall(self.acqusText)[0])
-        self.o6               = float(self.regEx.o6.findall(self.acqusText)[0])
-        self.o7               = float(self.regEx.o7.findall(self.acqusText)[0])
-        self.o8               = float(self.regEx.o8.findall(self.acqusText)[0])
+        try:
+            self.o5               = float(self.regEx.o5.findall(self.acqusText)[0])
+            self.o6               = float(self.regEx.o6.findall(self.acqusText)[0])
+            self.o7               = float(self.regEx.o7.findall(self.acqusText)[0])
+            self.o8               = float(self.regEx.o8.findall(self.acqusText)[0])
+        except:
+            pass
+        
         self.sw[0]            = float(self.regEx.sw.findall(self.acqusText)[0])
         self.sw_h[0]          = float(self.regEx.sw_h.findall(self.acqusText)[0])
         self.nDataPoints[0]   = int(self.regEx.td.findall(self.acqusText)[0])
