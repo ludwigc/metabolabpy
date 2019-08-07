@@ -58,7 +58,7 @@ class MplWidget(QWidget):
 # ------------------ MplWidget ------------------
 class main_w(object):
     def __init__(self):
-        self.__version__ = '2019.07101730'
+        self.__version__ = '0.1.0'
         self.nd          = nmrDataSet.NmrDataSet()
         self.phCorr      = phCorr.PhCorr()
         # load ui; create w
