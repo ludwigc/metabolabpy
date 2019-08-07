@@ -32,7 +32,7 @@ class AcqRegEx:
         self.o7               = re.compile(r'##\$O7= (\d+\.?\d?\d?\d?\d?\d?\d?)')
         self.o8               = re.compile(r'##\$O8= (\d+\.?\d?\d?\d?\d?\d?\d?)')
         self.sw               = re.compile(r'##\$SW= (\d+\.\d+)')
-        self.sw_h             = re.compile(r'##\$SW_h= (\d+\.\d+)')
+        self.sw_h             = re.compile(r'##\$SW_h= (\d+\.?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?)')
         self.td               = re.compile(r'##\$TD= (\d+)')
         self.decim            = re.compile(r'##\$DECIM= (\d+)')
         self.dspfvs           = re.compile(r'##\$DSPFVS= (\d+)')

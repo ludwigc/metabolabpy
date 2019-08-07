@@ -78,9 +78,10 @@ class NmrDataSet:
             #self.nmrdat[self.s][self.e].setRef(np.array([0.0]), np.array([14836]))
             
         else:
-            refShifts                = np.array([1.33, 19.3])
-            refPoints                = np.array([262, 2150])
-            self.nmrdat[self.s][self.e].setRef(refShifts, refPoints)
+            self.nmrdat[self.s][self.e].autoRef()
+            #refShifts                = np.array([1.33, 19.3])
+            #refPoints                = np.array([262, 2150])
+            #self.nmrdat[self.s][self.e].setRef(refShifts, refPoints)
         
         return "Finished autoref"
         # end autoref
@@ -250,9 +251,9 @@ class NmrDataSet:
             
         else:
             self.nmrdat[self.s][self.e].procSpc()
-            refShifts                = np.array([1.33, 19.3])
-            refPoints                = np.array([262, 2150])
-            self.nmrdat[self.s][self.e].setRef(refShifts, refPoints)
+            #refShifts                = np.array([1.33, 19.3])
+            #refPoints                = np.array([262, 2150])
+            #self.nmrdat[self.s][self.e].setRef(refShifts, refPoints)
         
         # end ft
 

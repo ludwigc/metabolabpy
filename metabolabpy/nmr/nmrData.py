@@ -53,7 +53,13 @@ class NmrData:
             self.ppm.resize(1,self.proc.nPoints[0])
             x           = np.linspace(0.0, self.proc.nPoints[0] - 1.0, self.proc.nPoints[0])
             self.ppm[0] = self.proc.refShift[0] + (self.proc.refPoint[0] - x)*self.acq.sw[0]/self.proc.nPoints[0]
-        
+        else:
+            self.ppm1.resize(1,self.proc.nPoints[0])
+            self.ppm2.resize(1,self.proc.nPoints[1])
+            x1          = np.linspace(0.0, self.proc.nPoints[0] - 1.0, self.proc.nPoints[0])
+            x2          = np.linspace(0.0, self.proc.nPoints[1] - 1.0, self.proc.nPoints[1])
+            self.ppm[0] = self.proc.refShift[0] + (self.proc.refPoint[0] - x)*self.acq.sw[0]/self.proc.nPoints[0]
+            
         # end calcPPM
         
     def apodise(self, fid, dim, lb, gb, ssb, groupDelay, sw_h):
@@ -151,7 +157,9 @@ class NmrData:
                 spc               = self.spc[0][r].real
                 refP              = np.where(spc == np.amax(spc))
                 self.refPoint[0] -= refP[0][0] - int((max(pts)-min(pts))/2) + 1
-                self.calcPPM()
+        
+        
+        self.calcPPM()
                 
                 
         # end autoRef
@@ -171,10 +179,18 @@ class NmrData:
         
     def calcPPM(self):
         npts      = int(len(self.spc[0]))
-        self.ppm1 = self.points2ppm(np.linspace(npts-1, 0, npts), 0)
+        if(self.disp.axisType1 == 'ppm'):
+            self.ppm1 = self.points2ppm(np.linspace(npts-1, 0, npts), 0)
+        else:
+            self.ppm1 = self.points2Hz(np.linspace(npts-1, 0, npts), 0)
+            
         if(self.dim>1):
             npts      = int(len(self.spc))
-            self.ppm2 = self.points2ppm(np.linspace(npts-1, 0, npts), 1)
+            if(self.disp.axisType2 == 'ppm'):
+                self.ppm2 = self.points2ppm(np.linspace(npts-1, 0, npts), 1)
+            else:
+                self.ppm2 = self.points2Hz(np.linspace(npts-1, 0, npts), 1)
+            
         
         # end calcPPM
     
@@ -365,8 +381,20 @@ class NmrData:
         return mat
         # end phase3
 
+    def points2Hz(self, points, dim):
+        sw = self.acq.sw_h[dim]
+        if(dim==0):
+            npts = int(len(self.spc[0]))
+            
+        if(dim==1):
+            npts = int(len(self.spc))
+        
+        hz = sw*(points - npts/2)/npts
+        return hz
+        # end points2Hz
+    
     def points2ppm(self, points, dim):
-        sw = self.proc.sw_h[dim]
+        sw = self.acq.sw_h[dim]
         if(dim==0):
             sfo  = self.acq.sfo1
             npts = int(len(self.spc[0]))
@@ -380,7 +408,7 @@ class NmrData:
         # end points2ppm
     
     def ppm2points(self, ppm, dim):
-        sw = self.proc.sw_h[dim]
+        sw = self.acq.sw_h[dim]
         if(dim==0):
             sfo  = self.acq.sfo1
             npts = int(len(self.spc[0]))
@@ -459,8 +487,12 @@ class NmrData:
             fid2   = self.apodise(fid2, 1, self.proc.lb[1], self.proc.gb[1], self.proc.ssb[1], 0.0, self.acq.sw_h[1])
             fid2   = self.zeroFill(fid2, 1)
             fid2   = fftshift(fft(fid2))
-            fid2   = self.phase2(fid2,self.proc.ph0[1], self.proc.ph1[1])
-            self.spc[k] = fid2
+            if(self.acq.fnMode == 1):
+                fid2 = np.abs(fid2)
+            else:
+                fid2   = self.phase2(fid2,self.proc.ph0[1], self.proc.ph1[1])
+            
+            self.spc[k] = fid2.real
             
         self.spc = np.ndarray.transpose(self.spc)
         # end procSpc2D
@@ -517,6 +549,7 @@ class NmrData:
     def readSpc(self):
         self.acq.read(self.dataSetName + os.sep + self.dataSetNumber)
         self.proc.read(self.dataSetName + os.sep + self.dataSetNumber)
+        #self.proc.sw_h = self.acq.sw_h
         self.origDataSet = self.dataSetName + self.dataSetNumber
         titleFile    = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'pdata' + os.sep + '1' + os.sep + 'title'
         pulProgFile = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'pulseprogram'

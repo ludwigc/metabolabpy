@@ -714,12 +714,14 @@ class main_w(object):
         d            = self.nd.nmrdat[self.nd.s][self.nd.e].disp
         d.axisType1  = d.axes.get(self.w.axisType1.currentIndex())
         self.nd.nmrdat[self.nd.s][self.nd.e].disp = d
+        self.nd.nmrdat[self.nd.s][self.nd.e].calcPPM()
         # end getDispPars7
 
     def getDispPars8(self):
         d            = self.nd.nmrdat[self.nd.s][self.nd.e].disp
         d.axisType2  = d.axes.get(self.w.axisType2.currentIndex())
         self.nd.nmrdat[self.nd.s][self.nd.e].disp = d
+        self.nd.nmrdat[self.nd.s][self.nd.e].calcPPM()
         # end getDispPars8
 
     def getDispPars9(self):
@@ -1475,6 +1477,10 @@ class main_w(object):
             self.setTitleFile()
             self.setPulseProgram()
             self.w.expBox.setValue(self.nd.e+1)
+            if(self.nd.nmrdat[self.nd.s][self.nd.e].acq.fnMode == 1):
+                self.nd.nmrdat[self.nd.s][self.nd.e].disp.yLabel = '1H'
+                print('1H')
+                
             self.setDispPars()
             self.updateGUI()
     
