@@ -12,6 +12,8 @@ class ProcPars:
         self.procsText             = str('')
         self.proc2sText            = str('')
         self.proc3sText            = str('')
+        self.tilt                  = True
+        self.symj                  = True
         self.ph0                   = np.array([0.0, 0.0, 0.0])
         self.ph1                   = np.array([0.0, 0.0, 0.0])
         self.phCorr                = np.array([1, 1, 0], dtype = 'int')
