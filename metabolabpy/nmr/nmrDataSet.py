@@ -133,10 +133,20 @@ class NmrDataSet:
         # end bucketSpectra
         
     def dataPreProcessing(self):
-        self.ftAll()
-        self.baseline1dAll()
-        self.autorefAll()
-        self.shiftRef()
+        if(self.nmrdat[self.s][0].projectedJres == False):
+            self.ftAll()
+            self.baseline1dAll()
+            self.autorefAll()
+            self.shiftRef()
+        else:
+            s = self.s
+            e = self.e
+            self.s = self.nmrdat[s][e].origJresSet
+            self.e = self.nmrdat[s][e].origJresExp
+            self.pjres(s+1, self.nmrdat[s][e].pjresMode)
+            self.s = s
+            self.e = e
+
         self.noiseFilteringInit()
         self.deselect  = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
         self.deselect2 = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
@@ -402,6 +412,40 @@ class NmrDataSet:
         self.pp.stdVal = np.std(self.nmrdat[self.s][0].spc[0][spcIdx].real)
         # end noiseFilteringInit
         
+    def pjres(self, set = -1, mode = 'skyline'):
+        if(set<1):
+            set = self.s + 2
+
+        if(len(self.nmrdat)<set):
+            self.nmrdat.append([])
+
+        self.nmrdat[set-1] = []
+        for k in range(len(self.nmrdat[self.s])):
+            nd1 = nd.NmrData()
+            self.nmrdat[set-1].append(nd1)
+            self.nmrdat[set-1][k].dim = 1
+            self.nmrdat[set-1][k].fid = [[]]
+            self.nmrdat[set-1][k].acq = self.nmrdat[self.s][k].acq
+            self.nmrdat[set-1][k].proc = self.nmrdat[self.s][k].proc
+            self.nmrdat[set-1][k].disp = self.nmrdat[self.s][k].disp
+            self.nmrdat[set-1][k].ppm1 = np.resize(self.nmrdat[set-1][k].ppm1, (len(self.nmrdat[self.s][k].ppm1)))
+            self.nmrdat[set-1][k].ppm1 = np.copy(self.nmrdat[self.s][k].ppm1)
+            self.nmrdat[set-1][k].spc = np.resize(self.nmrdat[set-1][k].spc, (1, len(self.nmrdat[self.s][k].spc[0])))
+            self.nmrdat[set-1][k].refShift = self.nmrdat[self.s][k].refShift
+            self.nmrdat[set-1][k].refPoint = self.nmrdat[self.s][k].refPoint
+            self.nmrdat[set-1][k].title = "pJres spectrum\n" + self.nmrdat[self.s][k].title
+            self.nmrdat[set-1][k].pjresMode = mode
+            self.nmrdat[set-1][k].projectedJres = True
+            self.nmrdat[set-1][k].origJresSet = self.s
+            self.nmrdat[set-1][k].origJresExp = k
+            if(mode == 'skyline'):
+                self.nmrdat[set-1][k].spc[0] = np.max(self.nmrdat[self.s][k].spc,0)
+            else:
+                self.nmrdat[set-1][k].spc[0] = np.sum(self.nmrdat[self.s][k].spc,0)
+
+
+        # end jresProject
+
     def preProcInit(self):
         self.pp.init(len(self.nmrdat[self.s]))
         # end preProcInit

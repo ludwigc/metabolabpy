@@ -40,6 +40,10 @@ class NmrData:
         self.refsw = np.array([0, 0, 0], dtype='float64')
         self.refTmspRange = 0.3  # [ppm]
         self.apc = apcbc.Apcbc()
+        self.projectedJres = False
+        self.origJresSet = -1
+        self.origJresExp = -1
+        self.pjresMode = ''
         # end __init__
 
     def __str__(self):
@@ -147,6 +151,16 @@ class NmrData:
         if (self.dim == 2):
             self.refShift[1] = self.acq.o2 / self.acq.bf2
             self.refPoint[1] = int(len(self.spc) / 2)
+            if(tmsp == True):
+                self.refPoint[0] = self.ppm2points(0.0, 0)
+                self.refShift[0] = 0.0
+                pts = self.ppm2points(np.array([-self.refTmspRange, self.refTmspRange]), 0)
+                npts = len(self.spc[0])
+                r = np.arange(npts - max(pts), npts - min(pts))
+                spc = np.sum(self.spc, 0)
+                spc = spc[r].real
+                refP = np.where(spc == np.amax(spc))
+                self.refPoint[0] -= refP[0][0] - int((max(pts) - min(pts)) / 2) + 1
 
         if (self.dim == 1):
             if (tmsp == True):
@@ -504,7 +518,7 @@ class NmrData:
                 self.spc[k] = np.abs(self.spc[k])
 
             if(self.proc.symj == True):
-                self.symj()
+                self.symjres()
             
 
         # end procSpc2D
@@ -652,7 +666,7 @@ class NmrData:
         return fid
         # end smo
 
-    def symj(self):
+    def symjres(self):
         for k in range(int(len(self.spc)/2)):
             tmp = np.minimum(self.spc[k], self.spc[len(self.spc) - k - 1])
             self.spc[k] = tmp
@@ -661,7 +675,6 @@ class NmrData:
         # end symj
 
     def tiltJRes(self):
-        print(len(self.spc[0]))
         hzPerPoint = self.acq.sw_h[0] / len(self.spc[0])
         sw2 = self.acq.sw_h[1]
         npts2 = len(self.spc)
@@ -669,16 +682,10 @@ class NmrData:
         for k in range(npts2):
             npts = hzVect[k]/hzPerPoint
             fid1 = ifft(self.spc[k])
-            #if((k == 48) or (k == 46)):
-            #    pl.plot(np.abs(self.spc[k]))
-            #
             fid1 = self.phase2(fid1, 0, -npts*360.0)
 
             self.spc[k] = fft(fid1)
-            #if((k == 48) or (k == 46)):
-            #    pl.plot(-np.abs(self.spc[k]))
-            #    pl.show()
-            #
+
         # end tiltJRes
 
     def waterSupp(self, fid):

@@ -3097,6 +3097,7 @@
     <addaction name="actionChange_to_previous_DS"/>
     <addaction name="actionSelect_All"/>
     <addaction name="actionClear_All"/>
+    <addaction name="actionVertical_AutoScale"/>
    </widget>
    <widget class="QMenu" name="menuData">
     <property name="title">
@@ -3495,6 +3496,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+L</string>
+   </property>
+  </action>
+  <action name="actionVertical_AutoScale">
+   <property name="text">
+    <string>Vertical AutoScale</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+V</string>
    </property>
   </action>
  </widget>
