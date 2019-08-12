@@ -107,6 +107,7 @@ class main_w(object):
         self.w.thLineWidthLE.returnPressed.connect(self.setnoiseRegPreProc)
         self.w.bucketPpmLE.returnPressed.connect(self.setBucketPPMPreProc)
         self.w.bucketDataPointsLE.returnPressed.connect(self.setBucketPointsPreProc)
+        self.w.actionVertical_AutoScale.triggered.connect(self.verticalAutoScale)
         self.w.actionSave.triggered.connect(self.saveButton)
         self.w.actionLoad.triggered.connect(self.loadButton)
         self.w.actionActivate_Command_Line.triggered.connect(self.activateCommandLine)
@@ -201,6 +202,7 @@ class main_w(object):
         self.w.nmrSpectrum.currentChanged.connect(lambda: self.tabIndexChanged())
         self.showVersion()
         self.keepZoom = False
+        self.keepXZoom = False
         self.phCorrActive = False
         self.setFontSize()
         self.cf = nmrConfig.NmrConfig()
@@ -334,7 +336,13 @@ class main_w(object):
                     self.w.expBox.setValue(len(self.nd.nmrdat[self.nd.s]))
 
                 self.nd.e = self.w.expBox.value() - 1
+                keepZoom = self.w.keepZoom.isChecked()
                 if (not ((oldSet == self.nd.s) and (oldExp == self.nd.e))):
+                    if(self.nd.nmrdat[oldSet][oldExp].dim != self.nd.nmrdat[self.nd.s][self.nd.e].dim):
+                        self.keepXZoom = True
+                        self.keepZoom = False
+                        self.w.keepZoom.setChecked(False)
+
                     self.setDispPars()
                     self.setProcPars()
                     self.setAcqPars()
@@ -350,6 +358,9 @@ class main_w(object):
                         self.phCorr.spc = self.nd.nmrdat[self.nd.s][self.nd.e].spc
                         self.phCorrPlotSpc()
 
+                    self.keepZoom = keepZoom
+                    self.w.keepZoom.setChecked(keepZoom)
+
                 self.keepZoom = False
 
             else:
@@ -360,6 +371,7 @@ class main_w(object):
                 self.w.setBox.valueChanged.connect(lambda: self.changeDataSetExp())
                 self.w.expBox.valueChanged.connect(lambda: self.changeDataSetExp())
 
+            self.updateGUI()
         else:
             self.w.setBox.valueChanged.disconnect()
             self.w.expBox.valueChanged.disconnect()
@@ -391,6 +403,7 @@ class main_w(object):
                     for l in range(len(self.nd.nmrdat[k])):
                         self.nd.nmrdat[k][l].disp.phRefDS = self.w.phRefDS.value()
                         self.nd.nmrdat[k][l].disp.phRefExp = self.w.phRefExp.value()
+
 
         # end changeDataSetExpPhRef
 
@@ -909,6 +922,17 @@ class main_w(object):
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
         # end getProcPars24
 
+    def get_bottom_top(self, line):
+        margin = 0.1
+        xd = line.get_xdata()
+        yd = line.get_ydata()
+        lo, hi = self.w.MplWidget.canvas.axes.get_xlim()
+        y_displayed = yd[((xd > min(lo,hi)) & (xd < max(lo,hi)))]
+        h = np.max(y_displayed) - np.min(y_displayed)
+        bot = np.min(y_displayed) - margin * h
+        top = np.max(y_displayed) + margin * h
+        return bot, top
+
     def get_rSpc_p0(self):
         r = self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc
         r[0] = float(self.w.rSpc_p0.text())
@@ -1351,6 +1375,11 @@ class main_w(object):
 
             self.w.MplWidget.canvas.toolbar.update()
             self.w.MplWidget.canvas.draw()
+            if (self.keepXZoom == True):
+                self.w.MplWidget.canvas.axes.set_xlim(xlim)
+                self.verticalAutoScale()
+                self.keepXZoom = False
+
 
         else:
             mm = self.nd.nmrdat[self.nd.s][self.nd.e].spc.real.max()
@@ -1373,6 +1402,11 @@ class main_w(object):
             if (self.keepZoom == True):
                 self.w.MplWidget.canvas.axes.set_xlim(xlim)
                 self.w.MplWidget.canvas.axes.set_ylim(ylim)
+            else:
+                if (self.keepXZoom == True):
+                    self.w.MplWidget.canvas.axes.set_xlim(xlim)
+                    self.keepXZoom = False
+
 
             self.w.MplWidget.canvas.toolbar.update()
             self.w.MplWidget.canvas.draw()
@@ -1470,6 +1504,12 @@ class main_w(object):
             dsName = selected_directory[:idx]
             expName = selected_directory[idx + 1:]
             self.nd.readSpc(dsName, expName)
+            if (self.nd.nmrdat[self.nd.s][self.nd.e].acq.fnMode == 1):
+                self.nd.nmrdat[self.nd.s][self.nd.e].disp.yLabel = '1H'
+                self.nd.nmrdat[self.nd.s][self.nd.e].disp.axisType2 = 'Hz'
+                self.nd.nmrdat[self.nd.s][self.nd.e].proc.windowType = np.array([5, 3, 0])
+                self.nd.nmrdat[self.nd.s][self.nd.e].proc.lb[0] = 0.5
+
             self.nd.ft()
             self.nd.autoref()
             self.nd.e = len(self.nd.nmrdat[self.nd.s]) - 1
@@ -1480,10 +1520,6 @@ class main_w(object):
             self.setTitleFile()
             self.setPulseProgram()
             self.w.expBox.setValue(self.nd.e + 1)
-            if (self.nd.nmrdat[self.nd.s][self.nd.e].acq.fnMode == 1):
-                self.nd.nmrdat[self.nd.s][self.nd.e].disp.yLabel = '1H'
-                print('1H')
-
             self.setDispPars()
             self.updateGUI()
 
@@ -2163,22 +2199,39 @@ class main_w(object):
         # end tabIndexChanged
 
     def updateGUI(self):
-        self.w.expBox.setValue(self.nd.e + 1)
-        self.w.setBox.setValue(self.nd.s + 1)
+        s = self.nd.s
+        e = self.nd.e
+        self.w.expBox.setValue(e + 1)
+        self.w.setBox.setValue(s + 1)
         self.plotSpc()
         self.setDispPars()
         self.setProcPars()
         self.setAcqPars()
         self.setTitleFile()
         self.setPulseProgram()
-        self.w.expBox.setValue(self.nd.e + 1)
-        if (self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1):
+        self.w.expBox.setValue(e + 1)
+        if (self.nd.nmrdat[s][e].dim == 1):
             self.w.preprocessing.setEnabled(True)
         else:
             self.w.preprocessing.setEnabled(False)
 
         return "updated GUI"
         # end updateGUI
+
+    def verticalAutoScale(self):
+        if(self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1):
+            lines = self.w.MplWidget.canvas.axes.get_lines()
+            bottom, top = np.inf, -np.inf
+            for line in lines:
+                newBottom, newTop = self.get_bottom_top(line)
+                if (newBottom < bottom): bottom = newBottom
+                if (newTop > top): top = newTop
+
+            self.w.MplWidget.canvas.axes.set_ylim(bottom, top)
+            self.w.MplWidget.canvas.toolbar.update()
+            self.w.MplWidget.canvas.draw()
+
+        # end verticalAutoScale
 
     def zeroAcqPars(self):
         self.w.acqPars.setText("")
