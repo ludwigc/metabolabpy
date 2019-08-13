@@ -162,6 +162,8 @@ class main_w(object):
         self.w.yLabel.returnPressed.connect(lambda: self.getDispPars13())
         self.w.spcLabel.returnPressed.connect(lambda: self.getDispPars14())
         self.w.preProcessingSelect.currentIndexChanged.connect(lambda: self.setPreProcessingOptions())
+        self.w.tilt.currentIndexChanged.connect(lambda: self.setTilt())
+        self.w.symJ.currentIndexChanged.connect(lambda: self.setSymJ())
         self.w.windowFunction.currentIndexChanged.connect(lambda: self.getProcPars1())
         self.w.windowFunction_2.currentIndexChanged.connect(lambda: self.getProcPars2())
         self.w.phaseCorrection.currentIndexChanged.connect(lambda: self.getProcPars3())
@@ -2075,6 +2077,28 @@ class main_w(object):
             self.w.selectClassTW.item(k, 1).setText(self.nd.pp.classSelect[k])
 
         # end setSelectClass
+
+    def setSymJ(self):
+        curIdx = self.w.symJ.currentIndex()
+        if(curIdx == 0):
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.symj = True
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.tilt = True
+            self.w.tilt.setCurrentIndex(0)
+        else:
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.symj = False
+
+        # end setTilt
+
+    def setTilt(self):
+        curIdx = self.w.tilt.currentIndex()
+        if(curIdx == 0):
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.tilt = True
+        else:
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.tilt = False
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.symj = False
+            self.w.symJ.setCurrentIndex(1)
+
+        # end setTilt
 
     def setTitleFile(self):
         self.w.titleFile.setText(self.nd.nmrdat[self.nd.s][self.nd.e].title)
