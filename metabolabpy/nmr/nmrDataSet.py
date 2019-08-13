@@ -465,6 +465,23 @@ class NmrDataSet:
     
     # end readSpcs
 
+    def resetDataPreProcessing(self):
+        if (self.nmrdat[self.s][0].projectedJres == False):
+            self.ftAll()
+            self.baseline1dAll()
+            self.autorefAll()
+            self.shiftRef()
+        else:
+            s = self.s
+            e = self.e
+            self.s = self.nmrdat[s][e].origJresSet
+            self.e = self.nmrdat[s][e].origJresExp
+            self.pjres(s + 1, self.nmrdat[s][e].pjresMode)
+            self.s = s
+            self.e = e
+
+        # end dataPreProcessing
+
     def save(self,dataSetName):
         if(len(dataSetName) == 0):
             return

@@ -982,6 +982,13 @@
              </spacer>
             </item>
             <item>
+             <widget class="QPushButton" name="resetPreProcessingButton">
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="runPreProcessingButton">
               <property name="text">
                <string>Run</string>

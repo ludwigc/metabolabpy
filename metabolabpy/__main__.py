@@ -82,6 +82,7 @@ class main_w(object):
         self.w.exportCharacter.returnPressed.connect(self.setExportCharacter)
         self.w.samplesInComboBox.currentIndexChanged.connect(self.setSamplesInComboBox)
         self.w.runPreProcessingButton.clicked.connect(self.dataPreProcessing)
+        self.w.resetPreProcessingButton.clicked.connect(self.resetDataPreProcessing)
         self.w.excludeRegion.stateChanged.connect(self.setExcludeRegion)
         # self.w.segmentalAlignment.stateChanged.connect(self.setSegmentalAlignment)
         self.w.noiseFiltering.stateChanged.connect(self.setNoiseFiltering)
@@ -1033,6 +1034,7 @@ class main_w(object):
         self.w.preProcessingSelect.setHidden(True)
         self.w.preProcessingWidget.setHidden(True)
         self.w.runPreProcessingButton.setHidden(True)
+        self.w.resetPreProcessingButton.setHidden(True)
         self.w.writeScriptButton.setHidden(True)
         self.plotSpc()
         # end hidePreProcessing
@@ -1532,6 +1534,11 @@ class main_w(object):
         self.cf.saveConfig()
         self.loadConfig()
         # end resetConfig
+
+    def resetDataPreProcessing(self):
+        self.nd.resetDataPreProcessing()
+        self.plotSpcPreProc()
+        # end dataPreProcessing
 
     def resetPlot(self):
         zoomChecked = self.w.keepZoom.isChecked()
@@ -2161,6 +2168,7 @@ class main_w(object):
         self.w.preProcessingSelect.setHidden(False)
         self.w.preProcessingWidget.setHidden(False)
         self.w.runPreProcessingButton.setHidden(False)
+        self.w.resetPreProcessingButton.setHidden(False)
         self.w.writeScriptButton.setHidden(False)
         # self.setSelectClass()
         self.plotSpcPreProc()
