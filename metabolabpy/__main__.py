@@ -82,6 +82,7 @@ class main_w(object):
         self.w.exportCharacter.returnPressed.connect(self.setExportCharacter)
         self.w.samplesInComboBox.currentIndexChanged.connect(self.setSamplesInComboBox)
         self.w.runPreProcessingButton.clicked.connect(self.dataPreProcessing)
+        self.w.resetPreProcessingButton.clicked.connect(self.resetDataPreProcessing)
         self.w.excludeRegion.stateChanged.connect(self.setExcludeRegion)
         # self.w.segmentalAlignment.stateChanged.connect(self.setSegmentalAlignment)
         self.w.noiseFiltering.stateChanged.connect(self.setNoiseFiltering)
@@ -162,6 +163,8 @@ class main_w(object):
         self.w.yLabel.returnPressed.connect(lambda: self.getDispPars13())
         self.w.spcLabel.returnPressed.connect(lambda: self.getDispPars14())
         self.w.preProcessingSelect.currentIndexChanged.connect(lambda: self.setPreProcessingOptions())
+        self.w.tilt.currentIndexChanged.connect(lambda: self.setTilt())
+        self.w.symJ.currentIndexChanged.connect(lambda: self.setSymJ())
         self.w.windowFunction.currentIndexChanged.connect(lambda: self.getProcPars1())
         self.w.windowFunction_2.currentIndexChanged.connect(lambda: self.getProcPars2())
         self.w.phaseCorrection.currentIndexChanged.connect(lambda: self.getProcPars3())
@@ -1031,6 +1034,7 @@ class main_w(object):
         self.w.preProcessingSelect.setHidden(True)
         self.w.preProcessingWidget.setHidden(True)
         self.w.runPreProcessingButton.setHidden(True)
+        self.w.resetPreProcessingButton.setHidden(True)
         self.w.writeScriptButton.setHidden(True)
         self.plotSpc()
         # end hidePreProcessing
@@ -1530,6 +1534,11 @@ class main_w(object):
         self.cf.saveConfig()
         self.loadConfig()
         # end resetConfig
+
+    def resetDataPreProcessing(self):
+        self.nd.resetDataPreProcessing()
+        self.plotSpcPreProc()
+        # end dataPreProcessing
 
     def resetPlot(self):
         zoomChecked = self.w.keepZoom.isChecked()
@@ -2076,6 +2085,28 @@ class main_w(object):
 
         # end setSelectClass
 
+    def setSymJ(self):
+        curIdx = self.w.symJ.currentIndex()
+        if(curIdx == 0):
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.symj = True
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.tilt = True
+            self.w.tilt.setCurrentIndex(0)
+        else:
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.symj = False
+
+        # end setTilt
+
+    def setTilt(self):
+        curIdx = self.w.tilt.currentIndex()
+        if(curIdx == 0):
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.tilt = True
+        else:
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.tilt = False
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.symj = False
+            self.w.symJ.setCurrentIndex(1)
+
+        # end setTilt
+
     def setTitleFile(self):
         self.w.titleFile.setText(self.nd.nmrdat[self.nd.s][self.nd.e].title)
         # end setTitleFile
@@ -2137,6 +2168,7 @@ class main_w(object):
         self.w.preProcessingSelect.setHidden(False)
         self.w.preProcessingWidget.setHidden(False)
         self.w.runPreProcessingButton.setHidden(False)
+        self.w.resetPreProcessingButton.setHidden(False)
         self.w.writeScriptButton.setHidden(False)
         # self.setSelectClass()
         self.plotSpcPreProc()

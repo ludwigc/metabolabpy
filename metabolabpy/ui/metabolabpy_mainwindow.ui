@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1825</width>
-    <height>787</height>
+    <width>1451</width>
+    <height>785</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -980,6 +980,13 @@
                </size>
               </property>
              </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="resetPreProcessingButton">
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QPushButton" name="runPreProcessingButton">
@@ -3071,7 +3078,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1825</width>
+     <width>1451</width>
      <height>22</height>
     </rect>
    </property>

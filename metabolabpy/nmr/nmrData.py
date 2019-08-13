@@ -473,8 +473,10 @@ class NmrData:
     def procSpc2D(self):
         fid = np.copy(self.fid)
         self.spc = np.resize(self.spc, (self.proc.nPoints[0], self.proc.nPoints[1]))
+        self.spc *= 0
         if (self.proc.nPoints[0] > len(fid[0])):
             fid = np.resize(fid, (self.proc.nPoints[1], self.proc.nPoints[0]))
+            fid *= 0
             for k in range(len(self.fid)):
                 fid[k][:len(self.fid[k])] = self.fid[k][:]
 
