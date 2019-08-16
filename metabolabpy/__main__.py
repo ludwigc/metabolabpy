@@ -2402,7 +2402,7 @@ def main():
         progressBar.show()
         app.processEvents()
         maxTime = 0.5
-        maxRange = 1000
+        maxRange = 30
         timeInc = maxRange
         for i in range(maxRange):
             progressBar.setValue(1.0 * float(i + 1) / float(maxRange))
