@@ -48,15 +48,15 @@ class MplWidget(QWidget):
 
         self.canvas.axes = self.canvas.figure.add_subplot(111)
         self.setLayout(vertical_layout)
-        #home = NavigationToolbar.home
-        #
-        #def new_home(self, *args, **kwargs):
-        #    self.canvas.axes.autoscale()
-        #    self.canvas.draw()
-        #    self.canvas.toolbar.update()
-        #    home(self, *args, **kwargs)
-        #
-        #NavigationToolbar.home = new_home
+        home = NavigationToolbar.home
+
+        def new_home(self, *args, **kwargs):
+            self.canvas.axes.autoscale()
+            self.canvas.draw()
+            self.canvas.toolbar.update()
+            home(self, *args, **kwargs)
+
+        NavigationToolbar.home = new_home
         self.phCorr = phCorr.PhCorr()
         # end __init__
 
@@ -65,6 +65,8 @@ class MplWidget(QWidget):
 class main_w(object):
     def __init__(self):
         self.__version__ = '0.1.0'
+        self.zoomWasOn = False
+        self.panWasOn = False
         self.nd = nmrDataSet.NmrDataSet()
         self.phCorr = phCorr.PhCorr()
         # load ui; create w
@@ -2208,12 +2210,14 @@ class main_w(object):
         e = self.nd.e
         if (self.w.MplWidget.canvas.figure.canvas.toolbar._active == 'ZOOM'):
             try:
+                self.zoomWasOn = True
                 self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
             except:
                 pass
 
         if (self.w.MplWidget.canvas.figure.canvas.toolbar._active == 'PAN'):
             try:
+                self.w.panWasOn = True
                 self.w.MplWidget.canvas.figure.canvas.toolbar.pan()
             except:
                 pass
@@ -2226,17 +2230,26 @@ class main_w(object):
             cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease)
             self.phCorrActive = True
             self.showPhCorr()
-            self.phCorrPlotSpc()
             self.w.MplWidget.canvas.figure.canvas.toolbar.setEnabled(False)
+            self.phCorrPlotSpc()
         else:
             cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick)
             cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease)
             cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
             cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
             self.phCorrActive = False
+            self.w.MplWidget.canvas.figure.canvas.toolbar.setEnabled(True)
             self.showVersion()
             self.plotSpc()
-            self.w.MplWidget.canvas.figure.canvas.toolbar.setEnabled(True)
+            zOn = self.zoomWasOn
+            pOn = self.panWasOn
+            self.zoomWasOn = False
+            self.panWasOn = False
+            if(zOn ==  True):
+                self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
+
+            if(pOn ==  True):
+                self.w.MplWidget.canvas.figure.canvas.toolbar.pan()
 
         # end startStopPhCorr
 
@@ -2358,6 +2371,7 @@ class main_w(object):
             if (self.w.MplWidget.canvas.figure.canvas.toolbar._active == 'ZOOM'):
                 try:
                     self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
+                    self.zoomWasOn = True
                 except:
                     pass
 
@@ -2374,6 +2388,7 @@ class main_w(object):
                 # Disable zoom
                 self.zoom = False
                 self.showPhCorr()
+                self.zoomWasOn = False
 
         # end zoomPhCorr        
 
