@@ -3,9 +3,11 @@ import argparse
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtCore import QFile
 from PySide2.QtWidgets import *
+from PySide2 import QtWidgets
 from PySide2.QtGui import *
 from PySide2 import QtGui
 from PySide2 import QtCore
+from PySide2.QtCore import SIGNAL
 import matplotlib
 
 matplotlib.use('Qt5Agg')
@@ -46,15 +48,15 @@ class MplWidget(QWidget):
 
         self.canvas.axes = self.canvas.figure.add_subplot(111)
         self.setLayout(vertical_layout)
-        home = NavigationToolbar.home
-
-        def new_home(self, *args, **kwargs):
-            self.canvas.axes.autoscale()
-            self.canvas.draw()
-            self.canvas.toolbar.update()
-            home(self, *args, **kwargs)
-
-        NavigationToolbar.home = new_home
+        #home = NavigationToolbar.home
+        #
+        #def new_home(self, *args, **kwargs):
+        #    self.canvas.axes.autoscale()
+        #    self.canvas.draw()
+        #    self.canvas.toolbar.update()
+        #    home(self, *args, **kwargs)
+        #
+        #NavigationToolbar.home = new_home
         self.phCorr = phCorr.PhCorr()
         # end __init__
 
@@ -363,6 +365,16 @@ class main_w(object):
 
                     self.keepZoom = keepZoom
                     self.w.keepZoom.setChecked(keepZoom)
+                else:
+                    if (self.phCorrActive == False):
+                        if (self.w.autoPlot.isChecked()):
+                            self.plotSpc()
+                        elif (self.w.nmrSpectrum.currentIndex() == 0):
+                            self.plotSpc()
+
+                    else:
+                        self.phCorr.spc = self.nd.nmrdat[self.nd.s][self.nd.e].spc
+                        self.phCorrPlotSpc()
 
                 self.keepZoom = False
 
@@ -1270,7 +1282,7 @@ class main_w(object):
         if (self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1):
             self.w.MplWidget.canvas.axes.clear()
             if ((d.phRefDS > 0) & (d.phRefExp > 0) & (
-                    ((d.phRefDS - 1 == self.nd.s) & (d.phRefExp - 1 == self.nd.e)) == False)):
+                    ((d.phRefDS - 1 == self.nd.s) & (d.phRefExp - 1 == self.nd.e)) is False)):
                 self.w.MplWidget.canvas.axes.plot(self.nd.nmrdat[d.phRefDS - 1][d.phRefExp - 1].ppm1,
                                                   self.nd.nmrdat[d.phRefDS - 1][d.phRefExp - 1].spc[0].real,
                                                   color=refCol)
@@ -1283,9 +1295,14 @@ class main_w(object):
             self.w.MplWidget.canvas.axes.invert_xaxis()
             self.w.MplWidget.canvas.axes.set_xlim(xlim)
             self.w.MplWidget.canvas.axes.set_ylim(ylim)
-            self.w.MplWidget.canvas.toolbar.update()
-            self.w.MplWidget.canvas.draw()
 
+        self.setProcPars()
+        self.w.MplWidget.canvas.draw()
+        codeErr = io.StringIO()
+        sys.stderr = codeErr
+        self.w.MplWidget.canvas.figure()
+        sys.stderr = sys.__stderr__
+        #self.w.MplWidget.canvas.figure.canvas.toolbar._active()
         # end phCorrPlotSpc
 
     def phase1d(self, mat, ph0, ph1, piv):
@@ -1377,7 +1394,7 @@ class main_w(object):
                 self.w.MplWidget.canvas.axes.set_xlim(xlim)
                 self.w.MplWidget.canvas.axes.set_ylim(ylim)
 
-            self.w.MplWidget.canvas.toolbar.update()
+            #self.w.MplWidget.canvas.toolbar.update()
             self.w.MplWidget.canvas.draw()
             if (self.keepXZoom == True):
                 self.w.MplWidget.canvas.axes.set_xlim(xlim)
@@ -1412,7 +1429,7 @@ class main_w(object):
                     self.keepXZoom = False
 
 
-            self.w.MplWidget.canvas.toolbar.update()
+            #self.w.MplWidget.canvas.toolbar.update()
             self.w.MplWidget.canvas.draw()
 
         self.keepZoom = False
@@ -1480,7 +1497,7 @@ class main_w(object):
             self.w.MplWidget.canvas.axes.set_xlim(xlim)
             self.w.MplWidget.canvas.axes.set_ylim(ylim)
 
-        self.w.MplWidget.canvas.toolbar.update()
+        #self.w.MplWidget.canvas.toolbar.update()
         self.w.MplWidget.canvas.draw()
 
     def previousCommand(self):
@@ -2260,7 +2277,7 @@ class main_w(object):
                 if (newTop > top): top = newTop
 
             self.w.MplWidget.canvas.axes.set_ylim(bottom, top)
-            self.w.MplWidget.canvas.toolbar.update()
+            #self.w.MplWidget.canvas.toolbar.update()
             self.w.MplWidget.canvas.draw()
 
         # end verticalAutoScale
@@ -2374,6 +2391,7 @@ def main():
         sys.argv.pop()
 
     args = vars(ap.parse_args())
+    QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
     app = QApplication(['pyMetaboLab'])  # sys.argv)
     icon = QIcon()
     pName = os.path.join(os.path.dirname(__file__), "icon")
