@@ -1307,6 +1307,8 @@ class main_w(object):
 
         self.setProcPars()
         self.w.MplWidget.canvas.draw()
+        # This is a messy solution to force the matplotlib widget to update the plot by introducing an error (calling
+        # a figure object and redirecting the error output
         codeErr = io.StringIO()
         sys.stderr = codeErr
         self.w.MplWidget.canvas.figure()
@@ -1981,6 +1983,7 @@ class main_w(object):
         self.w.console.selectAll()
         self.w.console.setFontPointSize(fontSize)
         self.w.console.setTextCursor(cursor)
+        self.w.console.setCurrentFont(f)
         # self.w.console.setFont(f)
         self.w.pulseProgram.setFont(f)
         self.w.cmdLine.setFont(f)
