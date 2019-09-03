@@ -335,6 +335,7 @@ class main_w(object):
         # end baseline1d
 
     def changeDataSetExp(self):
+        cidx = self.w.nmrSpectrum.currentIndex()
         if (len(self.nd.nmrdat) > 0):
             if (len(self.nd.nmrdat[self.nd.s]) > 0):
                 self.keepZoom = self.w.keepZoom.isChecked()
@@ -407,6 +408,9 @@ class main_w(object):
             self.w.setBox.setValue(0)
             self.w.setBox.valueChanged.connect(lambda: self.changeDataSetExp())
             self.w.expBox.valueChanged.connect(lambda: self.changeDataSetExp())
+
+        if (self.w.autoPlot.isChecked() is False):
+            self.w.nmrSpectrum.setCurrentIndex(cidx)
 
         # end changeDataSetExp
 
@@ -609,7 +613,9 @@ class main_w(object):
         self.w.console.setTextColor('Black')
         codeOut.close()
         codeErr.close()
-        self.updateGUI()
+        if(len(self.nd.nmrdat[0])>0):
+            self.updateGUI()
+
         # end execScript
 
     def fillPreProcessingNumbers(self):
@@ -1580,9 +1586,52 @@ class main_w(object):
             dataPath = QFileDialog.getExistingDirectory()
 
         if (len(dataPath) > 0):
+            if(str(dataSets) == 'all'):
+                folders = []
+                for r, d, f in os.walk(dataPath):
+                    for folder in d:
+                        if(os.path.isfile(os.path.join(r, folder, 'fid'))):
+                            if(folder != '99999'):
+                                folders.append(folder.zfill(5))
+
+                        if(os.path.isfile(os.path.join(r, folder, 'ser'))):
+                            folders.append(folder.zfill(5))
+
+                folders.sort()
+                dataSets = []
+                for k in range(len(folders)):
+                    dataSets.append(int(folders[k]))
+
+            if(str(dataSets) == 'all1d'):
+                folders = []
+                for r, d, f in os.walk(dataPath):
+                    for folder in d:
+                        if(os.path.isfile(os.path.join(r, folder, 'fid'))):
+                            if(folder != '99999'):
+                                folders.append(folder.zfill(5))
+
+                folders.sort()
+                dataSets = []
+                for k in range(len(folders)):
+                    dataSets.append(int(folders[k]))
+
+            if(str(dataSets) == 'all2d'):
+                folders = []
+                for r, d, f in os.walk(dataPath):
+                    for folder in d:
+                        if(os.path.isfile(os.path.join(r, folder, 'ser'))):
+                            folders.append(folder.zfill(5))
+
+                folders.zfill(5)
+                folders.sort()
+                dataSets = []
+                for k in range(len(folders)):
+                    dataSets.append(int(folders[k]))
+
             self.nd.readSpcs(dataPath, dataSets)
 
         # end readSpcs
+
 
     def resetConfig(self):
         self.cf = nmrConfig.NmrConfig()
