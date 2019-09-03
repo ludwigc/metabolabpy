@@ -1,7 +1,7 @@
 msg = self.clear()
-dataPath = 'Replace with directory containing Bruker data'		# select directory containing bruker data
+dataPath = 'Replace with directory containing Bruker data'		# select directory containing bruker data, interactive for file dialog
 dataSets = []						# add comma separated list of experiment numbers (e.g. [1, 2, 3])
-self.nd.readSpcs(dataPath,dataSets)				# reading Bruker spectra
+self.readSpcs(dataPath,dataSets)				# reading Bruker spectra
 msg = self.nd.setZeroFill([131072])				# zero fill to 131072 data points
 msg = self.nd.setLb([0.3])					# 0.3 Hz line broadening
 msg = self.nd.setWindowType([1])				# exponential window function

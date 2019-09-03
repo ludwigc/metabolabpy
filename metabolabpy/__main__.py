@@ -1575,6 +1575,15 @@ class main_w(object):
 
         # end readBrukerSpc
 
+    def readSpcs(self, dataPath, dataSets):
+        if(dataPath == 'interactive'):
+            dataPath = QFileDialog.getExistingDirectory()
+
+        if (len(dataPath) > 0):
+            self.nd.readSpcs(dataPath, dataSets)
+
+        # end readSpcs
+
     def resetConfig(self):
         self.cf = nmrConfig.NmrConfig()
         self.cf.saveConfig()

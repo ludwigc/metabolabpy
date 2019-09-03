@@ -1,7 +1,7 @@
 msg = self.clear()
-dataPath = 'Replace with directory containing Bruker data'		# select directory containing bruker data
+dataPath = 'Replace with directory containing Bruker data'		# select directory containing bruker data, interactive for file dialog
 dataSets = []						# add comma separated list of experiment numbers (e.g. [1, 2, 3])
-self.nd.readSpcs(dataPath,dataSets)				# reading Bruker spectra
+self.readSpcs(dataPath,dataSets)				# reading Bruker spectra
 for k in range(len(dataSets)):					#
     self.nd.nmrdat[0][k].disp.yLabel = '1H'			# setting axis label
     self.nd.nmrdat[0][k].disp.axisType2 = 'Hz'			# setting axis units for indirect dimension to [Hz]
