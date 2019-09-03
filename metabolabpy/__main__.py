@@ -1622,7 +1622,6 @@ class main_w(object):
                         if(os.path.isfile(os.path.join(r, folder, 'ser'))):
                             folders.append(folder.zfill(5))
 
-                folders.zfill(5)
                 folders.sort()
                 dataSets = []
                 for k in range(len(folders)):
