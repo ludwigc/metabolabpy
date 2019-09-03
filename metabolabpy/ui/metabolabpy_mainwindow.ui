@@ -3017,10 +3017,36 @@
        </attribute>
        <layout class="QGridLayout" name="gridLayout_11">
         <item row="0" column="0">
-         <widget class="QTextEdit" name="script"/>
+         <widget class="QTextEdit" name="script">
+          <property name="font">
+           <font>
+            <family>.SF NS Text</family>
+           </font>
+          </property>
+         </widget>
         </item>
         <item row="1" column="0">
          <layout class="QHBoxLayout" name="horizontalLayout_28">
+          <item>
+           <widget class="QComboBox" name="exampleScripts">
+            <property name="minimumSize">
+             <size>
+              <width>250</width>
+              <height>0</height>
+             </size>
+            </property>
+            <item>
+             <property name="text">
+              <string>1D Example Script</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>2D J-res Example Script</string>
+             </property>
+            </item>
+           </widget>
+          </item>
           <item>
            <spacer name="horizontalSpacer_7">
             <property name="orientation">
@@ -3105,6 +3131,11 @@
     <addaction name="actionSelect_All"/>
     <addaction name="actionClear_All"/>
     <addaction name="actionVertical_AutoScale"/>
+    <addaction name="separator"/>
+    <addaction name="actionScale_2D_Spectrum_Up"/>
+    <addaction name="actionScale_2D_Spectrum_Down"/>
+    <addaction name="actionScale_all_2D_Spectra_Up"/>
+    <addaction name="actionScale_all_2D_Spectra_Down"/>
    </widget>
    <widget class="QMenu" name="menuData">
     <property name="title">
@@ -3539,6 +3570,41 @@
    </property>
    <property name="shortcut">
     <string>Meta+X</string>
+   </property>
+  </action>
+  <action name="actionScale_2D_Spectrum_Up">
+   <property name="text">
+    <string>Scale 2D Spectrum Up</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl++</string>
+   </property>
+  </action>
+  <action name="actionScale_2D_Spectrum_Down">
+   <property name="text">
+    <string>Scale 2D Spectrum Down</string>
+   </property>
+   <property name="toolTip">
+    <string>Scale 2D Spectrum Down</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+-</string>
+   </property>
+  </action>
+  <action name="actionScale_all_2D_Spectra_Up">
+   <property name="text">
+    <string>Scale all 2D Spectra Up</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Num++</string>
+   </property>
+  </action>
+  <action name="actionScale_all_2D_Spectra_Down">
+   <property name="text">
+    <string>Scale all 2D Spectra Down</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Num+-</string>
    </property>
   </action>
  </widget>

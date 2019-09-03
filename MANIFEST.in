@@ -4,3 +4,4 @@ include requirements.txt
 include metabolabpy/ui/*
 include metabolabpy/icon/*
 include metabolabpy/png/*
+include metabolabpy/exampleScripts/*

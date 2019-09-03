@@ -136,8 +136,13 @@ class main_w(object):
         self.w.actionChange_to_previous_Exp.triggered.connect(lambda: self.changeToPreviousExp())
         self.w.actionChange_to_next_DS.triggered.connect(lambda: self.changeToNextDS())
         self.w.actionChange_to_previous_DS.triggered.connect(lambda: self.changeToPreviousDS())
+        self.w.exampleScripts.view().pressed.connect(self.loadExampleScript)
         self.w.actionAutomatic_Phase_Correction.triggered.connect(lambda: self.autophase1d())
         self.w.actionAutomatic_Baseline_Correction.triggered.connect(lambda: self.autobaseline1d())
+        self.w.actionScale_2D_Spectrum_Up.triggered.connect(self.scale2DSpectrumUp)
+        self.w.actionScale_2D_Spectrum_Down.triggered.connect(self.scale2DSpectrumDown)
+        self.w.actionScale_all_2D_Spectra_Up.triggered.connect(self.scaleAll2DSpectraUp)
+        self.w.actionScale_all_2D_Spectra_Down.triggered.connect(self.scaleAll2DSpectraDown)
         self.w.actionSelect_All.triggered.connect(lambda: self.selectPlotAll())
         self.w.actionClear_All.triggered.connect(lambda: self.selectPlotClear())
         self.w.actionConsole.triggered.connect(lambda: self.showConsole())
@@ -1078,6 +1083,20 @@ class main_w(object):
         self.w.fontSize.setValue(self.cf.fontSize)
         # end loadConfig
 
+    def loadExampleScript(self):
+        idx = self.w.exampleScripts.view().selectedIndexes()[0].row()
+        self.w.exampleScripts.setCurrentIndex(idx)
+        if(idx == 0):
+            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "example1DScript.py")
+
+        if (idx == 1):
+            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "example2DJresScript.py")
+
+        f = open(fName,'r')
+        scriptText = f.read()
+        self.w.script.setText(scriptText)
+        # end loadExampleScript
+
     def loadFile(self, fileName):
         self.nd.load(fileName)
         self.w.script.insertHtml(self.nd.script)
@@ -1615,6 +1634,42 @@ class main_w(object):
             f.write(scriptText)
 
         # end openScript
+
+    def scale2DSpectrumUp(self):
+        self.nd.nmrdat[self.nd.s][self.nd.e].disp.minLevel /= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].disp.maxLevel /= 1.1
+        self.setDispPars()
+        self.plotSpc()
+        # end scale2DSpectrumUp
+
+    def scale2DSpectrumDown(self):
+        self.nd.nmrdat[self.nd.s][self.nd.e].disp.minLevel *= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].disp.maxLevel *= 1.1
+        self.setDispPars()
+        self.plotSpc()
+        # end scale2DSpectrumDown
+
+    def scaleAll2DSpectraUp(self):
+        self.nd.nmrdat[self.nd.s][self.nd.e].disp.minLevel /= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].disp.maxLevel /= 1.1
+        for k in range(len(self.nd.nmrdat[self.nd.s])):
+            self.nd.nmrdat[self.nd.s][k].disp.minLevel = self.nd.nmrdat[self.nd.s][self.nd.e].disp.minLevel
+            self.nd.nmrdat[self.nd.s][k].disp.maxLevel = self.nd.nmrdat[self.nd.s][self.nd.e].disp.maxLevel
+
+        self.setDispPars()
+        self.plotSpc()
+        # end scaleAll2DSpectraUp
+
+    def scaleAll2DSpectraDown(self):
+        self.nd.nmrdat[self.nd.s][self.nd.e].disp.minLevel *= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].disp.maxLevel *= 1.1
+        for k in range(len(self.nd.nmrdat[self.nd.s])):
+            self.nd.nmrdat[self.nd.s][k].disp.minLevel = self.nd.nmrdat[self.nd.s][self.nd.e].disp.minLevel
+            self.nd.nmrdat[self.nd.s][k].disp.maxLevel = self.nd.nmrdat[self.nd.s][self.nd.e].disp.maxLevel
+
+        self.setDispPars()
+        self.plotSpc()
+        # end scaleAll2DSpectraDown
 
     def scriptEditor(self):
         self.w.nmrSpectrum.setCurrentIndex(6)
