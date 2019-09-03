@@ -239,6 +239,7 @@ class main_w(object):
         self.w.iSpc_p5.returnPressed.connect(lambda: self.get_iSpc_p5())
         self.w.iSpc_p6.returnPressed.connect(lambda: self.get_iSpc_p6())
         self.setFontSize()
+        self.w.MplWidget.setFocus()
         # end __init__
 
     def activateCommandLine(self):
@@ -1264,6 +1265,7 @@ class main_w(object):
             scriptText = f.read()
             self.w.script.setText(scriptText)
 
+        self.w.nmrSpectrum.setCurrentIndex(6)
         # end openScript
 
     def phCorrPlotSpc(self):
@@ -1309,7 +1311,6 @@ class main_w(object):
         sys.stderr = codeErr
         self.w.MplWidget.canvas.figure()
         sys.stderr = sys.__stderr__
-        #self.w.MplWidget.canvas.figure.canvas.toolbar._active()
         # end phCorrPlotSpc
 
     def phase1d(self, mat, ph0, ph1, piv):
