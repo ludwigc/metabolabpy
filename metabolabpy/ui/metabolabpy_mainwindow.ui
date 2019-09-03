@@ -3051,7 +3051,7 @@
           <item>
            <widget class="QPushButton" name="executeScript">
             <property name="text">
-             <string>Execute Script</string>
+             <string>eXecute Script</string>
             </property>
            </widget>
           </item>
@@ -3164,6 +3164,10 @@
     <addaction name="actionPrevious_command"/>
     <addaction name="actionNext_command"/>
     <addaction name="actionActivate_Command_Line"/>
+    <addaction name="separator"/>
+    <addaction name="actionOpen_Script"/>
+    <addaction name="actionSave_Script"/>
+    <addaction name="actionExecute_Script"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlot"/>
@@ -3511,6 +3515,30 @@
    </property>
    <property name="shortcut">
     <string>Alt+V</string>
+   </property>
+  </action>
+  <action name="actionOpen_Script">
+   <property name="text">
+    <string>Open Script</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+O</string>
+   </property>
+  </action>
+  <action name="actionSave_Script">
+   <property name="text">
+    <string>Save Script</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+S</string>
+   </property>
+  </action>
+  <action name="actionExecute_Script">
+   <property name="text">
+    <string>Execute Script</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+X</string>
    </property>
   </action>
  </widget>

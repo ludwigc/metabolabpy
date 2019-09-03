@@ -64,7 +64,7 @@ class MplWidget(QWidget):
 # ------------------ MplWidget ------------------
 class main_w(object):
     def __init__(self):
-        self.__version__ = '0.1.0'
+        self.__version__ = '0.2.0'
         self.zoomWasOn = False
         self.panWasOn = False
         self.nd = nmrDataSet.NmrDataSet()
@@ -198,6 +198,11 @@ class main_w(object):
         self.w.phRefColour.currentIndexChanged.connect(lambda: self.getDispPars15())
         self.w.fourierTransformButton.clicked.connect(self.ft)
         self.w.executeScript.clicked.connect(self.execScript)
+        self.w.openScript.clicked.connect(self.openScript)
+        self.w.saveScript.clicked.connect(self.saveScript)
+        self.w.actionOpen_Script.triggered.connect(self.openScript)
+        self.w.actionSave_Script.triggered.connect(self.saveScript)
+        self.w.actionExecute_Script.triggered.connect(self.execScript)
         # Quit Button
         self.w.quitButton.clicked.connect(self.quit_app)
         self.w.saveButton.clicked.connect(self.saveButton)
@@ -205,7 +210,6 @@ class main_w(object):
         self.w.exportPathSelectButton.clicked.connect(lambda: self.setExportTable())
         self.w.actionQuit.triggered.connect(lambda: self.quit_app())
         self.w.dispPlotButton.clicked.connect(self.plotSpcDisp)
-        self.w.openScript.clicked.connect(self.openScript)
         self.w.nmrSpectrum.currentChanged.connect(lambda: self.tabIndexChanged())
         self.showVersion()
         self.keepZoom = False
@@ -234,6 +238,7 @@ class main_w(object):
         self.w.iSpc_p4.returnPressed.connect(lambda: self.get_iSpc_p4())
         self.w.iSpc_p5.returnPressed.connect(lambda: self.get_iSpc_p5())
         self.w.iSpc_p6.returnPressed.connect(lambda: self.get_iSpc_p6())
+        self.setFontSize()
         # end __init__
 
     def activateCommandLine(self):
@@ -1251,7 +1256,7 @@ class main_w(object):
             fName = ""
 
         if (len(fName) == 0):
-            fName = QFileDialog.getOpenFileName()
+            fName = QFileDialog.getOpenFileName(None, 'Open Script File', '', 'Python files (*.py)')
             fName = fName[0]
 
         if (len(fName) > 0):
@@ -1592,6 +1597,21 @@ class main_w(object):
     def saveMat(self):
         scipy.io.savemat('/Users/ludwigc/metabolabpy.mat', {'spc': self.nd.nmrdat[0][0].spc, 'fid': self.nd.nmrdat[0][0].fid})
         # end saveMat
+
+    def saveScript(self, fName=""):
+        if (fName == False):
+            fName = ""
+
+        if (len(fName) == 0):
+            fName = QFileDialog.getSaveFileName(None, 'Save Script File', '', 'Python files (*.py)')
+            fName = fName[0]
+
+        if (len(fName) > 0):
+            scriptText = self.w.script.toPlainText()
+            f = open(fName, 'w')
+            f.write(scriptText)
+
+        # end openScript
 
     def scriptEditor(self):
         self.w.nmrSpectrum.setCurrentIndex(6)
@@ -1954,6 +1974,7 @@ class main_w(object):
         self.w.script.selectAll()
         self.w.script.setFontPointSize(fontSize)
         self.w.script.setTextCursor(cursor)
+        self.w.script.setCurrentFont(f)
         # self.w.script.setFont(f)
         cursor = self.w.console.textCursor()
         self.w.console.selectAll()
