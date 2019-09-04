@@ -1098,6 +1098,9 @@ class main_w(object):
         if (idx == 1):
             fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "example2DJresScript.py")
 
+        if (idx == 2):
+            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "examplePreprocessingScript.py")
+
         f = open(fName,'r')
         scriptText = f.read()
         self.w.script.setText(scriptText)

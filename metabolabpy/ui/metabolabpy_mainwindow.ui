@@ -3031,7 +3031,7 @@
            <widget class="QComboBox" name="exampleScripts">
             <property name="minimumSize">
              <size>
-              <width>250</width>
+              <width>350</width>
               <height>0</height>
              </size>
             </property>
@@ -3043,6 +3043,11 @@
             <item>
              <property name="text">
               <string>2D J-res Example Script</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1D Data Pre-Processing Example Script</string>
              </property>
             </item>
            </widget>
