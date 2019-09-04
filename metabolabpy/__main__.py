@@ -2405,7 +2405,7 @@ class main_w(object):
         e = self.nd.e
         self.w.expBox.setValue(e + 1)
         self.w.setBox.setValue(s + 1)
-        self.plotSpc()
+        #self.plotSpc()
         self.setDispPars()
         self.setProcPars()
         self.setAcqPars()
