@@ -458,11 +458,27 @@ class NmrDataSet:
         nd1.readSpc()
         self.nmrdat[self.s].append(nd1)
         # end readSpc
-        
+
     def readSpcs(self, dataPath, dataExp):
         for k in range(len(dataExp)):
             self.readSpc(dataPath, str(dataExp[k]))
-    
+
+    # end readSpcs
+
+    def readNMRPipeSpc(self, dataSetName, dataSetNumber, procDataName = 'test.dat'):
+        self.e            = len(self.nmrdat[self.s])
+        nd1               = nd.NmrData()
+        nd1.dataSetName   = dataSetName
+        nd1.dataSetNumber = dataSetNumber
+        nd1.readSpc()
+        nd1.readPipe2D(dataSetName + os.sep + dataSetNumber + '.proc', procDataName)
+        self.nmrdat[self.s].append(nd1)
+        # end readSpc
+
+    def readNMRPipeSpcs(self, dataPath, dataExp, procDataName = 'test.dat'):
+        for k in range(len(dataExp)):
+            self.readNMRPipeSpc(dataPath, str(dataExp[k]), procDataName)
+
     # end readSpcs
 
     def resetDataPreProcessing(self):

@@ -1101,6 +1101,9 @@ class main_w(object):
         if (idx == 2):
             fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "examplePreprocessingScript.py")
 
+        if (idx == 3):
+            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "example2DNMRPipeScript.py")
+
         f = open(fName,'r')
         scriptText = f.read()
         self.w.script.setText(scriptText)
@@ -1584,7 +1587,29 @@ class main_w(object):
 
         # end readBrukerSpc
 
+    def readNMRPipeSpcs(self, dataPath, dataSets, procDataName = 'test.dat'):
+        zFill = 25
+        if(dataPath == 'interactive'):
+            dataPath = QFileDialog.getExistingDirectory()
+
+        if (len(dataPath) > 0):
+            if(str(dataSets) == 'all'):
+                folders = []
+                for r, d, f in os.walk(dataPath):
+                    for folder in d:
+                        if(os.path.isfile(os.path.join(r, folder, procDataName))):
+                            folders.append(folder.zfill(zFill).rstrip('.proc'))
+
+                folders.sort()
+                dataSets = []
+                for k in range(len(folders)):
+                    dataSets.append(int(folders[k]))
+
+            self.nd.readNMRPipeSpcs(dataPath, dataSets, procDataName)
+        # end readNMRPipeSpcs
+
     def readSpcs(self, dataPath, dataSets):
+        zFill = 25
         if(dataPath == 'interactive'):
             dataPath = QFileDialog.getExistingDirectory()
 
@@ -1595,10 +1620,10 @@ class main_w(object):
                     for folder in d:
                         if(os.path.isfile(os.path.join(r, folder, 'fid'))):
                             if(folder != '99999'):
-                                folders.append(folder.zfill(5))
+                                folders.append(folder.zfill(zFill))
 
                         if(os.path.isfile(os.path.join(r, folder, 'ser'))):
-                            folders.append(folder.zfill(5))
+                            folders.append(folder.zfill(zFill))
 
                 folders.sort()
                 dataSets = []
@@ -1611,7 +1636,7 @@ class main_w(object):
                     for folder in d:
                         if(os.path.isfile(os.path.join(r, folder, 'fid'))):
                             if(folder != '99999'):
-                                folders.append(folder.zfill(5))
+                                folders.append(folder.zfill(zFill))
 
                 folders.sort()
                 dataSets = []
@@ -1623,7 +1648,7 @@ class main_w(object):
                 for r, d, f in os.walk(dataPath):
                     for folder in d:
                         if(os.path.isfile(os.path.join(r, folder, 'ser'))):
-                            folders.append(folder.zfill(5))
+                            folders.append(folder.zfill(zFill))
 
                 folders.sort()
                 dataSets = []
@@ -2362,34 +2387,35 @@ class main_w(object):
             except:
                 pass
 
-        if (self.phCorrActive == False):
-            self.phCorr.spc = self.nd.nmrdat[s][e].spc
-            self.phCorr.spcMax = max(max(abs(self.phCorr.spc)))
-            self.phCorr.pivPoints = self.nd.nmrdat[s][e].ppm2points(self.phCorr.pivot, 0)
-            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick)
-            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease)
-            self.phCorrActive = True
-            self.showPhCorr()
-            self.w.MplWidget.canvas.figure.canvas.toolbar.setEnabled(False)
-            self.phCorrPlotSpc()
-        else:
-            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick)
-            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease)
-            cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
-            cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
-            self.phCorrActive = False
-            self.w.MplWidget.canvas.figure.canvas.toolbar.setEnabled(True)
-            self.showVersion()
-            self.plotSpc()
-            zOn = self.zoomWasOn
-            pOn = self.panWasOn
-            self.zoomWasOn = False
-            self.panWasOn = False
-            if(zOn ==  True):
-                self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
+        if(self.nd.nmrdat[s][e].dim == 1):
+            if (self.phCorrActive == False):
+                self.phCorr.spc = self.nd.nmrdat[s][e].spc
+                self.phCorr.spcMax = max(max(abs(self.phCorr.spc)))
+                self.phCorr.pivPoints = self.nd.nmrdat[s][e].ppm2points(self.phCorr.pivot, 0)
+                cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick)
+                cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease)
+                self.phCorrActive = True
+                self.showPhCorr()
+                self.w.MplWidget.canvas.figure.canvas.toolbar.setEnabled(False)
+                self.phCorrPlotSpc()
+            else:
+                cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick)
+                cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease)
+                cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
+                cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
+                self.phCorrActive = False
+                self.w.MplWidget.canvas.figure.canvas.toolbar.setEnabled(True)
+                self.showVersion()
+                self.plotSpc()
+                zOn = self.zoomWasOn
+                pOn = self.panWasOn
+                self.zoomWasOn = False
+                self.panWasOn = False
+                if(zOn ==  True):
+                    self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
 
-            if(pOn ==  True):
-                self.w.MplWidget.canvas.figure.canvas.toolbar.pan()
+                if(pOn ==  True):
+                    self.w.MplWidget.canvas.figure.canvas.toolbar.pan()
 
         # end startStopPhCorr
 

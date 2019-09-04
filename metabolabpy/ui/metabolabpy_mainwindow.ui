@@ -3050,6 +3050,11 @@
               <string>1D Data Pre-Processing Example Script</string>
              </property>
             </item>
+            <item>
+             <property name="text">
+              <string>2D NMRPipe HSQC Example Script</string>
+             </property>
+            </item>
            </widget>
           </item>
           <item>
