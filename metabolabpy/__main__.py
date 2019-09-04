@@ -3,9 +3,11 @@ import argparse
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtCore import QFile
 from PySide2.QtWidgets import *
+from PySide2 import QtWidgets
 from PySide2.QtGui import *
 from PySide2 import QtGui
 from PySide2 import QtCore
+from PySide2.QtCore import SIGNAL
 import matplotlib
 
 matplotlib.use('Qt5Agg')
@@ -62,7 +64,9 @@ class MplWidget(QWidget):
 # ------------------ MplWidget ------------------
 class main_w(object):
     def __init__(self):
-        self.__version__ = '0.1.0'
+        self.__version__ = '0.2.0'
+        self.zoomWasOn = False
+        self.panWasOn = False
         self.nd = nmrDataSet.NmrDataSet()
         self.phCorr = phCorr.PhCorr()
         # load ui; create w
@@ -132,8 +136,13 @@ class main_w(object):
         self.w.actionChange_to_previous_Exp.triggered.connect(lambda: self.changeToPreviousExp())
         self.w.actionChange_to_next_DS.triggered.connect(lambda: self.changeToNextDS())
         self.w.actionChange_to_previous_DS.triggered.connect(lambda: self.changeToPreviousDS())
+        self.w.exampleScripts.view().pressed.connect(self.loadExampleScript)
         self.w.actionAutomatic_Phase_Correction.triggered.connect(lambda: self.autophase1d())
         self.w.actionAutomatic_Baseline_Correction.triggered.connect(lambda: self.autobaseline1d())
+        self.w.actionScale_2D_Spectrum_Up.triggered.connect(self.scale2DSpectrumUp)
+        self.w.actionScale_2D_Spectrum_Down.triggered.connect(self.scale2DSpectrumDown)
+        self.w.actionScale_all_2D_Spectra_Up.triggered.connect(self.scaleAll2DSpectraUp)
+        self.w.actionScale_all_2D_Spectra_Down.triggered.connect(self.scaleAll2DSpectraDown)
         self.w.actionSelect_All.triggered.connect(lambda: self.selectPlotAll())
         self.w.actionClear_All.triggered.connect(lambda: self.selectPlotClear())
         self.w.actionConsole.triggered.connect(lambda: self.showConsole())
@@ -194,6 +203,11 @@ class main_w(object):
         self.w.phRefColour.currentIndexChanged.connect(lambda: self.getDispPars15())
         self.w.fourierTransformButton.clicked.connect(self.ft)
         self.w.executeScript.clicked.connect(self.execScript)
+        self.w.openScript.clicked.connect(self.openScript)
+        self.w.saveScript.clicked.connect(self.saveScript)
+        self.w.actionOpen_Script.triggered.connect(self.openScript)
+        self.w.actionSave_Script.triggered.connect(self.saveScript)
+        self.w.actionExecute_Script.triggered.connect(self.execScript)
         # Quit Button
         self.w.quitButton.clicked.connect(self.quit_app)
         self.w.saveButton.clicked.connect(self.saveButton)
@@ -201,7 +215,6 @@ class main_w(object):
         self.w.exportPathSelectButton.clicked.connect(lambda: self.setExportTable())
         self.w.actionQuit.triggered.connect(lambda: self.quit_app())
         self.w.dispPlotButton.clicked.connect(self.plotSpcDisp)
-        self.w.openScript.clicked.connect(self.openScript)
         self.w.nmrSpectrum.currentChanged.connect(lambda: self.tabIndexChanged())
         self.showVersion()
         self.keepZoom = False
@@ -230,6 +243,8 @@ class main_w(object):
         self.w.iSpc_p4.returnPressed.connect(lambda: self.get_iSpc_p4())
         self.w.iSpc_p5.returnPressed.connect(lambda: self.get_iSpc_p5())
         self.w.iSpc_p6.returnPressed.connect(lambda: self.get_iSpc_p6())
+        self.setFontSize()
+        self.w.MplWidget.setFocus()
         # end __init__
 
     def activateCommandLine(self):
@@ -320,6 +335,7 @@ class main_w(object):
         # end baseline1d
 
     def changeDataSetExp(self):
+        cidx = self.w.nmrSpectrum.currentIndex()
         if (len(self.nd.nmrdat) > 0):
             if (len(self.nd.nmrdat[self.nd.s]) > 0):
                 self.keepZoom = self.w.keepZoom.isChecked()
@@ -363,6 +379,16 @@ class main_w(object):
 
                     self.keepZoom = keepZoom
                     self.w.keepZoom.setChecked(keepZoom)
+                else:
+                    if (self.phCorrActive == False):
+                        if (self.w.autoPlot.isChecked()):
+                            self.plotSpc()
+                        elif (self.w.nmrSpectrum.currentIndex() == 0):
+                            self.plotSpc()
+
+                    else:
+                        self.phCorr.spc = self.nd.nmrdat[self.nd.s][self.nd.e].spc
+                        self.phCorrPlotSpc()
 
                 self.keepZoom = False
 
@@ -382,6 +408,9 @@ class main_w(object):
             self.w.setBox.setValue(0)
             self.w.setBox.valueChanged.connect(lambda: self.changeDataSetExp())
             self.w.expBox.valueChanged.connect(lambda: self.changeDataSetExp())
+
+        if (self.w.autoPlot.isChecked() is False):
+            self.w.nmrSpectrum.setCurrentIndex(cidx)
 
         # end changeDataSetExp
 
@@ -584,7 +613,9 @@ class main_w(object):
         self.w.console.setTextColor('Black')
         codeOut.close()
         codeErr.close()
-        self.updateGUI()
+        if(len(self.nd.nmrdat[0])>0):
+            self.updateGUI()
+
         # end execScript
 
     def fillPreProcessingNumbers(self):
@@ -1058,6 +1089,23 @@ class main_w(object):
         self.w.fontSize.setValue(self.cf.fontSize)
         # end loadConfig
 
+    def loadExampleScript(self):
+        idx = self.w.exampleScripts.view().selectedIndexes()[0].row()
+        self.w.exampleScripts.setCurrentIndex(idx)
+        if(idx == 0):
+            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "example1DScript.py")
+
+        if (idx == 1):
+            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "example2DJresScript.py")
+
+        if (idx == 2):
+            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "examplePreprocessingScript.py")
+
+        f = open(fName,'r')
+        scriptText = f.read()
+        self.w.script.setText(scriptText)
+        # end loadExampleScript
+
     def loadFile(self, fileName):
         self.nd.load(fileName)
         self.w.script.insertHtml(self.nd.script)
@@ -1237,7 +1285,7 @@ class main_w(object):
             fName = ""
 
         if (len(fName) == 0):
-            fName = QFileDialog.getOpenFileName()
+            fName = QFileDialog.getOpenFileName(None, 'Open Script File', '', 'Python files (*.py)')
             fName = fName[0]
 
         if (len(fName) > 0):
@@ -1245,6 +1293,7 @@ class main_w(object):
             scriptText = f.read()
             self.w.script.setText(scriptText)
 
+        self.w.nmrSpectrum.setCurrentIndex(6)
         # end openScript
 
     def phCorrPlotSpc(self):
@@ -1270,7 +1319,7 @@ class main_w(object):
         if (self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1):
             self.w.MplWidget.canvas.axes.clear()
             if ((d.phRefDS > 0) & (d.phRefExp > 0) & (
-                    ((d.phRefDS - 1 == self.nd.s) & (d.phRefExp - 1 == self.nd.e)) == False)):
+                    ((d.phRefDS - 1 == self.nd.s) & (d.phRefExp - 1 == self.nd.e)) is False)):
                 self.w.MplWidget.canvas.axes.plot(self.nd.nmrdat[d.phRefDS - 1][d.phRefExp - 1].ppm1,
                                                   self.nd.nmrdat[d.phRefDS - 1][d.phRefExp - 1].spc[0].real,
                                                   color=refCol)
@@ -1283,9 +1332,15 @@ class main_w(object):
             self.w.MplWidget.canvas.axes.invert_xaxis()
             self.w.MplWidget.canvas.axes.set_xlim(xlim)
             self.w.MplWidget.canvas.axes.set_ylim(ylim)
-            self.w.MplWidget.canvas.toolbar.update()
-            self.w.MplWidget.canvas.draw()
 
+        self.setProcPars()
+        self.w.MplWidget.canvas.draw()
+        # This is a messy solution to force the matplotlib widget to update the plot by introducing an error (calling
+        # a figure object and redirecting the error output
+        codeErr = io.StringIO()
+        sys.stderr = codeErr
+        self.w.MplWidget.canvas.figure()
+        sys.stderr = sys.__stderr__
         # end phCorrPlotSpc
 
     def phase1d(self, mat, ph0, ph1, piv):
@@ -1377,7 +1432,7 @@ class main_w(object):
                 self.w.MplWidget.canvas.axes.set_xlim(xlim)
                 self.w.MplWidget.canvas.axes.set_ylim(ylim)
 
-            self.w.MplWidget.canvas.toolbar.update()
+            #self.w.MplWidget.canvas.toolbar.update()
             self.w.MplWidget.canvas.draw()
             if (self.keepXZoom == True):
                 self.w.MplWidget.canvas.axes.set_xlim(xlim)
@@ -1412,7 +1467,7 @@ class main_w(object):
                     self.keepXZoom = False
 
 
-            self.w.MplWidget.canvas.toolbar.update()
+            #self.w.MplWidget.canvas.toolbar.update()
             self.w.MplWidget.canvas.draw()
 
         self.keepZoom = False
@@ -1480,7 +1535,7 @@ class main_w(object):
             self.w.MplWidget.canvas.axes.set_xlim(xlim)
             self.w.MplWidget.canvas.axes.set_ylim(ylim)
 
-        self.w.MplWidget.canvas.toolbar.update()
+        #self.w.MplWidget.canvas.toolbar.update()
         self.w.MplWidget.canvas.draw()
 
     def previousCommand(self):
@@ -1529,6 +1584,57 @@ class main_w(object):
 
         # end readBrukerSpc
 
+    def readSpcs(self, dataPath, dataSets):
+        if(dataPath == 'interactive'):
+            dataPath = QFileDialog.getExistingDirectory()
+
+        if (len(dataPath) > 0):
+            if(str(dataSets) == 'all'):
+                folders = []
+                for r, d, f in os.walk(dataPath):
+                    for folder in d:
+                        if(os.path.isfile(os.path.join(r, folder, 'fid'))):
+                            if(folder != '99999'):
+                                folders.append(folder.zfill(5))
+
+                        if(os.path.isfile(os.path.join(r, folder, 'ser'))):
+                            folders.append(folder.zfill(5))
+
+                folders.sort()
+                dataSets = []
+                for k in range(len(folders)):
+                    dataSets.append(int(folders[k]))
+
+            if(str(dataSets) == 'all1d'):
+                folders = []
+                for r, d, f in os.walk(dataPath):
+                    for folder in d:
+                        if(os.path.isfile(os.path.join(r, folder, 'fid'))):
+                            if(folder != '99999'):
+                                folders.append(folder.zfill(5))
+
+                folders.sort()
+                dataSets = []
+                for k in range(len(folders)):
+                    dataSets.append(int(folders[k]))
+
+            if(str(dataSets) == 'all2d'):
+                folders = []
+                for r, d, f in os.walk(dataPath):
+                    for folder in d:
+                        if(os.path.isfile(os.path.join(r, folder, 'ser'))):
+                            folders.append(folder.zfill(5))
+
+                folders.sort()
+                dataSets = []
+                for k in range(len(folders)):
+                    dataSets.append(int(folders[k]))
+
+            self.nd.readSpcs(dataPath, dataSets)
+
+        # end readSpcs
+
+
     def resetConfig(self):
         self.cf = nmrConfig.NmrConfig()
         self.cf.saveConfig()
@@ -1573,6 +1679,57 @@ class main_w(object):
     def saveMat(self):
         scipy.io.savemat('/Users/ludwigc/metabolabpy.mat', {'spc': self.nd.nmrdat[0][0].spc, 'fid': self.nd.nmrdat[0][0].fid})
         # end saveMat
+
+    def saveScript(self, fName=""):
+        if (fName == False):
+            fName = ""
+
+        if (len(fName) == 0):
+            fName = QFileDialog.getSaveFileName(None, 'Save Script File', '', 'Python files (*.py)')
+            fName = fName[0]
+
+        if (len(fName) > 0):
+            scriptText = self.w.script.toPlainText()
+            f = open(fName, 'w')
+            f.write(scriptText)
+
+        # end openScript
+
+    def scale2DSpectrumUp(self):
+        self.nd.nmrdat[self.nd.s][self.nd.e].disp.minLevel /= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].disp.maxLevel /= 1.1
+        self.setDispPars()
+        self.plotSpc()
+        # end scale2DSpectrumUp
+
+    def scale2DSpectrumDown(self):
+        self.nd.nmrdat[self.nd.s][self.nd.e].disp.minLevel *= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].disp.maxLevel *= 1.1
+        self.setDispPars()
+        self.plotSpc()
+        # end scale2DSpectrumDown
+
+    def scaleAll2DSpectraUp(self):
+        self.nd.nmrdat[self.nd.s][self.nd.e].disp.minLevel /= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].disp.maxLevel /= 1.1
+        for k in range(len(self.nd.nmrdat[self.nd.s])):
+            self.nd.nmrdat[self.nd.s][k].disp.minLevel = self.nd.nmrdat[self.nd.s][self.nd.e].disp.minLevel
+            self.nd.nmrdat[self.nd.s][k].disp.maxLevel = self.nd.nmrdat[self.nd.s][self.nd.e].disp.maxLevel
+
+        self.setDispPars()
+        self.plotSpc()
+        # end scaleAll2DSpectraUp
+
+    def scaleAll2DSpectraDown(self):
+        self.nd.nmrdat[self.nd.s][self.nd.e].disp.minLevel *= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].disp.maxLevel *= 1.1
+        for k in range(len(self.nd.nmrdat[self.nd.s])):
+            self.nd.nmrdat[self.nd.s][k].disp.minLevel = self.nd.nmrdat[self.nd.s][self.nd.e].disp.minLevel
+            self.nd.nmrdat[self.nd.s][k].disp.maxLevel = self.nd.nmrdat[self.nd.s][self.nd.e].disp.maxLevel
+
+        self.setDispPars()
+        self.plotSpc()
+        # end scaleAll2DSpectraDown
 
     def scriptEditor(self):
         self.w.nmrSpectrum.setCurrentIndex(6)
@@ -1935,11 +2092,13 @@ class main_w(object):
         self.w.script.selectAll()
         self.w.script.setFontPointSize(fontSize)
         self.w.script.setTextCursor(cursor)
+        self.w.script.setCurrentFont(f)
         # self.w.script.setFont(f)
         cursor = self.w.console.textCursor()
         self.w.console.selectAll()
         self.w.console.setFontPointSize(fontSize)
         self.w.console.setTextCursor(cursor)
+        self.w.console.setCurrentFont(f)
         # self.w.console.setFont(f)
         self.w.pulseProgram.setFont(f)
         self.w.cmdLine.setFont(f)
@@ -2191,12 +2350,14 @@ class main_w(object):
         e = self.nd.e
         if (self.w.MplWidget.canvas.figure.canvas.toolbar._active == 'ZOOM'):
             try:
+                self.zoomWasOn = True
                 self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
             except:
                 pass
 
         if (self.w.MplWidget.canvas.figure.canvas.toolbar._active == 'PAN'):
             try:
+                self.w.panWasOn = True
                 self.w.MplWidget.canvas.figure.canvas.toolbar.pan()
             except:
                 pass
@@ -2209,17 +2370,26 @@ class main_w(object):
             cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease)
             self.phCorrActive = True
             self.showPhCorr()
-            self.phCorrPlotSpc()
             self.w.MplWidget.canvas.figure.canvas.toolbar.setEnabled(False)
+            self.phCorrPlotSpc()
         else:
             cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick)
             cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease)
             cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
             cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
             self.phCorrActive = False
+            self.w.MplWidget.canvas.figure.canvas.toolbar.setEnabled(True)
             self.showVersion()
             self.plotSpc()
-            self.w.MplWidget.canvas.figure.canvas.toolbar.setEnabled(True)
+            zOn = self.zoomWasOn
+            pOn = self.panWasOn
+            self.zoomWasOn = False
+            self.panWasOn = False
+            if(zOn ==  True):
+                self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
+
+            if(pOn ==  True):
+                self.w.MplWidget.canvas.figure.canvas.toolbar.pan()
 
         # end startStopPhCorr
 
@@ -2260,7 +2430,7 @@ class main_w(object):
                 if (newTop > top): top = newTop
 
             self.w.MplWidget.canvas.axes.set_ylim(bottom, top)
-            self.w.MplWidget.canvas.toolbar.update()
+            #self.w.MplWidget.canvas.toolbar.update()
             self.w.MplWidget.canvas.draw()
 
         # end verticalAutoScale
@@ -2341,6 +2511,7 @@ class main_w(object):
             if (self.w.MplWidget.canvas.figure.canvas.toolbar._active == 'ZOOM'):
                 try:
                     self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
+                    self.zoomWasOn = True
                 except:
                     pass
 
@@ -2357,6 +2528,7 @@ class main_w(object):
                 # Disable zoom
                 self.zoom = False
                 self.showPhCorr()
+                self.zoomWasOn = False
 
         # end zoomPhCorr        
 
@@ -2374,6 +2546,7 @@ def main():
         sys.argv.pop()
 
     args = vars(ap.parse_args())
+    QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
     app = QApplication(['pyMetaboLab'])  # sys.argv)
     icon = QIcon()
     pName = os.path.join(os.path.dirname(__file__), "icon")
@@ -2402,7 +2575,7 @@ def main():
         progressBar.show()
         app.processEvents()
         maxTime = 0.5
-        maxRange = 1000
+        maxRange = 30
         timeInc = maxRange
         for i in range(maxRange):
             progressBar.setValue(1.0 * float(i + 1) / float(maxRange))
