@@ -24,3 +24,4 @@ msg = self.nd.ftAll()					# Fourier Transform all NMR spectra
 self.nd.pjres(2,'skyline')					# calculate skyline projection in data set 2
 self.nd.s = 1						# change to data set 2
 self.nd.e = 0						# change to experiment 1 in data set 2
+self.plotSpc()

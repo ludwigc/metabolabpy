@@ -18,3 +18,4 @@ for k in range(lds):						# set plot colour for each spectrum
     self.nd.nmrdat[0][k].disp.posColRGB = (r[k], g[k], b[k])
 
 self.setPhRefExp(1)						# select reference spectrum for manual phase correction
+self.plotSpc()
