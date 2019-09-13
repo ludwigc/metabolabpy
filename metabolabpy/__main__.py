@@ -590,6 +590,7 @@ class main_w(object):
         codeOut = io.StringIO()
         codeErr = io.StringIO()
         code = self.w.script.toPlainText()
+        code = code.replace('\\', '\\'*2)
         try:
             exec(code)
         except:  # (SyntaxError, NameError, TypeError, ZeroDivisionError, AttributeError):
