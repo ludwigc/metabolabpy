@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1451</width>
-    <height>785</height>
+    <width>1054</width>
+    <height>701</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -3114,7 +3114,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1451</width>
+     <width>1054</width>
      <height>22</height>
     </rect>
    </property>
@@ -3347,7 +3347,7 @@
    <property name="shortcut">
     <string>Ctrl+Shift+D</string>
    </property>
-   <property name="shortcutVisibleInContextMenu">
+   <property name="shortcutVisibleInContextMenu" stdset="0">
     <bool>true</bool>
    </property>
   </action>

@@ -132,6 +132,13 @@ class NmrDataSet:
         
         # end bucketSpectra
         
+    def clear(self):
+        self.nmrdat = [[]]
+        self.s = 0
+        self.e = -1
+        return "Workspace cleared"
+        # end clear
+
     def dataPreProcessing(self):
         if(self.nmrdat[self.s][0].projectedJres == False):
             self.ftAll()

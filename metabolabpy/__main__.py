@@ -2568,7 +2568,8 @@ def main():
     ap.add_argument("-fs", "--FullScreen", required=False, help="open applicatin in full screen mode",
                     action="store_true")
     ap.add_argument("fileName", metavar="fileName", type=str, help="load MetaboLabPy DataSet File")
-    dd = ap.parse_known_intermixed_args()
+    dd = ap.parse_known_args()
+    #dd = ap.parse_known_intermixed_args()
     if (len(dd[1]) > 0):
         sys.argv.pop()
 
