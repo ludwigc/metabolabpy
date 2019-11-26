@@ -10,10 +10,16 @@ def main():
     if sys.version_info[0] != 3 and sys.version_info[1] <= 7:
         sys.exit("Python-3.7.3 is required ")
 
+    # read the contents of your README file
+    from os import path
+    this_directory = path.abspath(path.dirname(__file__))
+    with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+        long_description = f.read()
+
     setuptools.setup(name="metabolabpy",
         version=metabolabpy.__version__,
         description="Python package for data processing of NMR 1D and 2D metabolomics and metabolism tracing data",
-        long_description=open('README.rst').read(),
+        long_description=long_description,
         author="Christian Ludwig",
         author_email="C.Ludwig@bham.ac.uk ",
         url="https://github.com/ludwigc/metabolabpy",
