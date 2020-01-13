@@ -535,6 +535,7 @@ class main_w(object):
         # end clear
 
     def dataPreProcessing(self):
+        self.resetDataPreProcessing()
         self.nd.dataPreProcessing()
         self.plotSpcPreProc()
         # end dataPreProcessing
