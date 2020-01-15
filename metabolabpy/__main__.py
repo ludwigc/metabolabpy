@@ -1119,6 +1119,8 @@ class main_w(object):
         self.resetPlot()
         self.updateGUI()
         self.w.console.verticalScrollBar().setValue(self.w.console.verticalScrollBar().maximum())
+        self.showTitleFileInformation()
+        self.showNMRSpectrum()
         # end loadFile
 
     def nextCommand(self):
