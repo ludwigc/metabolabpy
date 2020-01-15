@@ -118,20 +118,41 @@ class ProcPars:
         proc2sName = spcDir + os.sep + 'pdata' + os.sep + '1' + os.sep + 'proc2s'
         proc3sName = spcDir + os.sep + 'pdata' + os.sep + '1' + os.sep + 'proc3s'
         if(os.path.isfile(procsName)):
-            f = open(procsName,"r")
-            self.procsText = f.read()
-            f.close()
-            
+            try:
+                f = open(procsName, "r")
+                self.procsText = f.read()
+                f.close()
+
+            except:
+                f = open(procsName, "r", encoding='latin-1')
+                self.procsText = f.read()
+                f.close()
+
+
         if(os.path.isfile(proc2sName)):
-            f = open(proc2sName,"r")
-            self.proc2sText = f.read()
-            f.close()
-            
+            try:
+                f = open(proc2sName,"r")
+                self.proc2sText = f.read()
+                f.close()
+
+            except:
+                f = open(proc2sName,"r", encoding='latin-1')
+                self.proc2sText = f.read()
+                f.close()
+
+
         if(os.path.isfile(proc3sName)):
-            f = open(proc3sName,"r")
-            self.proc3sText = f.read()
-            f.close()
-        
+            try:
+                f = open(proc3sName,"r")
+                self.proc3sText = f.read()
+                f.close()
+
+            except:
+                f = open(proc3sName,"r", encoding='latin-1')
+                self.proc3sText = f.read()
+                f.close()
+
+
         self.parseRegEx()
         # end read
     
