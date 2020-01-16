@@ -350,19 +350,40 @@ class AcqPars:
         acqu2sName = spcDir + os.sep + 'acqu2s'
         acqu3sName = spcDir + os.sep + 'acqu3s'
         if(os.path.isfile(acqusName)):
-            f = open(acqusName,"r")
-            self.acqusText = f.read()
-            f.close()
+            try:
+                f = open(acqusName,"r")
+                self.acqusText = f.read()
+                f.close()
+
+            except:
+                f = open(acqusName,"r", encoding='latin-1')
+                self.acqusText = f.read()
+                f.close()
+
             
         if(os.path.isfile(acqu2sName)):
-            f = open(acqu2sName,"r")
-            self.acqu2sText = f.read()
-            f.close()
-            
+            try:
+                f = open(acqu2sName,"r")
+                self.acqu2sText = f.read()
+                f.close()
+
+            except:
+                f = open(acqu2sName,"r", encoding='latin-1')
+                self.acqu2sText = f.read()
+                f.close()
+
+
         if(os.path.isfile(acqu3sName)):
-            f = open(acqu3sName,"r")
-            self.acqu3sText = f.read()
-            f.close()
+            try:
+                f = open(acqu3sName,"r")
+                self.acqu3sText = f.read()
+                f.close()
+
+            except:
+                f = open(acqu3sName,"r", encoding='latin-1')
+                self.acqu3sText = f.read()
+                f.close()
+
         
         self.parseRegEx()
         # end read
