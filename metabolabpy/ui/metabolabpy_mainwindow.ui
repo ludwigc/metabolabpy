@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1054</width>
-    <height>701</height>
+    <height>771</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -3042,6 +3042,11 @@
             </item>
             <item>
              <property name="text">
+              <string>Automatic Phase and Baseline Correction</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
               <string>2D J-res Example Script</string>
              </property>
             </item>
@@ -3347,7 +3352,7 @@
    <property name="shortcut">
     <string>Ctrl+Shift+D</string>
    </property>
-   <property name="shortcutVisibleInContextMenu" stdset="0">
+   <property name="shortcutVisibleInContextMenu">
     <bool>true</bool>
    </property>
   </action>

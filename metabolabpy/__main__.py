@@ -1098,12 +1098,15 @@ class main_w(object):
             fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "example1DScript.py")
 
         if (idx == 1):
-            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "example2DJresScript.py")
+            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "exampleAutoPhaseScript.py")
 
         if (idx == 2):
-            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "examplePreprocessingScript.py")
+            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "example2DJresScript.py")
 
         if (idx == 3):
+            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "examplePreprocessingScript.py")
+
+        if (idx == 4):
             fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "example2DNMRPipeScript.py")
 
         f = open(fName,'r')
