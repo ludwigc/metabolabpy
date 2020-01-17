@@ -9,7 +9,7 @@
 
 
 ConsoleWrite($cmdLine[0] & @CRLF)
-$gui1 = GUICreate("MetaboLabPy Installer v0.3", 500, 300, 100, 100) ; ==> draw GUI
+$gui1 = GUICreate("MetaboLabPy Installer v0.2.1", 500, 300, 100, 100) ; ==> draw GUI
 $nextButton = GUICtrlCreateButton("Next",440, 270, 50, 20)
 $cancelButton = GUICtrlCreateButton("Cancel", 380, 270, 50, 20)
 $installMiniconda = GUICtrlCreateCheckbox("Install Miniconda3", 10, 10,250, 20)
