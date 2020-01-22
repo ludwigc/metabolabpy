@@ -409,7 +409,9 @@ class NmrDataSet:
     def noiseFiltering(self):
         val    = self.pp.noiseThreshold*self.pp.stdVal
         for k in range(len(self.nmrdat[self.s])):
-            idx = np.where(self.nmrdat[self.s][k].spc[0].real < val)
+            idx =  np.where(self.nmrdat[self.s][k].spc[0].real < val)
+            idx2 = np.where(self.nmrdat[self.s][k].spc[0].real < 0)
+            self.nmrdat[self.s][k].spc[0][idx2] = np.zeros(len(idx2))
             self.deselect2[idx] += np.ones(len(idx))
             
         # end noiseFiltering
