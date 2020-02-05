@@ -64,7 +64,7 @@ class MplWidget(QWidget):
 # ------------------ MplWidget ------------------
 class main_w(object):
     def __init__(self):
-        self.__version__ = '0.2.0'
+        self.__version__ = '0.3.0'
         self.zoomWasOn = False
         self.panWasOn = False
         self.nd = nmrDataSet.NmrDataSet()

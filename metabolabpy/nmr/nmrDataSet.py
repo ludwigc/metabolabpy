@@ -145,6 +145,7 @@ class NmrDataSet:
             self.baseline1dAll()
             self.autorefAll()
             self.shiftRef()
+
         else:
             s = self.s
             e = self.e
@@ -181,6 +182,10 @@ class NmrDataSet:
                 self.nmrdat[self.s][k].spc[0] -= mVal
 
         
+        for k in range(len(self.nmrdat[self.s])):
+            self.nmrdat[self.s][k].spc[0][idx]  = np.zeros(len(idx))
+            self.nmrdat[self.s][k].spc[0][idx2] = np.zeros(len(idx2))
+
         if(self.pp.flagBucketSpectra == True):
             self.bucketSpectra()
         
