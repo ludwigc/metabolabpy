@@ -279,14 +279,10 @@ class NmrDataSet:
     def ft(self):
         if(self.nmrdat[self.s][self.e].dim == 1):
             self.nmrdat[self.s][self.e].procSpc1D()
-            #self.nmrdat[self.s][self.e].setRef(np.array([0.0]), np.array([14836]))
-            
+
         else:
             self.nmrdat[self.s][self.e].procSpc()
-            #refShifts                = np.array([1.33, 19.3])
-            #refPoints                = np.array([262, 2150])
-            #self.nmrdat[self.s][self.e].setRef(refShifts, refPoints)
-        
+
         # end ft
 
     def ftAll(self):

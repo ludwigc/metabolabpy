@@ -82,8 +82,8 @@ $$ process /opt/topspin3.2.6/prog/mod/proc1d
 ##$NZP= 0
 ##$OFFSET= 11.78742
 ##$PC= 1
-##$PHC0= 0
-##$PHC1= 0
+##$PHC0= 22
+##$PHC1= 22
 ##$PH_mod= 1
 ##$PKNL= yes
 ##$PPARMOD= 0
