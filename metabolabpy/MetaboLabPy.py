@@ -64,7 +64,7 @@ class MplWidget(QWidget):
 # ------------------ MplWidget ------------------
 class main_w(object):
     def __init__(self):
-        self.__version__ = '0.2.0'
+        self.__version__ = '0.4.0'
         self.zoomWasOn = False
         self.panWasOn = False
         self.nd = nmrDataSet.NmrDataSet()
@@ -535,6 +535,7 @@ class main_w(object):
         # end clear
 
     def dataPreProcessing(self):
+        self.resetDataPreProcessing()
         self.nd.dataPreProcessing()
         self.plotSpcPreProc()
         # end dataPreProcessing
@@ -1097,12 +1098,15 @@ class main_w(object):
             fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "example1DScript.py")
 
         if (idx == 1):
-            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "example2DJresScript.py")
+            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "exampleAutoPhaseScript.py")
 
         if (idx == 2):
-            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "examplePreprocessingScript.py")
+            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "example2DJresScript.py")
 
         if (idx == 3):
+            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "examplePreprocessingScript.py")
+
+        if (idx == 4):
             fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "example2DNMRPipeScript.py")
 
         f = open(fName,'r')
@@ -1118,6 +1122,8 @@ class main_w(object):
         self.resetPlot()
         self.updateGUI()
         self.w.console.verticalScrollBar().setValue(self.w.console.verticalScrollBar().maximum())
+        self.showTitleFileInformation()
+        self.showNMRSpectrum()
         # end loadFile
 
     def nextCommand(self):
@@ -2568,7 +2574,8 @@ def main():
     ap.add_argument("-fs", "--FullScreen", required=False, help="open applicatin in full screen mode",
                     action="store_true")
     ap.add_argument("fileName", metavar="fileName", type=str, help="load MetaboLabPy DataSet File")
-    dd = ap.parse_known_intermixed_args()
+    dd = ap.parse_known_args()
+    #dd = ap.parse_known_intermixed_args()
     if (len(dd[1]) > 0):
         sys.argv.pop()
 

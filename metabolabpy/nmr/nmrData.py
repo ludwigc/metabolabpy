@@ -212,7 +212,7 @@ class NmrData:
         f0 = np.copy(fid)
         filtFid = fid[list(range(round(self.acq.groupDelay)))]
         fid = fid[list(range(round(self.acq.groupDelay), len(fid)))]
-        ws2 = self.proc.convWindowSize[0] / 2
+        ws2 = int(self.proc.convWindowSize[0] / 2)
         es = self.proc.convExtrapolationSize[0]
         wt = int(self.proc.convWindowType[0])
         win = np.zeros(int(ws2 * 2 + 1))
