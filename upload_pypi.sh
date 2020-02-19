@@ -14,7 +14,7 @@ python setup.py sdist
 
 conda install -c conda-forge twine
 
-twine upload --repository-url https://test.pypi.org/legacy dist/*
+twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 pip install --index-url https://test.pypi.org/simple --extra-url https://pypi.org/simple $PACKAGE
 
 twine upload dist/*
