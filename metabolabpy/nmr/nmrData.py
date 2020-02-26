@@ -597,7 +597,7 @@ class NmrData:
         fidFile2 = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'ser'
         if (os.path.isfile(fidFile1)):
             # read 1D FID file
-            self.fid.resize(1, int(self.acq.nDataPoints[0] / 2))
+            self.fid = np.resize(self.fid, (1, int(self.acq.nDataPoints[0] / 2))
             f = open(fidFile1, 'rb')
             fid = np.fromfile(f, dtype=np.int32)
             f.close()
@@ -609,7 +609,7 @@ class NmrData:
             # read 1D spectrum file (real part)
             f = open(spcFile1r, 'rb')
             fid = np.fromfile(f, dtype=np.int32)
-            self.spc.resize(1, int(len(fid)))
+            self.spc = np.resize(self.spc, (1, int(len(fid))))
             self.spc[0].real = fid;
             f.close()
             if (os.path.isfile(spcFile1i)):
@@ -624,7 +624,7 @@ class NmrData:
             # read 2D spectrum
             np1 = int(self.acq.nDataPoints[0])
             np2 = int(self.acq.nDataPoints[1])
-            self.fid.resize(int(np2), int(np1 / 2))
+            self.fid = np.resize(self.fid, (int(np2), int(np1 / 2)))
             f = open(fidFile2, 'rb')
             fid = np.fromfile(f, dtype=np.int32)
             f.close()
