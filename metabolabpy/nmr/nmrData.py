@@ -597,7 +597,7 @@ class NmrData:
         fidFile2 = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'ser'
         if (os.path.isfile(fidFile1)):
             # read 1D FID file
-            self.fid = np.resize(self.fid, (1, int(self.acq.nDataPoints[0] / 2))
+            self.fid = np.resize(self.fid, (1, int(self.acq.nDataPoints[0] / 2)))
             f = open(fidFile1, 'rb')
             fid = np.fromfile(f, dtype=np.int32)
             f.close()
