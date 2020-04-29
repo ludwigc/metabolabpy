@@ -323,6 +323,9 @@ class NmrData:
         return mat1
         # end hilbert1
 
+    def multiply(self, factor = 1.0):
+        self.spc = factor*self.spc
+
     def phase(self, ph0, ph1, npts):
         ph0 = -ph0 * math.pi / 180.0
         ph1 = -ph1 * math.pi / 180.0

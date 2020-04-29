@@ -13,8 +13,8 @@ import matplotlib
 matplotlib.use('Qt5Agg')
 from matplotlib.backends.backend_qt5agg import (FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 from matplotlib.figure import Figure
-import matplotlib.pyplot                  as     pl
-import numpy                              as     np
+import matplotlib.pyplot as pl
+import numpy as np
 import io
 import sys
 from metabolabpy.nmr import nmrDataSet
@@ -677,18 +677,18 @@ class main_w(object):
         self.w.exportCharacter.setText(self.nd.pp.exportCharacter)
         self.w.samplesInComboBox.setCurrentIndex(self.nd.pp.exportSamplesInRowsCols)
         self.nd.pp.preProcFill = False
-        #    
+        #
         # d  = np.arange(nSpc)
         # dd = np.isin(d, self.nd.pp.plotSelect, invert = True)
         # e  = d[dd]
         # for k in range(len(e)):
         #    self.w.selectClassTW.selectedItems()[2*e[k]].setSelected(False)
-        #    
+        #
         # self.w.selectClassTW.setRangeSelected(QTableWidgetSelectionRange(0,0,nSpc-1,0),True)
         # for k in range(len(self.nd.pp.plotSelect)):
         #    self.w.selectClassTW.selectionModel().select((self.nd.pp.plotSelect[k],0), True)
         #    #self.w.selectClassTW.setItemSelected(spcNumber, True)
-        #    
+        #
         # end fillPreProcessingNumbers
 
     def ft(self):
@@ -2563,7 +2563,7 @@ class main_w(object):
                 self.showPhCorr()
                 self.zoomWasOn = False
 
-        # end zoomPhCorr        
+        # end zoomPhCorr
 
 
 def main():
