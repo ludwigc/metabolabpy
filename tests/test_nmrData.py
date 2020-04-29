@@ -122,6 +122,18 @@ class nmrDataTestCase(unittest.TestCase):
         m = nd.hilbert1(nd.spc[0].real, 0)
         self.assertTrue(np.iscomplex(m[0]))
 
+    def test_multiply(self):
+        pName = os.path.join(os.path.dirname(__file__),"data","nmrData") # directory of test data set
+        eName = "1"                                                      # 1D NMR data in exp 1
+        nd               = nmrData.NmrData()
+        nd.dataSetName   = pName
+        nd.dataSetNumber = eName
+        nd.readSpc()
+        int1 = nd.spc[0][nd.refPoint[0]].real
+        nd.multiply(10.0)
+        int2 = nd.spc[0][nd.refPoint[0]].real
+        self.assertEqual(int2/int1, 10.0)
+
     def test_phase(self):
         pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         eName = "1"  # 1D NMR data in exp 1
