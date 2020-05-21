@@ -4,12 +4,11 @@ python:
   - "3.7"
 
 install:
-  - pip install coverage
-  - pip install green codecov
+  - pip install pytest codecov pytest-cov
   - pip install .
 
 script:
-  - coverage run --source metabolabpy setup.py test
+  - pytest --cov=metabolabpy tests/
 
 after_script:
-  - python -m codecov
+  - codecov
