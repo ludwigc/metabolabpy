@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# pragma: no cover
+
 import argparse
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtCore import QFile
@@ -36,7 +38,7 @@ import scipy.io
 # ------------------ MplWidget ------------------
 class MplWidget(QWidget):
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None):  # pragma: no cover
         QWidget.__init__(self, parent)
 
         self.canvas = FigureCanvas(Figure())
@@ -62,7 +64,7 @@ class MplWidget(QWidget):
 
 
 # ------------------ MplWidget ------------------
-class main_w(object):
+class main_w(object):  # pragma: no cover
     def __init__(self):
         self.__version__ = '0.4.6'
         self.zoomWasOn = False
@@ -2566,7 +2568,7 @@ class main_w(object):
         # end zoomPhCorr
 
 
-def main():
+def main():  # pragma: no cover
     sys.argv.append('None')
     ap = argparse.ArgumentParser()
     ap.add_argument("-s", "--script", required=False, help="optional script argument")
