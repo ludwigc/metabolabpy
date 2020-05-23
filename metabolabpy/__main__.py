@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-# pragma: no cover
 
+# pragma: no cover
 import argparse
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtCore import QFile
@@ -11,7 +11,6 @@ from PySide2 import QtGui
 from PySide2 import QtCore
 from PySide2.QtCore import SIGNAL
 import matplotlib
-
 matplotlib.use('Qt5Agg')
 from matplotlib.backends.backend_qt5agg import (FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 from matplotlib.figure import Figure
@@ -30,15 +29,12 @@ import os
 import traceback
 import shutil
 import scipy.io
-
-
 # import pandas as pd
 
-
 # ------------------ MplWidget ------------------
-class MplWidget(QWidget):
+class MplWidget(QWidget): # pragma: no cover
 
-    def __init__(self, parent=None):  # pragma: no cover
+    def __init__(self, parent=None):
         QWidget.__init__(self, parent)
 
         self.canvas = FigureCanvas(Figure())
@@ -2640,5 +2636,5 @@ def main():  # pragma: no cover
     sys.exit(app.exec_())
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     main()
