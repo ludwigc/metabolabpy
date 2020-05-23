@@ -1,35 +1,34 @@
 #!/usr/bin/env python
 
-# pragma: no cover
-import argparse
-from PySide2.QtUiTools import QUiLoader
-from PySide2.QtCore import QFile
-from PySide2.QtWidgets import *
-from PySide2 import QtWidgets
-from PySide2.QtGui import *
-from PySide2 import QtGui
-from PySide2 import QtCore
-from PySide2.QtCore import SIGNAL
-import matplotlib
-matplotlib.use('Qt5Agg')
-from matplotlib.backends.backend_qt5agg import (FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
-from matplotlib.figure import Figure
-import matplotlib.pyplot as pl
-import numpy as np
-import io
-import sys
-from metabolabpy.nmr import nmrDataSet
-from metabolabpy.GUI import phCorr
-import matplotlib
-import time
-import platform
-import math
-from metabolabpy.nmr import nmrConfig
-import os
-import traceback
-import shutil
-import scipy.io
-# import pandas as pd
+import argparse                             # pragma: no cover
+from PySide2.QtUiTools import QUiLoader     # pragma: no cover
+from PySide2.QtCore import QFile            # pragma: no cover
+from PySide2.QtWidgets import *             # pragma: no cover
+from PySide2 import QtWidgets               # pragma: no cover
+from PySide2.QtGui import *                 # pragma: no cover
+from PySide2 import QtGui                   # pragma: no cover
+from PySide2 import QtCore                  # pragma: no cover
+from PySide2.QtCore import SIGNAL           # pragma: no cover
+import matplotlib                           # pragma: no cover
+matplotlib.use('Qt5Agg')                    # pragma: no cover
+from matplotlib.backends.backend_qt5agg import (FigureCanvas, NavigationToolbar2QT as NavigationToolbar)# pragma: no cover
+from matplotlib.figure import Figure        # pragma: no cover
+import matplotlib.pyplot as pl              # pragma: no cover
+import numpy as np                          # pragma: no cover
+import io                                   # pragma: no cover
+import sys                                  # pragma: no cover
+from metabolabpy.nmr import nmrDataSet      # pragma: no cover
+from metabolabpy.GUI import phCorr          # pragma: no cover
+import matplotlib                           # pragma: no cover
+import time                                 # pragma: no cover
+import platform                             # pragma: no cover
+import math                                 # pragma: no cover
+from metabolabpy.nmr import nmrConfig       # pragma: no cover
+import os                                   # pragma: no cover
+import traceback                            # pragma: no cover
+import shutil                               # pragma: no cover
+import scipy.io                             # pragma: no cover
+# import pandas as pd                       # pragma: no cover
 
 # ------------------ MplWidget ------------------
 class MplWidget(QWidget): # pragma: no cover
