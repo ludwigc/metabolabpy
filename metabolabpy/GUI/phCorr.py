@@ -2,9 +2,9 @@
 interactive NMR spectrum phase correction
 '''
 
-import numpy as np
+import numpy as np # pragma: no cover
 
-class PhCorr:
+class PhCorr: # pragma: no cover
     
     def __init__(self):
         self.start          = 0.0

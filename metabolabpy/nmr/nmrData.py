@@ -46,7 +46,7 @@ class NmrData:
         self.pjresMode = ''
         # end __init__
 
-    def __str__(self):
+    def __str__(self): # pragma: no cover
         rString = 'MetaboLabPy NMR Data (v. 0.1)\n'
         rString += '__________________________________________________________________\n'
         rString += self.title
