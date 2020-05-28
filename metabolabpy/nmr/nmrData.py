@@ -53,20 +53,6 @@ class NmrData:
         return rString
         # end __str__
 
-    def calcPPM(self):
-        if (self.dim == 1):
-            self.ppm.resize(1, self.proc.nPoints[0])
-            x = np.linspace(0.0, self.proc.nPoints[0] - 1.0, self.proc.nPoints[0])
-            self.ppm[0] = self.proc.refShift[0] + (self.proc.refPoint[0] - x) * self.acq.sw[0] / self.proc.nPoints[0]
-        else:
-            self.ppm1.resize(1, self.proc.nPoints[0])
-            self.ppm2.resize(1, self.proc.nPoints[1])
-            x1 = np.linspace(0.0, self.proc.nPoints[0] - 1.0, self.proc.nPoints[0])
-            x2 = np.linspace(0.0, self.proc.nPoints[1] - 1.0, self.proc.nPoints[1])
-            self.ppm[0] = self.proc.refShift[0] + (self.proc.refPoint[0] - x) * self.acq.sw[0] / self.proc.nPoints[0]
-
-        # end calcPPM
-
     def apodise(self, fid, dim, lb, gb, ssb, groupDelay, sw_h):
         if (self.proc.windowType[dim] == 0):  # no window
             wdwf = np.ones(len(fid))
@@ -197,7 +183,7 @@ class NmrData:
         else:
             self.ppm1 = self.points2Hz(np.linspace(npts - 1, 0, npts), 0)
 
-        if (self.dim > 1):
+        if (self.dim > 1): # pragma: no cover
             npts = int(len(self.spc))
             if (self.disp.axisType2 == 'ppm'):
                 self.ppm2 = self.points2ppm(np.linspace(npts - 1, 0, npts), 1)

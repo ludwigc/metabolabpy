@@ -28,7 +28,8 @@ class nmrDataTestCase(unittest.TestCase):
         nd.dataSetNumber = eName
         nd.readSpc()
         for k in range(6):
-            f = nd.apodise(nd.fid, 0, 0.5, 0.0, 0.0, nd.acq.groupDelay, nd.acq.sw_h[0])
+            nd.proc.windowType[0] = k
+            f = nd.apodise(nd.fid, 0, 0.5, 1.0, 0.0, nd.acq.groupDelay, nd.acq.sw_h[0])
 
 
     def test_autobaseline1d(self):
