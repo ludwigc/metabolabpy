@@ -27,9 +27,15 @@ class nmrDataTestCase(unittest.TestCase):
         nd.dataSetName = pName
         nd.dataSetNumber = eName
         nd.readSpc()
+        fpMultiplier = [1.0, 0.9999405017700899, 0.9716680181001582, 0.9662600707477789, 0.9336585243215026, 0.9618534966816228]
+        fidNo = int(nd.acq.groupDelay+1)
         for k in range(6):
             nd.proc.windowType[0] = k
-            f = nd.apodise(nd.fid, 0, 0.5, 1.0, 0.0, nd.acq.groupDelay, nd.acq.sw_h[0])
+            f = np.copy(nd.fid[0])
+            v1 = f[fidNo].real
+            f = nd.apodise(f, 0, 0.5, 1.0, 90.0, nd.acq.groupDelay, nd.acq.sw_h[0])
+            v2 = f[fidNo].real
+            self.assertAlmostEqual(v2/v1, fpMultiplier[k], 8)
 
 
     def test_autobaseline1d(self):
