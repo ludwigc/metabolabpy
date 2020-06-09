@@ -243,7 +243,7 @@ class nmrDataTestCase(unittest.TestCase):
         self.assertLess(np.sum(np.sum(spc1.real - spc2.real)), 1e-5)
 
     def test_phase2d(self):
-        pName = os.path.join("/Users/ludwigc/Develop/metabolabpy/tests", "data",
+        pName = os.path.join(os.path.dirname(__file__), "data",
                              "nmrData")  # directory of test data set
         eName = "3"  # 2D HSQC NMR data in exp 3
         nd = nmrData.NmrData()
@@ -305,7 +305,7 @@ class nmrDataTestCase(unittest.TestCase):
         pts2 = nd.ppm2points(1, 0)
         self.assertEqual(pts2 - pts1, 4682)
         nd = [[]]
-        pName = os.path.join("/Users/ludwigc/Develop/metabolabpy/tests", "data",
+        pName = os.path.join(os.path.dirname(__file__), "data",
                              "nmrData")  # directory of test data set
         eName = "3"  # 2D HSQC NMR data in exp 3
         nd = nmrData.NmrData()
@@ -321,7 +321,7 @@ class nmrDataTestCase(unittest.TestCase):
         self.assertEqual(pts4 - pts3, 224)
 
     def test_ppm2points2d(self):
-        pName = os.path.join("/Users/ludwigc/Develop/metabolabpy/tests", "data",
+        pName = os.path.join(os.path.dirname(__file__), "data",
                              "nmrData")  # directory of test data set
         eName = "3"  # 2D HSQC NMR data in exp 3
         nd = nmrData.NmrData()
@@ -500,7 +500,7 @@ class nmrDataTestCase(unittest.TestCase):
         f = nd.smo(nd.fid[0])
 
     def test_symjres(self):
-        pName = os.path.join("/Users/ludwigc/Develop/metabolabpy/tests", "data",
+        pName = os.path.join(os.path.dirname(__file__), "data",
                              "nmrData")  # directory of test data set
         eName = "2"  # 2D HSQC NMR data in exp 3
         nd = nmrData.NmrData()
@@ -519,7 +519,7 @@ class nmrDataTestCase(unittest.TestCase):
         self.assertEqual(pt, 37)
 
     def test_tiltJRes(self):
-        pName = os.path.join("/Users/ludwigc/Develop/metabolabpy/tests", "data",
+        pName = os.path.join(os.path.dirname(__file__), "data",
                              "nmrData")  # directory of test data set
         eName = "2"  # 2D HSQC NMR data in exp 3
         nd = nmrData.NmrData()
