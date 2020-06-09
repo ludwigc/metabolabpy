@@ -46,7 +46,7 @@ class NmrData:
         self.pjresMode = ''
         # end __init__
 
-    def __str__(self): # pragma: no cover
+    def __str__(self):  # pragma: no cover
         rString = 'MetaboLabPy NMR Data (v. 0.1)\n'
         rString += '__________________________________________________________________\n'
         rString += self.title
@@ -54,6 +54,7 @@ class NmrData:
         # end __str__
 
     def apodise(self, fid, dim, lb, gb, ssb, groupDelay, sw_h):
+        fid = np.copy(fid)
         if (self.proc.windowType[dim] == 0):  # no window
             wdwf = np.ones(len(fid))
 
@@ -66,22 +67,28 @@ class NmrData:
             wdwf = np.exp(-lb * 2 * math.pi * t - 2 * math.pi * (t ** 2) / ((2 * math.pi * gb * len(fid) / sw_h)))
 
         if (self.proc.windowType[dim] == 3):  # sine window
-            t = (np.linspace(0.0, len(fid) - 1, len(fid))) / len(fid)
+            npts = int(min(self.acq.nDataPoints[dim]/2, len(fid)))
+            t = (np.linspace(0.0, npts - 1, npts)) / (npts-1)
+            wdwf = np.zeros(len(fid))
             ssb2 = ssb * math.pi / 180.0
-            wdwf = np.sin(ssb + (math.pi - ssb) * t)
+            wdwf[:npts] = np.sin(ssb2 + (math.pi - ssb2) * t)
 
         if (self.proc.windowType[dim] == 4):  # qsine window
-            t = (np.linspace(0.0, len(fid) - 1, len(fid))) / len(fid)
+            npts = int(min(self.acq.nDataPoints[dim]/2, len(fid)))
+            t = (np.linspace(0.0, npts - 1, npts)) / (npts-1)
+            wdwf = np.zeros(len(fid))
             ssb2 = ssb * math.pi / 180.0
-            wdwf = np.sin(ssb + (math.pi - ssb) * t) ** 2
+            wdwf[:npts] = np.sin(ssb2 + (math.pi - ssb2) * t) ** 2
 
         if (self.proc.windowType[dim] == 5):  # sem window
-            t1 = (np.linspace(0.0, len(fid) - 1 - groupDelay, len(fid))) / sw_h
-            t2 = (np.linspace(0.0, len(fid) - 1, len(fid))) / len(fid)
+            npts = int(min(self.acq.nDataPoints[dim]/2, len(fid)))
+            t1 = (np.linspace(0.0, npts - 1 - groupDelay, npts)) / sw_h
+            t2 = (np.linspace(0.0, npts - 1, npts)) / (npts-1)
+            wdwf = np.zeros(len(fid))
             ssb2 = ssb * math.pi / 180.0
-            wdwf = np.exp(-lb * t1) * np.sin(ssb + (math.pi - ssb) * t2)
+            wdwf[:npts] = np.exp(-lb * t1) * np.sin(ssb2 + (math.pi - ssb2) * t2)
 
-        fid *= wdwf
+        fid = np.copy(wdwf*fid)
         return fid
         # end apodise
 
@@ -137,7 +144,7 @@ class NmrData:
         if (self.dim == 2):
             self.refShift[1] = self.acq.o2 / self.acq.bf2
             self.refPoint[1] = int(len(self.spc) / 2)
-            if(tmsp == True):
+            if (tmsp == True):
                 self.refPoint[0] = self.ppm2points(0.0, 0)
                 self.refShift[0] = 0.0
                 pts = self.ppm2points(np.array([-self.refTmspRange, self.refTmspRange]), 0)
@@ -308,8 +315,8 @@ class NmrData:
         return mat1
         # end hilbert1
 
-    def multiply(self, factor = 1.0):
-        self.spc = factor*self.spc
+    def multiply(self, factor=1.0):
+        self.spc = factor * self.spc
 
     def phase(self, ph0, ph1, npts):
         ph0 = -ph0 * math.pi / 180.0
@@ -318,7 +325,7 @@ class NmrData:
         frac = np.linspace(0, 1, npts)
         ph = ph0 + frac * ph1
         self.spc[0] = np.cos(ph) * self.spc[0].real + np.sin(ph) * self.spc[0].imag + 1j * (
-                    -np.sin(ph) * self.spc[0].real + np.cos(ph) * self.spc[0].imag)
+                -np.sin(ph) * self.spc[0].real + np.cos(ph) * self.spc[0].imag)
         # end phase
 
     def phase2(self, mat, ph0, ph1):
@@ -458,7 +465,7 @@ class NmrData:
         self.phase(self.proc.ph0[0], 360.0 * self.acq.groupDelay + self.proc.ph1[0], self.proc.nPoints[0])
         # end procSpc1D
 
-    def procSpc2D(self, testQuad2d = False, noAbs = False):
+    def procSpc2D(self, testQuad2d=False, noAbs=False):
         fid = np.copy(self.fid)
         self.spc = np.resize(self.spc, (self.proc.nPoints[0], self.proc.nPoints[1]))
         self.spc *= 0
@@ -486,7 +493,7 @@ class NmrData:
             fid[k] = fid2
 
         fid = np.ndarray.transpose(fid)
-        if testQuad2d== False:
+        if testQuad2d == False:
             fid = self.quad2D(fid)
             for k in range(len(fid)):
                 fid2 = np.copy(fid[k])
@@ -508,9 +515,8 @@ class NmrData:
                 for k in range(len(self.spc)):
                     self.spc[k] = np.abs(self.spc[k])
 
-                if(self.proc.symj == True):
+                if (self.proc.symj == True):
                     self.symjres()
-
 
         # end procSpc2D
 
@@ -524,13 +530,18 @@ class NmrData:
         rFid = np.resize(rFid, (len(fid), int(len(fid[0]) / 2)))
         iFid = np.copy(fid)
         iFid = np.resize(iFid, (len(fid), int(len(fid[0]) / 2)))
-        if (inc == 1):
-            fid = fid #rFid + 1j * iFid
+        if inc == 1 or inc == 2:
+            fid = fid  # rFid + 1j * iFid
 
-        if inc > 1 and inc < 6:
-            fid = rFid + 1j * iFid
+        if inc == 5:
+            for k in range(len(fid)):
+                npts = int(len(fid[k]) / 2)
+                rFid[k] = fid[k][0::2].real * (-2 * (np.linspace(0, npts - 1, npts, dtype='int') % 2) + 1)
+                iFid[k] = fid[k][1::2].real * (2 * (np.linspace(0, npts - 1, npts, dtype='int') % 2) - 1)
 
-        if (inc == 6):
+            fid = np.copy(rFid + 1j * iFid)
+
+        if inc == 6:
             for k in range(len(fid)):
                 rFid[k] = np.conj(fid[k][0::2] + fid[k][1::2])
                 iFid[k] = np.conj(fid[k][0::2] - fid[k][1::2])
@@ -650,7 +661,7 @@ class NmrData:
         # end smo
 
     def symjres(self):
-        for k in range(int(len(self.spc)/2)):
+        for k in range(int(len(self.spc) / 2)):
             tmp = np.minimum(self.spc[k], self.spc[len(self.spc) - k - 1])
             self.spc[k] = tmp
             self.spc[len(self.spc) - k - 1] = tmp
@@ -661,11 +672,11 @@ class NmrData:
         hzPerPoint = self.acq.sw_h[0] / len(self.spc[0])
         sw2 = self.acq.sw_h[1]
         npts2 = len(self.spc)
-        hzVect = np.linspace(-sw2/2.0, sw2/2.0, npts2)
+        hzVect = np.linspace(-sw2 / 2.0, sw2 / 2.0, npts2)
         for k in range(npts2):
-            npts = hzVect[k]/hzPerPoint
+            npts = hzVect[k] / hzPerPoint
             fid1 = ifft(self.spc[k])
-            fid1 = self.phase2(fid1, 0, -npts*360.0)
+            fid1 = self.phase2(fid1, 0, -npts * 360.0)
 
             self.spc[k] = fft(fid1)
 

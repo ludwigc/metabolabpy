@@ -93,6 +93,9 @@ class ProcPars:
         self.lb[0]          = float(self.regEx.lb.findall(self.procsText)[0][0])
         self.gb[0]          = float(self.regEx.gb.findall(self.procsText)[0][0])
         self.ssb[0]         = float(self.regEx.ssb.findall(self.procsText)[0][0])
+        if self.ssb[0] == 2.0:
+            self.ssb[0] = 90.0
+
         self.axisNucleus[0] = self.regEx.axisNucleus.findall(self.procsText)[0]
         self.windowType[0]  = int(self.regEx.wdw.findall(self.procsText)[0])
         self.aunmp          = self.regEx.aunmp.findall(self.procsText)[0]
@@ -103,6 +106,9 @@ class ProcPars:
             self.lb[1]          = float(self.regEx.lb.findall(self.proc2sText)[0][0])
             self.gb[1]          = float(self.regEx.gb.findall(self.proc2sText)[0][0])
             self.ssb[1]         = float(self.regEx.ssb.findall(self.proc2sText)[0][0])
+            if self.ssb[1] == 2.0:
+                self.ssb[1] = 90.0
+
             self.wdw[1]         = float(self.regEx.wdw.findall(self.proc2sText)[0][0])
             self.axisNucleus[1] = self.regEx.axisNucleus.findall(self.proc2sText)[0]
             self.windowType[1]  = int(self.regEx.wdw.findall(self.proc2sText)[0])

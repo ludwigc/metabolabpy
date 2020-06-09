@@ -1,15 +1,15 @@
-##TITLE= Parameter file, TOPSPIN		Version 3.2
+##TITLE= Parameter file, TopSpin 4.0.7
 ##JCAMPDX= 5.0
 ##DATATYPE= Parameter Values
-##NPOINTS= 17	$$ modification sequence number
+##NPOINTS= 26	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= ludwigc
-$$ 2020-02-07 14:37:46.567 +0000  ludwigc@CZC8290D4T
-$$ /opt/data/ludwigc/nmr/chris_mark_06022020/1104/pdata/1/procs
-$$ process /opt/topspin3.2.6/prog/mod/proc2d
-##$ABSF1= 11.31256
-##$ABSF2= -1.705454
-##$ABSG= 5
+$$ 2020-06-09 19:15:51.523 +0100  ludwigc@macMini.lan
+$$ /Users/ludwigc/Develop/metabolabpy/tests/data/nmrData/4/pdata/1/procs
+$$ process /opt/topspin4.0.7/prog/mod/proc2d
+##$ABSF1= 0
+##$ABSF2= 0
+##$ABSG= 0
 ##$ABSL= 0
 ##$ALPHA= 0
 ##$AQORDER= 0
@@ -70,7 +70,12 @@ $$ process /opt/topspin3.2.6/prog/mod/proc2d
 ##$Mdd_CsLAMBDA= 0
 ##$Mdd_CsNITER= 0
 ##$Mdd_CsNORM= 0
+##$Mdd_CsVE= yes
 ##$Mdd_CsZF= 0
+##$Mdd_LrLAMBDA= 0
+##$Mdd_LrNITER= 0
+##$Mdd_LrRANK= 0
+##$Mdd_LrZF= 0
 ##$Mdd_mod= 0
 ##$NCOEF= 0
 ##$NC_proc= -5
@@ -82,8 +87,8 @@ $$ process /opt/topspin3.2.6/prog/mod/proc2d
 ##$NZP= 0
 ##$OFFSET= 11.31256
 ##$PC= 1
-##$PHC0= 167.3389
-##$PHC1= -90
+##$PHC0= 191.851
+##$PHC1= -93.1
 ##$PH_mod= 1
 ##$PKNL= yes
 ##$PPARMOD= 1
@@ -94,21 +99,27 @@ $$ process /opt/topspin3.2.6/prog/mod/proc2d
 ##$PSCAL= 0
 ##$PSIGN= 0
 ##$PYNMP= <>
+##$RDF1= 0
+##$RDF2= 0
+##$RDFWHM= 0
+##$RDINT= 0
+##$RDPOS= 0
 ##$REVERSE= no
 ##$SF= 600.129932741287
 ##$SI= 1024
-##$SIGF1= 11.31256
-##$SIGF2= -1.705454
+##$SIGF1= 0
+##$SIGF2= 0
 ##$SINO= 400
 ##$SIOLD= 131072
-##$SPECTYP= <>
+##$SPECTYP= <HSQC>
+##$SREF_mod= 1
 ##$SREGLST= <1H.H2O+D2O>
 ##$SSB= 2
 ##$STSI= 1024
 ##$STSR= 0
 ##$SW_p= 7812.5
 ##$SYMM= 0
-##$S_DEV= 10244
+##$S_DEV= 29356
 ##$TDeff= 1024
 ##$TDoff= 0
 ##$TI= <mtac_spc1d H2O+D2O /opt ludwigc {4  A1 - 401}
@@ -123,8 +134,8 @@ $$ process /opt/topspin3.2.6/prog/mod/proc2d
 ##$USERP3= <user>
 ##$USERP4= <user>
 ##$USERP5= <user>
-##$WDW= 4
+##$WDW= 3
 ##$XDIM= 1024
-##$YMAX_p= 128851649
-##$YMIN_p= -8988110
+##$YMAX_p= 131105623
+##$YMIN_p= -26587759
 ##END=

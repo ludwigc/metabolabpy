@@ -1,12 +1,12 @@
-##TITLE= Parameter file, TOPSPIN		Version 3.2
+##TITLE= Parameter file, TopSpin 4.0.7
 ##JCAMPDX= 5.0
 ##DATATYPE= Parameter Values
-##NPOINTS= 6	$$ modification sequence number
+##NPOINTS= 12	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= ludwigc
-$$ 2020-02-06 17:29:54.188 +0000  ludwigc@CZC8290D4T
-$$ /opt/data/ludwigc/nmr/chris_mark_06022020/1104/pdata/1/proc
-$$ process /opt/topspin3.2.6/prog/mod/dataserver
+$$ 2020-06-09 19:15:44.075 +0100  ludwigc@macMini.lan
+$$ /Users/ludwigc/Develop/metabolabpy/tests/data/nmrData/4/pdata/1/proc
+$$ process /opt/topspin4.0.7/prog/mod/dataserver
 ##$ABSF1= 1000
 ##$ABSF2= -1000
 ##$ABSG= 5
@@ -82,8 +82,8 @@ $$ process /opt/topspin3.2.6/prog/mod/dataserver
 ##$NZP= 1
 ##$OFFSET= 11.31256
 ##$PC= 1.4
-##$PHC0= 167.3389
-##$PHC1= -90
+##$PHC0= 191.851
+##$PHC1= -93.1
 ##$PH_mod= 1
 ##$PKNL= yes
 ##$PPARMOD= 1
@@ -124,7 +124,7 @@ Tub>
 ##$USERP3= <>
 ##$USERP4= <>
 ##$USERP5= <>
-##$WDW= 4
+##$WDW= 3
 ##$XDIM= 0
 ##$YMAX_p= 0
 ##$YMIN_p= 0
