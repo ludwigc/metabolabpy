@@ -1,5 +1,5 @@
 import numpy as np
-from metabolabpy.nmr import wdwf
+#from metabolabpy.nmr import wdwf
 from metabolabpy.nmr import acqPars
 from metabolabpy.nmr import procPars
 from metabolabpy.nmr import dispPars
