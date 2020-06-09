@@ -1,0 +1,8 @@
+Sample: L60M1 Control
+Sample Type: Primary Cells
+Treatment: Control
+Tube No: 170007277138
+NMR-Pos: A1
+:
+:
+mtac_hsqc_4096 H2O+D2O /opt ludwigc {1  A1 - 101}

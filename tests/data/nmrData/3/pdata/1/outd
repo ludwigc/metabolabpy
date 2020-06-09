@@ -1,0 +1,16 @@
+##TITLE= Parameter file, TOPSPIN		Version 3.0
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr
+$$ 2014-02-09 15:58:58.486 +0000  nmr@CZC8290D4T
+$$ /opt/topspin3.0/data/nmr/nmr/chris_anusha_07022014/33/pdata/1/outd
+$$ process /opt/topspin3.0/prog/mod/xwish3
+##$CURPLOT= <FS-1010>
+##$CURPRIN= <$FS-1010>
+##$DFORMAT= <normdp>
+##$LAYOUT= <+/2D_inv.xwp>
+##$LFORMAT= <normlp>
+##$PFORMAT= <normpl>
+##END=

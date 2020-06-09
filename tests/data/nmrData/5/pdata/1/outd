@@ -1,0 +1,16 @@
+##TITLE= Parameter file, TOPSPIN		Version 3.2
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= ludwigc
+$$ 2019-03-12 23:16:29.798 +0000  ludwigc@CZC8290D4T
+$$ /opt/data/ludwigc/nmr/chris_ohema_11032019/50/pdata/1/outd
+$$ process /opt/topspin3.2.6/prog/mod/xwish3
+##$CURPLOT= <FS-1010>
+##$CURPRIN= <$FS-1010>
+##$DFORMAT= <normdp>
+##$LAYOUT= <>
+##$LFORMAT= <normlp>
+##$PFORMAT= <normpl>
+##END=

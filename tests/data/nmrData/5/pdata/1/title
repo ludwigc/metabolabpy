@@ -1,0 +1,12 @@
+﻿Sample: 25
+Sample Type: Cell extract (100cm plate)
+Treatment: Rep 3 HighO2 1
+Labelling: 10mM Universal 13C glugocse 
+Tube No: 8080
+NMR-Pos: A4
+Acct No: 796
+User: Ohema
+Operator: Chris
+Date: 
+my ID : Note: these ar the second set (i.e 1 is rep 4; 2 is 5; 3 is 6) 
+mtac_hsqc_4096 D2O /opt ludwigc {1  A4 - 125}

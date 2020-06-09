@@ -1,0 +1,36 @@
+##TITLE= Audit trail, TOPSPIN		Version 3.0
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= byrnej
+$$ /opt/topspin3.0/data/byrnej/nmr/29022012-byrnej/2/pdata/1/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2012-02-29 14:23:04.055 +0000>,<jinkang>,<CZC8290D4T>,<go>,<TOPSPIN 3.0>,
+      <created by zg
+	started at 2012-02-29 13:58:05.700 +0000,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       86 90 A0 23 B2 65 CF 29 21 0C E9 63 6F 5B 80 5A
+       data hash MD5: 16K * 32
+       B2 E2 B1 15 BF 85 8A 4B DD A5 26 05 BA C2 29 E6>)
+(   2,<2012-02-29 14:23:06.642 +0000>,<jinkang>,<CZC8290D4T>,<audit>,<TOPSPIN 3.0>,
+      <user comment:
+       ICON-NMR User ID: byrnej
+       data hash MD5: 16K * 32
+       B2 E2 B1 15 BF 85 8A 4B DD A5 26 05 BA C2 29 E6>)
+(   3,<2012-05-29 14:23:26.019 +0100>,<byrnej>,<CZC8290D4T>,<proc2d>,<TOPSPIN 3.0>,
+      <Start of raw data processing
+       xfb F2: SI = 8K BC_mod = 4 WDW = 3 SSB = 0 FT_mod = 6 PKNL = 1 F1: SI = 128 WDW = 3 SSB = 0 FT_mod = 6 PH_mod = 2
+       data hash MD5: 8K * 128
+       28 67 D0 93 83 9E E6 74 52 FF 0F CD 42 E6 D7 26>)
+(   4,<2012-05-29 14:23:28.209 +0100>,<byrnej>,<CZC8290D4T>,<proc2d>,<TOPSPIN 3.0>,
+      <tilt
+       data hash MD5: 8K * 128
+       74 D9 79 7A 3C 25 8C 5C C0 AF 94 30 64 E6 28 98>)
+(   5,<2012-05-29 14:23:30.143 +0100>,<byrnej>,<CZC8290D4T>,<proc2d>,<TOPSPIN 3.0>,
+      <symj
+       data hash MD5: 8K * 128
+       5C FD F1 EA BD F9 2B E0 98 CA CC 5F C5 AB BF A8>)
+##END=
+
+$$ hash MD5
+$$ E2 58 8D 6B 20 30 26 62 B6 C9 34 C7 0C 34 34 91

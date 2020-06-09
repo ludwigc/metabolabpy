@@ -183,7 +183,7 @@ class NmrData:
         else:
             self.ppm1 = self.points2Hz(np.linspace(npts - 1, 0, npts), 0)
 
-        if (self.dim > 1): # pragma: no cover
+        if (self.dim > 1):
             npts = int(len(self.spc))
             if (self.disp.axisType2 == 'ppm'):
                 self.ppm2 = self.points2ppm(np.linspace(npts - 1, 0, npts), 1)
@@ -193,7 +193,7 @@ class NmrData:
         # end calcPPM
 
     def conv(self, fid):
-        f1 = fid
+        f1 = np.copy(fid)
         x = np.linspace(0, len(fid) - 1, len(fid))
         f0 = np.copy(fid)
         filtFid = fid[list(range(round(self.acq.groupDelay)))]
@@ -231,11 +231,10 @@ class NmrData:
         # end conv
 
     def fidOffsetCorrection(self, fid):
+        fid = np.copy(fid)
         if (self.fidOffsetCorr > 0):
-            meanRange = np.linspace(len(fid) - self.fidOffsetCorr - 1, len(fid) - 1, self.fidOffsetCorr, dtype='int')
-            rMean = np.mean(fid[meanRange].real)
-            iMean = np.mean(fid[meanRange].imag)
-            fid -= (rMean + 1j * iMean)
+            mMean = np.mean(fid[:self.fidOffsetCorr])
+            fid -= mMean
 
         return fid
         # end fidOffsetCorrection
@@ -459,7 +458,7 @@ class NmrData:
         self.phase(self.proc.ph0[0], 360.0 * self.acq.groupDelay + self.proc.ph1[0], self.proc.nPoints[0])
         # end procSpc1D
 
-    def procSpc2D(self):
+    def procSpc2D(self, testQuad2d = False, noAbs = False):
         fid = np.copy(self.fid)
         self.spc = np.resize(self.spc, (self.proc.nPoints[0], self.proc.nPoints[1]))
         self.spc *= 0
@@ -487,34 +486,36 @@ class NmrData:
             fid[k] = fid2
 
         fid = np.ndarray.transpose(fid)
-        fid = self.quad2D(fid)
-        for k in range(len(fid)):
-            fid2 = np.copy(fid[k])
-            fid2 = self.gibbs(fid2)
-            fid2 = self.apodise(fid2, 1, self.proc.lb[1], self.proc.gb[1], self.proc.ssb[1], 0.0, self.acq.sw_h[1])
-            fid2 = self.zeroFill(fid2, 1)
-            fid2 = fftshift(fft(fid2))
-            if (self.acq.fnMode != 1):
-                fid2 = self.phase2(fid2, self.proc.ph0[1], self.proc.ph1[1])
-                self.spc[k] = fid2.real
-            else:
-                self.spc[k] = fid2
+        if testQuad2d== False:
+            fid = self.quad2D(fid)
+            for k in range(len(fid)):
+                fid2 = np.copy(fid[k])
+                fid2 = self.gibbs(fid2)
+                fid2 = self.apodise(fid2, 1, self.proc.lb[1], self.proc.gb[1], self.proc.ssb[1], 0.0, self.acq.sw_h[1])
+                fid2 = self.zeroFill(fid2, 1)
+                fid2 = fftshift(fft(fid2))
+                if (self.acq.fnMode != 1):
+                    fid2 = self.phase2(fid2, self.proc.ph0[1], self.proc.ph1[1])
+                    self.spc[k] = fid2.real
+                else:
+                    self.spc[k] = fid2
 
-        self.spc = np.ndarray.transpose(self.spc)
-        if ((self.acq.fnMode == 1) and (self.proc.tilt == True)):
-            self.tiltJRes()
+            self.spc = np.ndarray.transpose(self.spc)
+            if ((self.acq.fnMode == 1) and (self.proc.tilt == True)):
+                self.tiltJRes()
 
-        if(self.acq.fnMode == 1):
-            for k in range(len(self.spc)):
-                self.spc[k] = np.abs(self.spc[k])
+            if self.acq.fnMode == 1 and noAbs is False:
+                for k in range(len(self.spc)):
+                    self.spc[k] = np.abs(self.spc[k])
 
-            if(self.proc.symj == True):
-                self.symjres()
-            
+                if(self.proc.symj == True):
+                    self.symjres()
+
 
         # end procSpc2D
 
     def quad2D(self, fid):
+        fid = np.copy(fid)
         inc = self.acq.fnMode
         # MetLab: 6,     0,    3,      2,            1,   4
         # FnMode: 1,     2,    3,      4,            5,   6
@@ -526,16 +527,7 @@ class NmrData:
         if (inc == 1):
             fid = fid #rFid + 1j * iFid
 
-        if (inc == 2):
-            fid = rFid + 1j * iFid
-
-        if (inc == 3):
-            fid = rFid + 1j * iFid
-
-        if (inc == 4):
-            fid = rFid + 1j * iFid
-
-        if (inc == 5):
+        if inc > 1 and inc < 6:
             fid = rFid + 1j * iFid
 
         if (inc == 6):

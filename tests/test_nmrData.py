@@ -19,7 +19,7 @@ import numpy as np
 
 
 class nmrDataTestCase(unittest.TestCase):
-    
+
     def test_apodise(self):
         pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         eName = "1"  # 1D NMR data in exp 1
@@ -66,6 +66,18 @@ class nmrDataTestCase(unittest.TestCase):
         nd.autoRef(True)
         self.assertEqual(nd.refShift[0], 0.0)
         self.assertEqual(nd.refPoint[0], 10342)
+        pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        eName = "2"  # 2D Jres NMR data in exp 2
+        nd = nmrData.NmrData()
+        nd.dataSetName = pName
+        nd.dataSetNumber = eName
+        nd.readSpc()
+        nd.procSpc2D()
+        nd.autoRef(True)
+        self.assertEqual(nd.refShift[0], 0.0)
+        self.assertEqual(nd.refPoint[0], 817)
+        self.assertAlmostEqual(nd.refShift[1], 4.7, 5)
+        self.assertEqual(nd.refPoint[1], 64)
 
     #def test_baseline1d(self):
 
@@ -78,7 +90,19 @@ class nmrDataTestCase(unittest.TestCase):
         nd.readSpc()
         nd.calcPPM()
         self.assertAlmostEqual(nd.ppm1[0], 13.996205596)
-        self.assertAlmostEqual(nd.ppm1[len(nd.ppm1)-1], 0.0)
+        self.assertAlmostEqual(nd.ppm1[len(nd.ppm1) - 1], 0.0)
+        pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        eName = "2"  # 2D Jres NMR data in exp 2
+        nd = nmrData.NmrData()
+        nd.dataSetName = pName
+        nd.dataSetNumber = eName
+        nd.readSpc()
+        nd.procSpc2D()
+        nd.calcPPM()
+        self.assertAlmostEqual(nd.ppm1[0], 12.016570688775726)
+        self.assertAlmostEqual(nd.ppm1[-1], 0.0)
+        self.assertAlmostEqual(nd.ppm2[0], 0.08331489010884505)
+        self.assertAlmostEqual(nd.ppm2[-1], 0.0)
 
     def test_conv(self):
         pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
@@ -87,7 +111,14 @@ class nmrDataTestCase(unittest.TestCase):
         nd.dataSetName = pName
         nd.dataSetNumber = eName
         nd.readSpc()
-        f = nd.conv(nd.fid[0])
+        fpMultiplier = [0.8537643573214553, 0.881140405836974]
+        for k in range(2):
+            nd.proc.convWindowType[0] = k
+            f = nd.conv(nd.fid[0])
+            fidNo = int(nd.acq.groupDelay + 1)
+            v1 = nd.fid[0][fidNo].real
+            v2 = f[fidNo].real
+            self.assertAlmostEqual(v2/v1, fpMultiplier[k], 8)
 
     def test_fidOffsetCorrection(self):
         pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
@@ -96,8 +127,9 @@ class nmrDataTestCase(unittest.TestCase):
         nd.dataSetName = pName
         nd.dataSetNumber = eName
         nd.readSpc()
+        nd.fidOffsetCorr = 128
         f = nd.fidOffsetCorrection(nd.fid[0])
-
+        self.assertEqual(np.mean(f[:nd.fidOffsetCorr].real), 0.0)
 
     def test_gibbs(self):
         pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
@@ -126,8 +158,17 @@ class nmrDataTestCase(unittest.TestCase):
         nd.dataSetName = pName
         nd.dataSetNumber = eName
         nd.readSpc()
-        m = nd.hilbert1(nd.spc[0].real, 0)
+        m = nd.hilbert1(nd.spc[0].real, 1)
         self.assertTrue(np.iscomplex(m[0]))
+        pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        eName = "2"  # 2D Jres NMR data in exp 1
+        nd = nmrData.NmrData()
+        nd.dataSetName = pName
+        nd.dataSetNumber = eName
+        nd.readSpc()
+        nd.procSpc2D()
+        m = nd.hilbert1(nd.spc, 2)
+        self.assertTrue(np.iscomplex(m[0][0]))
 
     def test_multiply(self):
         pName = os.path.join(os.path.dirname(__file__),"data","nmrData") # directory of test data set
@@ -179,6 +220,24 @@ class nmrDataTestCase(unittest.TestCase):
 
     #def test_phase2d(self, ph0, ph1, dim):
 
+    def test_phase2d(self):
+        pName = os.path.join("/Users/ludwigc/Develop/metabolabpy/tests", "data",
+                             "nmrData")  # directory of test data set
+        eName = "3"  # 2D HSQC NMR data in exp 3
+        nd = nmrData.NmrData()
+        nd.dataSetName = pName
+        nd.dataSetNumber = eName
+        nd.readSpc()
+        nd.procSpc2D()
+        ppm = [[]]
+        ppm[0].append(1.64164)
+        ppm[0].append(20.7576)
+        pts = nd.ppm2points2d(ppm)
+        int1 = nd.spc[int(pts[0][1])][int(pts[0][0])].real
+        nd.phase2d(180.0, 0.0, 2)
+        int2 = nd.spc[int(pts[0][1])][int(pts[0][0])].real
+        self.assertAlmostEqual(int1, -int2)
+
     def test_phase3(self):
         pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         eName = "1"  # 1D NMR data in exp 1
@@ -224,7 +283,21 @@ class nmrDataTestCase(unittest.TestCase):
         pts2 = nd.ppm2points(1, 0)
         self.assertAlmostEqual(pts2 - pts1, 4682)
 
-    #def test_ppm2points2d(self, ppm):
+    def test_ppm2points2d(self):
+        pName = os.path.join("/Users/ludwigc/Develop/metabolabpy/tests", "data",
+                             "nmrData")  # directory of test data set
+        eName = "3"  # 2D HSQC NMR data in exp 3
+        nd = nmrData.NmrData()
+        nd.dataSetName = pName
+        nd.dataSetNumber = eName
+        nd.readSpc()
+        nd.procSpc2D()
+        ppm = [[]]
+        ppm[0].append(1.64164)
+        ppm[0].append(20.7576)
+        pts = nd.ppm2points2d(ppm)
+        self.assertEqual(int(pts[0][0]), 129)
+        self.assertEqual(int(pts[0][1]), 465)
 
     def test_procSpc(self):
         pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
@@ -247,9 +320,64 @@ class nmrDataTestCase(unittest.TestCase):
         self.assertEqual(len(nd.spc[0]), 65536)         # check number of data points in Fourier transformed spectrum
 
 
-    #def test_procSpc2D(self):
-    #def test_quad2D(self, fid):
-    #def test_readPipe2D(self, pName, fName):
+    def test_procSpc2D(self):
+        pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        eName = "2"  # 2D NMR data in exp 2
+        nd = nmrData.NmrData()
+        nd.dataSetName = pName
+        nd.dataSetNumber = eName
+        nd.readSpc()
+        nd.procSpc2D()
+        self.assertEqual(len(nd.spc), 128)  # check number of data points in Fourier transformed spectrum  (indirect dimension)
+        self.assertEqual(len(nd.spc[0]), 8192)  # check number of data points in Fourier transformed spectrum (direct dimension)
+
+    def test_quad2D(self):
+        # test QF data (FnMODE = 1)
+        pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        eName = "2"  # 2D Jres NMR data in exp 2
+        nd = nmrData.NmrData()
+        nd.dataSetName = pName
+        nd.dataSetNumber = eName
+        nd.readSpc()
+        nd.procSpc2D(True)
+        f = np.copy(nd.quad2D(nd.fid))
+        self.assertEqual(f[0][100].real, -309905)
+        f = [[]]
+        nd = [[]]
+        # test E/A data (FnMODE = 6)
+        pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        eName = "3"  # 2D Jres NMR data in exp 2
+        nd = nmrData.NmrData()
+        nd.dataSetName = pName
+        nd.dataSetNumber = eName
+        nd.readSpc()
+        nd.procSpc2D(True)
+        f = np.copy(nd.quad2D(nd.fid))
+        self.assertEqual(f[0][100].real, 1206.0)
+        f = [[]]
+        nd = [[]]
+        # test States & States-TPPI data data (FnMODE = 5)
+        pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        eName = "4"  # 2D Jres NMR data in exp 2
+        nd = nmrData.NmrData()
+        nd.dataSetName = pName
+        nd.dataSetNumber = eName
+        nd.readSpc()
+        nd.procSpc2D(True)
+        f = np.copy(nd.quad2D(nd.fid))
+        self.assertEqual(f[0][100].real, 40668.0)
+
+    def test_readPipe2D(self):
+        pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        eName = "5"  # 2D HSQC NMR data rocessed with NMRPipe in exp 15
+        dName = "test.dat"
+        nd = nmrData.NmrData()
+        nd.dataSetName = pName
+        nd.dataSetNumber = eName
+        nd.readSpc()
+        nd.readPipe2D(pName + os.sep + eName + '.proc', dName)
+        self.assertEqual(len(nd.spc), 16384)
+        self.assertEqual(len(nd.spc[0]), 922)
 
     def test_readSpc(self):
         pName = os.path.join(os.path.dirname(__file__),"data","nmrData") # directory of test data set
@@ -301,8 +429,42 @@ class nmrDataTestCase(unittest.TestCase):
         nd.readSpc()
         f = nd.smo(nd.fid[0])
 
-    #def test_symjres(self):
-    #def test_tiltJRes(self):
+    def test_symjres(self):
+        pName = os.path.join("/Users/ludwigc/Develop/metabolabpy/tests", "data",
+                             "nmrData")  # directory of test data set
+        eName = "2"  # 2D HSQC NMR data in exp 3
+        nd = nmrData.NmrData()
+        nd.dataSetName = pName
+        nd.dataSetNumber = eName
+        nd.readSpc()
+        nd.proc.tilt = False
+        nd.proc.symj = False
+        nd.procSpc2D(False, True)
+        nd.tiltJRes()
+        for k in range(len(nd.spc)):
+            nd.spc[k] = np.abs(nd.spc[k])
+
+        nd.symjres()
+        pt = np.where(np.transpose(nd.spc)[1406].real == np.amax(np.transpose(nd.spc)[1406].real))[0][0]
+        self.assertEqual(pt, 23)
+
+    def test_tiltJRes(self):
+        pName = os.path.join("/Users/ludwigc/Develop/metabolabpy/tests", "data",
+                             "nmrData")  # directory of test data set
+        eName = "2"  # 2D HSQC NMR data in exp 3
+        nd = nmrData.NmrData()
+        nd.dataSetName = pName
+        nd.dataSetNumber = eName
+        nd.readSpc()
+        nd.proc.tilt = False
+        nd.proc.symj = False
+        nd.procSpc2D(False, True)
+        nd.tiltJRes()
+        for k in range(len(nd.spc)):
+            nd.spc[k] = np.abs(nd.spc[k])
+
+        pt = np.where(np.transpose(nd.spc)[1406].real == np.amax(np.transpose(nd.spc)[1406].real))[0][0]
+        self.assertEqual(pt, 49)
 
     def test_waterSupp(self):
         pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set

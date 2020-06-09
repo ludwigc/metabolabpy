@@ -1,0 +1,341 @@
+# 1 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4"
+;hsqcphprsp.ug4
+;avance-version (12/01/11)
+;HSQC
+;2D H-1/X correlation via double inept transfer
+;phase sensitive
+;with decoupling during acquisition
+;with 15N decoupling during incrementation
+;
+;G. Bodenhausen & D.J. Ruben, Chem. Phys. Lett. 69, 185 (1980)
+;
+;$CLASS=HighRes
+;$DIM=2D
+;$TYPE=
+;$SUBTYPE=
+;$COMMENT=
+
+; with 13C 180deg soft pulses and gradients
+
+# 1 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/Avance.incl" 1
+;Avance3.incl
+;   for AV III
+;
+;avance-version (13/06/17)
+;
+;$CLASS=HighRes Incl
+;$COMMENT=
+
+
+# 169 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/Avance.incl"
+;$Id: Avance3.incl,v 1.9.8.3 2013/08/30 09:44:49 ber Exp $
+# 20 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4" 2
+
+# 1 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/Delay.incl" 1
+;Delay.incl  -  include file for commonly used delays
+;
+;version (13/08/07)
+;
+;$CLASS=HighRes Incl
+;$COMMENT=
+
+# 9 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/Delay.incl"
+;general delays
+
+define delay DELTA
+define delay DELTA1
+define delay DELTA2
+define delay DELTA3
+define delay DELTA4
+define delay DELTA5
+define delay DELTA6
+define delay DELTA7
+define delay DELTA8
+define delay DELTA9
+define delay DELTA10
+define delay DELTA11
+define delay DELTA12
+define delay DELTA13
+define delay DELTA14
+define delay DELTA15
+define delay DELTA16
+
+define delay TAU
+define delay TAU1
+define delay TAU2
+define delay TAU3
+define delay TAU4
+define delay TAU5
+define delay TAU6
+define delay TAU7
+define delay TAU8
+define delay TAU9
+# 40 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/Delay.incl"
+define delay INCR1
+define delay INCR2
+define delay INCR3
+define delay INCR4
+define delay INCR5
+define delay INCR6
+
+
+;delays for centering pulses
+# 50 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/Delay.incl"
+define delay CEN_HN1
+define delay CEN_HN2
+define delay CEN_HN3
+define delay CEN_HC1
+define delay CEN_HC2
+define delay CEN_HC3
+define delay CEN_HC4
+define delay CEN_HP1
+define delay CEN_HP2
+define delay CEN_CN1
+define delay CEN_CN2
+define delay CEN_CN3
+define delay CEN_CN4
+define delay CEN_CP1
+define delay CEN_CP2
+
+
+;loop counters
+# 69 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/Delay.incl"
+define loopcounter COUNTER
+define loopcounter SCALEF
+define loopcounter FACTOR1
+define loopcounter FACTOR2
+define loopcounter FACTOR3
+define loopcounter FACTOR4
+define loopcounter FACTOR5
+define loopcounter FACTOR6
+
+
+# 80 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/Delay.incl"
+;$Id: Delay.incl,v 1.13.8.2 2013/08/30 09:44:49 ber Exp $
+# 21 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4" 2
+
+# 1 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/Grad.incl" 1
+;Grad2.incl  -  include file for Gradient Spectroscopy
+;   for TCU3
+;
+;avance-version (07/01/17)
+;
+;$CLASS=HighRes Incl
+;$COMMENT=
+
+# 27 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/Grad.incl"
+define list<gradient> EA=<EA>
+
+
+# 31 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/Grad.incl"
+;$Id: Grad2.incl,v 1.13.8.1 2012/01/31 17:56:17 ber Exp $
+# 22 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4" 2
+
+
+# 25 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4"
+"p2=p1*2"
+"p4=p3*2"
+"d4=1s/(cnst2*4)"
+"p22=p21*2"
+"d11=30m"
+"d12=20u"
+"d13=4u"
+
+
+"d0=3u"
+# 36 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4"
+"in0=inf1/2"
+
+
+;"DELTA=d0*2+p2"
+# 44 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4"
+"DELTA=d0*2+p2"
+
+
+"DELTA1=d4-larger(p2,p14)/2-p19-d16-4u"
+# 1 "mc_line 49 file /opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4 exp. def. part of mc cmd. before ze"
+define delay MCWRK
+define delay MCREST
+define delay d0orig
+"d0orig=d0"
+define loopcounter t1loop
+"t1loop=0"
+define loopcounter ph1loop
+"ph1loop=0"
+define loopcounter ST1CNT
+"ST1CNT = td1 / 2"
+"MCREST = d11 - d11"
+"MCWRK = 0.111111*d11"
+
+    dccorr
+# 49 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4"
+# 49 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4"
+1 ze 
+# 1 "mc_line 49 file /opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4 exp. def. of mc cmd. after ze"
+      "d0=d0orig + t1loop * in0 "
+      "phval6 = (ph1loop % 4) * 90"
+      MCWRK ip6 + phval6
+      "phval9 = (ph1loop % 4) * 90"
+      MCWRK ip9 + phval9
+      "phval29 = (ph1loop % 4) * 90"
+      MCWRK ip29 + phval29
+# 50 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4"
+
+
+# 53 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4"
+  d11 pl12:f2 
+
+# 1 "mc_line 55 file /opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4 exp. start label for mc cmd."
+2 MCWRK  * 4 do:f2
+LBLF1, MCWRK  * 4
+LBLST1, MCWRK 
+  MCREST
+# 56 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4"
+
+# 60 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4"
+  4u
+
+
+  d12 pl9:f1
+  d1 cw:f1 ph29
+  d13 do:f1
+  d12 pl1:f1
+  p1 ph1
+  ;d4 pl2:f2
+  4u setnmr3|0 setnmr0|34|32|33 ctrlgrad 0
+  p19:gp4
+  d16
+  DELTA1 pl0:f2
+  ;(center (p2 ph2) (p4 ph9):f2 )
+  (center (p2 ph1) (p14:sp3 ph9):f2 )
+  4u
+  p19:gp4
+  d16
+  DELTA1 pl2:f2
+  ;d4
+  (p1 ph3) 
+  4u 
+  p16:gp1
+  d16
+  (p3 ph6):f2
+  d0
+  ;(p2 ph8)
+# 90 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4"
+  (p2 ph8)
+
+  d0
+  (p4 ph7):f2
+  DELTA
+  (p3 ph7):f2
+  4u 
+  p16:gp2
+  d16
+  (p1 ph4) 
+  4u
+  p19:gp3
+  d16
+  DELTA1 pl0:f2
+  ;(center (p2 ph2) (p4 ph5):f2 )
+  (center (p2 ph1) (p14:sp3 ph5):f2 )
+  4u
+  DELTA1 
+  p19:gp3
+  d16 pl12:f2
+
+# 114 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4"
+  4u setnmr3^0 setnmr0^34^32^33 ctrlgrad 7
+
+
+  go=2 ph31 cpd2:f2 
+# 1 "mc_line 118 file /opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4 exp. mc cmd. in line"
+  MCWRK  do:f2 wr #0 if #0 zd 
+
+  "ph1loop+=1"
+      "d0=d0orig + t1loop * in0 "
+      "phval6 = (ph1loop % 4) * 90"
+      MCWRK ip6 + phval6
+      "phval9 = (ph1loop % 4) * 90"
+      MCWRK ip9 + phval9
+      "phval29 = (ph1loop % 4) * 90"
+      MCWRK ip29 + phval29
+  lo to LBLF1 times 2
+  MCWRK 
+
+  "t1loop+=1"
+      "d0=d0orig + t1loop * in0 "
+      "phval6 = (ph1loop % 4) * 90"
+      MCWRK ip6 + phval6
+      "phval9 = (ph1loop % 4) * 90"
+      MCWRK ip9 + phval9
+      "phval29 = (ph1loop % 4) * 90"
+      MCWRK ip29 + phval29
+  lo to LBLST1 times ST1CNT
+  MCWRK 
+  "t1loop=0"
+  "ph1loop=0"
+  MCWRK
+# 119 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4"
+exit 
+  
+ph0=0
+ph1=0
+ph2=0
+ph3=1
+ph4=1
+ph5=0 0 0 0 0 0 0 0 2 2 2 2 2 2 2 2
+ph6=0 2
+ph7=0 0 0 0 2 2 2 2
+ph8=0 0 2 2
+ph9=0 0 0 0 0 0 0 0 2 2 2 2 2 2 2 2
+ph29=0
+ph31=0 2 0 2 2 0 2 0
+# 135 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4"
+;pl1 : f1 channel - power level for pulse (default)
+;pl2 : f2 channel - power level for pulse (default)
+;pl9 : f1 channel - power level for presaturation
+;pl12: f2 channel - power level for CPD/BB decoupling
+;p1 : f1 channel -  90 degree high power pulse
+;p2 : f1 channel - 180 degree high power pulse
+;p3 : f2 channel -  90 degree high power pulse
+;p4 : f2 channel - 180 degree high power pulse
+;d0 : incremented delay (2D)                         [3 usec]
+;d1 : relaxation delay; 1-5 * T1
+;d4 : 1/(4J)XH
+;d11: delay for disk I/O                             [30 msec]
+;d12: delay for power switching                      [20 usec]
+;d13: short delay                                    [4 usec]
+;cnst2: = J(XH)
+;inf1: 1/SW(X) = 2 * DW(X)
+;in0: 1/(2 * SW(X)) = DW(X)
+;nd0: 2
+;ns: 4 * n
+;ds: 16
+;td1: number of experiments
+;FnMODE: States-TPPI, TPPI, States or QSEQ
+;cpd2: decoupling according to sequence defined by cpdprg2
+;pcpd2: f2 channel - 90 degree pulse for decoupling sequence
+
+;for z-only gradients:
+;gpz1: 60%
+;gpz2: 55%
+;gpz3: 11%
+;gpz4: 6%
+
+;use gradient files:   
+;gpnam1: SMSQ10.100
+;gpnam2: SMSQ10.100
+;gpnam3: SMSQ10.100
+;gpnam4: SMSQ10.100
+# 172 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4"
+                                          ;preprocessor-flags-start
+;LABEL_CN: for C-13 and N-15 labeled samples start experiment with
+;             option -DLABEL_CN (eda: ZGOPTNS)
+                                          ;preprocessor-flags-end
+
+
+                                          ;preprocessor-flags-start
+;FLAG_BLK: for setnmr3^0 setnmr0^34^32^33 ctrlgrad 7 before d1 rather than go
+;             option -DFLAG_BLK: (eda: ZGOPTNS)
+                                          ;preprocessor-flags-end
+# 185 "/opt/topspin3.2.6/exp/stan/nmr/lists/pp/user/hsqcphprsp.ug4"
+;$Id: hsqcphprsp.ug4,v 1.6 2012/01/31 17:49:26 ber Exp $

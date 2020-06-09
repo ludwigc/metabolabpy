@@ -1,0 +1,44 @@
+##TITLE= Audit trail, TOPSPIN		Version 3.0
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmr
+$$ /opt/topspin3.0/data/nmr/nmr/chris_anusha_07022014/33/pdata/1/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2014-02-09 20:12:55.748 +0000>,<nmr>,<CZC8290D4T>,<go>,<TOPSPIN 3.0>,
+      <created by zg
+	started at 2014-02-09 15:59:44.655 +0000,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       32 B3 A2 B9 6F 79 BF DC B0 77 80 5A 7C 5E BB 63
+       data hash MD5: 4K * 4K
+       E8 95 98 65 41 28 D1 96 4E 34 F7 D0 28 35 11 EB>)
+(   2,<2014-02-09 20:12:58.551 +0000>,<nmr>,<CZC8290D4T>,<audit>,<TOPSPIN 3.0>,
+      <user comment:
+       ICON-NMR User ID: nmr
+       data hash MD5: 4K * 4K
+       E8 95 98 65 41 28 D1 96 4E 34 F7 D0 28 35 11 EB>)
+(   3,<2014-02-11 16:01:53.355 +0000>,<nmr>,<CZC8290D4T>,<proc2d>,<TOPSPIN 3.0>,
+      <Start of raw data processing
+       xfb F2: SI = 1K BC_mod = 6 BCFW = 0.25 WDW = 4 SSB = 2 FT_mod = 6 PKNL = 1 PHC0 = 172.6264 PHC1 = -90 F1: SI = 4K WDW = 4 SSB = 2 FT_mod = 6 STSR = 256 STSI = 3584 PHC0 = 0 PHC1 = 0
+       data hash MD5: 1K * 3584
+       2C 49 A3 4E C3 0B 03 5F 9D 04 BE 8F 9D 18 0A 1D>)
+(   4,<2014-02-11 16:03:18.198 +0000>,<nmr>,<CZC8290D4T>,<proc2d>,<TOPSPIN 3.0>,
+      <pk2 fgphup F2: PHC0 = -15.48013 PHC1 = 18.325
+       data hash MD5: 1K * 3584
+       AA F1 C5 B7 81 BD DC 86 C0 2C 3E 39 AA 21 97 60>)
+(   5,<2014-02-11 16:04:15.852 +0000>,<nmr>,<CZC8290D4T>,<proc2d>,<TOPSPIN 3.0>,
+      <pk2 fgphup F2: PHC0 = 29.12671 PHC1 = -39.175
+       data hash MD5: 1K * 3584
+       1C AD 2E F8 63 67 82 B6 C6 AC 40 9A DD CA 9F 2A>)
+(   6,<2014-02-11 16:04:34.163 +0000>,<nmr>,<CZC8290D4T>,<proc2d>,<TOPSPIN 3.0>,
+      <pk2 fgphup F2: PHC0 = 6.287988 PHC1 = -8.45
+       data hash MD5: 1K * 3584
+       39 CE A2 32 C1 FC 90 60 A7 DC F4 F2 7A 93 63 5C>)
+(   7,<2014-02-11 16:05:07.025 +0000>,<nmr>,<CZC8290D4T>,<proc2d>,<TOPSPIN 3.0>,
+      <pk1 fgphup F1: PHC0 = -8.508142 PHC1 = 8.375
+       data hash MD5: 1K * 3584
+       BC 31 AB 7B C5 8C A1 47 54 86 97 DD D1 97 82 13>)
+##END=
+
+$$ hash MD5
+$$ F9 CE 08 B4 BD 0E FF 68 B0 25 CF 2F 24 E0 4E E0
