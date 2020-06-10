@@ -50,7 +50,7 @@ class NmrPreProc:
         self.exportSamplesInRowsCols   = 0
         # end __init__
 
-    def __str__(self):
+    def __str__(self): # pragma: no cover
         strStr = "NMR data pre-processing"
         return strStr
         # end __str__

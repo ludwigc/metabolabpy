@@ -46,6 +46,27 @@ class nmrDataTestCase(unittest.TestCase):
         nd.readSpc()
         nd.autobaseline1d()
 
+    def test_apcbcGetHist(self):
+        pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        eName = "1"  # 1D NMR data in exp 1
+        nd = nmrData.NmrData()
+        nd.dataSetName = pName
+        nd.dataSetNumber = eName
+        nd.readSpc()
+        nd.autobaseline1d()
+        h1 = nd.apc.getHist(nd.spc[0], np.linspace(-nd.apc.nMax, nd.apc.nMax, nd.apc.npts))
+        self.assertEqual(len(h1), 5001)
+
+    def test_apcbcSetVars(self):
+        pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        eName = "1"  # 1D NMR data in exp 1
+        nd = nmrData.NmrData()
+        nd.dataSetName = pName
+        nd.dataSetNumber = eName
+        nd.readSpc()
+        nd.apc.setVars(nd.spc[0])
+        self.assertEqual(nd.apc.npts, 65536)
+
     def test_autophase1d(self):
         pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         eName = "1"  # 1D NMR data in exp 1

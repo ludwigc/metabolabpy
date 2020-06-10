@@ -95,7 +95,7 @@ class AcqPars:
         self.regEx            = acqRegEx.AcqRegEx()
         # end __init__
         
-    def __str__(self):
+    def __str__(self): # pragma: no cover
         return self.acqusText
         # end __str__
         

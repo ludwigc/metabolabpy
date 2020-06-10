@@ -22,7 +22,7 @@ class NmrDataSet:
         self.fileFormatVersion = 0.1
         # end __init__
 
-    def __str__(self):
+    def __str__(self): # pragma: no cover
         rString  = 'MetaboLabPy NMR Data Set (v. 0.1)\n'
         rString += '__________________________________________________________________\n'
         rString += ' Number of data sets\t\t\t: {:0.0f}\n'.format(len(self.nmrdat))
@@ -216,7 +216,7 @@ class NmrDataSet:
     def exportDataSet(self):
         fName = os.path.join(self.pp.exportPathName, self.pp.exportFileName)
         try:
-            f = open(fName,'w')
+            f = open(fName, 'w')
         except:
             return
         
@@ -503,7 +503,7 @@ class NmrDataSet:
     # end readSpcs
 
     def resetDataPreProcessing(self):
-        if (self.nmrdat[self.s][0].projectedJres == False):
+        if not self.nmrdat[self.s][0].projectedJres:
             self.ftAll()
             self.baseline1dAll()
             self.autorefAll()

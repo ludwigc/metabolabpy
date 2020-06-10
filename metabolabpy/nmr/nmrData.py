@@ -99,7 +99,7 @@ class NmrData:
         spc /= scaleFact
         xaxis = np.linspace(-self.apc.nMax, self.apc.nMax, self.apc.npts)
         parEval = self.apc.fitBaseline(spc, xaxis)
-        spc2 = self.apc.baselineFitFuncEval(parEval, spc, xaxis, False)
+        spc2 = self.apc.baselineFitFuncEval(parEval, spc, xaxis) #, False)
         self.apc.pars = parEval
         self.apc.rSpc = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
         self.apc.iSpc = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
@@ -118,12 +118,12 @@ class NmrData:
         spc /= scaleFact
         xaxis = np.linspace(-self.apc.nMax, self.apc.nMax, self.apc.npts)
         parEval = self.apc.fitPhase(spc, xaxis)
-        spc2 = self.apc.phaseFitFuncEval(parEval, spc, xaxis, False)
+        spc2 = self.apc.phaseFitFuncEval(parEval, spc, xaxis) #, False)
         if (np.min(spc2.real) == -np.max(np.abs(spc2.real))):
             parEval[0] = ((parEval[0] * self.apc.mFact0 + 180.0) % 360) / self.apc.mFact0
 
         parEval[0] = (((parEval[0] * self.apc.mFact0 + 180.0) % 360) - 180.0) / self.apc.mFact0
-        spc2 = self.apc.phaseFitFuncEval(parEval, spc, xaxis, False)
+        spc2 = self.apc.phaseFitFuncEval(parEval, spc, xaxis) #, False)
         self.apc.pars = parEval
         self.apc.rSpc = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
         self.apc.iSpc = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
@@ -179,7 +179,7 @@ class NmrData:
         parEval = np.copy(self.apc.rSpc)
         parEval = np.append(parEval, self.apc.iSpc)
         # print(parEval)
-        spc2 = self.apc.baselineFitFuncEval(parEval, spc, xaxis, False)
+        spc2 = self.apc.baselineFitFuncEval(parEval, spc, xaxis) #, False)
         self.spc[0] = spc2  # *scaleFact
         # end baseline1d
 

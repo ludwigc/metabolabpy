@@ -82,7 +82,7 @@ class ProcPars:
         }
         # end __init__
 
-    def __str__(self):
+    def __str__(self): # pragma: no cover
         return self.procsText
         # end __str__
         
