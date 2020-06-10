@@ -3,10 +3,10 @@
 
 """
 
-test_nmrDataSet
+test_acqPars
 
 author(s): C. Ludwig
-origin: 26-07-2019
+origin: 05-05-2020
 
 
 """
@@ -17,7 +17,7 @@ import metabolabpy.nmr.acqPars as acqPars
 import os
 
 
-class procParsTestCase(unittest.TestCase):
+class acqParsTestCase(unittest.TestCase):
 
     def test_readAcqPars(self):
         pName = os.path.join(os.path.dirname(__file__), "data", "nmrData", "1")  # directory of spectrum

@@ -3,7 +3,7 @@
 
 """
 
-test_nmrDataSet
+test_nmrData
 
 author(s): C. Ludwig
 origin: 26-07-2019
