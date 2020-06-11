@@ -1495,6 +1495,7 @@ class main_w(object):  # pragma: no cover
         if (len(self.nd.pp.classSelect) == 0):
             self.nd.preProcInit()
 
+        self.w.rDolphinExport.setChecked(self.nd.pp.rDolphinExport)
         self.fillPreProcessingNumbers()
         sel = self.w.selectClassTW.selectedIndexes()
         cls = np.array([])
