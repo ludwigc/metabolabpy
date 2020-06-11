@@ -12,10 +12,10 @@ class DispPars:
         self.posCol     = "RGB"     #(r,g,b) or colour string (e.g. 'b')
         self.posColRGB  = (0,0,1)   
         self.negCol     = "RGB"     #(r,g,b) or colour string (e.g. 'r')
+        self.negColRGB  = (1,0,0)
         self.phRefCol   = self.cf.phaseReferenceColour
         self.phRefDS    = 1
         self.phRefExp   = 1
-        self.negColRGB  = (1,0,0)   
         self.nLevels    = 8         # integer1
         self.minLevel   = 0.01      # percentage of max
         self.maxLevel   = 0.1       # percentage of max

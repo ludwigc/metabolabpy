@@ -48,6 +48,7 @@ class NmrPreProc:
         self.exportDelimiterTab        = True
         self.exportCharacter           = ","
         self.exportSamplesInRowsCols   = 0
+        self.rDolphinExport            = False
         # end __init__
 
     def __str__(self): # pragma: no cover

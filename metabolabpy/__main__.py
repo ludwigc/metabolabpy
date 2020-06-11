@@ -77,6 +77,7 @@ class main_w(object):  # pragma: no cover
 
         self.hidePreProcessing()
         # connections
+        self.w.rDolphinExport.clicked.connect(self.setrDolphinExport)
         self.w.exportPath.returnPressed.connect(self.setExportPath)
         self.w.exportFileName.returnPressed.connect(self.setExportFileName)
         self.w.exportDelimiterTab.toggled.connect(self.setExportDelimiterTab)
@@ -2262,6 +2263,9 @@ class main_w(object):  # pragma: no cover
     def setPulseProgram(self):
         self.w.pulseProgram.setText(self.nd.nmrdat[self.nd.s][self.nd.e].pulseProgram)
         # end setPulseProgram
+
+    def setrDolphinExport(self):
+        self.nd.pp.rDolphinExport = self.w.rDolphinExport.isChecked()
 
     def setSamplesInComboBox(self):
         self.nd.pp.exportSamplesInRowsCols = self.w.samplesInComboBox.currentIndex()

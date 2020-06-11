@@ -934,6 +934,13 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_40">
                 <item>
+                 <widget class="QCheckBox" name="rDolphinExport">
+                  <property name="text">
+                   <string>rDolphin Export</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <spacer name="horizontalSpacer_31">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>

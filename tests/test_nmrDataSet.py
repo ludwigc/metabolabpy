@@ -240,7 +240,7 @@ class nmrDataSetTestCase(unittest.TestCase):
         pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         eName = ["1", "1"]  # 1D data in exp 1
         nd = nmrDataSet.NmrDataSet()  # create nmrDataSet object
-        nd.readSpcs(pName, eName)  # check if Bruker data can be read
+        nd.readSpcs([pName], eName)  # check if Bruker data can be read
         self.assertEqual(len(nd.nmrdat[0][0].spc[0]), 65536)
         self.assertEqual(len(nd.nmrdat[0][1].spc[0]), 65536)
 

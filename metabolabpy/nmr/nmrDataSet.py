@@ -177,7 +177,7 @@ class NmrDataSet:
         for k in range(len(self.nmrdat[self.s])):
             mVal = min(mVal,np.min(self.nmrdat[self.s][k].spc[0].real))
 
-        if(mVal<0):
+        if mVal < 0 and self.pp.rDolphinExport is False:
             for k in range(len(self.nmrdat[self.s])):
                 self.nmrdat[self.s][k].spc[0] -= mVal
 
@@ -214,12 +214,11 @@ class NmrDataSet:
         # end excludeRegion
         
     def exportDataSet(self):
+        if os.path.isdir(self.pp.exportPathName) is False:
+            os.makedirs(self.pp.exportPathName)
+
         fName = os.path.join(self.pp.exportPathName, self.pp.exportFileName)
-        try:
-            f = open(fName, 'w')
-        except:
-            return
-        
+        f = open(fName, 'w')
         if(self.pp.exportDelimiterTab == True):
             delim = '\t'
         else:
@@ -233,21 +232,39 @@ class NmrDataSet:
         idx           = np.where(spc == 0)
         deselect[idx] = np.ones(len(idx))
         if(self.pp.exportSamplesInRowsCols == 0): # samples in rows
-            f.write("ppm" + delim + " ")
-            for k in range(len(self.nmrdat[self.s][0].ppm1)):
-                if(deselect[k] == 0):
-                    f.write(delim + str(self.nmrdat[self.s][0].ppm1[k]))
-                
-                
+            if self.pp.rDolphinExport is False:
+                f.write("ppm" + delim + " ")
+                for k in range(len(self.nmrdat[self.s][0].ppm1)):
+                    if(deselect[k] == 0):
+                        f.write(delim + str(self.nmrdat[self.s][0].ppm1[k]))
+
+
+            else:
+                f.write(str(self.nmrdat[self.s][0].ppm1[0]))
+                for k in range(1,len(self.nmrdat[self.s][0].ppm1)):
+                    if (deselect[k] == 0):
+                        f.write(delim + str(self.nmrdat[self.s][0].ppm1[k]))
+
+
             f.write("\n")
             for k in range(len(self.nmrdat[self.s])):
                 dse = os.path.split(self.nmrdat[self.s][k].origDataSet)
                 ds  = os.path.split(dse[0])
-                f.write(ds[1] + " " + dse[1] + delim + self.pp.classSelect[k])
-                for l in range(len(self.nmrdat[self.s][k].spc[0])):
-                    if(deselect[l] == 0):
-                        f.write(delim + str(self.nmrdat[self.s][k].spc[0][l].real))
-                        
+                if self.pp.rDolphinExport is False:
+                    f.write(ds[1] + " " + dse[1] + delim + self.pp.classSelect[k])
+                    for l in range(len(self.nmrdat[self.s][k].spc[0])):
+                        if(deselect[l] == 0):
+                            f.write(delim + str(self.nmrdat[self.s][k].spc[0][l].real))
+
+
+                else:
+                    f.write(str(self.nmrdat[self.s][k].spc[0][0].real))
+                    for l in range(1,len(self.nmrdat[self.s][k].spc[0])):
+                        if (deselect[l] == 0):
+                            f.write(delim + str(self.nmrdat[self.s][k].spc[0][l].real))
+
+
+
                 f.write("\n")
                 
         else:                                     # samples in cols
@@ -274,7 +291,33 @@ class NmrDataSet:
             
         
         f.close()
-        # end exportDataSet
+        if self.pp.rDolphinExport is True:
+            fName = os.path.join(self.pp.exportPathName, "Parameters.csv")
+            f = open(fName, 'w')
+            f.write("Parameter,Value\n")
+            f.write("nmr folder path,\n")
+            f.write("1D data index,\n")
+            f.write("proc_no,\n")
+            f.write("spectra dataset path (csv format)," + self.pp.exportPathName + "/" + self.pp.exportFileName + "\n")
+            f.write("Metadata path (csv format)," + self.pp.exportPathName + "/Metadata.csv\n")
+            f.write("ROI patters file," + self.pp.exportPathName + "/ROI_profile.csv\n")
+            f.write("Normalization (0=No;1=Eretic; 2=TSP; 3=Creatinine; 4=Spectra Sum; 5=PQN),2\n")
+            f.write("Alignment (0=No;1=Glucose; 2=TSP; 3=Formate),2\n")
+            f.write("Suppression,12-9.5;6.1-5.6;5.1-4.5\n")
+            f.write("Spectrometer Frequency (MHz)," + str(self.nmrdat[self.s][0].acq.sfo1) + "\n")
+            f.write("Bucket resolution," + str(self.pp.bucketPPM) + "\n")
+            f.write("Biofluid,Urine\n")
+            f.write("2D-Path,\n")
+            f.write("Specific program parameters,\n")
+            f.close()
+            fName = os.path.join(self.pp.exportPathName, "Metadata.csv")
+            f = open(fName, 'w')
+            f.write("Sample,Individual,Sample Type\n")
+            for k in range(len(self.nmrdat[self.s])):
+                f.write(os.path.split(self.nmrdat[self.s][k].origDataSet)[1] + "," + str(k+1) + ",1\n")
+
+            f.close()
+    # end exportDataSet
         
     def ft(self):
         if(self.nmrdat[self.s][self.e].dim == 1):
@@ -314,7 +357,128 @@ class NmrDataSet:
         self.fileFormatVersion = curPars[0]
         self.s = curPars[1]
         self.e = curPars[2]
-        self.pp = curPars[3]
+        #self.pp = curPars[3]
+        c = curPars[3]
+        if hasattr(c, 'excludeStart'):
+            self.pp.excludeStart = c.excludeStart
+
+        if hasattr(c, 'excludeEnd'):
+            self.pp.excludeEnd = c.excludeEnd
+
+        if hasattr(c, 'segStart'):
+            self.pp.segStart = c.segStart
+
+        if hasattr(c, 'segEnd'):
+            self.pp.segEnd = c.segEnd
+
+        if hasattr(c, 'noiseThreshold'):
+            self.pp.noiseThreshold = c.noiseThreshold
+
+        if hasattr(c, 'noiseStart'):
+            self.pp.noiseStart = c.noiseStart
+
+        if hasattr(c, 'noiseEnd'):
+            self.pp.noiseEnd = c.noiseEnd
+
+        if hasattr(c, 'bucketPoints'):
+            self.pp.bucketPoints = c.bucketPoints
+
+        if hasattr(c, 'bucketPPM'):
+            self.pp.bucketPPM = c.bucketPPM
+
+        if hasattr(c, 'compressBuckets'):
+            self.pp.compressBuckets = c.compressBuckets
+
+        if hasattr(c, 'scaleSpc'):
+            self.pp.scaleSpc= c.scaleSpc
+
+        if hasattr(c, 'varianceStabilisation'):
+            self.pp.varianceStabilisation = c.varianceStabilisation
+
+        if hasattr(c, 'varLambda'):
+            self.pp.varLambda = c.varLambda
+
+        if hasattr(c, 'varX0'):
+            self.pp.varX0 = c.varX0
+
+        if hasattr(c, 'pName'):
+            self.pp.pName = c.pName
+
+        if hasattr(c, 'fName'):
+            self.pp.fName = c.fName
+
+        if hasattr(c, 'samplesInRows'):
+            self.pp.samplesInRows = c.samplesInRows
+
+        if hasattr(c, 'plotSelect'):
+            self.pp.plotSelect = c.plotSelect
+
+        if hasattr(c, 'classSelect'):
+            self.pp.classSelect = c.classSelect
+
+        if hasattr(c, 'plotColours'):
+            self.pp.plotColours = c.plotColours
+
+        if hasattr(c, 'preProcFill'):
+            self.pp.preProcFill = c.preProcFill
+
+        if hasattr(c, 'alpha'):
+            self.pp.alpha = c.alpha
+
+        if hasattr(c, 'colour'):
+            self.pp.colour = c.colour
+
+        if hasattr(c, 'thColour'):
+            self.pp.thColour = c.thColour
+
+        if hasattr(c, 'thLineWidth'):
+            self.pp.thLineWidth = c.thLineWidth
+
+        if hasattr(c, 'flagExcludeRegion'):
+            self.pp.flagExcludeRegion = c.flagExcludeRegion
+
+        if hasattr(c, 'flagSegmentalAlignment'):
+            self.pp.flagSegmentalAlignment = c.flagSegmentalAlignment
+
+        if hasattr(c, 'flagNoiseFiltering'):
+            self.pp.flagNoiseFiltering = c.flagNoiseFiltering
+
+        if hasattr(c, 'flagBucketSpectra'):
+            self.pp.flagBucketSpectra = c.flagBucketSpectra
+
+        if hasattr(c, 'flagCompressBuckets'):
+            self.pp.flagCompressBuckets = c.flagCompressBuckets
+
+        if hasattr(c, 'flagScaleSpectra'):
+            self.pp.flagScaleSpectra = c.flagScaleSpectra
+
+        if hasattr(c, 'flagVarianceStabilisation'):
+            self.pp.flagVarianceStabilisation = c.flagVarianceStabilisation
+
+        if hasattr(c, 'flagExportDataSet'):
+            self.pp.flagExportDataSet = c.flagExportDataSet
+
+        if hasattr(c, 'stdVal'):
+            self.pp.stdVal = c.stdVal
+
+        if hasattr(c, 'exportPathName'):
+            self.pp.exportPathName= c. exportPathName
+
+        if hasattr(c, 'exportFileName'):
+            self.pp.exportFileName = c.exportFileName
+
+        if hasattr(c, 'exportDelimiterTab'):
+            self.pp.exportDelimiterTab = c.exportDelimiterTab
+
+        if hasattr(c, 'exportCharacter'):
+            self.pp.exportCharacter = c. exportCharacter
+
+        if hasattr(c, 'exportSamplesInRowsCols'):
+            self.pp.exportSamplesInRowsCols = c. exportSamplesInRowsCols
+
+        if hasattr(c, 'rDolphinExport'):
+            self.pp.rDolphinExport = c.rDolphinExport
+
         self.deselect = curPars[4]
         self.deselect2 = curPars[5]
         self.cmdBuffer = curPars[6]
@@ -375,9 +539,518 @@ class NmrDataSet:
                 fName = os.path.join(os.path.join(os.path.join(dataSetName, dataSets[k]), dataSetExps[k][l]),
                                      'nmrDataSet.dat')
                 f = open(fName, 'rb')
-                nd = pickle.load(f)
+                n = pickle.load(f)
                 f.close()
-                self.nmrdat[k].append(nd)
+                nd2 = nd.NmrData()
+                if hasattr(n, 'fid'):
+                    nd2.fid = n.fid
+
+                if hasattr(n, 'spc'):
+                    nd2.spc = n.spc
+
+                if hasattr(n, 'ppm1'):
+                    nd2.ppm1 = n.ppm1
+
+                if hasattr(n, 'ppm2'):
+                    nd2.ppm2 = n.ppm2
+
+                if hasattr(n, 'ppm3'):
+                    nd2.ppm3 = n.ppm3
+
+                if hasattr(n, 'dim'):
+                    nd2.dim = n.dim
+
+                if hasattr(n, 'title'):
+                    nd2.title = n.title
+
+                if hasattr(n, 'origDataSet'):
+                    nd2.origDataSet = n.origDataSet
+
+                if hasattr(n, 'phCorrMode'):
+                    nd2.phCorrMode = n.phCorrMode
+
+                if hasattr(n, 'acq'):
+                    a = n.acq
+                    aq = nd2.acq
+                    if hasattr(a, 'acqusText'):
+                        aq.acqusText = a.acqusText
+
+                    if hasattr(a, 'acqu2sText'):
+                        aq.acqu2sText = a.acqu2sText
+
+                    if hasattr(a, 'acqu3sText'):
+                        aq.acqu3sText = a.acqu3sText
+
+                    if hasattr(a, 'byteOrder'):
+                        aq.byteOrder = a.byteOrder
+
+                    if hasattr(a, 'sw'):
+                        aq.sw = a.sw
+
+                    if hasattr(a, 'sw_h'):
+                        aq.sw_h = a.sw_h
+
+                    if hasattr(a, 'sfo1'):
+                        aq.sfo1 = a.sfo1
+
+                    if hasattr(a, 'sfo2'):
+                        aq.sfo2 = a.sfo2
+
+                    if hasattr(a, 'sfo3'):
+                        aq.sfo3 = a.sfo3
+
+                    if hasattr(a, 'bf1'):
+                        aq.bf1 = a.bf1
+
+                    if hasattr(a, 'bf2'):
+                        aq.bf2 = a.bf2
+
+                    if hasattr(a, 'bf3'):
+                        aq.bf3 = a.bf3
+
+                    if hasattr(a, 'o1'):
+                        aq.o1 = a.o1
+
+                    if hasattr(a, 'o2'):
+                        aq.o2 = a.o2
+
+                    if hasattr(a, 'o3'):
+                        aq.o3 = a.o3
+
+                    if hasattr(a, 'nDataPoints'):
+                        aq.nDataPoints = a.nDataPoints
+
+                    if hasattr(a, 'aqMode'):
+                        aq.aqMode = a.aqMode
+
+                    if hasattr(a, 'decim'):
+                        aq.decim = a.decim
+
+                    if hasattr(a, 'dspfvs'):
+                        aq.dspfvs = a.dspfvs
+
+                    if hasattr(a, 'groupDelay'):
+                        aq.groupDelay = a.groupDelay
+
+                    if hasattr(a, 'digMod'):
+                        aq.digMod = a.digMod
+
+                    if hasattr(a, 'transients'):
+                        aq.transients = a.transients
+
+                    if hasattr(a, 'steadyStateScans'):
+                        aq.steadyStateScans = a.steadyStateScans
+
+                    if hasattr(a, 'relaxationDelay'):
+                        aq.relaxationDelay = a.relaxationDelay
+
+                    if hasattr(a, 'spinRate'):
+                        aq.spinRate = a.spinRate
+
+                    if hasattr(a, 'nndp'):
+                        aq.nndp = a.nndp
+
+                    if hasattr(a, 'pulseProgram'):
+                        aq.pulseProgram = a.pulseProgram
+
+                    if hasattr(a, 'pulProgName'):
+                        aq.pulProgName = a.pulProgName
+
+                    if hasattr(a, 'instrument'):
+                        aq.instrument = a.instrument
+
+                    if hasattr(a, 'dataType'):
+                        aq.dataType = a.dataType
+
+                    if hasattr(a, 'solvent'):
+                        aq.solvent = a.solvent
+
+                    if hasattr(a, 'probe'):
+                        aq.probe = a.probe
+
+                    if hasattr(a, 'title'):
+                        aq.title = a.title
+
+                    if hasattr(a, 'origin'):
+                        aq.origin = a.origin
+
+                    if hasattr(a, 'owner'):
+                        aq.owner = a.owner
+
+                    if hasattr(a, 'metaInfo'):
+                        aq.metaInfo = a.metaInfo
+
+                    if hasattr(a, 'aunm'):
+                        aq.aunm = a.aunm
+
+                    if hasattr(a, 'temperature'):
+                        aq.temperature = a.temperature
+
+                    if hasattr(a, 'cnst'):
+                        aq.cnst = a.cnst
+
+                    if hasattr(a, 'delay'):
+                        aq.delay = a.delay
+
+                    if hasattr(a, 'pulse'):
+                        aq.pulse = a.pulse
+
+                    if hasattr(a, 'pcpd'):
+                        aq.pcpd = a.pcpd
+
+                    if hasattr(a, 'powerLevel'):
+                        aq.powerLevel = a.powerLevel
+
+                    if hasattr(a, 'powerLevelWatt'):
+                        aq.powerLevelWatt = a.powerLevelWatt
+
+                    if hasattr(a, 'powerLevelMax'):
+                        aq.powerLevelMax = a.powerLevelMax
+
+                    if hasattr(a, 'shapedPower'):
+                        aq.shapedPower = a.shapedPower
+
+                    if hasattr(a, 'shapedPowerWatt'):
+                        aq.shapedPowerWatt = a.shapedPowerWatt
+
+                    if hasattr(a, 'spoal'):
+                        aq.spoal = a.spoal
+
+                    if hasattr(a, 'spoffs'):
+                        aq.spoffs = a.spoffs
+
+                    if hasattr(a, 'cpdProg'):
+                        aq.cpdProg = a.cpdProg
+
+                    if hasattr(a, 'gpName'):
+                        aq.gpName = a.gpName
+
+                    if hasattr(a, 'vcList'):
+                        aq.vcList = a.vcList
+
+                    if hasattr(a, 'vdList'):
+                        aq.vdList = a.vdList
+
+                    if hasattr(a, 'vpList'):
+                        aq.vpList = a.vpList
+
+                    if hasattr(a, 'vaList'):
+                        aq.vaList = a.vaList
+
+                    if hasattr(a, 'vtList'):
+                        aq.vtList = a.vtList
+
+                    if hasattr(a, 'nuc1'):
+                        aq.nuc1 = a.nuc1
+
+                    if hasattr(a, 'nuc2'):
+                        aq.nuc2 = a.nuc2
+
+                    if hasattr(a, 'nuc3'):
+                        aq.nuc3 = a.nuc3
+
+                    if hasattr(a, 'nuc4'):
+                        aq.nuc4 = a.nuc4
+
+                    if hasattr(a, 'nuc5'):
+                        aq.nuc5 = a.nuc5
+
+                    if hasattr(a, 'nuc6'):
+                        aq.nuc6 = a.nuc6
+
+                    if hasattr(a, 'nuc7'):
+                        aq.nuc7 = a.nuc7
+
+                    if hasattr(a, 'nuc8'):
+                        aq.nuc8 = a.nuc8
+
+                    if hasattr(a, 'gpx'):
+                        aq.gpx = a.gpx
+
+                    if hasattr(a, 'gpy'):
+                        aq.gpy = a.gpy
+
+                    if hasattr(a, 'gpz'):
+                        aq.gpz = a.gpz
+
+                    if hasattr(a, 'increments'):
+                        aq.increments = a.increments
+
+                    if hasattr(a, 'nusList'):
+                        aq.nusList = a.nusList
+
+                    if hasattr(a, 'nusAmount'):
+                        aq.nusAmount = a.nusAmount
+
+                    if hasattr(a, 'nusSeed'):
+                        aq.nusSeed = a.nusSeed
+
+                    if hasattr(a, 'nusJsp'):
+                        aq.nusJsp = a.nusJsp
+
+                    if hasattr(a, 'nusT2'):
+                        aq.nusT2 = a.nusT2
+
+                    if hasattr(a, 'nusTD'):
+                        aq.nusTD = a.nusTD
+
+                    if hasattr(a, 'overFlow'):
+                        aq.overFlow = a.overFlow
+
+                    if hasattr(a, 'pynm'):
+                        aq.pynm = a.pynm
+
+                    if hasattr(a, 'spcFrequency'):
+                        aq.spcFrequency = a.spcFrequency
+
+                    if hasattr(a, 'spcSFreq'):
+                        aq.spcSFreq = a.spcSFreq
+
+                    if hasattr(a, 'spcNucleus'):
+                        aq.spcNucleus = a.spcNucleus
+
+                    if hasattr(a, 'spcOffset'):
+                        aq.spcOffset = a.spcOffset
+
+                    if hasattr(a, 'acqT0'):
+                        aq.acqT0 = a.acqT0
+
+                    if hasattr(a, 'fnMode'):
+                        aq.fnMode = a.fnMode
+
+                    if hasattr(a, 'inf'):
+                        aq.inf = a.inf
+
+                    nd2.acq = aq
+
+                if hasattr(n, 'proc'):
+                    #nd2.proc = n.proc
+                    p = n.proc
+                    pc = nd2.proc
+                    if hasattr(p, 'procsText'):
+                        pc.procsText = p.procsText
+
+                    if hasattr(p, 'proc2sText'):
+                        pc.proc2sText = p.proc2sText
+
+                    if hasattr(p, 'proc3sText'):
+                        pc.proc3sText = p.proc3sText
+
+                    if hasattr(p, 'tilt'):
+                        pc.tilt = p.tilt
+
+                    if hasattr(p, 'symj'):
+                        pc.symj = p.symj
+
+                    if hasattr(p, 'ph0'):
+                        pc.ph0 = p.ph0
+
+                    if hasattr(p, 'ph1'):
+                        pc.ph1 = p.ph1
+
+                    if hasattr(p, 'phCorr'):
+                        pc.phCorr = p.phCorr
+
+                    if hasattr(p, 'refShift'):
+                        pc.refShift = p.refShift
+
+                    if hasattr(p, 'refPoint'):
+                        pc.refPoint = p.refPoint
+
+                    if hasattr(p, 'nPoints'):
+                        pc.nPoints = p.nPoints
+
+                    if hasattr(p, 'pivot'):
+                        pc.pivot = p.pivot
+
+                    if hasattr(p, 'lb'):
+                        pc.lb = p.lb
+
+                    if hasattr(p, 'gb'):
+                        pc.gb = p.gb
+
+                    if hasattr(p, 'ssb'):
+                        pc.ssb = p.ssb
+
+                    if hasattr(p, 'axisNucleus'):
+                        pc.axisNucleus = p.axisNucleus
+
+                    if hasattr(p, 'aunmp'):
+                        pc.aunmp = p.aunmp
+
+                    if hasattr(p, 'polyOrder'):
+                        pc.polyOrder = p.polyOrder
+
+                    if hasattr(p, 'waterSuppression'):
+                        pc.waterSuppression = p.waterSuppression
+
+                    if hasattr(p, 'gibbs'):
+                        pc.gibbs = p.gibbs
+
+                    if hasattr(p, 'convExtrapolationSize'):
+                        pc.convExtrapolationSize = p.convExtrapolationSize
+
+                    if hasattr(p, 'convWindowSize'):
+                        pc.convWindowSize = p.convWindowSize
+
+                    if hasattr(p, 'windowType'):
+                        pc.windowType = p.windowType
+
+                    if hasattr(p, 'convWindowType'):
+                        pc.convWindowType = p.convWindowType
+
+                    if hasattr(p, 'sw_h'):
+                        pc.sw_h = p.sw_h
+
+                    if hasattr(p, 'fidOffsetCorrection'):
+                        pc.fidOffsetCorrection = p.fidOffsetCorrection
+
+                    nd2.proc = pc
+
+                if hasattr(n, 'disp'):
+                    d = n.disp
+                    dp = nd2.disp
+                    if hasattr(d, 'posCol'):
+                        dp.posCol = d.posCol
+
+                    if hasattr(d, 'posColRGB'):
+                        dp.posColRGB = d.posColRGB
+
+                    if hasattr(d, 'negCol'):
+                        dp.negCol = d.negCol
+
+                    if hasattr(d, 'negColRGB'):
+                        dp.negColRGB = d.negColRGB
+
+                    if hasattr(d, 'phRefCol'):
+                        dp.phRefCol = d.phRefCol
+
+                    if hasattr(d, 'phRefDS'):
+                        dp.phRefDS = d.phRefDS
+
+                    if hasattr(d, 'phRefExp'):
+                        dp.phRefExp = d.phRefExp
+
+                    if hasattr(d, 'nLevels'):
+                        dp.nLevels = d.nLevels
+
+                    if hasattr(d, 'minLevel'):
+                        dp.minLevel = d.minLevel
+
+                    if hasattr(d, 'maxLevel'):
+                        dp.maxLevel = d.maxLevel
+
+                    if hasattr(d, 'axisType1'):
+                        dp.axisType1 = d.axisType1
+
+                    if hasattr(d, 'axisType2'):
+                        dp.axisType2 = d.axisType2
+
+                    if hasattr(d, 'displaySpc'):
+                        dp.displaySpc = d.displaySpc
+
+                    if hasattr(d, 'spcOffset'):
+                        dp.spcOffset = d.spcOffset
+
+                    if hasattr(d, 'spcScale'):
+                        dp.spcScale = d.spcScale
+
+                    if hasattr(d, 'xLabel'):
+                        dp.xLabel = d.xLabel
+
+                    if hasattr(d, 'yLabel'):
+                        dp.yLabel = d.yLabel
+
+                    if hasattr(d, 'spcLabel'):
+                        dp.spcLabel = d.spcLabel
+
+                    nd2.disp = dp
+
+                if hasattr(n, 'fidOffsetCorr'):
+                    nd2.fidOffsetCorr = n.fidOffsetCorr
+
+                if hasattr(n, 'dataSetName'):
+                    nd2.dataSetName = n.dataSetName
+
+                if hasattr(n, 'dataSetNumber'):
+                    nd2.dataSetNumber = n.dataSetNumber
+
+                if hasattr(n, 'title'):
+                    nd2.title = n.title
+
+                if hasattr(n, 'pulseProgram'):
+                    nd2.pulseProgram = n.pulseProgram
+
+                if hasattr(n, 'windowFunction'):
+                    nd2.windowFunction = n.windowFunction
+
+                if hasattr(n, 'refShift'):
+                    nd2.refShift = n.refShift
+
+                if hasattr(n, 'refPoint'):
+                    nd2.refPoint = n.refPoint
+
+                if hasattr(n, 'refsw'):
+                    nd2.refsw = n.refsw
+
+                if hasattr(n, 'refTmspRange'):
+                    nd2.refTmspRange = n.refTmspRange
+
+                if hasattr(n, 'apc'):
+                    ab = n.apc
+                    ac = nd2.apc
+                    if hasattr(ab, 'correctBaseline'):
+                        ac.correctBaseline = ab.correctBaseline
+
+                    if hasattr(ab, 'npts'):
+                        ac.npts = ab.npts
+
+                    if hasattr(ab, 'nMax'):
+                        ac.nMax = ab.nMax
+
+                    if hasattr(ab, 'nOrder'):
+                        ac.nOrder = ab.nOrder
+
+                    if hasattr(ab, 'nbins'):
+                        ac.nbins = ab.nbins
+
+                    if hasattr(ab, 'mFact0'):
+                        ac.mFact0 = ab.mFact0
+
+                    if hasattr(ab, 'mFact1'):
+                        ac.mFact1 = ab.mFact1
+
+                    if hasattr(ab, 'startPts'):
+                        ac.startPts = ab.startPts
+
+                    if hasattr(ab, 'endPts'):
+                        ac.endPts = ab.endPts
+
+                    if hasattr(ab, 'pars'):
+                        ac.pars = ab.pars
+
+                    if hasattr(ab, 'rSpc'):
+                        ac.rSpc = ab.rSpc
+
+                    if hasattr(ab, 'iSpc'):
+                        ac.iSpc = ab.iSpc
+
+                    nd2.apc = ac
+
+                if hasattr(n, 'projectedJres'):
+                    nd2.projectedJres = n.projectedJres
+
+                if hasattr(n, 'origJresSet'):
+                    nd2.origJresSet = n.origJresSet
+
+                if hasattr(n, 'origJresExp'):
+                    nd2.origJresExp = n.origJresExp
+
+                if hasattr(n, 'pjresMode'):
+                    nd2.pjresMode = n.pjresMode
+
+                self.nmrdat[k].append(nd2)
+                nd2 = []
                 fName = os.path.join(os.path.join(os.path.join(dataSetName, dataSets[k]), dataSetExps[k][l]),
                                      'titleFile.txt')
                 f = open(fName, 'r')
@@ -481,8 +1154,15 @@ class NmrDataSet:
         # end readSpc
 
     def readSpcs(self, dataPath, dataExp):
-        for k in range(len(dataExp)):
-            self.readSpc(dataPath, str(dataExp[k]))
+        if len(dataExp) > 1:
+            for k in range(len(dataExp)):
+                self.readSpc(dataPath[0], str(dataExp[k]))
+
+
+        else:
+            for k in range(len(dataPath)):
+                self.readSpc(dataPath[k], str(dataExp[0]))
+
 
     # end readSpcs
 
