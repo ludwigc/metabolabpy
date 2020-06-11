@@ -61,7 +61,7 @@ class MplWidget(QWidget): # pragma: no cover
 # ------------------ MplWidget ------------------
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.__version__ = '0.4.7'
+        self.__version__ = '0.4.8'
         self.zoomWasOn = False
         self.panWasOn = False
         self.nd = nmrDataSet.NmrDataSet()

@@ -4,7 +4,7 @@ conda create -n pypi
 conda activate pypi
 
 PACKAGE="metabolabpy"
-VERSION="0.4.7"
+VERSION="0.4.8"
 echo $PACKAGE
 
 git clone https://github.com/ludwigc/metabolabpy
