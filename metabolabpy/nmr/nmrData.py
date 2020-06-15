@@ -567,6 +567,7 @@ class NmrData:
         # end readPipe2D
 
     def readSpc(self):
+        print("{} / {}".format(self.dataSetName, self.dataSetNumber))
         self.acq.read(self.dataSetName + os.sep + self.dataSetNumber)
         self.proc.read(self.dataSetName + os.sep + self.dataSetNumber)
         # self.proc.sw_h = self.acq.sw_h

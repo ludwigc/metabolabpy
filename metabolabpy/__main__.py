@@ -1595,8 +1595,8 @@ class main_w(object):  # pragma: no cover
 
     def readNMRPipeSpcs(self, dataPath, dataSets, procDataName = 'test.dat'):
         zFill = 25
-        if(dataPath == 'interactive'):
-            dataPath = QFileDialog.getExistingDirectory()
+        if(dataPath[0] == 'interactive'):
+            dataPath = [QFileDialog.getExistingDirectory()]
 
         if (len(dataPath) > 0):
             if(str(dataSets) == 'all'):
@@ -1616,11 +1616,11 @@ class main_w(object):  # pragma: no cover
 
     def readSpcs(self, dataPath, dataSets):
         zFill = 25
-        if(dataPath == 'interactive'):
-            dataPath = QFileDialog.getExistingDirectory()
+        if(dataPath[0] == 'interactive'):
+            dataPath = [QFileDialog.getExistingDirectory()]
 
         if (len(dataPath) > 0):
-            if(str(dataSets) == 'all'):
+            if(str(dataSets[0]) == 'all'):
                 folders = []
                 for r, d, f in os.walk(dataPath):
                     for folder in d:
@@ -1636,7 +1636,7 @@ class main_w(object):  # pragma: no cover
                 for k in range(len(folders)):
                     dataSets.append(int(folders[k]))
 
-            if(str(dataSets) == 'all1d'):
+            if(str(dataSets[0]) == 'all1d'):
                 folders = []
                 for r, d, f in os.walk(dataPath):
                     for folder in d:
@@ -1649,7 +1649,7 @@ class main_w(object):  # pragma: no cover
                 for k in range(len(folders)):
                     dataSets.append(int(folders[k]))
 
-            if(str(dataSets) == 'all2d'):
+            if(str(dataSets[0]) == 'all2d'):
                 folders = []
                 for r, d, f in os.walk(dataPath):
                     for folder in d:
@@ -1824,6 +1824,26 @@ class main_w(object):  # pragma: no cover
         self.w.excludeRegionTW.setFocus()
         self.plotSpcPreProc()
         self.setExcludePreProc()
+        # end selectClearExcludePreProc
+
+    def selectClearSegAlignPreProc(self):
+        self.nd.pp.preProcFill = True
+        for k in range(len(self.nd.pp.segStart)):
+            self.w.segAlignTW.item(k, 0).setText("")
+            self.w.segAlignTW.setFocus()
+            self.w.segAlignTW.item(k, 1).setText("")
+            self.w.segAlignTW.setFocus()
+
+        self.nd.pp.preProcFill = False
+        self.nd.pp.segStart = np.array([])
+        self.nd.pp.segEnd = np.array([])
+        self.w.segAlignTW.setFocus()
+        self.fillPreProcessingNumbers()
+        self.w.segAlignTW.setFocus()
+        self.setPlotPreProc()
+        self.w.segAlignTW.setFocus()
+        self.plotSpcPreProc()
+        self.setsegAlignPreProc()
         # end selectClearExcludePreProc
 
     def selectEvenPreProc(self):
@@ -2271,6 +2291,80 @@ class main_w(object):  # pragma: no cover
     def setSamplesInComboBox(self):
         self.nd.pp.exportSamplesInRowsCols = self.w.samplesInComboBox.currentIndex()
         # end setSamplesInComboBox
+
+    def setSegAlignPreProc(self):
+        if (self.nd.pp.preProcFill == False):
+            nRows = self.w.segAlignTW.rowCount()
+            segStart = np.array([])
+            segEnd = np.array([])
+            tStart = np.array([])
+            tEnd = np.array([])
+            for k in range(nRows):
+                # tStart = np.array([])
+                # tEnd   = np.array([])
+                try:
+                    tStart = np.append(tStart, float(self.w.segAlignTW.item(k, 0).text()))
+                    # self.w.segAlignTW.item(k,0).clearContents()
+                except:
+                    tStart = np.append(tStart, -10000.0)
+
+                try:
+                    tEnd = np.append(tEnd, float(self.w.segAlignTW.item(k, 1).text()))
+                    # self.w.segAlignTW.item(k,1).clearContents()
+                except:
+                    tEnd = np.append(tEnd, -10000.0)
+
+            # self.w.segAlignTW.clearContents()
+            self.w.segAlignTW.setRowCount(0)
+            self.w.segAlignTW.setRowCount(20)
+            self.nd.pp.preProcFill = True
+            for k in np.arange(len(tStart) - 1, -1, -1):  # range(len(tStart)):
+                segNumber1 = QTableWidgetItem(2 * k)
+                segNumber1.setTextAlignment(QtCore.Qt.AlignHCenter)
+                self.w.segAlignTW.setItem(k, 0, segNumber1)
+                segNumber2 = QTableWidgetItem(2 * k + 1)
+                segNumber2.setTextAlignment(QtCore.Qt.AlignHCenter)
+                self.w.segAlignTW.setItem(k, 1, segNumber2)
+                if ((tStart[k] > -10000.0) & (tEnd[k] > -10000.0)):
+                    tMin = min(tStart[k], tEnd[k])
+                    tEnd[k] = max(tStart[k], tEnd[k])
+                    tStart[k] = tMin
+                    segStart = np.append(segStart, tStart[k])
+                    segEnd = np.append(segEnd, tEnd[k])
+                    tStart = np.delete(tStart, k)
+                    tEnd = np.delete(tEnd, k)
+
+                if (tStart[k] > -10000.0):
+                    self.w.segAlignTW.item(k, 0).setText(str(tStart[k]))
+                    self.w.segAlignTW.setFocus()
+                else:
+                    self.w.segAlignTW.item(k, 0).setText("")
+                    self.w.segAlignTW.setFocus()
+
+                if (tEnd[k] > -10000.0):
+                    self.w.segAlignTW.item(k, 1).setText(str(tEnd[k]))
+                    self.w.segAlignTW.setFocus()
+                else:
+                    self.w.segAlignTW.item(k, 1).setText("")
+                    self.w.segAlignTW.setFocus()
+
+            self.nd.pp.preProcFill = False
+            sortIdx = np.argsort(segStart)
+            self.nd.pp.segStart = segStart[sortIdx]
+            self.nd.pp.segEnd = segEnd[sortIdx]
+            self.plotSpcPreProc()
+
+        # end setSegAlignPreProc
+
+    def setSegAlign(self):  
+        if (self.nd.pp.preProcFill == False):
+            if (self.w.segmentalAlignment.isChecked() == True):
+                self.nd.pp.flagSegmentalAlignment = True
+                self.w.preProcessingSelect.setCurrentIndex(2)
+            else:
+                self.nd.pp.flagSegmentalAlignment = False
+
+        # end setSegAlign
 
     def setSelectClass(self):
         for k in range(len(self.nd.pp.classSelect)):
