@@ -86,7 +86,7 @@ class main_w(object):  # pragma: no cover
         self.w.runPreProcessingButton.clicked.connect(self.dataPreProcessing)
         self.w.resetPreProcessingButton.clicked.connect(self.resetDataPreProcessing)
         self.w.excludeRegion.stateChanged.connect(self.setExcludeRegion)
-        # self.w.segmentalAlignment.stateChanged.connect(self.setSegmentalAlignment)
+        self.w.segmentalAlignment.stateChanged.connect(self.setSegmentalAlignment)
         self.w.noiseFiltering.stateChanged.connect(self.setNoiseFiltering)
         self.w.bucketSpectra.stateChanged.connect(self.setBucketSpectra)
         # self.w.compressBuckets.stateChanged.connect(self.setCompressBuckets)
@@ -97,7 +97,9 @@ class main_w(object):  # pragma: no cover
         self.w.selectClassTW.itemSelectionChanged.connect(self.setPlotPreProc)
         self.w.selectClassTW.cellChanged.connect(self.setChangePreProc)
         self.w.excludeClearButton.clicked.connect(self.selectClearExcludePreProc)
+        self.w.segAlignClearButton.clicked.connect(self.selectClearSegAlignPreProc)
         self.w.excludeAddButton.clicked.connect(self.selectAddExcludePreProc)
+        self.w.segAlignAddButton.clicked.connect(self.selectAddSegAlignPreProc)
         self.w.selectAllButton.clicked.connect(self.selectAllPreProc)
         self.w.selectEvenButton.clicked.connect(self.selectEvenPreProc)
         self.w.selectOddButton.clicked.connect(self.selectOddPreProc)
@@ -654,6 +656,16 @@ class main_w(object):  # pragma: no cover
             self.w.excludeRegionTW.item(k, 0).setText(str(self.nd.pp.excludeStart[k]))
             self.w.excludeRegionTW.item(k, 1).setText(str(self.nd.pp.excludeEnd[k]))
 
+        for k in range(len(self.nd.pp.segStart)):
+            segNumber1 = QTableWidgetItem(str(2 * k))
+            segNumber1.setTextAlignment(QtCore.Qt.AlignHCenter)
+            segNumber2 = QTableWidgetItem(str(2 * k + 1))
+            segNumber2.setTextAlignment(QtCore.Qt.AlignHCenter)
+            self.w.segAlignTW.setItem(k, 0, segNumber1)
+            self.w.segAlignTW.setItem(k, 1, segNumber2)
+            self.w.segAlignTW.item(k, 0).setText(str(self.nd.pp.segStart[k]))
+            self.w.segAlignTW.item(k, 1).setText(str(self.nd.pp.segEnd[k]))
+
         self.w.noiseThresholdLE.setText(str(self.nd.pp.noiseThreshold))
         self.w.noiseRegionStartLE.setText(str(self.nd.pp.noiseStart))
         self.w.noiseRegionEndLE.setText(str(self.nd.pp.noiseEnd))
@@ -1050,6 +1062,21 @@ class main_w(object):  # pragma: no cover
         i[6] = float(self.w.iSpc_p6.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc = i
         # end get_iSpc_p6
+
+    def ginput(self, nClicks = 2):
+        self.w.MplWidget.canvas.setFocus()
+        self.showNMRSpectrum()
+        xy = self.w.MplWidget.canvas.axes.figure.ginput(nClicks)
+        xVect = np.zeros(nClicks)
+        yVect = np.zeros(nClicks)
+        for k in range(nClicks):
+            xVect[k] = xy[k][0]
+            yVect[k] = xy[k][1]
+
+        print("x-values: {} / xDiff: {}".format(xVect, -np.diff(xVect)))
+        print("y-values: {} / yDiff: {}".format(yVect, -np.diff(yVect)))
+        self.showConsole()
+        # end ginput
 
     def h(self):
         print("Command history: ")
@@ -1520,6 +1547,11 @@ class main_w(object):  # pragma: no cover
                 self.w.MplWidget.canvas.axes.axvspan(self.nd.pp.excludeStart[k], self.nd.pp.excludeEnd[k],
                                                      alpha=self.nd.pp.alpha, color=self.nd.pp.colour)
 
+        if (self.w.preProcessingWidget.currentIndex() == 2):
+            for k in range(len(self.nd.pp.segStart)):
+                self.w.MplWidget.canvas.axes.axvspan(self.nd.pp.segStart[k], self.nd.pp.segEnd[k],
+                                                     alpha=self.nd.pp.alpha, color=self.nd.pp.colour)
+
         for k in range(len(self.nd.pp.plotSelect)):
             colIdx = np.where(cls2 == cls[self.nd.pp.plotSelect[k]])[0][0]
             plotCol = matplotlib.colors.to_hex(self.nd.pp.plotColours[colIdx])
@@ -1779,6 +1811,19 @@ class main_w(object):  # pragma: no cover
         self.setExcludePreProc()
         # end selectAddExcludePreProc
 
+    def selectAddSegAlignPreProc(self):
+        xy = self.w.MplWidget.canvas.axes.figure.ginput(2)
+        t = np.round(1e4 * np.array([xy[0][0], xy[1][0]])) / 1e4
+        self.nd.pp.segStart = np.append(self.nd.pp.segStart, min(t))
+        self.nd.pp.segEnd = np.append(self.nd.pp.segEnd, max(t))
+        self.fillPreProcessingNumbers()
+        self.w.segAlignTW.setFocus()
+        self.setPlotPreProc()
+        self.w.segAlignTW.setFocus()
+        self.plotSpcPreProc()
+        self.setSegAlignPreProc()
+        # end selectAddExcludePreProc
+
     def selectAllPreProc(self):
         nSpc = len(self.nd.pp.classSelect)
         self.nd.pp.plotSelect = np.arange(nSpc)
@@ -1843,7 +1888,7 @@ class main_w(object):  # pragma: no cover
         self.setPlotPreProc()
         self.w.segAlignTW.setFocus()
         self.plotSpcPreProc()
-        self.setsegAlignPreProc()
+        self.setSegAlignPreProc()
         # end selectClearExcludePreProc
 
     def selectEvenPreProc(self):
@@ -2356,7 +2401,7 @@ class main_w(object):  # pragma: no cover
 
         # end setSegAlignPreProc
 
-    def setSegAlign(self):  
+    def setSegmentalAlignment(self):
         if (self.nd.pp.preProcFill == False):
             if (self.w.segmentalAlignment.isChecked() == True):
                 self.nd.pp.flagSegmentalAlignment = True
@@ -2364,7 +2409,7 @@ class main_w(object):  # pragma: no cover
             else:
                 self.nd.pp.flagSegmentalAlignment = False
 
-        # end setSegAlign
+        # end setSegmentalAlignment
 
     def setSelectClass(self):
         for k in range(len(self.nd.pp.classSelect)):

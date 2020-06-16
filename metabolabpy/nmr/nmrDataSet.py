@@ -4,6 +4,7 @@ import pickle
 
 from metabolabpy.nmr import nmrData as nd
 from metabolabpy.nmr import nmrPreProc as npp
+from metabolabpy.nmr import icoshift
 
 
 class NmrDataSet:
@@ -162,7 +163,7 @@ class NmrDataSet:
             self.excludeRegion()
             
         if(self.pp.flagSegmentalAlignment == True):
-            print("segmentalAlignment")
+            self.segmentalAlignment()
         
         if(self.pp.flagNoiseFiltering == True):
             self.noiseFiltering()
@@ -1260,6 +1261,10 @@ class NmrDataSet:
                 f.close()
         # end save
         
+    def segmentalAlignment(self):
+        return
+    # end segmentalAlignment
+
     def setGb(self, gb):
         nExp = len(self.nmrdat[self.s])
         for k in range(nExp):
