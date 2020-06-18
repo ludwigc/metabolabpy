@@ -97,9 +97,11 @@ class AcqPars:
         self.regExVarian      = acqProcparRegEx.AcqProcparRegEx()
         self.manufacturer     = ''
         self.ni               = 0
+        self.ni2              = 0
         self.np               = 1
         self.np2              = 1
         self.phase            = np.array([], dtype = 'int')
+        self.phase2           = np.array([], dtype = 'int')
         # end __init__
         
     def __str__(self): # pragma: no cover
@@ -468,7 +470,6 @@ class AcqPars:
             dd       = dd[:dd.find(' ')]
             self.np2 = int(dd)
 
-        ni = 1
         dd        = self.regExVarian.ni.search(self.acqusText)
         if hasattr(dd, 'span'):
             dd        = self.acqusText[dd.span()[0] + 1:]
@@ -476,7 +477,7 @@ class AcqPars:
             dd        = dd[dd.find(' '):dd.find('\n')]
             self.ni = int(dd)
 
-        ni2 = 1
+        self.ni = max(self.ni, 1)
         dd        = self.regExVarian.ni2.search(self.acqusText)
         if hasattr(dd, 'span'):
             dd        = self.acqusText[dd.span()[0] + 1:]
@@ -484,12 +485,20 @@ class AcqPars:
             dd        = dd[dd.find(' '):dd.find('\n')]
             self.ni2 = int(dd)
 
+        self.ni2 = max(self.ni2, 1)
         dd        = self.regExVarian.phase.search(self.acqusText)
         if hasattr(dd, 'span'):
             dd         = self.acqusText[dd.span()[0] + 1:]
             dd         = dd[dd.find('\n') + 1:]
             dd         = dd[dd.find(' '):dd.find('\n')]
             self.phase = np.array(dd.split(), dtype = 'int')
+
+        dd        = self.regExVarian.phase2.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd         = self.acqusText[dd.span()[0] + 1:]
+            dd         = dd[dd.find('\n') + 1:]
+            dd         = dd[dd.find(' '):dd.find('\n')]
+            self.phase2 = np.array(dd.split(), dtype = 'int')
 
         dd        = self.regExVarian.transients.search(self.acqusText)
         if hasattr(dd, 'span'):
@@ -627,7 +636,7 @@ class AcqPars:
 
         if self.manufacturer == 'Varian':
             self.parseRegExVarian()
-            self.nDataPoints[1] = self.ni*len(self.phase)*2
+            self.nDataPoints[1] = self.ni*self.ni2*len(self.phase)*len(self.phase2)*2
             self.groupDelay = 0.0
             self.decim = 0
             self.dspfvs = 0

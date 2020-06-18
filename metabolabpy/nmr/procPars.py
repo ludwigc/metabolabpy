@@ -142,6 +142,7 @@ class ProcPars:
             dd        = dd[dd.find(' '):dd.find('\n')]
             ni = int(dd)
 
+        ni = max(ni,1)
         ni2 = 1
         dd        = self.regExVarian.ni2.search(self.procsText)
         if hasattr(dd, 'span'):
@@ -150,14 +151,24 @@ class ProcPars:
             dd        = dd[dd.find(' '):dd.find('\n')]
             ni2 = int(dd)
 
+        ni2 = max(ni2,1)
+        phase = np.array([1], dtype='int')
         dd        = self.regExVarian.phase.search(self.procsText)
         if hasattr(dd, 'span'):
             dd         = self.procsText[dd.span()[0] + 1:]
             dd         = dd[dd.find('\n') + 1:]
             dd         = dd[dd.find(' '):dd.find('\n')]
-            phase = np.array(dd.split(), dtype = 'int')
+            phase = np.array(dd.split(), dtype='int')
 
-        self.nPoints[1] = pow(2, math.ceil(math.log(ni*ni2*len(phase))/math.log(2)))
+        phase2 = np.array([1], dtype='int')
+        dd        = self.regExVarian.phase2.search(self.procsText)
+        if hasattr(dd, 'span'):
+            dd         = self.procsText[dd.span()[0] + 1:]
+            dd         = dd[dd.find('\n') + 1:]
+            dd         = dd[dd.find(' '):dd.find('\n')]
+            phase2 = np.array(dd.split(), dtype='int')
+
+        self.nPoints[1] = pow(2, math.ceil(math.log(ni*ni2*len(phase)*len(phase2))/math.log(2)))
         dd        = self.regExVarian.nuc1.search(self.procsText)
         if hasattr(dd, 'span'):
             dd        = self.procsText[dd.span()[0] + 1:]

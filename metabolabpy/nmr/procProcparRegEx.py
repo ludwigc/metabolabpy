@@ -14,4 +14,5 @@ class ProcProcparRegEx:
         self.ni               = re.compile(r'\nni ')
         self.ni2              = re.compile(r'\nni2 ')
         self.phase            = re.compile(r'\nphase ')
+        self.phase2           = re.compile(r'\nphase2 ')
         # end __init__
