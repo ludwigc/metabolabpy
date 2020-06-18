@@ -121,7 +121,7 @@ class main_w(object):  # pragma: no cover
         self.w.actionCorrect_Phase.triggered.connect(self.startStopPhCorr)
         self.w.actionZoomCorrect_Phase.triggered.connect(self.zoomPhCorr)
         self.w.actionClear.triggered.connect(self.clear)
-        self.w.actionRead_Bruker_Spectrum.triggered.connect(lambda: self.readBrukerSpc())
+        self.w.actionRead_NMR_Spectrum.triggered.connect(lambda: self.readNMRSpc())
         self.w.preprocessing.stateChanged.connect(lambda: self.setPreProcessing())
         self.w.actionReset.triggered.connect(lambda: self.resetPlot())
         self.w.actionShow_NMR_Spectrum.triggered.connect(lambda: self.showNMRSpectrum())
@@ -319,8 +319,8 @@ class main_w(object):  # pragma: no cover
         self.plotSpc()
         # end autophase1dAll
 
-    def autoref(self):
-        self.nd.autoref()
+    def autoref(self, tmsp = True):
+        self.nd.autoref(tmsp)
         self.w.nmrSpectrum.setCurrentIndex(0)
         self.changeDataSetExp()
         self.plotSpc()
@@ -1592,7 +1592,7 @@ class main_w(object):  # pragma: no cover
         self.w.close()
         # end quit_app
 
-    def readBrukerSpc(self):
+    def readNMRSpc(self):
         kz = self.w.keepZoom.isChecked()
         if (len(self.nd.nmrdat[0]) == 0):
             self.w.keepZoom.setChecked(False)
@@ -1604,12 +1604,7 @@ class main_w(object):  # pragma: no cover
             dsName = selected_directory[:idx]
             expName = selected_directory[idx + 1:]
             self.nd.readSpc(dsName, expName)
-            if (self.nd.nmrdat[self.nd.s][self.nd.e].acq.fnMode == 1):
-                self.nd.nmrdat[self.nd.s][self.nd.e].disp.yLabel = '1H'
-                self.nd.nmrdat[self.nd.s][self.nd.e].disp.axisType2 = 'Hz'
-                self.nd.nmrdat[self.nd.s][self.nd.e].proc.windowType = np.array([5, 3, 0])
-                self.nd.nmrdat[self.nd.s][self.nd.e].proc.lb[0] = 0.5
-
+            self.setJres()
             self.nd.ft()
             self.nd.autoref()
             self.nd.e = len(self.nd.nmrdat[self.nd.s]) - 1
@@ -1623,7 +1618,7 @@ class main_w(object):  # pragma: no cover
             self.setDispPars()
             self.updateGUI()
 
-        # end readBrukerSpc
+        # end readNMRSpc
 
     def readNMRPipeSpcs(self, dataPath, dataSets, procDataName = 'test.dat'):
         zFill = 25
@@ -1697,6 +1692,16 @@ class main_w(object):  # pragma: no cover
 
         # end readSpcs
 
+
+    def reference1d(self, refShift = 0.0):
+        self.w.MplWidget.canvas.setFocus()
+        self.showNMRSpectrum()
+        xy = self.w.MplWidget.canvas.axes.figure.ginput(1)
+        self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0], 0)
+        self.nd.nmrdat[self.nd.s][self.nd.e].refShift[0] = refShift
+        self.nd.nmrdat[self.nd.s][self.nd.e].calcPPM()
+        self.resetPlot()
+        # end reference1d
 
     def resetConfig(self):
         self.cf = nmrConfig.NmrConfig()
@@ -2199,6 +2204,15 @@ class main_w(object):  # pragma: no cover
         self.w.pulseProgram.setFont(f)
         self.w.cmdLine.setFont(f)
         # end setFontSize
+
+    def setJres(self):
+        if (self.nd.nmrdat[self.nd.s][self.nd.e].acq.fnMode == 1):
+            self.nd.nmrdat[self.nd.s][self.nd.e].disp.yLabel = '1H'
+            self.nd.nmrdat[self.nd.s][self.nd.e].disp.axisType2 = 'Hz'
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.windowType = np.array([5, 3, 0])
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.lb[0] = 0.5
+
+        # end setJres
 
     def setNoiseFiltering(self):
         if (self.nd.pp.preProcFill == False):

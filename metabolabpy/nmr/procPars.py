@@ -5,6 +5,8 @@ NMR spectrum processing parameters
 import numpy as np
 import os
 from metabolabpy.nmr import procRegEx
+from metabolabpy.nmr import procProcparRegEx
+import math
 
 class ProcPars:
     
@@ -12,8 +14,8 @@ class ProcPars:
         self.procsText             = str('')
         self.proc2sText            = str('')
         self.proc3sText            = str('')
-        self.tilt                  = True
-        self.symj                  = True
+        self.tilt                  = False
+        self.symj                  = False
         self.ph0                   = np.array([0.0, 0.0, 0.0])
         self.ph1                   = np.array([0.0, 0.0, 0.0])
         self.phCorr                = np.array([1, 1, 0], dtype = 'int')
@@ -34,6 +36,7 @@ class ProcPars:
         self.windowType            = np.array([1, 4, 0], dtype = 'int')
         self.convWindowType        = np.array([0, 0, 0], dtype = 'int')
         self.regEx                 = procRegEx.ProcRegEx()
+        self.regExVarian           = procProcparRegEx.ProcProcparRegEx()
         self.sw_h                  = np.array([0.0, 0.0, 0.0])
         self.fidOffsetCorrection   = 0
         self.windowFunctions       = {
@@ -80,6 +83,7 @@ class ProcPars:
             "Poly"    : 2,
             "Wavewat" : 3
         }
+        self.dataType = ''
         # end __init__
 
     def __str__(self): # pragma: no cover
@@ -96,7 +100,9 @@ class ProcPars:
         if self.ssb[0] == 2.0:
             self.ssb[0] = 90.0
 
-        self.axisNucleus[0] = self.regEx.axisNucleus.findall(self.procsText)[0]
+        if self.procsText.find("$AXNUC=") > -1:
+            self.axisNucleus[0] = self.regEx.axisNucleus.findall(self.procsText)[0]
+
         self.windowType[0]  = int(self.regEx.wdw.findall(self.procsText)[0])
         self.aunmp          = self.regEx.aunmp.findall(self.procsText)[0]
         try:
@@ -119,10 +125,74 @@ class ProcPars:
         
         # end parseRegEx
 
+    def parseRegExVarian(self):
+        dd        = self.regExVarian.td.search(self.procsText)
+        if hasattr(dd, 'span'):
+            dd        = self.procsText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            td        = int(dd)
+            self.nPoints[0] = pow(2, math.ceil(math.log(td)/math.log(2)))
+
+        ni = 1
+        dd        = self.regExVarian.ni.search(self.procsText)
+        if hasattr(dd, 'span'):
+            dd        = self.procsText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            ni = int(dd)
+
+        ni2 = 1
+        dd        = self.regExVarian.ni2.search(self.procsText)
+        if hasattr(dd, 'span'):
+            dd        = self.procsText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            ni2 = int(dd)
+
+        dd        = self.regExVarian.phase.search(self.procsText)
+        if hasattr(dd, 'span'):
+            dd         = self.procsText[dd.span()[0] + 1:]
+            dd         = dd[dd.find('\n') + 1:]
+            dd         = dd[dd.find(' '):dd.find('\n')]
+            phase = np.array(dd.split(), dtype = 'int')
+
+        self.nPoints[1] = pow(2, math.ceil(math.log(ni*ni2*len(phase))/math.log(2)))
+        dd        = self.regExVarian.nuc1.search(self.procsText)
+        if hasattr(dd, 'span'):
+            dd        = self.procsText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            dd        = dd.replace(" ", "")
+            dd        = dd.replace("\"", "")
+            self.axisNucleus[0] = dd
+
+        dd        = self.regExVarian.nuc2.search(self.procsText)
+        if hasattr(dd, 'span'):
+            dd        = self.procsText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            dd        = dd.replace(" ", "")
+            dd        = dd.replace("\"", "")
+            self.axisNucleus[1] = dd
+
+        dd        = self.regExVarian.nuc3.search(self.procsText)
+        if hasattr(dd, 'span'):
+            dd        = self.procsText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            dd        = dd.replace(" ", "")
+            dd        = dd.replace("\"", "")
+            self.axisNucleus[2] = dd
+
+        # end parseRegExVarian
+
     def read(self, spcDir):
-        procsName  = spcDir + os.sep + 'pdata' + os.sep + '1' + os.sep + 'procs'
-        proc2sName = spcDir + os.sep + 'pdata' + os.sep + '1' + os.sep + 'proc2s'
-        proc3sName = spcDir + os.sep + 'pdata' + os.sep + '1' + os.sep + 'proc3s'
+        procsName    = spcDir + os.sep + 'pdata' + os.sep + '1' + os.sep + 'procs'
+        proc2sName   = spcDir + os.sep + 'pdata' + os.sep + '1' + os.sep + 'proc2s'
+        proc3sName   = spcDir + os.sep + 'pdata' + os.sep + '1' + os.sep + 'proc3s'
+        procparName  = spcDir + os.sep + 'procpar'
+        procparName2 = spcDir + os.sep + 'PROCPAR'
         if(os.path.isfile(procsName)):
             try:
                 f = open(procsName, "r")
@@ -134,6 +204,7 @@ class ProcPars:
                 self.procsText = f.read()
                 f.close()
 
+            self.dataType = 'Bruker'
 
         if(os.path.isfile(proc2sName)):
             try:
@@ -146,6 +217,7 @@ class ProcPars:
                 self.proc2sText = f.read()
                 f.close()
 
+            self.dataType = 'Bruker'
 
         if(os.path.isfile(proc3sName)):
             try:
@@ -158,7 +230,24 @@ class ProcPars:
                 self.proc3sText = f.read()
                 f.close()
 
+            self.dataType = 'Bruker'
 
-        self.parseRegEx()
+        if (os.path.isfile(procparName)):
+            f = open(procparName, "r")
+            self.procsText = f.read()
+            f.close()
+            self.dataType = 'Varian'
+
+        if (os.path.isfile(procparName2)):
+            f = open(procparName2, "r")
+            self.procsText = f.read()
+            f.close()
+            self.dataType = 'Varian'
+
+        if self.dataType == 'Bruker':
+            self.parseRegEx()
+        else:
+            self.parseRegExVarian()
+
         # end read
     

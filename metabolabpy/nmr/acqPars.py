@@ -5,6 +5,7 @@ NMR spectrum acquisition parameters
 import numpy as np
 import os
 from metabolabpy.nmr import acqRegEx
+from metabolabpy.nmr import acqProcparRegEx
 
 class AcqPars:
     
@@ -93,6 +94,12 @@ class AcqPars:
         self.fnMode           = 0
         self.inf              = np.array([], dtype = 'float64')
         self.regEx            = acqRegEx.AcqRegEx()
+        self.regExVarian      = acqProcparRegEx.AcqProcparRegEx()
+        self.manufacturer     = ''
+        self.ni               = 0
+        self.np               = 1
+        self.np2              = 1
+        self.phase            = np.array([], dtype = 'int')
         # end __init__
         
     def __str__(self): # pragma: no cover
@@ -133,7 +140,9 @@ class AcqPars:
         self.nDataPoints[0]   = int(self.regEx.td.findall(self.acqusText)[0])
         self.decim            = int(self.regEx.decim.findall(self.acqusText)[0])
         self.dspfvs           = int(self.regEx.dspfvs.findall(self.acqusText)[0])
-        self.groupDelay       = float(self.regEx.grpdly.findall(self.acqusText)[0][0])
+        if self.acqusText.find("$GRPDLY=") > -1:
+            self.groupDelay       = float(self.regEx.grpdly.findall(self.acqusText)[0][0])
+
         self.byteOrder        = int(self.regEx.byteOrder.findall(self.acqusText)[0])
         self.aqMode           = int(self.regEx.aqMode.findall(self.acqusText)[0])
         self.digMod           = int(self.regEx.digMod.findall(self.acqusText)[0])
@@ -152,7 +161,11 @@ class AcqPars:
         self.title            = self.regEx.title.findall(self.acqusText)[0]
         self.origin           = self.regEx.origin.findall(self.acqusText)[0]
         self.owner            = self.regEx.owner.findall(self.acqusText)[0]
-        self.metaInfo         = self.regEx.metaInfo.findall(self.acqusText)[0]
+        try:
+            self.metaInfo         = self.regEx.metaInfo.findall(self.acqusText)[0]
+        except:
+            pass
+
         self.temperature      = float(self.regEx.temperature.findall(self.acqusText)[0])
         dd                    = self.regEx.cnst.search(self.acqusText)
         dd                    = self.acqusText[dd.span()[0]:]
@@ -217,26 +230,30 @@ class AcqPars:
         dd                    = dd[dd.find('\n')+1:]
         dd                    = dd[:dd.find('##$')]
         self.powerLevel       = np.array(dd.split(), dtype = 'float64')
-        dd                    = self.regEx.powerLevelWatt.search(self.acqusText)
-        dd                    = self.acqusText[dd.span()[0]:]
-        dd                    = dd[dd.find('\n')+1:]
-        dd                    = dd[:dd.find('##$')]
-        self.powerLevelWatt   = np.array(dd.split(), dtype = 'float64')
-        dd                    = self.regEx.powerLevelMax.search(self.acqusText)
-        dd                    = self.acqusText[dd.span()[0]:]
-        dd                    = dd[dd.find('\n')+1:]
-        dd                    = dd[:dd.find('##$')]
-        self.powerLevelMax    = np.array(dd.split(), dtype = 'float64')
+        if self.acqusText.find("$PLW=") > -1:
+            dd                    = self.regEx.powerLevelWatt.search(self.acqusText)
+            dd                    = self.acqusText[dd.span()[0]:]
+            dd                    = dd[dd.find('\n')+1:]
+            dd                    = dd[:dd.find('##$')]
+            self.powerLevelWatt   = np.array(dd.split(), dtype = 'float64')
+            dd                    = self.regEx.powerLevelMax.search(self.acqusText)
+            dd                    = self.acqusText[dd.span()[0]:]
+            dd                    = dd[dd.find('\n')+1:]
+            dd                    = dd[:dd.find('##$')]
+            self.powerLevelMax    = np.array(dd.split(), dtype = 'float64')
+
         dd                    = self.regEx.shapedPower.search(self.acqusText)
         dd                    = self.acqusText[dd.span()[0]:]
         dd                    = dd[dd.find('\n')+1:]
         dd                    = dd[:dd.find('##$')]
         self.shapedPower      = np.array(dd.split(), dtype = 'float64')
-        dd                    = self.regEx.shapedPowerWatt.search(self.acqusText)
-        dd                    = self.acqusText[dd.span()[0]:]
-        dd                    = dd[dd.find('\n')+1:]
-        dd                    = dd[:dd.find('##$')]
-        self.shapedPowerWatt  = np.array(dd.split(), dtype = 'float64')
+        if self.acqusText.find("$SPW=") > -1:
+            dd                    = self.regEx.shapedPowerWatt.search(self.acqusText)
+            dd                    = self.acqusText[dd.span()[0]:]
+            dd                    = dd[dd.find('\n')+1:]
+            dd                    = dd[:dd.find('##$')]
+            self.shapedPowerWatt  = np.array(dd.split(), dtype = 'float64')
+
         dd                    = self.regEx.spoal.search(self.acqusText)
         dd                    = self.acqusText[dd.span()[0]:]
         dd                    = dd[dd.find('\n')+1:]
@@ -247,11 +264,13 @@ class AcqPars:
         dd                    = dd[dd.find('\n')+1:]
         dd                    = dd[:dd.find('##$')]
         self.spoffs           = np.array(dd.split(), dtype = 'float64')
-        dd                    = self.regEx.inf.search(self.acqusText)
-        dd                    = self.acqusText[dd.span()[0]:]
-        dd                    = dd[dd.find('\n')+1:]
-        dd                    = dd[:dd.find('##$')]
-        self.inf              = np.array(dd.split(), dtype = 'float64')
+        if self.acqusText.find("$INF=") > -1:
+            dd                    = self.regEx.inf.search(self.acqusText)
+            dd                    = self.acqusText[dd.span()[0]:]
+            dd                    = dd[dd.find('\n')+1:]
+            dd                    = dd[:dd.find('##$')]
+            self.inf              = np.array(dd.split(), dtype = 'float64')
+
         self.vcList           = self.regEx.vcList.findall(self.acqusText)[0]
         self.vdList           = self.regEx.vdList.findall(self.acqusText)[0]
         self.vpList           = self.regEx.vpList.findall(self.acqusText)[0]
@@ -265,17 +284,21 @@ class AcqPars:
         self.nuc6             = self.regEx.nuc6.findall(self.acqusText)[0]
         self.nuc7             = self.regEx.nuc7.findall(self.acqusText)[0]
         self.nuc8             = self.regEx.nuc8.findall(self.acqusText)[0]
-        self.nusList          = self.regEx.nusList.findall(self.acqusText)[0]
-        try:
-            self.nusAmount        = float(self.regEx.nusAmount.findall(self.acqusText)[0])
-            self.nusSeed          = int(self.regEx.nusSeed.findall(self.acqusText)[0])
-            self.nusJsp           = int(self.regEx.nusJsp.findall(self.acqusText)[0])
-            self.nusT2            = float(self.regEx.nusT2.findall(self.acqusText)[0][0])
-        except:
-            pass
-            
+        if self.acqusText.find("$NUSLIST=") > -1:
+            self.nusList          = self.regEx.nusList.findall(self.acqusText)[0]
+            try:
+                self.nusAmount        = float(self.regEx.nusAmount.findall(self.acqusText)[0])
+                self.nusSeed          = int(self.regEx.nusSeed.findall(self.acqusText)[0])
+                self.nusJsp           = int(self.regEx.nusJsp.findall(self.acqusText)[0])
+                self.nusT2            = float(self.regEx.nusT2.findall(self.acqusText)[0][0])
+            except:
+                pass
+
+
         self.overFlow         = int(self.regEx.overFlow.findall(self.acqusText)[0])
-        self.pynm             = self.regEx.pynm.findall(self.acqusText)[0]
+        if self.acqusText.find("$PYNM=") > -1:
+            self.pynm             = self.regEx.pynm.findall(self.acqusText)[0]
+
         self.spcFrequency[0]  = float(self.regEx.bf1.findall(self.acqusText)[0])
         self.spcSFreq[0]      = float(self.regEx.sfo1.findall(self.acqusText)[0])
         self.spcNucleus[0]    = self.regEx.nuc1.findall(self.acqusText)[0]
@@ -345,10 +368,203 @@ class AcqPars:
         
         # end parseRegEx
 
+    def parseRegExVarian(self):
+        dd        = self.regExVarian.sfo1.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            self.sfo1 = float(dd)
+
+        dd        = self.regExVarian.sfo2.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            self.sfo2 = float(dd)
+
+        dd        = self.regExVarian.sfo3.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            self.sfo3 = float(dd)
+
+        dd        = self.regExVarian.o1.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            self.o1 = float(dd)
+
+        dd        = self.regExVarian.o2.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            self.o2 = float(dd)
+
+        dd        = self.regExVarian.o3.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            self.o3 = float(dd)
+
+        self.bf1 = self.sfo1 - self.o1/1000.0
+        self.bf2 = self.sfo2 - self.o2/1000.0
+        self.bf3 = self.sfo3 - self.o3/1000.0
+        self.o1 = 0
+        self.o2 = 0
+        self.o3 = 0
+        dd        = self.regExVarian.sw_h.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            self.sw_h[0] = float(dd)
+            self.sw[0]   = self.sw_h[0]/self.sfo1
+
+        dd        = self.regExVarian.sw2_h.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            self.sw_h[1] = float(dd)
+            self.sw[1]   = self.sw_h[1]/self.sfo2
+
+        dd        = self.regExVarian.sw3_h.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            dd2 = self.regExVarian.sw2_h.search(self.acqusText)
+            if hasattr(dd2, 'span'):
+                self.sw_h[2] = float(dd)
+                self.sw[2]   = self.sw_h[2]/self.sfo3
+            else:
+                self.sw_h[1] = float(dd)
+                self.sw[1]   = self.sw_h[1]/self.sfo3
+
+
+        dd        = self.regExVarian.td.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            self.nDataPoints[0] = int(dd)  # int(int(dd)/2)
+
+        dd        = self.regExVarian.phase.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd      = self.acqusText[dd.span()[0] + 1:]
+            dd      = dd[dd.find('\n') + 1:]
+            dd      = dd[:dd.find(' ')]
+            self.np = int(dd)
+
+        dd        = self.regExVarian.phase2.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd       = self.acqusText[dd.span()[0] + 1:]
+            dd       = dd[dd.find('\n') + 1:]
+            dd       = dd[:dd.find(' ')]
+            self.np2 = int(dd)
+
+        ni = 1
+        dd        = self.regExVarian.ni.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            self.ni = int(dd)
+
+        ni2 = 1
+        dd        = self.regExVarian.ni2.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            self.ni2 = int(dd)
+
+        dd        = self.regExVarian.phase.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd         = self.acqusText[dd.span()[0] + 1:]
+            dd         = dd[dd.find('\n') + 1:]
+            dd         = dd[dd.find(' '):dd.find('\n')]
+            self.phase = np.array(dd.split(), dtype = 'int')
+
+        dd        = self.regExVarian.transients.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            self.transients = int(dd)
+
+        dd        = self.regExVarian.steadyStateScans.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            self.steadyStateScans = int(dd)
+
+        dd        = self.regExVarian.nucleus.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            dd        = dd.replace(" ", "")
+            dd        = dd.replace("\"", "")
+            self.spcNucleus = dd
+
+        dd        = self.regExVarian.pulProgName.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            dd        = dd.replace(" ", "")
+            dd        = dd.replace("\"", "")
+            self.pulProgName = dd
+
+        dd        = self.regExVarian.temperature.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            self.temperature = float(dd) + 273.15
+
+        dd        = self.regExVarian.nuc1.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            dd        = dd.replace(" ", "")
+            dd        = dd.replace("\"", "")
+            self.nuc1 = dd
+
+        dd        = self.regExVarian.nuc2.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            dd        = dd.replace(" ", "")
+            dd        = dd.replace("\"", "")
+            self.nuc2 = dd
+
+        dd        = self.regExVarian.nuc3.search(self.acqusText)
+        if hasattr(dd, 'span'):
+            dd        = self.acqusText[dd.span()[0] + 1:]
+            dd        = dd[dd.find('\n') + 1:]
+            dd        = dd[dd.find(' '):dd.find('\n')]
+            dd        = dd.replace(" ", "")
+            dd        = dd.replace("\"", "")
+            self.nuc3 = dd
+
+        # end parseRegExVarian
+
     def read(self, spcDir):
-        acqusName  = spcDir + os.sep + 'acqus'
-        acqu2sName = spcDir + os.sep + 'acqu2s'
-        acqu3sName = spcDir + os.sep + 'acqu3s'
+        acqusName    = spcDir + os.sep + 'acqus'
+        acqu2sName   = spcDir + os.sep + 'acqu2s'
+        acqu3sName   = spcDir + os.sep + 'acqu3s'
+        procparName  = spcDir + os.sep + 'procpar'
+        procparName2 = spcDir + os.sep + 'PROCPAR'
         if(os.path.isfile(acqusName)):
             try:
                 f = open(acqusName,"r")
@@ -360,6 +576,7 @@ class AcqPars:
                 self.acqusText = f.read()
                 f.close()
 
+            self.manufacturer = 'Bruker'
             
         if(os.path.isfile(acqu2sName)):
             try:
@@ -371,6 +588,8 @@ class AcqPars:
                 f = open(acqu2sName,"r", encoding='latin-1')
                 self.acqu2sText = f.read()
                 f.close()
+
+            self.manufacturer = 'Bruker'
 
 
         if(os.path.isfile(acqu3sName)):
@@ -384,8 +603,53 @@ class AcqPars:
                 self.acqu3sText = f.read()
                 f.close()
 
-        
-        self.parseRegEx()
+            self.manufacturer = 'Bruker'
+
+        if (os.path.isfile(procparName)):
+            f = open(procparName, "r")
+            self.acqusText = f.read()
+            f.close()
+            self.byteOrder = 0
+            self.manufacturer = 'Varian'
+
+        if (os.path.isfile(procparName2)):
+            f = open(procparName2, "r")
+            self.acqusText = f.read()
+            f.close()
+            self.byteOrder = 0
+            self.manufacturer = 'Varian'
+
+        if self.manufacturer == 'Bruker':
+            self.parseRegEx()
+            if(self.groupDelay == 0.0):
+                self.setGroupDelay()
+
+
+        if self.manufacturer == 'Varian':
+            self.parseRegExVarian()
+            self.nDataPoints[1] = self.ni*len(self.phase)*2
+            self.groupDelay = 0.0
+            self.decim = 0
+            self.dspfvs = 0
+
         # end read
     
+    def setGroupDelay(self):
+        decims = np.array([2, 3, 4, 6, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192, 256, 384, 512, 768, 1024, 1536, 2048])
+        dspfirm10 = np.array([179, 201, 533, 709, 1097, 1449, 2225, 2929, 4481, 5889, 8993, 11809, 18017, 23649, 36065, 47329, 72161, 94689, 144353, 189409, 288737])
+        dspfirm11 = np.array([184, 219, 384, 602, 852, 1668, 2312, 3368, 4656, 6768, 9344, 13568, 18560, 27392, 36992, 55040, 73856, 110336, 147584, 220928, 295040])
+        dspfirm12 = np.array([184, 219, 384, 602, 852, 1668, 2292, 3368, 4616, 6768, 9264, 13568, 18560, 27392, 36992, 55040, 73856, 110336, 147584, 220928, 295040])
+        dspfirm13 = np.array([11, 17, 23, 35, 47, 71, 95, 143, 191, 287, 383, 575])
+        dspfirm14 = np.array([60, 90, 118, 179, 244, 360, 492, 724, 980, 1444, 1958, 2886, 3912, 5768, 7820, 11532])
+        dspfirm15 = np.array([0, 0, 58, 152, 202, 318, 418, 642, 842, 1290, 1690, 2586, 3386])
+        dspfirm = [dspfirm10, dspfirm11, dspfirm12, dspfirm13, dspfirm14, dspfirm15]
+        addr = np.where(decims == self.decim)[0][0]
+        dly = dspfirm[self.dspfvs-10][addr]
+        if self.decim == 3 and self.dspfvs== 15 and self.sw_h > 104000.0:
+            self.groupDelay = 55.0
+        else:
+            self.groupDelay = dly / self.decim / 2.0
+
+        # end setGroupDelay
+
 

@@ -1,5 +1,5 @@
 import numpy as np
-#from metabolabpy.nmr import wdwf
+# from metabolabpy.nmr import wdwf
 from metabolabpy.nmr import acqPars
 from metabolabpy.nmr import procPars
 from metabolabpy.nmr import dispPars
@@ -44,6 +44,7 @@ class NmrData:
         self.origJresSet = -1
         self.origJresExp = -1
         self.pjresMode = ''
+        self.jRes = False
         # end __init__
 
     def __str__(self):  # pragma: no cover
@@ -67,28 +68,28 @@ class NmrData:
             wdwf = np.exp(-lb * 2 * math.pi * t - 2 * math.pi * (t ** 2) / ((2 * math.pi * gb * len(fid) / sw_h)))
 
         if (self.proc.windowType[dim] == 3):  # sine window
-            npts = int(min(self.acq.nDataPoints[dim]/2, len(fid)))
-            t = (np.linspace(0.0, npts - 1, npts)) / (npts-1)
+            npts = int(min(self.acq.nDataPoints[dim] / 2, len(fid)))
+            t = (np.linspace(0.0, npts - 1, npts)) / (npts - 1)
             wdwf = np.zeros(len(fid))
             ssb2 = ssb * math.pi / 180.0
             wdwf[:npts] = np.sin(ssb2 + (math.pi - ssb2) * t)
 
         if (self.proc.windowType[dim] == 4):  # qsine window
-            npts = int(min(self.acq.nDataPoints[dim]/2, len(fid)))
-            t = (np.linspace(0.0, npts - 1, npts)) / (npts-1)
+            npts = int(min(self.acq.nDataPoints[dim] / 2, len(fid)))
+            t = (np.linspace(0.0, npts - 1, npts)) / (npts - 1)
             wdwf = np.zeros(len(fid))
             ssb2 = ssb * math.pi / 180.0
             wdwf[:npts] = np.sin(ssb2 + (math.pi - ssb2) * t) ** 2
 
         if (self.proc.windowType[dim] == 5):  # sem window
-            npts = int(min(self.acq.nDataPoints[dim]/2, len(fid)))
+            npts = int(min(self.acq.nDataPoints[dim] / 2, len(fid)))
             t1 = (np.linspace(0.0, npts - 1 - groupDelay, npts)) / sw_h
-            t2 = (np.linspace(0.0, npts - 1, npts)) / (npts-1)
+            t2 = (np.linspace(0.0, npts - 1, npts)) / (npts - 1)
             wdwf = np.zeros(len(fid))
             ssb2 = ssb * math.pi / 180.0
             wdwf[:npts] = np.exp(-lb * t1) * np.sin(ssb2 + (math.pi - ssb2) * t2)
 
-        fid = np.copy(wdwf*fid)
+        fid = np.copy(wdwf * fid)
         return fid
         # end apodise
 
@@ -99,7 +100,7 @@ class NmrData:
         spc /= scaleFact
         xaxis = np.linspace(-self.apc.nMax, self.apc.nMax, self.apc.npts)
         parEval = self.apc.fitBaseline(spc, xaxis)
-        spc2 = self.apc.baselineFitFuncEval(parEval, spc, xaxis) #, False)
+        spc2 = self.apc.baselineFitFuncEval(parEval, spc, xaxis)  # , False)
         self.apc.pars = parEval
         self.apc.rSpc = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
         self.apc.iSpc = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
@@ -118,12 +119,12 @@ class NmrData:
         spc /= scaleFact
         xaxis = np.linspace(-self.apc.nMax, self.apc.nMax, self.apc.npts)
         parEval = self.apc.fitPhase(spc, xaxis)
-        spc2 = self.apc.phaseFitFuncEval(parEval, spc, xaxis) #, False)
+        spc2 = self.apc.phaseFitFuncEval(parEval, spc, xaxis)  # , False)
         if (np.min(spc2.real) == -np.max(np.abs(spc2.real))):
             parEval[0] = ((parEval[0] * self.apc.mFact0 + 180.0) % 360) / self.apc.mFact0
 
         parEval[0] = (((parEval[0] * self.apc.mFact0 + 180.0) % 360) - 180.0) / self.apc.mFact0
-        spc2 = self.apc.phaseFitFuncEval(parEval, spc, xaxis) #, False)
+        spc2 = self.apc.phaseFitFuncEval(parEval, spc, xaxis)  # , False)
         self.apc.pars = parEval
         self.apc.rSpc = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
         self.apc.iSpc = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
@@ -139,7 +140,11 @@ class NmrData:
         # end autophase1d
 
     def autoRef(self, tmsp=True):
-        self.refShift[0] = self.acq.o1 / self.acq.bf1
+        if self.acq.o1 == 0:
+            self.refShift[0] = 4.76
+        else:
+            self.refShift[0] = self.acq.o1 / self.acq.bf1
+
         self.refPoint[0] = int(len(self.spc[0]) / 2)
         if (self.dim == 2):
             self.refShift[1] = self.acq.o2 / self.acq.bf2
@@ -162,6 +167,7 @@ class NmrData:
                 pts = self.ppm2points(np.array([-self.refTmspRange, self.refTmspRange]), 0)
                 npts = len(self.spc[0])
                 r = np.arange(npts - max(pts), npts - min(pts))
+                r = np.copy(r[np.where(r < len(self.spc[0]))])
                 spc = self.spc[0][r].real
                 refP = np.where(spc == np.amax(spc))
                 self.refPoint[0] -= refP[0][0] - int((max(pts) - min(pts)) / 2) + 1
@@ -179,7 +185,7 @@ class NmrData:
         parEval = np.copy(self.apc.rSpc)
         parEval = np.append(parEval, self.apc.iSpc)
         # print(parEval)
-        spc2 = self.apc.baselineFitFuncEval(parEval, spc, xaxis) #, False)
+        spc2 = self.apc.baselineFitFuncEval(parEval, spc, xaxis)  # , False)
         self.spc[0] = spc2  # *scaleFact
         # end baseline1d
 
@@ -567,69 +573,170 @@ class NmrData:
         # end readPipe2D
 
     def readSpc(self):
-        print("{} / {}".format(self.dataSetName, self.dataSetNumber))
         self.acq.read(self.dataSetName + os.sep + self.dataSetNumber)
         self.proc.read(self.dataSetName + os.sep + self.dataSetNumber)
         # self.proc.sw_h = self.acq.sw_h
-        self.origDataSet = self.dataSetName + self.dataSetNumber
-        titleFile = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'pdata' + os.sep + '1' + os.sep + 'title'
-        pulProgFile = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'pulseprogram'
-        if (os.path.isfile(titleFile)):
-            fid = open(titleFile, "r")
-            self.title = fid.read()
-            fid.close()
+        self.origDataSet = self.dataSetName + os.sep + self.dataSetNumber
+        if self.acq.manufacturer == 'Bruker':
+            titleFile = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'pdata' + os.sep + '1' + os.sep + 'title'
+            if (os.path.isfile(titleFile)):
+                fid = open(titleFile, "r")
+                self.title = fid.read()
+                fid.close()
+
+        else:
+            titleFile1 = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'text'
+            titleFile2 = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'TEXT'
+            if (os.path.isfile(titleFile1)):
+                fid = open(titleFile1, "r")
+                self.title = fid.read()
+                fid.close()
+
+            if (os.path.isfile(titleFile2)):
+                fid = open(titleFile2, "r")
+                self.title = fid.read()
+                fid.close()
+
+        if self.acq.manufacturer == 'Bruker':
+            pulProgFile = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'pulseprogram'
+        else:
+            pulProgFile = self.dataSetName + os.sep + self.dataSetNumber + os.sep + self.acq.pulProgName + ".c"
 
         if (os.path.isfile(pulProgFile)):
             fid = open(pulProgFile, "r")
             self.pulseProgram = fid.read()
             fid.close()
 
-        fidFile1 = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'fid'
-        spcFile1r = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'pdata' + os.sep + '1' + os.sep + '1r'
-        spcFile1i = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'pdata' + os.sep + '1' + os.sep + '1i'
-        fidFile2 = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'ser'
-        if (os.path.isfile(fidFile1)):
-            # read 1D FID file
-            self.fid = np.resize(self.fid, (1, int(self.acq.nDataPoints[0] / 2)))
-            f = open(fidFile1, 'rb')
-            fid = np.fromfile(f, dtype=np.int32)
-            f.close()
-            self.fid[0].real = fid[0::2]
-            self.fid[0].imag = -fid[1::2]
-            self.dim = 1
+        if self.acq.manufacturer == 'Bruker':
+            fidFile1 = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'fid'
+            spcFile1r = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'pdata' + os.sep + '1' + os.sep + '1r'
+            spcFile1i = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'pdata' + os.sep + '1' + os.sep + '1i'
+            fidFile2 = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'ser'
+            if (os.path.isfile(fidFile1)):
+                # read 1D FID file
+                self.fid = np.resize(self.fid, (1, int(self.acq.nDataPoints[0] / 2)))
+                f = open(fidFile1, 'rb')
+                if self.acq.byteOrder == 1:
+                    fid = np.fromfile(f, dtype='>i4')
+                else:
+                    if self.acq.dataType == 0:
+                        fid = np.fromfile(f, dtype='<i4')
+                    else:
+                        if self.acq.dataType == 1:
+                            fid = np.fromfile(f, dtype=np.float64)
+                        else:
+                            fid = np.fromfile(f, dtype=np.float32)
 
-        if (os.path.isfile(spcFile1r)):
-            # read 1D spectrum file (real part)
-            f = open(spcFile1r, 'rb')
-            fid = np.fromfile(f, dtype=np.int32)
-            self.spc = np.resize(self.spc, (1, int(len(fid))))
-            self.spc[0].real = fid;
-            f.close()
-            if (os.path.isfile(spcFile1i)):
-                # read 1D spectrum file (imaginary part)
-                f = open(spcFile1i, 'rb')
+                f.close()
+                self.fid[0].real = fid[0::2]
+                self.fid[0].imag = -fid[1::2]
+                self.dim = 1
+
+            if (os.path.isfile(spcFile1r)):
+                # read 1D spectrum file (real part)
+                f = open(spcFile1r, 'rb')
+                fid = np.fromfile(f, dtype=np.int32)
+                self.spc = np.resize(self.spc, (1, int(len(fid))))
+                self.spc[0].real = fid;
+                f.close()
+                if (os.path.isfile(spcFile1i)):
+                    # read 1D spectrum file (imaginary part)
+                    f = open(spcFile1i, 'rb')
+                    fid = np.fromfile(f, dtype=np.int32)
+                    f.close()
+                    self.spc[0].imag = fid
+
+
+            elif (os.path.isfile(fidFile2)):
+                # read 2D spectrum
+                np1 = int(self.acq.nDataPoints[0])
+                np2 = int(self.acq.nDataPoints[1])
+                self.fid = np.resize(self.fid, (int(np2), int(np1 / 2)))
+                f = open(fidFile2, 'rb')
                 fid = np.fromfile(f, dtype=np.int32)
                 f.close()
-                self.spc[0].imag = fid
+                fid = fid.reshape(int(np2), int(np1))
+                for x in range(np2):
+                    self.fid[x].real = fid[x][0::2]
+                    self.fid[x].imag = -fid[x][1::2]
 
+                self.dim = 2
+                if self.acq.pulProgName.find("jres"):
+                    self.jRes = True
+                    self.proc.tilt = True
+                    self.proc.symj = True
 
-        elif (os.path.isfile(fidFile2)):
-            # read 2D spectrum
-            np1 = int(self.acq.nDataPoints[0])
-            np2 = int(self.acq.nDataPoints[1])
-            self.fid = np.resize(self.fid, (int(np2), int(np1 / 2)))
-            f = open(fidFile2, 'rb')
-            fid = np.fromfile(f, dtype=np.int32)
-            f.close()
-            fid = fid.reshape(int(np2), int(np1))
-            for x in range(np2):
-                self.fid[x].real = fid[x][0::2]
-                self.fid[x].imag = -fid[x][1::2]
+            self.proc.sw_h = np.copy(self.acq.sw_h)
+        elif self.acq.manufacturer == 'Varian':
+            fidFile1 = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'fid'
+            fidFile2 = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'FID'
+            fidFile = ''
+            if os.path.isfile(fidFile1):
+                fidFile = fidFile1
+            elif os.path.isfile(fidFile2):
+                fidFile = fidFile2
 
-            self.dim = 2
+            if len(fidFile) > 0:
+                self.dim = self.acq.np + self.acq.np2 - 1
+                if self.dim == 1 and self.acq.ni > 1:
+                    self.dim = 2
+                    self.jRes = True
+                    self.proc.tilt = True
+                    self.proc.symj = True
+                    self.acq.fnMode = 1
 
-        self.proc.sw_h = np.copy(self.acq.sw_h)
-        # end readSpc    
+                f = open(fidFile, 'rb')
+                dh1 = np.fromfile(f, dtype='>i4', count=6)
+                dh2 = np.fromfile(f, dtype='>i2', count=2)
+                dh3 = np.fromfile(f, dtype='>i4', count=1)
+                status = np.binary_repr(dh2[1], 16)
+                dataFormat = '>i2'
+                if status[12] == '1':
+                    dataFormat = '>f'
+                elif status[13] == '1':
+                    dataFormat = '>i4'
+
+                nBlocks = dh1[0]
+                nTraces = dh1[1]
+                nPoints = dh1[2]
+                if self.dim == 1:
+                    self.fid = np.resize(self.fid, (1, int(self.acq.nDataPoints[0] / 2)))
+                    fid = np.array([])
+                    for k in range(nBlocks):
+                        bh1 = np.fromfile(f, dtype='>i2', count=4)
+                        bh2 = np.fromfile(f, dtype='>i4', count=1)
+                        bh3 = np.fromfile(f, dtype='>f', count=4)
+                        if status[10] == '1':
+                            bh4 = np.fromfile(f, dtype='>i2', count=4)
+                            bh5 = np.fromfile(f, dtype='>i4', count=1)
+                            bh6 = np.fromfile(f, dtype='>f', count=4)
+
+                        data = np.fromfile(f, dtype=dataFormat, count=nTraces * nPoints)
+                        fid = np.append(fid, data[0::2] + 1j * data[1::2])
+
+                    self.fid[0] = fid
+
+                else:
+                    ni = int(self.acq.nDataPoints[1] / 2)
+                    td = int(self.acq.nDataPoints[0] / 2)
+                    self.fid = np.zeros((ni, td), dtype='complex')
+                    for k in range(ni):
+                        bh1 = np.fromfile(f, dtype='>i2', count=4)
+                        bh2 = np.fromfile(f, dtype='>i4', count=1)
+                        bh3 = np.fromfile(f, dtype='>f', count=4)
+                        status = np.binary_repr(bh1[1], 8)
+                        dataFormat = '>i2'
+                        if status[4] == '1':
+                            dataFormat = '>f'
+                        elif status[5] == '1':
+                            dataFormat = '>i4'
+
+                        data = np.fromfile(f, dtype=dataFormat, count=nTraces * nPoints)
+                        self.fid[k] = data[0::2] + 1j * data[1::2]
+
+                f.close()
+
+        # end readSpc
 
     def setRef(self, refShift, refPoint):
         for k in range(len(refShift)):

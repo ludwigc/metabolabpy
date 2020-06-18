@@ -3284,7 +3284,7 @@
     </property>
     <addaction name="actionSave"/>
     <addaction name="actionLoad"/>
-    <addaction name="actionRead_Bruker_Spectrum"/>
+    <addaction name="actionRead_NMR_Spectrum"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuPlot">
@@ -3575,12 +3575,15 @@
     <string>Alt+Down</string>
    </property>
   </action>
-  <action name="actionRead_Bruker_Spectrum">
+  <action name="actionRead_NMR_Spectrum">
    <property name="text">
-    <string>Read Bruker Spectrum</string>
+    <string>Open NMR Spectrum</string>
+   </property>
+   <property name="toolTip">
+    <string>Open NMR Spectrum (Bruker and Varian file format)</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+B</string>
+    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="actionShow_pulseProgram">
