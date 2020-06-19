@@ -545,11 +545,11 @@ class main_w(object):  # pragma: no cover
 
     def dataPreProcessing(self):
         self.resetDataPreProcessing()
-        if self.w.segmentalAlignment.isChecked():
-            cIdx = self.w.preProcessingSelect.currentIndex()
-            self.w.excludeRegion.setChecked(True)
-            self.w.preProcessingSelect.setCurrentIndex(cIdx)
-
+        #if self.w.segmentalAlignment.isChecked():
+        #    cIdx = self.w.preProcessingSelect.currentIndex()
+        #    self.w.excludeRegion.setChecked(True)
+        #    self.w.preProcessingSelect.setCurrentIndex(cIdx)
+        #
         self.nd.dataPreProcessing()
         self.plotSpcPreProc()
         self.w.MplWidget.canvas.flush_events()
