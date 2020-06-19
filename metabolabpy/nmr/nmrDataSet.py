@@ -4,8 +4,8 @@ import pickle
 
 from metabolabpy.nmr import nmrData as nd
 from metabolabpy.nmr import nmrPreProc as npp
-from metabolabpy.nmr import icoshift
-
+import matplotlib.pyplot as pl
+import math
 
 class NmrDataSet:
 
@@ -1262,7 +1262,102 @@ class NmrDataSet:
         # end save
         
     def segmentalAlignment(self):
-        return
+        nExp = len(self.nmrdat[self.s])
+        nPts = len(self.nmrdat[self.s][0].spc[0])
+        spcs = np.zeros((nExp, nPts))
+        for k in range(nExp):
+            spcs[k] = np.copy(self.nmrdat[self.s][k].spc[0].real)
+
+        segStart = self.nmrdat[self.s][0].ppm2points(self.pp.segStart, 0)
+        segEnd   = self.nmrdat[self.s][0].ppm2points(self.pp.segEnd,   0)
+        npts     = len(self.nmrdat[self.s][0].spc[0])
+        nSpc     = len(self.nmrdat[self.s])
+        excludeStart = np.zeros((len(segStart), nSpc))
+        excludeEnd = np.zeros((len(segStart), nSpc))
+        if self.pp.segAlignRefSpc > 0:
+            refSpc = self.nmrdat[self.s][self.pp.segAlignRefSpc - 1].spc[0]
+        else:
+            refSpcs = np.zeros((nSpc, npts))
+            for k in range(nSpc):
+                refSpcs[k] = self.nmrdat[self.s][k].spc[0].real
+
+            if self.pp.segAlignRefSpc == 0:
+                refSpc = np.mean(refSpcs, 0)
+            else:
+                refSpc = np.median(refSpcs, 0)
+
+            refSpcs = np.array([[]])
+
+        posShift = np.zeros((nSpc, len(segStart)))
+        negShift = np.zeros((nSpc, len(segStart)))
+        for k in range(nSpc):
+            if k != self.pp.segAlignRefSpc - 1:
+                for l in range(len(segStart)):
+                    startPts = npts - segEnd[l]
+                    endPts   = npts - segStart[l]
+                    corrSpc1 = np.copy(refSpc[startPts:endPts].real)
+                    corrSpc2 = self.nmrdat[self.s][k].spc[0][startPts:endPts].real
+                    maxShift = len(corrSpc1) - 1
+                    zeros = np.zeros(len(corrSpc1))
+                    corrSpc1 = np.append(np.append(zeros, corrSpc1), zeros)
+                    corrSpc2 = np.append(np.append(zeros, corrSpc2), zeros)
+                    shifts = np.linspace(-maxShift, maxShift, 2 * maxShift + 1, dtype='int')
+                    corrVect = np.zeros(2*maxShift + 1)
+                    spcShift = 0
+                    for m in shifts:
+                        corrVect[m + maxShift] = np.corrcoef(corrSpc1, np.roll(corrSpc2, m))[0][1]
+
+                    maxCorrShifts = shifts[np.where(corrVect == np.max(corrVect))]
+                    minShift = np.where(np.abs(maxCorrShifts) == np.min(np.abs(maxCorrShifts)))
+                    if np.max(corrVect) > 0.8:
+                        spcShift = maxCorrShifts[minShift][0]
+                        corrSpc2 = self.nmrdat[self.s][k].spc[0][startPts:endPts]
+                        corrSpc2 = np.append(np.append(zeros, corrSpc2), zeros)
+                        corrSpc2 = np.roll(corrSpc2, spcShift)[maxShift + 1:2*maxShift + 2]
+                        self.nmrdat[self.s][k].spc[0][startPts:endPts] = np.copy(corrSpc2)
+                        exSta = 0
+                        exEnd = 0
+                        if spcShift < 0:
+                            negShift[k][l] = 0 - spcShift
+                            exEnd = self.nmrdat[self.s][self.pp.segAlignRefSpc - 1].points2ppm(npts - endPts - spcShift, 0)
+                            exSta = self.nmrdat[self.s][self.pp.segAlignRefSpc - 1].points2ppm(npts - endPts, 0)
+                        elif spcShift > 0:
+                            posShift[k][l] = spcShift
+                            exEnd = self.nmrdat[self.s][self.pp.segAlignRefSpc - 1].points2ppm(npts - startPts, 0)
+                            exSta = self.nmrdat[self.s][self.pp.segAlignRefSpc - 1].points2ppm(npts - startPts - spcShift, 0)
+
+                        excludeStart[l][k] = exSta
+                        excludeEnd[l][k] = exEnd
+
+
+
+
+
+        ps = np.max(posShift, 0)
+        ns = np.max(negShift, 0)
+        ps2 = np.transpose(posShift)
+        ns2 = np.transpose(negShift)
+        for k in range(len(posShift[0])):
+            l = np.where(ps2[k] == ps[k])[0][0]
+            if ps[k] > 0:
+                sVal = math.floor(1e4 * excludeStart[k][l]) / 1e4
+                eVal = math.floor(1e4 * excludeEnd[k][l]) / 1e4
+                if sVal not in self.pp.excludeStart and eVal not in self.pp.excludeEnd:
+                    self.pp.excludeStart = np.append(self.pp.excludeStart, sVal)
+                    self.pp.excludeEnd   = np.append(self.pp.excludeEnd,   eVal)
+
+            l = np.where(ns2[k] == ns[k])[0][0]
+            if ns[k] > 0:
+                sVal = math.floor(1e4 * excludeStart[k][l]) / 1e4
+                eVal = math.floor(1e4 * excludeEnd[k][l]) / 1e4
+                if sVal not in self.pp.excludeStart and eVal not in self.pp.excludeEnd:
+                    self.pp.excludeStart = np.append(self.pp.excludeStart, math.floor(1e4 * excludeStart[k][l]) / 1e4)
+                    self.pp.excludeEnd = np.append(self.pp.excludeEnd, math.floor(1e4 * excludeEnd[k][l]) / 1e4)
+
+
+
+        self.excludeRegion()
+
     # end segmentalAlignment
 
     def setGb(self, gb):

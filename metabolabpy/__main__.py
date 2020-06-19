@@ -61,7 +61,7 @@ class MplWidget(QWidget): # pragma: no cover
 # ------------------ MplWidget ------------------
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.__version__ = '0.4.8'
+        self.__version__ = '0.5.1'
         self.zoomWasOn = False
         self.panWasOn = False
         self.nd = nmrDataSet.NmrDataSet()
@@ -89,11 +89,13 @@ class main_w(object):  # pragma: no cover
         self.w.segmentalAlignment.stateChanged.connect(self.setSegmentalAlignment)
         self.w.noiseFiltering.stateChanged.connect(self.setNoiseFiltering)
         self.w.bucketSpectra.stateChanged.connect(self.setBucketSpectra)
+        self.w.segAlignRefSpc.valueChanged.connect(self.changeSegAlignRefSpc)
         # self.w.compressBuckets.stateChanged.connect(self.setCompressBuckets)
         # self.w.scaleSpectra.stateChanged.connect(self.setScaleSpectra)
         # self.w.varianceStabilisation.stateChanged.connect(self.setVarianceStabilisation)
         self.w.exportDataSet.stateChanged.connect(self.setExportDataSet)
         self.w.excludeRegionTW.cellChanged.connect(self.setExcludePreProc)
+        self.w.segAlignTW.cellChanged.connect(self.setSegAlignPreProc)
         self.w.selectClassTW.itemSelectionChanged.connect(self.setPlotPreProc)
         self.w.selectClassTW.cellChanged.connect(self.setChangePreProc)
         self.w.excludeClearButton.clicked.connect(self.selectClearExcludePreProc)
@@ -439,6 +441,10 @@ class main_w(object):  # pragma: no cover
 
         # end changeDataSetExpPhRef
 
+    def changeSegAlignRefSpc(self):
+        self.nd.pp.segAlignRefSpc = self.w.segAlignRefSpc.value()
+        # end changeSegAlignRefSpc
+
     def changeToNextDS(self):
         self.w.setBox.setValue(self.w.setBox.value() + 1)
         # end changeToNextDS
@@ -536,8 +542,15 @@ class main_w(object):  # pragma: no cover
 
     def dataPreProcessing(self):
         self.resetDataPreProcessing()
+        if self.w.segmentalAlignment.isChecked():
+            cIdx = self.w.preProcessingSelect.currentIndex()
+            self.w.excludeRegion.setChecked(True)
+            self.w.preProcessingSelect.setCurrentIndex(cIdx)
+
         self.nd.dataPreProcessing()
         self.plotSpcPreProc()
+        self.w.MplWidget.canvas.flush_events()
+        self.w.MplWidget.canvas.draw()
         # end dataPreProcessing
 
     def enableBaseline(self):
@@ -1712,6 +1725,8 @@ class main_w(object):  # pragma: no cover
     def resetDataPreProcessing(self):
         self.nd.resetDataPreProcessing()
         self.plotSpcPreProc()
+        self.w.MplWidget.canvas.flush_events()
+        self.w.MplWidget.canvas.draw()
         # end dataPreProcessing
 
     def resetPlot(self):
@@ -1874,6 +1889,8 @@ class main_w(object):  # pragma: no cover
         self.w.excludeRegionTW.setFocus()
         self.plotSpcPreProc()
         self.setExcludePreProc()
+        self.w.MplWidget.canvas.flush_events()
+        self.w.MplWidget.canvas.draw()
         # end selectClearExcludePreProc
 
     def selectClearSegAlignPreProc(self):
@@ -1894,6 +1911,8 @@ class main_w(object):  # pragma: no cover
         self.w.segAlignTW.setFocus()
         self.plotSpcPreProc()
         self.setSegAlignPreProc()
+        self.w.MplWidget.canvas.flush_events()
+        self.w.MplWidget.canvas.draw()
         # end selectClearExcludePreProc
 
     def selectEvenPreProc(self):
@@ -2091,7 +2110,7 @@ class main_w(object):  # pragma: no cover
 
             # self.w.excludeRegionTW.clearContents()
             self.w.excludeRegionTW.setRowCount(0)
-            self.w.excludeRegionTW.setRowCount(20)
+            self.w.excludeRegionTW.setRowCount(nRows)
             self.nd.pp.preProcFill = True
             for k in np.arange(len(tStart) - 1, -1, -1):  # range(len(tStart)):
                 exclNumber1 = QTableWidgetItem(2 * k)
@@ -2279,6 +2298,8 @@ class main_w(object):  # pragma: no cover
         # end setPlotPreProc
 
     def setPreProcessing(self):
+        self.w.segAlignRefSpc.setMaximum(len(self.nd.nmrdat[self.nd.s]))
+        self.w.segAlignRefSpc.setValue(self.nd.pp.segAlignRefSpc)
         if (self.w.preprocessing.isChecked() == True):
             self.showPreProcessing()
             # self.nd.preProcInit()
@@ -2375,7 +2396,7 @@ class main_w(object):  # pragma: no cover
 
             # self.w.segAlignTW.clearContents()
             self.w.segAlignTW.setRowCount(0)
-            self.w.segAlignTW.setRowCount(20)
+            self.w.segAlignTW.setRowCount(nRows)
             self.nd.pp.preProcFill = True
             for k in np.arange(len(tStart) - 1, -1, -1):  # range(len(tStart)):
                 segNumber1 = QTableWidgetItem(2 * k)
