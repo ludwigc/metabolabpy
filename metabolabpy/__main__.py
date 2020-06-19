@@ -87,6 +87,7 @@ class main_w(object):  # pragma: no cover
         self.w.resetPreProcessingButton.clicked.connect(self.resetDataPreProcessing)
         self.w.excludeRegion.stateChanged.connect(self.setExcludeRegion)
         self.w.segmentalAlignment.stateChanged.connect(self.setSegmentalAlignment)
+        self.w.compressBuckets.stateChanged.connect(self.setCompressBuckets)
         self.w.noiseFiltering.stateChanged.connect(self.setNoiseFiltering)
         self.w.bucketSpectra.stateChanged.connect(self.setBucketSpectra)
         self.w.segAlignRefSpc.valueChanged.connect(self.changeSegAlignRefSpc)
@@ -100,8 +101,10 @@ class main_w(object):  # pragma: no cover
         self.w.selectClassTW.cellChanged.connect(self.setChangePreProc)
         self.w.excludeClearButton.clicked.connect(self.selectClearExcludePreProc)
         self.w.segAlignClearButton.clicked.connect(self.selectClearSegAlignPreProc)
+        self.w.compressClearButton.clicked.connect(self.selectClearCompressPreProc)
         self.w.excludeAddButton.clicked.connect(self.selectAddExcludePreProc)
         self.w.segAlignAddButton.clicked.connect(self.selectAddSegAlignPreProc)
+        self.w.compressAddButton.clicked.connect(self.selectAddCompressPreProc)
         self.w.selectAllButton.clicked.connect(self.selectAllPreProc)
         self.w.selectEvenButton.clicked.connect(self.selectEvenPreProc)
         self.w.selectOddButton.clicked.connect(self.selectOddPreProc)
@@ -678,6 +681,16 @@ class main_w(object):  # pragma: no cover
             self.w.segAlignTW.setItem(k, 1, segNumber2)
             self.w.segAlignTW.item(k, 0).setText(str(self.nd.pp.segStart[k]))
             self.w.segAlignTW.item(k, 1).setText(str(self.nd.pp.segEnd[k]))
+
+        for k in range(len(self.nd.pp.compressStart)):
+            compNumber1 = QTableWidgetItem(str(2 * k))
+            compNumber1.setTextAlignment(QtCore.Qt.AlignHCenter)
+            compNumber2 = QTableWidgetItem(str(2 * k + 1))
+            compNumber2.setTextAlignment(QtCore.Qt.AlignHCenter)
+            self.w.compressBucketsTW.setItem(k, 0, compNumber1)
+            self.w.compressBucketsTW.setItem(k, 1, compNumber2)
+            self.w.compressBucketsTW.item(k, 0).setText(str(self.nd.pp.compressStart[k]))
+            self.w.compressBucketsTW.item(k, 1).setText(str(self.nd.pp.compressEnd[k]))
 
         self.w.noiseThresholdLE.setText(str(self.nd.pp.noiseThreshold))
         self.w.noiseRegionStartLE.setText(str(self.nd.pp.noiseStart))
@@ -1580,6 +1593,11 @@ class main_w(object):  # pragma: no cover
             y = [val, val]
             self.w.MplWidget.canvas.axes.plot(x, y, color=self.nd.pp.thColour, linewidth=self.nd.pp.thLineWidth)
 
+        if (self.w.preProcessingWidget.currentIndex() == 5):
+            for k in range(len(self.nd.pp.compressStart)):
+                self.w.MplWidget.canvas.axes.axvspan(self.nd.pp.compressStart[k], self.nd.pp.compressEnd[k],
+                                                     alpha=self.nd.pp.alpha, color=self.nd.pp.colour)
+
         d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
         xlabel = d.xLabel + " [" + d.axisType1 + "]"
         self.w.MplWidget.canvas.axes.set_xlabel(xlabel)
@@ -1818,6 +1836,19 @@ class main_w(object):  # pragma: no cover
         self.w.nmrSpectrum.setCurrentIndex(6)
         # end scriptEditor
 
+    def selectAddCompressPreProc(self):
+        xy = self.w.MplWidget.canvas.axes.figure.ginput(2)
+        t = np.round(1e4 * np.array([xy[0][0], xy[1][0]])) / 1e4
+        self.nd.pp.compressStart = np.append(self.nd.pp.compressStart, min(t))
+        self.nd.pp.compressEnd = np.append(self.nd.pp.compressEnd, max(t))
+        self.fillPreProcessingNumbers()
+        self.w.compressBucketsTW.setFocus()
+        self.setPlotPreProc()
+        self.w.compressBucketsTW.setFocus()
+        self.plotSpcPreProc()
+        self.setCompressPreProc()
+        # end selectAddExcludePreProc
+
     def selectAddExcludePreProc(self):
         xy = self.w.MplWidget.canvas.axes.figure.ginput(2)
         t = np.round(1e4 * np.array([xy[0][0], xy[1][0]])) / 1e4
@@ -1870,6 +1901,28 @@ class main_w(object):  # pragma: no cover
         self.plotSpcPreProc()
         self.w.selectClassTW.setFocus()
         # end selectClassPreProc
+
+    def selectClearCompressPreProc(self):
+        self.nd.pp.preProcFill = True
+        for k in range(len(self.nd.pp.compressStart)):
+            self.w.compressBucketsTW.item(k, 0).setText("")
+            self.w.compressBucketsTW.setFocus()
+            self.w.compressBucketsTW.item(k, 1).setText("")
+            self.w.compressBucketsTW.setFocus()
+
+        self.nd.pp.preProcFill = False
+        self.nd.pp.compressStart = np.array([])
+        self.nd.pp.compressEnd = np.array([])
+        self.w.compressBucketsTW.setFocus()
+        self.fillPreProcessingNumbers()
+        self.w.compressBucketsTW.setFocus()
+        self.setPlotPreProc()
+        self.w.compressBucketsTW.setFocus()
+        self.plotSpcPreProc()
+        self.setCompressPreProc()
+        self.w.MplWidget.canvas.flush_events()
+        self.w.MplWidget.canvas.draw()
+        # end selectClearExcludePreProc
 
     def selectClearExcludePreProc(self):
         self.nd.pp.preProcFill = True
@@ -2059,6 +2112,80 @@ class main_w(object):  # pragma: no cover
             self.nd.pp.classSelect = cls
 
         # end setChangePreProc
+
+    def setCompressBuckets(self):
+        if (self.nd.pp.preProcFill == False):
+            if (self.w.compressBuckets.isChecked() == True):
+                self.nd.pp.flagCompressBuckets = True
+                self.w.preProcessingSelect.setCurrentIndex(5)
+            else:
+                self.nd.pp.flagCompressBuckets = False
+
+        # end setExcludeRegion
+
+    def setCompressPreProc(self):
+        if (self.nd.pp.preProcFill == False):
+            nRows = self.w.compressBucketsTW.rowCount()
+            coStart = np.array([])
+            coEnd = np.array([])
+            tStart = np.array([])
+            tEnd = np.array([])
+            for k in range(nRows):
+                # tStart = np.array([])
+                # tEnd   = np.array([])
+                try:
+                    tStart = np.append(tStart, float(self.w.compressBucketsTW.item(k, 0).text()))
+                    # self.w.compressBucketsTW.item(k,0).clearContents()
+                except:
+                    tStart = np.append(tStart, -10000.0)
+
+                try:
+                    tEnd = np.append(tEnd, float(self.w.compressBucketsTW.item(k, 1).text()))
+                    # self.w.compressBucketsTW.item(k,1).clearContents()
+                except:
+                    tEnd = np.append(tEnd, -10000.0)
+
+            # self.w.compressBucketsTW.clearContents()
+            self.w.compressBucketsTW.setRowCount(0)
+            self.w.compressBucketsTW.setRowCount(nRows)
+            self.nd.pp.preProcFill = True
+            for k in np.arange(len(tStart) - 1, -1, -1):  # range(len(tStart)):
+                compNumber1 = QTableWidgetItem(2 * k)
+                compNumber1.setTextAlignment(QtCore.Qt.AlignHCenter)
+                self.w.compressBucketsTW.setItem(k, 0, compNumber1)
+                compNumber2 = QTableWidgetItem(2 * k + 1)
+                compNumber2.setTextAlignment(QtCore.Qt.AlignHCenter)
+                self.w.compressBucketsTW.setItem(k, 1, compNumber2)
+                if ((tStart[k] > -10000.0) & (tEnd[k] > -10000.0)):
+                    tMin = min(tStart[k], tEnd[k])
+                    tEnd[k] = max(tStart[k], tEnd[k])
+                    tStart[k] = tMin
+                    coStart = np.append(coStart, tStart[k])
+                    coEnd = np.append(coEnd, tEnd[k])
+                    tStart = np.delete(tStart, k)
+                    tEnd = np.delete(tEnd, k)
+
+                if (tStart[k] > -10000.0):
+                    self.w.compressBucketsTW.item(k, 0).setText(str(tStart[k]))
+                    self.w.compressBucketsTW.setFocus()
+                else:
+                    self.w.compressBucketsTW.item(k, 0).setText("")
+                    self.w.compressBucketsTW.setFocus()
+
+                if (tEnd[k] > -10000.0):
+                    self.w.compressBucketsTW.item(k, 1).setText(str(tEnd[k]))
+                    self.w.compressBucketsTW.setFocus()
+                else:
+                    self.w.compressBucketsTW.item(k, 1).setText("")
+                    self.w.compressBucketsTW.setFocus()
+
+            self.nd.pp.preProcFill = False
+            sortIdx = np.argsort(coStart)
+            self.nd.pp.compressStart = coStart[sortIdx]
+            self.nd.pp.compressEnd = coEnd[sortIdx]
+            self.plotSpcPreProc()
+
+        # end setCompressPreProc
 
     def setDispPars(self):
         d = self.nd.nmrdat[self.nd.s][self.nd.e].disp

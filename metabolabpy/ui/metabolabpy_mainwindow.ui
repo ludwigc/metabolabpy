@@ -238,7 +238,7 @@
                <item>
                 <widget class="QCheckBox" name="compressBuckets">
                  <property name="enabled">
-                  <bool>false</bool>
+                  <bool>true</bool>
                  </property>
                  <property name="text">
                   <string>Compress Buckets</string>
@@ -1165,7 +1165,338 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="compressBucketsTab"/>
+            <widget class="QWidget" name="compressBucketsTab">
+             <layout class="QGridLayout" name="gridLayout_18">
+              <item row="0" column="0">
+               <layout class="QVBoxLayout" name="verticalLayout_20">
+                <item>
+                 <spacer name="verticalSpacer_9">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="compressClearButton">
+                  <property name="text">
+                   <string>Clear</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="compressAddButton">
+                  <property name="text">
+                   <string>Add</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item row="0" column="1">
+               <widget class="QTableWidget" name="compressBucketsTW">
+                <property name="rowCount">
+                 <number>200</number>
+                </property>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </row>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <row/>
+                <column>
+                 <property name="text">
+                  <string>PPM Start</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>PPM End</string>
+                 </property>
+                </column>
+               </widget>
+              </item>
+             </layout>
+            </widget>
             <widget class="QWidget" name="scaleSpectraTab"/>
             <widget class="QWidget" name="varianceStabilisationTab"/>
             <widget class="QWidget" name="exportDataSetTab">

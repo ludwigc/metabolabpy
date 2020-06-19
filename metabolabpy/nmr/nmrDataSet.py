@@ -140,6 +140,24 @@ class NmrDataSet:
         return "Workspace cleared"
         # end clear
 
+    def compressBuckets(self):
+        if (len(self.pp.compressStart) != len(self.pp.compressEnd)):
+            return
+
+        for k in range(len(self.pp.compressStart)):
+            idx = np.where((self.nmrdat[self.s][0].ppm1 > self.pp.compressStart[k]) & (
+                        self.nmrdat[self.s][0].ppm1 < self.pp.compressEnd[k]))
+            self.deselect[idx] = np.ones(len(idx))
+            self.deselect[int(np.round(np.mean(idx)))] = 0
+            print(idx)
+            for l in range(len(self.nmrdat[self.s])):
+                val = np.sum(self.nmrdat[self.s][l].spc[0][idx])
+                self.nmrdat[self.s][l].spc[0][idx] = np.zeros(len(idx))
+                self.nmrdat[self.s][l].spc[0][int(np.round(np.mean(idx)))] = val
+
+
+        # end compressBuckets
+
     def dataPreProcessing(self):
         if(self.nmrdat[self.s][0].projectedJres == False):
             self.ftAll()
@@ -191,7 +209,7 @@ class NmrDataSet:
             self.bucketSpectra()
         
         if(self.pp.flagCompressBuckets == True):
-            print("compressBuckets")
+            self.compressBuckets()
             
         if(self.pp.flagScaleSpectra == True):
             print("scaleSpectra")
@@ -1337,26 +1355,41 @@ class NmrDataSet:
         ns = np.max(negShift, 0)
         ps2 = np.transpose(posShift)
         ns2 = np.transpose(negShift)
+        excludeStart2 = np.array([])
+        excludeEnd2   = np.array([])
         for k in range(len(posShift[0])):
             l = np.where(ps2[k] == ps[k])[0][0]
             if ps[k] > 0:
                 sVal = math.floor(1e4 * excludeStart[k][l]) / 1e4
                 eVal = math.floor(1e4 * excludeEnd[k][l]) / 1e4
                 if sVal not in self.pp.excludeStart and eVal not in self.pp.excludeEnd:
-                    self.pp.excludeStart = np.append(self.pp.excludeStart, sVal)
-                    self.pp.excludeEnd   = np.append(self.pp.excludeEnd,   eVal)
+                    excludeStart2 = np.append(excludeStart2, math.floor(1e4 * sVal) / 1e4)
+                    excludeEnd2   = np.append(excludeEnd2,   math.floor(1e4 * eVal) / 1e4)
+                    #self.pp.excludeStart = np.append(self.pp.excludeStart, sVal)
+                    #self.pp.excludeEnd   = np.append(self.pp.excludeEnd,   eVal)
 
             l = np.where(ns2[k] == ns[k])[0][0]
             if ns[k] > 0:
                 sVal = math.floor(1e4 * excludeStart[k][l]) / 1e4
                 eVal = math.floor(1e4 * excludeEnd[k][l]) / 1e4
                 if sVal not in self.pp.excludeStart and eVal not in self.pp.excludeEnd:
-                    self.pp.excludeStart = np.append(self.pp.excludeStart, math.floor(1e4 * excludeStart[k][l]) / 1e4)
-                    self.pp.excludeEnd = np.append(self.pp.excludeEnd, math.floor(1e4 * excludeEnd[k][l]) / 1e4)
+                    excludeStart2 = np.append(excludeStart2, math.floor(1e4 * sVal) / 1e4)
+                    excludeEnd2   = np.append(excludeEnd2,   math.floor(1e4 * eVal) / 1e4)
+                    #self.pp.excludeStart = np.append(self.pp.excludeStart, math.floor(1e4 * sVal) / 1e4)
+                    #self.pp.excludeEnd = np.append(self.pp.excludeEnd, math.floor(1e4 * eVal) / 1e4)
 
 
 
-        self.excludeRegion()
+        #self.excludeRegion()
+        if self.pp.segAlignRefSpc > 0:
+            spcIdx = self.pp.segAlignRefSpc - 1
+        else:
+            spcIdx = 0
+
+        for k in range(len(excludeStart2)):
+            idx = np.where((self.nmrdat[self.s][spcIdx].ppm1 > excludeStart2[k]) & (
+                        self.nmrdat[self.s][spcIdx].ppm1 < excludeEnd2[k]))
+            self.deselect[idx] = np.ones(len(idx))
 
     # end segmentalAlignment
 
