@@ -61,7 +61,7 @@ class MplWidget(QWidget): # pragma: no cover
 # ------------------ MplWidget ------------------
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.__version__ = '0.5.2'
+        self.__version__ = '0.5.3'
         self.zoomWasOn = False
         self.panWasOn = False
         self.nd = nmrDataSet.NmrDataSet()
@@ -90,9 +90,11 @@ class main_w(object):  # pragma: no cover
         self.w.compressBuckets.stateChanged.connect(self.setCompressBuckets)
         self.w.noiseFiltering.stateChanged.connect(self.setNoiseFiltering)
         self.w.bucketSpectra.stateChanged.connect(self.setBucketSpectra)
+        self.w.scaleSpectraRefSpc.valueChanged.connect(self.changeScaleSpectraRefSpc)
         self.w.segAlignRefSpc.valueChanged.connect(self.changeSegAlignRefSpc)
-        # self.w.compressBuckets.stateChanged.connect(self.setCompressBuckets)
-        # self.w.scaleSpectra.stateChanged.connect(self.setScaleSpectra)
+        self.w.scaleSpectra.stateChanged.connect(self.setScaleSpectra)
+        self.w.pqnButton.clicked.connect(self.setPqnTsaScaling)
+        self.w.tsaButton.clicked.connect(self.setPqnTsaScaling)
         # self.w.varianceStabilisation.stateChanged.connect(self.setVarianceStabilisation)
         self.w.exportDataSet.stateChanged.connect(self.setExportDataSet)
         self.w.excludeRegionTW.cellChanged.connect(self.setExcludePreProc)
@@ -128,6 +130,7 @@ class main_w(object):  # pragma: no cover
         self.w.actionClear.triggered.connect(self.clear)
         self.w.actionRead_NMR_Spectrum.triggered.connect(lambda: self.readNMRSpc())
         self.w.preprocessing.stateChanged.connect(lambda: self.setPreProcessing())
+        self.w.preserveOverallScale.stateChanged.connect(self.setPreserveOverallScale)
         self.w.actionReset.triggered.connect(lambda: self.resetPlot())
         self.w.actionShow_NMR_Spectrum.triggered.connect(lambda: self.showNMRSpectrum())
         self.w.actionSetup_Processing_Parameters.triggered.connect(lambda: self.setupProcessingParameters())
@@ -444,6 +447,10 @@ class main_w(object):  # pragma: no cover
 
         # end changeDataSetExpPhRef
 
+    def changeScaleSpectraRefSpc(self):
+        self.nd.pp.scaleSpectraRefSpc = self.w.scaleSpectraRefSpc.value()
+        # end changeScaleSpectraRefSpc
+
     def changeSegAlignRefSpc(self):
         self.nd.pp.segAlignRefSpc = self.w.segAlignRefSpc.value()
         # end changeSegAlignRefSpc
@@ -545,11 +552,6 @@ class main_w(object):  # pragma: no cover
 
     def dataPreProcessing(self):
         self.resetDataPreProcessing()
-        #if self.w.segmentalAlignment.isChecked():
-        #    cIdx = self.w.preProcessingSelect.currentIndex()
-        #    self.w.excludeRegion.setChecked(True)
-        #    self.w.preProcessingSelect.setCurrentIndex(cIdx)
-        #
         self.nd.dataPreProcessing()
         self.plotSpcPreProc()
         self.w.MplWidget.canvas.flush_events()
@@ -704,6 +706,11 @@ class main_w(object):  # pragma: no cover
         self.w.bucketSpectra.setChecked(self.nd.pp.flagBucketSpectra)
         self.w.compressBuckets.setChecked(self.nd.pp.flagCompressBuckets)
         self.w.scaleSpectra.setChecked(self.nd.pp.flagScaleSpectra)
+        if self.nd.pp.scalePQN is True:
+            self.w.pqnButton.setChecked(True)
+        else:
+            self.w.tsaButton.setChecked(True)
+
         self.w.varianceStabilisation.setChecked(self.nd.pp.flagVarianceStabilisation)
         self.w.exportDataSet.setChecked(self.nd.pp.flagExportDataSet)
         self.w.exportPath.setText(self.nd.pp.exportPathName)
@@ -2424,9 +2431,20 @@ class main_w(object):  # pragma: no cover
 
         # end setPlotPreProc
 
+    def setPqnTsaScaling(self):
+        if self.w.pqnButton.isChecked() is True:
+            self.nd.pp.scalePQN = True
+        else:
+            self.nd.pp.scalePQN = False
+
+        # end setPqnTsaScaling
+
     def setPreProcessing(self):
         self.w.segAlignRefSpc.setMaximum(len(self.nd.nmrdat[self.nd.s]))
+        self.w.scaleSpectraRefSpc.setMaximum(len(self.nd.nmrdat[self.nd.s]))
         self.w.segAlignRefSpc.setValue(self.nd.pp.segAlignRefSpc)
+        self.w.scaleSpectraRefSpc.setValue(self.nd.pp.scaleSpectraRefSpc)
+        self.w.preserveOverallScale.setChecked(self.nd.pp.preserveOverallScale)
         if (self.w.preprocessing.isChecked() == True):
             self.showPreProcessing()
             # self.nd.preProcInit()
@@ -2442,6 +2460,10 @@ class main_w(object):  # pragma: no cover
         self.w.preProcessingWidget.setCurrentIndex(curIdx)
         self.plotSpcPreProc()
         # end setPreProcessingOption
+
+    def setPreserveOverallScale(self):
+        self.nd.pp.preserveOverallScale = self.w.preserveOverallScale.isChecked()
+        # end setPreserveOverallScale
 
     def setProcPars(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
@@ -2498,6 +2520,16 @@ class main_w(object):  # pragma: no cover
     def setSamplesInComboBox(self):
         self.nd.pp.exportSamplesInRowsCols = self.w.samplesInComboBox.currentIndex()
         # end setSamplesInComboBox
+
+    def setScaleSpectra(self):
+        if (self.nd.pp.preProcFill == False):
+            if (self.w.scaleSpectra.isChecked() == True):
+                self.nd.pp.flagScaleSpectra = True
+                self.w.preProcessingSelect.setCurrentIndex(6)
+            else:
+                self.nd.pp.flagScaleSpectra = False
+
+        # end setScaleSpectra
 
     def setSegAlignPreProc(self):
         if (self.nd.pp.preProcFill == False):

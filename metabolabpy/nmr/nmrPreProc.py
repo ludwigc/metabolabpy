@@ -15,7 +15,7 @@ class NmrPreProc:
         self.segEnd                    = np.array([])
         self.compressStart             = np.array([])
         self.compressEnd               = np.array([])
-        self.segAlignRefSpc            = 1
+        self.segAlignRefSpc            = 0                           # use mean spectra
         self.noiseThreshold            = 4.0                         # times std of noise region
         self.noiseStart                = 10.0
         self.noiseEnd                  = 10.5
@@ -45,6 +45,9 @@ class NmrPreProc:
         self.flagScaleSpectra          = False
         self.flagVarianceStabilisation = False
         self.flagExportDataSet         = False
+        self.scalePQN                  = True
+        self.scaleSpectraRefSpc        = 0                           # use mean spectra
+        self.preserveOverallScale      = False
         self.stdVal                    = 0.0
         self.exportPathName            = ""
         self.exportFileName            = ""

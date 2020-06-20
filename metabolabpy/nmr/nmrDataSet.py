@@ -212,7 +212,7 @@ class NmrDataSet:
             self.compressBuckets()
             
         if(self.pp.flagScaleSpectra == True):
-            print("scaleSpectra")
+            self.scaleSpectra()
         
         if(self.pp.flagVarianceStabilisation == True):
             print("varianceStabilisation")
@@ -1279,13 +1279,41 @@ class NmrDataSet:
                 f.close()
         # end save
         
-    def segmentalAlignment(self):
-        nExp = len(self.nmrdat[self.s])
-        nPts = len(self.nmrdat[self.s][0].spc[0])
-        spcs = np.zeros((nExp, nPts))
-        for k in range(nExp):
-            spcs[k] = np.copy(self.nmrdat[self.s][k].spc[0].real)
+    def scaleSpectra(self):
+        nSpc     = len(self.nmrdat[self.s])
+        npts     = len(self.nmrdat[self.s][0].spc[0])
+        if self.pp.scaleSpectraRefSpc > 0:
+            refSpc = self.nmrdat[self.s][self.pp.scaleSpectraRefSpc - 1].spc[0].real
+        else:
+            refSpcs = np.zeros((nSpc, npts))
+            for k in range(nSpc):
+                refSpcs[k] = self.nmrdat[self.s][k].spc[0].real
 
+            if self.pp.segAlignRefSpc == 0:
+                refSpc = np.mean(refSpcs, 0)
+            else:
+                refSpc = np.median(refSpcs, 0)
+
+            refSpcs = np.array([[]])
+
+        scale = np.ones(nSpc)
+        if self.pp.scalePQN is True:
+            for k in range(nSpc):
+                scaleVect = self.nmrdat[self.s][k].spc[0][np.where(refSpc != 0)].real/refSpc[np.where(refSpc != 0)]
+                self.nmrdat[self.s][k].spc[0] /= np.median(scaleVect[np.where(scaleVect != 0)])
+        else:
+            if self.pp.preserveOverallScale is True:
+                for k in range(nSpc):
+                    scale[k] = np.sum(self.nmrdat[self.s][k].spc[0]).real
+
+            for k in range(nSpc):
+                self.nmrdat[self.s][k].spc[0] /= np.sum(self.nmrdat[self.s][k].spc[0]).real
+                self.nmrdat[self.s][k].spc[0] *= np.max(scale)
+
+
+        # end scaleSpectra
+
+    def segmentalAlignment(self):
         segStart = self.nmrdat[self.s][0].ppm2points(self.pp.segStart, 0)
         segEnd   = self.nmrdat[self.s][0].ppm2points(self.pp.segEnd,   0)
         npts     = len(self.nmrdat[self.s][0].spc[0])
