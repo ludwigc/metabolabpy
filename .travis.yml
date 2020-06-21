@@ -4,7 +4,7 @@ python:
   - "3.7"
 
 install:
-  - pip install pytest>=4.6 codecov pytest-cov
+  - pip install pytest==5.4.3 codecov pytest-cov
   - pip install .
 
 script:
