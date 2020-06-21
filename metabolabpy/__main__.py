@@ -28,6 +28,7 @@ import os                                   # pragma: no cover
 import traceback                            # pragma: no cover
 import shutil                               # pragma: no cover
 import scipy.io                             # pragma: no cover
+import inspect
 # import pandas as pd                       # pragma: no cover
 
 # ------------------ MplWidget ------------------
@@ -61,7 +62,7 @@ class MplWidget(QWidget): # pragma: no cover
 # ------------------ MplWidget ------------------
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.__version__ = '0.5.3'
+        self.__version__ = '0.5.4'
         self.zoomWasOn = False
         self.panWasOn = False
         self.nd = nmrDataSet.NmrDataSet()
@@ -95,7 +96,10 @@ class main_w(object):  # pragma: no cover
         self.w.scaleSpectra.stateChanged.connect(self.setScaleSpectra)
         self.w.pqnButton.clicked.connect(self.setPqnTsaScaling)
         self.w.tsaButton.clicked.connect(self.setPqnTsaScaling)
-        # self.w.varianceStabilisation.stateChanged.connect(self.setVarianceStabilisation)
+        self.w.autoScaling.clicked.connect(self.setVarianceStabilisationOptions)
+        self.w.paretoScaling.clicked.connect(self.setVarianceStabilisationOptions)
+        self.w.gLogTransform.clicked.connect(self.setVarianceStabilisationOptions)
+        self.w.varianceStabilisation.stateChanged.connect(self.setVarianceStabilisation)
         self.w.exportDataSet.stateChanged.connect(self.setExportDataSet)
         self.w.excludeRegionTW.cellChanged.connect(self.setExcludePreProc)
         self.w.segAlignTW.cellChanged.connect(self.setSegAlignPreProc)
@@ -128,6 +132,8 @@ class main_w(object):  # pragma: no cover
         self.w.actionCorrect_Phase.triggered.connect(self.startStopPhCorr)
         self.w.actionZoomCorrect_Phase.triggered.connect(self.zoomPhCorr)
         self.w.actionClear.triggered.connect(self.clear)
+        self.w.lambdaLE.textChanged.connect(self.setVarLambda)
+        self.w.y0LE.textChanged.connect(self.setVary0)
         self.w.actionRead_NMR_Spectrum.triggered.connect(lambda: self.readNMRSpc())
         self.w.preprocessing.stateChanged.connect(lambda: self.setPreProcessing())
         self.w.preserveOverallScale.stateChanged.connect(self.setPreserveOverallScale)
@@ -554,6 +560,7 @@ class main_w(object):  # pragma: no cover
         self.resetDataPreProcessing()
         self.nd.dataPreProcessing()
         self.plotSpcPreProc()
+        self.verticalAutoScale()
         self.w.MplWidget.canvas.flush_events()
         self.w.MplWidget.canvas.draw()
         # end dataPreProcessing
@@ -719,19 +726,22 @@ class main_w(object):  # pragma: no cover
         self.w.exportDelimiterCharacter.setChecked(not self.nd.pp.exportDelimiterTab)
         self.w.exportCharacter.setText(self.nd.pp.exportCharacter)
         self.w.samplesInComboBox.setCurrentIndex(self.nd.pp.exportSamplesInRowsCols)
+        self.w.segAlignRefSpc.setMaximum(len(self.nd.nmrdat[self.nd.s]))
+        self.w.scaleSpectraRefSpc.setMaximum(len(self.nd.nmrdat[self.nd.s]))
+        self.w.segAlignRefSpc.setValue(self.nd.pp.segAlignRefSpc)
+        self.w.scaleSpectraRefSpc.setValue(self.nd.pp.scaleSpectraRefSpc)
+        self.w.preserveOverallScale.setChecked(self.nd.pp.preserveOverallScale)
+        self.w.preserveOverallScale.setDisabled(self.nd.pp.scalePQN)
+        self.w.autoScaling.setChecked(self.nd.pp.autoScaling)
+        self.w.paretoScaling.setChecked(self.nd.pp.paretoScaling)
+        self.w.gLogTransform.setChecked(self.nd.pp.gLogTransform)
+        self.w.lambdaText.setEnabled(self.nd.pp.gLogTransform)
+        self.w.y0Text.setEnabled(self.nd.pp.gLogTransform)
+        self.w.lambdaLE.setEnabled(self.nd.pp.gLogTransform)
+        self.w.y0LE.setEnabled(self.nd.pp.gLogTransform)
+        self.w.lambdaLE.setText(str(self.nd.pp.varLambda))
+        self.w.y0LE.setText(str(self.nd.pp.varY0))
         self.nd.pp.preProcFill = False
-        #
-        # d  = np.arange(nSpc)
-        # dd = np.isin(d, self.nd.pp.plotSelect, invert = True)
-        # e  = d[dd]
-        # for k in range(len(e)):
-        #    self.w.selectClassTW.selectedItems()[2*e[k]].setSelected(False)
-        #
-        # self.w.selectClassTW.setRangeSelected(QTableWidgetSelectionRange(0,0,nSpc-1,0),True)
-        # for k in range(len(self.nd.pp.plotSelect)):
-        #    self.w.selectClassTW.selectionModel().select((self.nd.pp.plotSelect[k],0), True)
-        #    #self.w.selectClassTW.setItemSelected(spcNumber, True)
-        #
         # end fillPreProcessingNumbers
 
     def ft(self):
@@ -1750,6 +1760,7 @@ class main_w(object):  # pragma: no cover
     def resetDataPreProcessing(self):
         self.nd.resetDataPreProcessing()
         self.plotSpcPreProc()
+        self.verticalAutoScale()
         self.w.MplWidget.canvas.flush_events()
         self.w.MplWidget.canvas.draw()
         # end dataPreProcessing
@@ -2437,14 +2448,11 @@ class main_w(object):  # pragma: no cover
         else:
             self.nd.pp.scalePQN = False
 
+        self.w.preserveOverallScale.setDisabled(self.nd.pp.scalePQN)
+
         # end setPqnTsaScaling
 
     def setPreProcessing(self):
-        self.w.segAlignRefSpc.setMaximum(len(self.nd.nmrdat[self.nd.s]))
-        self.w.scaleSpectraRefSpc.setMaximum(len(self.nd.nmrdat[self.nd.s]))
-        self.w.segAlignRefSpc.setValue(self.nd.pp.segAlignRefSpc)
-        self.w.scaleSpectraRefSpc.setValue(self.nd.pp.scaleSpectraRefSpc)
-        self.w.preserveOverallScale.setChecked(self.nd.pp.preserveOverallScale)
         if (self.w.preprocessing.isChecked() == True):
             self.showPreProcessing()
             # self.nd.preProcInit()
@@ -2640,6 +2648,44 @@ class main_w(object):  # pragma: no cover
     def setupProcessingParameters(self):
         self.w.nmrSpectrum.setCurrentIndex(1)
         # end setupProcessingParameters
+
+    def setVarianceStabilisation(self):
+        if (self.nd.pp.preProcFill == False):
+            if (self.w.varianceStabilisation.isChecked() == True):
+                self.nd.pp.flagVarianceStabilisation = True
+                self.w.preProcessingSelect.setCurrentIndex(7)
+            else:
+                self.nd.pp.flagVarianceStabilisation = False
+
+        # end setVarianceStabilisation
+
+    def setVarianceStabilisationOptions(self):
+        if self.w.autoScaling.isChecked():
+            self.nd.pp.autoScaling = True
+            self.nd.pp.paretoScaling = False
+            self.nd.pp.gLogTransform = False
+        elif self.w.paretoScaling.isChecked():
+            self.nd.pp.autoScaling = False
+            self.nd.pp.paretoScaling = True
+            self.nd.pp.gLogTransform = False
+        else:
+            self.nd.pp.autoScaling = False
+            self.nd.pp.paretoScaling = False
+            self.nd.pp.gLogTransform = True
+
+        self.w.lambdaText.setEnabled(self.nd.pp.gLogTransform)
+        self.w.y0Text.setEnabled(self.nd.pp.gLogTransform)
+        self.w.lambdaLE.setEnabled(self.nd.pp.gLogTransform)
+        self.w.y0LE.setEnabled(self.nd.pp.gLogTransform)
+        # end setVarianceStabilisationOptions
+
+    def setVarLambda(self):
+        self.nd.pp.varLambda = float(self.w.lambdaLE.text())
+        # end setVarLambda
+
+    def setVary0(self):
+        self.nd.pp.varY0 = float(self.w.y0LE.text())
+        # end setVarLambda
 
     def show(self):
         self.w.show()

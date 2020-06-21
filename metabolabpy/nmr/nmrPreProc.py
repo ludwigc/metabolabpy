@@ -24,8 +24,11 @@ class NmrPreProc:
         self.compressBuckets           = False
         self.scaleSpc                  = ""
         self.varianceStabilisation     = ""
+        self.autoScaling               = False
+        self.paretoScaling             = True
+        self.gLogTransform             = False
         self.varLambda                 = 1e-5
-        self.varX0                     = 0.0
+        self.varY0                     = 0.0
         self.pName                     = ""
         self.fName                     =""
         self.samplesInRows             = True

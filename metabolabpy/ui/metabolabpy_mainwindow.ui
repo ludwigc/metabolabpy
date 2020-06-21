@@ -248,7 +248,7 @@
                <item>
                 <widget class="QCheckBox" name="varianceStabilisation">
                  <property name="enabled">
-                  <bool>false</bool>
+                  <bool>true</bool>
                  </property>
                  <property name="text">
                   <string>Variance Stabilisation</string>
@@ -1535,7 +1535,7 @@
                 <item>
                  <widget class="QCheckBox" name="preserveOverallScale">
                   <property name="text">
-                   <string>Preserve Overall Scale</string>
+                   <string>Preserve Overall Scaling</string>
                   </property>
                  </widget>
                 </item>
@@ -1590,7 +1590,117 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="varianceStabilisationTab"/>
+            <widget class="QWidget" name="varianceStabilisationTab">
+             <layout class="QGridLayout" name="gridLayout_21">
+              <item row="0" column="0">
+               <layout class="QVBoxLayout" name="verticalLayout_23">
+                <item>
+                 <widget class="QRadioButton" name="autoScaling">
+                  <property name="text">
+                   <string>Autoscaling</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="paretoScaling">
+                  <property name="text">
+                   <string>Pareto Scaling</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="gLogTransform">
+                  <property name="text">
+                   <string>Generalised Log Transform</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item row="0" column="1">
+               <spacer name="horizontalSpacer_35">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>193</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="1" column="0">
+               <spacer name="verticalSpacer_11">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>147</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="1" column="1">
+               <spacer name="verticalSpacer_12">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>147</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="2" column="0">
+               <spacer name="horizontalSpacer_36">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>194</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="2" column="1">
+               <layout class="QGridLayout" name="gridLayout_20">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="lambdaText">
+                  <property name="text">
+                   <string>Lambda</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLineEdit" name="lambdaLE"/>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="y0Text">
+                  <property name="text">
+                   <string>y0</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QLineEdit" name="y0LE"/>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
             <widget class="QWidget" name="exportDataSetTab">
              <layout class="QVBoxLayout" name="verticalLayout_11">
               <item>
