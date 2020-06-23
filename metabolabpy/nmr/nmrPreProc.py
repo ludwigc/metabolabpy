@@ -4,6 +4,7 @@ NMR data pre-processing
 '''
 
 import numpy as np
+import os
 
 
 class NmrPreProc:
@@ -52,12 +53,23 @@ class NmrPreProc:
         self.scaleSpectraRefSpc        = 0                           # use mean spectra
         self.preserveOverallScale      = False
         self.stdVal                    = 0.0
-        self.exportPathName            = ""
-        self.exportFileName            = ""
+        self.exportPathName            = os.getcwd()
+        self.exportFileName            = "csvExport.csv"
+        self.exportExcelPath            = os.getcwd()
+        self.exportExcel               = "excelExport.xlsx"
+        self.exportMetaboAnalystPath   = os.getcwd()
+        self.exportMetaboAnalyst       = "metaboAnalystExport.csv"
+        self.exportrDolphinPath        = os.getcwd()
+        self.exportrDolphin            = "rDolphinExport.csv"
+        self.exportBatmanPath          = os.getcwd()
+        self.exportBatman              = "NMRdata.txt"
+        self.exportBrukerPath          = os.getcwd()
+        self.exportBruker              = "brukerExport"
         self.exportDelimiterTab        = True
         self.exportCharacter           = ","
         self.exportSamplesInRowsCols   = 0
-        self.rDolphinExport            = False
+        self.exportMethod              = 0
+        self.avoidNegativeValues       = False
         # end __init__
 
     def __str__(self): # pragma: no cover

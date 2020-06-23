@@ -45,6 +45,19 @@ class NmrData:
         self.origJresExp = -1
         self.pjresMode = ''
         self.jRes = False
+        self.acqu = str('')
+        self.acqu2 = str('')
+        self.acqu3 = str('')
+        self.audita_txt = str('')
+        self.format_temp = str('')
+        self.fq1list = str('')
+        self.scon2 = str('')
+        self.shimvalues = str('')
+        self.uxnmr_par = str('')
+        self.proc1 = str('')
+        self.proc2 = str('')
+        self.proc3 = str('')
+        self.outd = str('')
         # end __init__
 
     def __str__(self):  # pragma: no cover
@@ -242,6 +255,105 @@ class NmrData:
         fid = np.concatenate([filtFid, fid])
         return fid
         # end conv
+
+    def exportBruker1d(self, pathName, expName, scaleFactor = -1):
+        if self.acq.manufacturer != 'Bruker':
+            return
+
+        if os.path.isdir(pathName + os.sep + expName) is False:
+            os.makedirs(pathName + os.sep + expName)
+
+        if os.path.isdir(pathName + os.sep + expName + os.sep + 'pdata' + os.sep + '1') is False:
+            os.makedirs(pathName + os.sep + expName + os.sep + 'pdata' + os.sep + '1')
+
+        fidFile1 = pathName + os.sep + expName + os.sep + 'fid'
+        spcFile1r = pathName + os.sep + expName + os.sep + 'pdata' + os.sep + '1' + os.sep + '1r'
+        # write 1D FID file
+        fid = np.zeros(2*len(self.fid[0]))
+        fid[0::2] = self.fid[0].real
+        fid[1::2] = self.fid[0].imag
+        if self.acq.byteOrder == 1:
+            fid.astype('>i4').tofile(fidFile1)
+        else:
+            if self.acq.dataType == 0:
+                fid.astype('<i4').tofile(fidFile1)
+            else:
+                if self.acq.dataType == 1:
+                    fid.astype(np.float64).tofile(fidFile1)
+                else:
+                    fid.astype(np.float32).tofile(fidFile1)
+
+
+        # write 1r file
+        spc = self.spc[0].real
+        if scaleFactor == -1:
+            scaleFactor = int(2*np.max(spc)/2147483647)
+
+        spc /= scaleFactor
+        spc.real.astype(np.int32).tofile(spcFile1r)
+        # write parameter files
+        # acqu file
+        fName = pathName + os.sep + expName + os.sep + 'acqu'
+        f = open(fName, 'w')
+        f.write(self.acq.acqusText)
+        f.close()
+        # acqus file
+        fName = pathName + os.sep + expName + os.sep + 'acqus'
+        f = open(fName, 'w')
+        f.write(self.acq.acqusText)
+        f.close()
+        # audita.txt file
+        fName = pathName + os.sep + expName + os.sep + 'audita.txt'
+        f = open(fName, 'w')
+        f.write(self.audita_txt)
+        f.close()
+        # format.temp file
+        fName = pathName + os.sep + expName + os.sep + 'format.temp'
+        f = open(fName, 'w')
+        f.write(self.format_temp)
+        f.close()
+        # fq1list file
+        fName = pathName + os.sep + expName + os.sep + 'fq1list'
+        f = open(fName, 'w')
+        f.write(self.fq1list)
+        f.close()
+        # scon2 file
+        fName = pathName + os.sep + expName + os.sep + 'scon2'
+        f = open(fName, 'w')
+        f.write(self.scon2)
+        f.close()
+        # shimvalues file
+        fName = pathName + os.sep + expName + os.sep + 'shimvalues'
+        f = open(fName, 'w')
+        f.write(self.shimvalues)
+        f.close()
+        # uxnmr.par file
+        fName = pathName + os.sep + expName + os.sep + 'uxnmr.par'
+        f = open(fName, 'w')
+        f.write(self.uxnmr_par)
+        f.close()
+        # procs file
+        origSI = self.proc.regEx.si.findall(self.proc.procsText)[0]
+        ftMod  = int(self.proc.regEx.ftMod.findall(self.proc.procsText)[0])
+        ncProc = int(self.proc.regEx.ncProc.findall(self.proc.procsText)[0])
+        procsText = self.proc.procsText.replace(origSI, str(len(self.spc[0])))
+        procsText = procsText.replace('FT_mod= ' + str(ftMod), 'FT_mod= 0')
+        procsText = procsText.replace('NC_proc= '+ str(ncProc), 'NC_proc= 0')
+        fName = pathName + os.sep + expName + os.sep + 'pdata' + os.sep + '1' + os.sep + 'procs'
+        f = open(fName, 'w')
+        f.write(procsText)
+        f.close()
+        # proc file
+        fName = pathName + os.sep + expName + os.sep + 'pdata' + os.sep + '1' + os.sep + 'proc'
+        f = open(fName, 'w')
+        f.write(procsText)
+        f.close()
+        # outd file
+        fName = pathName + os.sep + expName + os.sep + 'pdata' + os.sep + '1' + os.sep + 'outd'
+        f = open(fName, 'w')
+        f.write(self.outd)
+        f.close()
+        # end exportBruker1d
 
     def fidOffsetCorrection(self, fid):
         fid = np.copy(fid)
@@ -583,6 +695,85 @@ class NmrData:
                 fid = open(titleFile, "r")
                 self.title = fid.read()
                 fid.close()
+
+            acquFile = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'acqu'
+            if (os.path.isfile(acquFile)):
+                fid = open(acquFile, "r")
+                self.acqu = fid.read()
+                fid.close()
+
+            acqu2File = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'acqu2'
+            if (os.path.isfile(acqu2File)):
+                fid = open(acqu2File, "r")
+                self.acqu2 = fid.read()
+                fid.close()
+
+            acqu3File = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'acqu3'
+            if (os.path.isfile(acqu3File)):
+                fid = open(acqu3File, "r")
+                self.acqu3 = fid.read()
+                fid.close()
+
+            auditaFile = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'audita.txt'
+            if (os.path.isfile(auditaFile)):
+                fid = open(auditaFile, "r")
+                self.audita_txt = fid.read()
+                fid.close()
+
+            formatFile = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'format.temp'
+            if (os.path.isfile(formatFile)):
+                fid = open(formatFile, "r")
+                self.format_temp = fid.read()
+                fid.close()
+
+            fq1listFile = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'fq1list'
+            if (os.path.isfile(fq1listFile)):
+                fid = open(fq1listFile, "r")
+                self.fq1list = fid.read()
+                fid.close()
+
+            scon2File = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'scon2'
+            if (os.path.isfile(scon2File)):
+                fid = open(scon2File, "r")
+                self.scon2 = fid.read()
+                fid.close()
+
+            shimvaluesFile = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'shimvalues'
+            if (os.path.isfile(shimvaluesFile)):
+                fid = open(shimvaluesFile, "r")
+                self.shimvalues = fid.read()
+                fid.close()
+
+            uxnmrparFile = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'uxnmr.par'
+            if (os.path.isfile(uxnmrparFile)):
+                fid = open(uxnmrparFile, "r")
+                self.uxnmr_par = fid.read()
+                fid.close()
+
+            procFile = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'pdata' + os.sep + '1' + os.sep + 'proc'
+            if (os.path.isfile(procFile)):
+                fid = open(procFile, "r")
+                self.proc1 = fid.read()
+                fid.close()
+
+            proc2File = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'pdata' + os.sep + '1' + os.sep + 'proc2'
+            if (os.path.isfile(proc2File)):
+                fid = open(proc2File, "r")
+                self.proc2 = fid.read()
+                fid.close()
+
+            proc3File = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'pdata' + os.sep + '1' + os.sep + 'proc3'
+            if (os.path.isfile(proc3File)):
+                fid = open(proc3File, "r")
+                self.proc3 = fid.read()
+                fid.close()
+
+            outdFile = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'pdata' + os.sep + '1' + os.sep + 'outd'
+            if (os.path.isfile(outdFile)):
+                fid = open(outdFile, "r")
+                self.outd = fid.read()
+                fid.close()
+
 
         else:
             titleFile1 = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'text'

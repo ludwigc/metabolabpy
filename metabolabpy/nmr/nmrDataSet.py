@@ -4,8 +4,10 @@ import pickle
 
 from metabolabpy.nmr import nmrData as nd
 from metabolabpy.nmr import nmrPreProc as npp
-import matplotlib.pyplot as pl
 import math
+from openpyxl import Workbook
+from string import ascii_uppercase
+import itertools
 
 class NmrDataSet:
 
@@ -196,7 +198,7 @@ class NmrDataSet:
         for k in range(len(self.nmrdat[self.s])):
             mVal = min(mVal,np.min(self.nmrdat[self.s][k].spc[0].real))
 
-        if mVal < 0 and self.pp.rDolphinExport is False:
+        if mVal < 0 and self.pp.avoidNegativeValues:
             for k in range(len(self.nmrdat[self.s])):
                 self.nmrdat[self.s][k].spc[0] -= mVal
 
@@ -233,93 +235,211 @@ class NmrDataSet:
         # end excludeRegion
         
     def exportDataSet(self):
-        if os.path.isdir(self.pp.exportPathName) is False:
-            os.makedirs(self.pp.exportPathName)
+        if self.pp.exportMethod == 0:
+            print("export Excel format")
+            if os.path.isdir(self.pp.exportExcelPath) is False:
+                os.makedirs(self.pp.exportExcelPath)
 
-        fName = os.path.join(self.pp.exportPathName, self.pp.exportFileName)
-        f = open(fName, 'w')
-        if(self.pp.exportDelimiterTab == True):
-            delim = '\t'
-        else:
-            delim = self.pp.exportCharacter
-            
-        spc = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
-        for k in range(len(self.nmrdat[self.s])):
-            spc += self.nmrdat[self.s][k].spc[0].real
-        
-        deselect      = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
-        idx           = np.where(spc == 0)
-        deselect[idx] = np.ones(len(idx))
-        if(self.pp.exportSamplesInRowsCols == 0): # samples in rows
-            if self.pp.rDolphinExport is False:
+            fName = os.path.join(self.pp.exportExcelPath, self.pp.exportExcel)
+            wb = Workbook()
+            wsNMRdata = wb.active
+            wsNMRdata.title = "NMR data"
+            wsMetaData = wb.create_sheet("Metadata")
+            spc = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
+            npts = len(self.nmrdat[self.s][0].spc[0])
+            nSpc = len(self.nmrdat[self.s])
+            for k in range(nSpc):
+                spc += self.nmrdat[self.s][k].spc[0].real
+
+            deselect = np.zeros(npts)
+            idx = np.where(spc == 0)
+            deselect[idx] = np.ones(len(idx))
+            select = np.where(deselect == 0)
+            if (self.pp.exportSamplesInRowsCols == 0):  # samples in rows
+                colString = []
+                for s in itertools.islice(self.iter_all_strings(), len(select[0]) + 2):
+                    colString.append(s)
+
+                wsNMRdata['A1'] = 'Name'
+                wsNMRdata['B1'] = 'Class / ppm -->'
+                for k in range(len(select[0])):
+                    wsNMRdata[colString[k+2] + '1'] = str(self.nmrdat[self.s][0].ppm1[select[0][k]])
+
+                for k in range(len(self.nmrdat[self.s])):
+                    dse = os.path.split(self.nmrdat[self.s][k].origDataSet)
+                    ds = os.path.split(dse[0])
+                    wsNMRdata['A' + str(k+2)] = ds[1] + " " + dse[1]
+                    wsNMRdata['B' + str(k+2)] = str(self.pp.classSelect[k])
+                    for l in range(len(select[0])):
+                        wsNMRdata[colString[l+2] + str(k+2)] = str(self.nmrdat[self.s][k].spc[0][select[0][l]].real)
+
+
+
+            else:  # samples in cols
+                wsNMRdata['A1'] = 'Name'
+                wsNMRdata['A2'] = 'Class / ppm -v'
+                colString = []
+                for s in itertools.islice(self.iter_all_strings(), nSpc + 1):
+                    colString.append(s)
+
+                for k in range(len(self.nmrdat[self.s])):
+                    dse = os.path.split(self.nmrdat[self.s][k].origDataSet)
+                    ds = os.path.split(dse[0])
+                    wsNMRdata[colString[k+1] + '1'] = ds[1] + " " + dse[1]
+                    wsNMRdata[colString[k+1] + '2'] = str(self.pp.classSelect[k])
+
+                for l in range(len(select[0])):
+                    wsNMRdata['A' + str(l+3)] = str(self.nmrdat[self.s][0].ppm1[select[0][l]])
+                    for k in range(len(self.nmrdat[self.s])):
+                        wsNMRdata[colString[k+1] + str(l+3)] = str(self.nmrdat[self.s][k].spc[0][select[0][l]].real)
+
+
+
+            wb.save(fName)
+
+        elif self.pp.exportMethod == 1:
+            print("export CSV format")
+            if os.path.isdir(self.pp.exportPathName) is False:
+                os.makedirs(self.pp.exportPathName)
+
+            fName = os.path.join(self.pp.exportPathName, self.pp.exportFileName)
+            f = open(fName, 'w')
+            if (self.pp.exportDelimiterTab == True):
+                delim = '\t'
+            else:
+                delim = self.pp.exportCharacter
+
+            spc = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
+            for k in range(len(self.nmrdat[self.s])):
+                spc += self.nmrdat[self.s][k].spc[0].real
+
+            deselect = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
+            idx = np.where(spc == 0)
+            deselect[idx] = np.ones(len(idx))
+            if (self.pp.exportSamplesInRowsCols == 0):  # samples in rows
                 f.write("ppm" + delim + " ")
                 for k in range(len(self.nmrdat[self.s][0].ppm1)):
-                    if(deselect[k] == 0):
-                        f.write(delim + str(self.nmrdat[self.s][0].ppm1[k]))
-
-
-            else:
-                f.write(str(self.nmrdat[self.s][0].ppm1[0]))
-                for k in range(1,len(self.nmrdat[self.s][0].ppm1)):
                     if (deselect[k] == 0):
                         f.write(delim + str(self.nmrdat[self.s][0].ppm1[k]))
 
 
-            f.write("\n")
-            for k in range(len(self.nmrdat[self.s])):
-                dse = os.path.split(self.nmrdat[self.s][k].origDataSet)
-                ds  = os.path.split(dse[0])
-                if self.pp.rDolphinExport is False:
+                f.write("\n")
+                for k in range(len(self.nmrdat[self.s])):
+                    dse = os.path.split(self.nmrdat[self.s][k].origDataSet)
+                    ds = os.path.split(dse[0])
                     f.write(ds[1] + " " + dse[1] + delim + self.pp.classSelect[k])
                     for l in range(len(self.nmrdat[self.s][k].spc[0])):
-                        if(deselect[l] == 0):
-                            f.write(delim + str(self.nmrdat[self.s][k].spc[0][l].real))
-
-
-                else:
-                    f.write(str(self.nmrdat[self.s][k].spc[0][0].real))
-                    for l in range(1,len(self.nmrdat[self.s][k].spc[0])):
                         if (deselect[l] == 0):
                             f.write(delim + str(self.nmrdat[self.s][k].spc[0][l].real))
 
 
-
-                f.write("\n")
-                
-        else:                                     # samples in cols
-            f.write("ppm")
-            for k in range(len(self.nmrdat[self.s])):
-                dse = os.path.split(self.nmrdat[self.s][k].origDataSet)
-                ds  = os.path.split(dse[0])
-                f.write(delim + ds[1] + " " + dse[1])
-                
-            f.write("\n")
-            f.write(" ")
-            for k in range(len(self.pp.classSelect)):
-                f.write(delim + self.pp.classSelect[k])
-                
-            f.write("\n")
-            for k in range(len(self.nmrdat[self.s][0].spc[0])):
-                if(deselect[k] == 0):
-                    f.write(str(self.nmrdat[self.s][0].ppm1[k]))
-                    for l in range(len(self.nmrdat[self.s])):
-                        f.write(delim + str(self.nmrdat[self.s][l].spc[0][k].real))
-
                     f.write("\n")
 
-            
-        
-        f.close()
-        if self.pp.rDolphinExport is True:
-            fName = os.path.join(self.pp.exportPathName, "Parameters.csv")
+
+            else:  # samples in cols
+                f.write("ppm")
+                for k in range(len(self.nmrdat[self.s])):
+                    dse = os.path.split(self.nmrdat[self.s][k].origDataSet)
+                    ds = os.path.split(dse[0])
+                    f.write(delim + ds[1] + " " + dse[1])
+
+                f.write("\n")
+                f.write(" ")
+                for k in range(len(self.pp.classSelect)):
+                    f.write(delim + self.pp.classSelect[k])
+
+                f.write("\n")
+                for k in range(len(self.nmrdat[self.s][0].spc[0])):
+                    if (deselect[k] == 0):
+                        f.write(str(self.nmrdat[self.s][0].ppm1[k]))
+                        for l in range(len(self.nmrdat[self.s])):
+                            f.write(delim + str(self.nmrdat[self.s][l].spc[0][k].real))
+
+                        f.write("\n")
+
+
+
+            f.close()
+
+        elif self.pp.exportMethod == 2:
+            print("export MetaboAnalyst")
+            if os.path.isdir(self.pp.exportMetaboAnalystPath) is False:
+                os.makedirs(self.pp.exportMetaboAnalystPath)
+
+            fName = os.path.join(self.pp.exportMetaboAnalystPath, self.pp.exportMetaboAnalyst)
+            f = open(fName, 'w')
+            delim = ','
+            spc = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
+            for k in range(len(self.nmrdat[self.s])):
+                spc += self.nmrdat[self.s][k].spc[0].real
+
+            deselect = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
+            idx = np.where(spc == 0)
+            deselect[idx] = np.ones(len(idx))
+            f.write("Sample" + delim + " Class")
+            for k in range(len(self.nmrdat[self.s][0].ppm1)):
+                if (deselect[k] == 0):
+                    f.write(delim + " Bin." + str(self.nmrdat[self.s][0].ppm1[k]))
+
+
+            f.write("\n")
+            for k in range(len(self.nmrdat[self.s])):
+                dse = os.path.split(self.nmrdat[self.s][k].origDataSet)
+                ds = os.path.split(dse[0])
+                f.write(ds[1] + " " + dse[1] + delim + " " + self.pp.classSelect[k])
+                for l in range(len(self.nmrdat[self.s][k].spc[0])):
+                    if (deselect[l] == 0):
+                        f.write(delim + " " + str(self.nmrdat[self.s][k].spc[0][l].real))
+
+
+                f.write("\n")
+
+
+            f.close()
+
+        elif self.pp.exportMethod == 3:
+            print("export rDolphin")
+            if os.path.isdir(self.pp.exportrDolphinPath) is False:
+                os.makedirs(self.pp.exportrDolphinPath)
+
+            fName = os.path.join(self.pp.exportrDolphinPath, self.pp.exportrDolphin)
+            f = open(fName, 'w')
+            delim = ','
+            spc = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
+            for k in range(len(self.nmrdat[self.s])):
+                spc += self.nmrdat[self.s][k].spc[0].real
+
+            deselect = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
+            idx = np.where(spc == 0)
+            deselect[idx] = np.ones(len(idx))
+            f.write(str(self.nmrdat[self.s][0].ppm1[0]))
+            for k in range(1, len(self.nmrdat[self.s][0].ppm1)):
+                if (deselect[k] == 0):
+                    f.write(delim + str(self.nmrdat[self.s][0].ppm1[k]))
+
+
+            f.write("\n")
+            for k in range(len(self.nmrdat[self.s])):
+                dse = os.path.split(self.nmrdat[self.s][k].origDataSet)
+                ds = os.path.split(dse[0])
+                f.write(str(self.nmrdat[self.s][k].spc[0][0].real))
+                for l in range(1, len(self.nmrdat[self.s][k].spc[0])):
+                    if (deselect[l] == 0):
+                        f.write(delim + str(self.nmrdat[self.s][k].spc[0][l].real))
+
+
+                f.write("\n")
+
+            f.close()
+            fName = os.path.join(self.pp.exportrDolphinPath, "Parameters.csv")
             f = open(fName, 'w')
             f.write("Parameter,Value\n")
             f.write("nmr folder path,\n")
             f.write("1D data index,\n")
             f.write("proc_no,\n")
-            f.write("spectra dataset path (csv format)," + self.pp.exportPathName + "/" + self.pp.exportFileName + "\n")
-            f.write("Metadata path (csv format)," + self.pp.exportPathName + "/Metadata.csv\n")
-            f.write("ROI patters file," + self.pp.exportPathName + "/ROI_profile.csv\n")
+            f.write("spectra dataset path (csv format)," + self.pp.exportrDolphinPath + "/" + self.pp.exportrDolphin + "\n")
+            f.write("Metadata path (csv format)," + self.pp.exportrDolphinPath + "/Metadata.csv\n")
+            f.write("ROI patters file," + self.pp.exportrDolphinPath + "/ROI_profile.csv\n")
             f.write("Normalization (0=No;1=Eretic; 2=TSP; 3=Creatinine; 4=Spectra Sum; 5=PQN),2\n")
             f.write("Alignment (0=No;1=Glucose; 2=TSP; 3=Formate),2\n")
             f.write("Suppression,12-9.5;6.1-5.6;5.1-4.5\n")
@@ -329,13 +449,59 @@ class NmrDataSet:
             f.write("2D-Path,\n")
             f.write("Specific program parameters,\n")
             f.close()
-            fName = os.path.join(self.pp.exportPathName, "Metadata.csv")
+            fName = os.path.join(self.pp.exportrDolphinPath, "Metadata.csv")
             f = open(fName, 'w')
             f.write("Sample,Individual,Sample Type\n")
             for k in range(len(self.nmrdat[self.s])):
-                f.write(os.path.split(self.nmrdat[self.s][k].origDataSet)[1] + "," + str(k+1) + ",1\n")
+                f.write(os.path.split(self.nmrdat[self.s][k].origDataSet)[1] + "," + str(k + 1) + ",1\n")
 
             f.close()
+
+        elif self.pp.exportMethod == 4:
+            print("export Batman")
+            if os.path.isdir(self.pp.exportBatmanPath) is False:
+                os.makedirs(self.pp.exportBatmanPath)
+
+            fName = os.path.join(self.pp.exportBatmanPath, self.pp.exportBatman)
+            f = open(fName, 'w')
+            delim = '\t'
+            spc = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
+            for k in range(len(self.nmrdat[self.s])):
+                spc += self.nmrdat[self.s][k].spc[0].real
+
+            deselect = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
+            idx = np.where(spc == 0)
+            deselect[idx] = np.ones(len(idx))
+            f.write("ppm")
+            for k in range(len(self.nmrdat[self.s])):
+                f.write(delim + "X" + str(k + 1))
+
+            f.write("\n")
+            for k in range(len(self.nmrdat[self.s][0].spc[0])):
+                if (deselect[k] == 0):
+                    f.write(str(self.nmrdat[self.s][0].ppm1[k]))
+                    for l in range(len(self.nmrdat[self.s])):
+                        f.write(delim + str(self.nmrdat[self.s][l].spc[0][k].real))
+
+                    f.write("\n")
+
+
+            f.close()
+
+        else:
+            print("export Bruker")
+            if os.path.isdir(self.pp.exportBrukerPath + os.sep + self.pp.exportBruker) is False:
+                os.makedirs(self.pp.exportBrukerPath + os.sep + self.pp.exportBruker)
+
+            mmax = 0
+            for k in range(len(self.nmrdat[self.s])):
+                mmax = max(np.max(self.nmrdat[0][0].spc[0].real), mmax)
+
+            scaleFactor = int(2 * mmax / 2147483647)
+            for k in range(len(self.nmrdat[self.s])):
+                self.nmrdat[self.s][k].exportBruker1d(self.pp.exportBrukerPath + os.sep + self.pp.exportBruker, str(k+1), scaleFactor)
+
+
     # end exportDataSet
         
     def ft(self):
@@ -357,6 +523,13 @@ class NmrDataSet:
         self.e = origExp
         return "Finished ftAll"
         # end ftAll
+
+    def iter_all_strings(self):
+        for size in itertools.count(1):
+            for s in itertools.product(ascii_uppercase, repeat=size):
+                yield "".join(s)
+
+        # end iter_all_strings
 
     def load(self, dataSetName):
         dataSets = np.array([])
@@ -456,8 +629,18 @@ class NmrDataSet:
                             a = n.acq
                             aq = nd2.acq
                             for kkk in aq.__dict__.keys():
-                                if hasattr(a, kkk):
-                                    exec('aq.' + kkk + '=a.' + kkk)
+                                if kkk is not 'regEx':
+                                    if hasattr(a, kkk):
+                                        exec('aq.' + kkk + '=a.' + kkk)
+
+                                else:
+                                    r  = a.regEx
+                                    re = aq.regEx
+                                    for kkkk in re.__dict__.keys():
+                                        if hasattr(r, kkkk):
+                                            exec('re.' + kkkk + '=r.' + kkkk)
+
+                                    aq.regEx = re
 
 
                             nd2.acq = aq
@@ -468,8 +651,17 @@ class NmrDataSet:
                             p = n.proc
                             pc = nd2.proc
                             for kkk in pc.__dict__.keys():
-                                if hasattr(p, kkk):
-                                    exec('pc.' + kkk + '=p.' + kkk)
+                                if kkk is not 'regEx':
+                                    if hasattr(p, kkk):
+                                        exec('pc.' + kkk + '=p.' + kkk)
+                                else:
+                                    r = p.regEx
+                                    re = pc.regEx
+                                    for kkkk in re.__dict__.keys():
+                                        if hasattr(r, kkkk):
+                                            exec('re.' + kkkk + '=r.' + kkkk)
+
+                                    aq.regEx = re
 
 
                         nd2.proc = pc

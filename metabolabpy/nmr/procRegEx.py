@@ -17,5 +17,8 @@ class ProcRegEx:
         self.ssb              = re.compile(r'##\$SSB= (-?\d+(\.\d+)?)')
         self.wdw              = re.compile(r'##\$WDW= (\d+)')
         self.axisNucleus      = re.compile(r'##\$AXNUC= (.+)')
+        self.si               = re.compile(r'##\$SI= (\d+)')
+        self.ftMod            = re.compile(r'##\$FT_mod= (\d+)')
+        self.ncProc           = re.compile(r'##\$NC_proc= (-?\d+)')
         # end __init__
 

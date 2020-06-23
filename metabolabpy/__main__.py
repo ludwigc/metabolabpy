@@ -62,7 +62,7 @@ class MplWidget(QWidget): # pragma: no cover
 # ------------------ MplWidget ------------------
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.__version__ = '0.5.4'
+        self.__version__ = '0.6.0'
         self.zoomWasOn = False
         self.panWasOn = False
         self.nd = nmrDataSet.NmrDataSet()
@@ -78,14 +78,15 @@ class main_w(object):  # pragma: no cover
 
         self.hidePreProcessing()
         # connections
-        self.w.rDolphinExport.clicked.connect(self.setrDolphinExport)
-        self.w.exportPath.returnPressed.connect(self.setExportPath)
-        self.w.exportFileName.returnPressed.connect(self.setExportFileName)
+        #self.w.rDolphinExport.clicked.connect(self.setrDolphinExport)
+        self.w.exportPath.textChanged.connect(self.setExportPath)
+        self.w.exportFileName.textChanged.connect(self.setExportFileName)
         self.w.exportDelimiterTab.toggled.connect(self.setExportDelimiterTab)
         self.w.exportCharacter.returnPressed.connect(self.setExportCharacter)
         self.w.samplesInComboBox.currentIndexChanged.connect(self.setSamplesInComboBox)
         self.w.runPreProcessingButton.clicked.connect(self.dataPreProcessing)
         self.w.resetPreProcessingButton.clicked.connect(self.resetDataPreProcessing)
+        self.w.avoidNegValues.stateChanged.connect(self.setAvoidNegValues)
         self.w.excludeRegion.stateChanged.connect(self.setExcludeRegion)
         self.w.segmentalAlignment.stateChanged.connect(self.setSegmentalAlignment)
         self.w.compressBuckets.stateChanged.connect(self.setCompressBuckets)
@@ -134,87 +135,88 @@ class main_w(object):  # pragma: no cover
         self.w.actionClear.triggered.connect(self.clear)
         self.w.lambdaLE.textChanged.connect(self.setVarLambda)
         self.w.y0LE.textChanged.connect(self.setVary0)
-        self.w.actionRead_NMR_Spectrum.triggered.connect(lambda: self.readNMRSpc())
-        self.w.preprocessing.stateChanged.connect(lambda: self.setPreProcessing())
+        self.w.actionRead_NMR_Spectrum.triggered.connect(self.readNMRSpc)
+        self.w.preprocessing.stateChanged.connect(self.setPreProcessing)
         self.w.preserveOverallScale.stateChanged.connect(self.setPreserveOverallScale)
-        self.w.actionReset.triggered.connect(lambda: self.resetPlot())
-        self.w.actionShow_NMR_Spectrum.triggered.connect(lambda: self.showNMRSpectrum())
-        self.w.actionSetup_Processing_Parameters.triggered.connect(lambda: self.setupProcessingParameters())
-        self.w.actionShow_Display_Parameters.triggered.connect(lambda: self.showDisplayParameters())
-        self.w.actionShow_Acquisition_Parameters.triggered.connect(lambda: self.showAcquisitionParameters())
-        self.w.actionShow_Title_File_Information.triggered.connect(lambda: self.showTitleFileInformation())
-        self.w.actionShow_pulseProgram.triggered.connect(lambda: self.showPulseProgram())
-        self.w.actionFourier_Transform.triggered.connect(lambda: self.ft())
-        self.w.actionScript_Editor.triggered.connect(lambda: self.scriptEditor())
-        self.w.actionChange_to_next_Exp.triggered.connect(lambda: self.changeToNextExp())
-        self.w.actionChange_to_previous_Exp.triggered.connect(lambda: self.changeToPreviousExp())
-        self.w.actionChange_to_next_DS.triggered.connect(lambda: self.changeToNextDS())
-        self.w.actionChange_to_previous_DS.triggered.connect(lambda: self.changeToPreviousDS())
+        self.w.actionReset.triggered.connect(self.resetPlot)
+        self.w.actionShow_NMR_Spectrum.triggered.connect(self.showNMRSpectrum)
+        self.w.actionSetup_Processing_Parameters.triggered.connect(self.setupProcessingParameters)
+        self.w.actionShow_Display_Parameters.triggered.connect(self.showDisplayParameters)
+        self.w.actionShow_Acquisition_Parameters.triggered.connect(self.showAcquisitionParameters)
+        self.w.actionShow_Title_File_Information.triggered.connect(self.showTitleFileInformation)
+        self.w.actionShow_pulseProgram.triggered.connect(self.showPulseProgram)
+        self.w.actionFourier_Transform.triggered.connect(self.ft)
+        self.w.actionScript_Editor.triggered.connect(self.scriptEditor)
+        self.w.actionChange_to_next_Exp.triggered.connect(self.changeToNextExp)
+        self.w.actionChange_to_previous_Exp.triggered.connect(self.changeToPreviousExp)
+        self.w.actionChange_to_next_DS.triggered.connect(self.changeToNextDS)
+        self.w.actionChange_to_previous_DS.triggered.connect(self.changeToPreviousDS)
         self.w.exampleScripts.view().pressed.connect(self.loadExampleScript)
-        self.w.actionAutomatic_Phase_Correction.triggered.connect(lambda: self.autophase1d())
-        self.w.actionAutomatic_Baseline_Correction.triggered.connect(lambda: self.autobaseline1d())
+        self.w.actionAutomatic_Phase_Correction.triggered.connect(self.autophase1d)
+        self.w.actionAutomatic_Baseline_Correction.triggered.connect(self.autobaseline1d)
         self.w.actionScale_2D_Spectrum_Up.triggered.connect(self.scale2DSpectrumUp)
         self.w.actionScale_2D_Spectrum_Down.triggered.connect(self.scale2DSpectrumDown)
         self.w.actionScale_all_2D_Spectra_Up.triggered.connect(self.scaleAll2DSpectraUp)
         self.w.actionScale_all_2D_Spectra_Down.triggered.connect(self.scaleAll2DSpectraDown)
-        self.w.actionSelect_All.triggered.connect(lambda: self.selectPlotAll())
-        self.w.actionClear_All.triggered.connect(lambda: self.selectPlotClear())
-        self.w.actionConsole.triggered.connect(lambda: self.showConsole())
-        self.w.actionToggle_FullScreen.triggered.connect(lambda: self.showMainWindow())
-        self.w.setBox.valueChanged.connect(lambda: self.changeDataSetExp())
-        self.w.expBox.valueChanged.connect(lambda: self.changeDataSetExp())
-        self.w.posCol.currentIndexChanged.connect(lambda: self.getDispPars1())
-        self.w.negCol.currentIndexChanged.connect(lambda: self.getDispPars2())
-        self.w.posColR.returnPressed.connect(lambda: self.getDispPars3())
-        self.w.posColG.returnPressed.connect(lambda: self.getDispPars3())
-        self.w.posColB.returnPressed.connect(lambda: self.getDispPars3())
-        self.w.negColR.returnPressed.connect(lambda: self.getDispPars3())
-        self.w.negColG.returnPressed.connect(lambda: self.getDispPars3())
-        self.w.negColB.returnPressed.connect(lambda: self.getDispPars3())
-        self.w.nLevels.returnPressed.connect(lambda: self.getDispPars4())
-        self.w.minLevel.returnPressed.connect(lambda: self.getDispPars5())
-        self.w.maxLevel.returnPressed.connect(lambda: self.getDispPars6())
-        self.w.axisType1.currentIndexChanged.connect(lambda: self.getDispPars7())
-        self.w.axisType2.currentIndexChanged.connect(lambda: self.getDispPars8())
-        self.w.displaySpc.currentIndexChanged.connect(lambda: self.getDispPars9())
-        self.w.baselineCorrection.currentIndexChanged.connect(lambda: self.checkBaselineCorrection())
-        self.w.baselineOrder.currentIndexChanged.connect(lambda: self.checkBaselineOrder())
-        self.w.spcOffset.returnPressed.connect(lambda: self.getDispPars10())
-        self.w.spcScale.returnPressed.connect(lambda: self.getDispPars11())
-        self.w.fontSize.valueChanged.connect(lambda: self.setFontSize())
-        self.w.xLabel.returnPressed.connect(lambda: self.getDispPars12())
-        self.w.yLabel.returnPressed.connect(lambda: self.getDispPars13())
-        self.w.spcLabel.returnPressed.connect(lambda: self.getDispPars14())
-        self.w.preProcessingSelect.currentIndexChanged.connect(lambda: self.setPreProcessingOptions())
-        self.w.tilt.currentIndexChanged.connect(lambda: self.setTilt())
-        self.w.symJ.currentIndexChanged.connect(lambda: self.setSymJ())
-        self.w.windowFunction.currentIndexChanged.connect(lambda: self.getProcPars1())
-        self.w.windowFunction_2.currentIndexChanged.connect(lambda: self.getProcPars2())
-        self.w.phaseCorrection.currentIndexChanged.connect(lambda: self.getProcPars3())
-        self.w.phaseCorrection_2.currentIndexChanged.connect(lambda: self.getProcPars4())
-        self.w.waterSuppression.currentIndexChanged.connect(lambda: self.getProcPars5())
-        self.w.winType.currentIndexChanged.connect(lambda: self.getProcPars6())
-        self.w.gibbs.currentIndexChanged.connect(lambda: self.getProcPars7())
-        self.w.gibbs_2.currentIndexChanged.connect(lambda: self.getProcPars8())
-        self.w.zeroFilling.returnPressed.connect(lambda: self.getProcPars9())
-        self.w.zeroFilling_2.returnPressed.connect(lambda: self.getProcPars10())
-        self.w.lb.returnPressed.connect(lambda: self.getProcPars11())
-        self.w.gb.returnPressed.connect(lambda: self.getProcPars12())
-        self.w.ssb.returnPressed.connect(lambda: self.getProcPars13())
-        self.w.lb_2.returnPressed.connect(lambda: self.getProcPars14())
-        self.w.gb_2.returnPressed.connect(lambda: self.getProcPars15())
-        self.w.ssb_2.returnPressed.connect(lambda: self.getProcPars16())
-        self.w.ph0.returnPressed.connect(lambda: self.getProcPars17())
-        self.w.ph1.returnPressed.connect(lambda: self.getProcPars18())
-        self.w.ph0_2.returnPressed.connect(lambda: self.getProcPars19())
-        self.w.ph1_2.returnPressed.connect(lambda: self.getProcPars20())
-        self.w.polyOrder.returnPressed.connect(lambda: self.getProcPars21())
-        self.w.extrapolationSize.returnPressed.connect(lambda: self.getProcPars22())
-        self.w.windowSize.returnPressed.connect(lambda: self.getProcPars23())
-        self.w.fidOffsetCorrection.returnPressed.connect(lambda: self.getProcPars24())
-        self.w.phRefDS.valueChanged.connect(lambda: self.changeDataSetExpPhRef())
-        self.w.phRefExp.valueChanged.connect(lambda: self.changeDataSetExpPhRef())
-        self.w.phRefColour.currentIndexChanged.connect(lambda: self.getDispPars15())
+        self.w.actionSelect_All.triggered.connect(self.selectPlotAll)
+        self.w.actionClear_All.triggered.connect(self.selectPlotClear)
+        self.w.actionConsole.triggered.connect(self.showConsole)
+        self.w.actionToggle_FullScreen.triggered.connect(self.showMainWindow)
+        self.w.setBox.valueChanged.connect(self.changeDataSetExp)
+        self.w.expBox.valueChanged.connect(self.changeDataSetExp)
+        self.w.posCol.currentIndexChanged.connect(self.getDispPars1)
+        self.w.negCol.currentIndexChanged.connect(self.getDispPars2)
+        self.w.posColR.returnPressed.connect(self.getDispPars3)
+        self.w.posColG.returnPressed.connect(self.getDispPars3)
+        self.w.posColB.returnPressed.connect(self.getDispPars3)
+        self.w.negColR.returnPressed.connect(self.getDispPars3)
+        self.w.negColG.returnPressed.connect(self.getDispPars3)
+        self.w.negColB.returnPressed.connect(self.getDispPars3)
+        self.w.nLevels.returnPressed.connect(self.getDispPars4)
+        self.w.minLevel.returnPressed.connect(self.getDispPars5)
+        self.w.maxLevel.returnPressed.connect(self.getDispPars6)
+        self.w.axisType1.currentIndexChanged.connect(self.getDispPars7)
+        self.w.axisType2.currentIndexChanged.connect(self.getDispPars8)
+        self.w.displaySpc.currentIndexChanged.connect(self.getDispPars9)
+        self.w.baselineCorrection.currentIndexChanged.connect(self.checkBaselineCorrection)
+        self.w.baselineOrder.currentIndexChanged.connect(self.checkBaselineOrder)
+        self.w.spcOffset.returnPressed.connect(self.getDispPars10)
+        self.w.spcScale.returnPressed.connect(self.getDispPars11)
+        self.w.fontSize.valueChanged.connect(self.setFontSize)
+        self.w.xLabel.returnPressed.connect(self.getDispPars12)
+        self.w.yLabel.returnPressed.connect(self.getDispPars13)
+        self.w.spcLabel.returnPressed.connect(self.getDispPars14)
+        self.w.preProcessingSelect.currentIndexChanged.connect(self.setPreProcessingOptions)
+        self.w.exportMethod.currentIndexChanged.connect(self.setExportMethodOptions)
+        self.w.tilt.currentIndexChanged.connect(self.setTilt)
+        self.w.symJ.currentIndexChanged.connect(self.setSymJ)
+        self.w.windowFunction.currentIndexChanged.connect(self.getProcPars1)
+        self.w.windowFunction_2.currentIndexChanged.connect(self.getProcPars2)
+        self.w.phaseCorrection.currentIndexChanged.connect(self.getProcPars3)
+        self.w.phaseCorrection_2.currentIndexChanged.connect(self.getProcPars4)
+        self.w.waterSuppression.currentIndexChanged.connect(self.getProcPars5)
+        self.w.winType.currentIndexChanged.connect(self.getProcPars6)
+        self.w.gibbs.currentIndexChanged.connect(self.getProcPars7)
+        self.w.gibbs_2.currentIndexChanged.connect(self.getProcPars8)
+        self.w.zeroFilling.returnPressed.connect(self.getProcPars9)
+        self.w.zeroFilling_2.returnPressed.connect(self.getProcPars10)
+        self.w.lb.returnPressed.connect(self.getProcPars11)
+        self.w.gb.returnPressed.connect(self.getProcPars12)
+        self.w.ssb.returnPressed.connect(self.getProcPars13)
+        self.w.lb_2.returnPressed.connect(self.getProcPars14)
+        self.w.gb_2.returnPressed.connect(self.getProcPars15)
+        self.w.ssb_2.returnPressed.connect(self.getProcPars16)
+        self.w.ph0.returnPressed.connect(self.getProcPars17)
+        self.w.ph1.returnPressed.connect(self.getProcPars18)
+        self.w.ph0_2.returnPressed.connect(self.getProcPars19)
+        self.w.ph1_2.returnPressed.connect(self.getProcPars20)
+        self.w.polyOrder.returnPressed.connect(self.getProcPars21)
+        self.w.extrapolationSize.returnPressed.connect(self.getProcPars22)
+        self.w.windowSize.returnPressed.connect(self.getProcPars23)
+        self.w.fidOffsetCorrection.returnPressed.connect(self.getProcPars24)
+        self.w.phRefDS.valueChanged.connect(self.changeDataSetExpPhRef)
+        self.w.phRefExp.valueChanged.connect(self.changeDataSetExpPhRef)
+        self.w.phRefColour.currentIndexChanged.connect(self.getDispPars15)
         self.w.fourierTransformButton.clicked.connect(self.ft)
         self.w.executeScript.clicked.connect(self.execScript)
         self.w.openScript.clicked.connect(self.openScript)
@@ -226,10 +228,10 @@ class main_w(object):  # pragma: no cover
         self.w.quitButton.clicked.connect(self.quit_app)
         self.w.saveButton.clicked.connect(self.saveButton)
         self.w.loadButton.clicked.connect(self.loadButton)
-        self.w.exportPathSelectButton.clicked.connect(lambda: self.setExportTable())
-        self.w.actionQuit.triggered.connect(lambda: self.quit_app())
+        self.w.exportPathSelectButton.clicked.connect(self.setExportTable)
+        self.w.actionQuit.triggered.connect(self.quit_app)
         self.w.dispPlotButton.clicked.connect(self.plotSpcDisp)
-        self.w.nmrSpectrum.currentChanged.connect(lambda: self.tabIndexChanged())
+        self.w.nmrSpectrum.currentChanged.connect(self.tabIndexChanged)
         self.showVersion()
         self.keepZoom = False
         self.keepXZoom = False
@@ -243,20 +245,20 @@ class main_w(object):  # pragma: no cover
         self.w.actionSave_as_Default.triggered.connect(self.saveConfig)
         self.w.actionLoad_Default.triggered.connect(self.loadConfig)
         self.w.actionReset_Config.triggered.connect(self.resetConfig)
-        self.w.rSpc_p0.returnPressed.connect(lambda: self.get_rSpc_p0())
-        self.w.rSpc_p1.returnPressed.connect(lambda: self.get_rSpc_p1())
-        self.w.rSpc_p2.returnPressed.connect(lambda: self.get_rSpc_p2())
-        self.w.rSpc_p3.returnPressed.connect(lambda: self.get_rSpc_p3())
-        self.w.rSpc_p4.returnPressed.connect(lambda: self.get_rSpc_p4())
-        self.w.rSpc_p5.returnPressed.connect(lambda: self.get_rSpc_p5())
-        self.w.rSpc_p6.returnPressed.connect(lambda: self.get_rSpc_p6())
-        self.w.iSpc_p0.returnPressed.connect(lambda: self.get_iSpc_p0())
-        self.w.iSpc_p1.returnPressed.connect(lambda: self.get_iSpc_p1())
-        self.w.iSpc_p2.returnPressed.connect(lambda: self.get_iSpc_p2())
-        self.w.iSpc_p3.returnPressed.connect(lambda: self.get_iSpc_p3())
-        self.w.iSpc_p4.returnPressed.connect(lambda: self.get_iSpc_p4())
-        self.w.iSpc_p5.returnPressed.connect(lambda: self.get_iSpc_p5())
-        self.w.iSpc_p6.returnPressed.connect(lambda: self.get_iSpc_p6())
+        self.w.rSpc_p0.returnPressed.connect(self.get_rSpc_p0)
+        self.w.rSpc_p1.returnPressed.connect(self.get_rSpc_p1)
+        self.w.rSpc_p2.returnPressed.connect(self.get_rSpc_p2)
+        self.w.rSpc_p3.returnPressed.connect(self.get_rSpc_p3)
+        self.w.rSpc_p4.returnPressed.connect(self.get_rSpc_p4)
+        self.w.rSpc_p5.returnPressed.connect(self.get_rSpc_p5)
+        self.w.rSpc_p6.returnPressed.connect(self.get_rSpc_p6)
+        self.w.iSpc_p0.returnPressed.connect(self.get_iSpc_p0)
+        self.w.iSpc_p1.returnPressed.connect(self.get_iSpc_p1)
+        self.w.iSpc_p2.returnPressed.connect(self.get_iSpc_p2)
+        self.w.iSpc_p3.returnPressed.connect(self.get_iSpc_p3)
+        self.w.iSpc_p4.returnPressed.connect(self.get_iSpc_p4)
+        self.w.iSpc_p5.returnPressed.connect(self.get_iSpc_p5)
+        self.w.iSpc_p6.returnPressed.connect(self.get_iSpc_p6)
         self.setFontSize()
         self.w.MplWidget.setFocus()
         # end __init__
@@ -720,11 +722,10 @@ class main_w(object):  # pragma: no cover
 
         self.w.varianceStabilisation.setChecked(self.nd.pp.flagVarianceStabilisation)
         self.w.exportDataSet.setChecked(self.nd.pp.flagExportDataSet)
-        self.w.exportPath.setText(self.nd.pp.exportPathName)
-        self.w.exportFileName.setText(self.nd.pp.exportFileName)
         self.w.exportDelimiterTab.setChecked(self.nd.pp.exportDelimiterTab)
         self.w.exportDelimiterCharacter.setChecked(not self.nd.pp.exportDelimiterTab)
         self.w.exportCharacter.setText(self.nd.pp.exportCharacter)
+        self.w.exportMethod.setCurrentIndex(self.nd.pp.exportMethod)
         self.w.samplesInComboBox.setCurrentIndex(self.nd.pp.exportSamplesInRowsCols)
         self.w.segAlignRefSpc.setMaximum(len(self.nd.nmrdat[self.nd.s]))
         self.w.scaleSpectraRefSpc.setMaximum(len(self.nd.nmrdat[self.nd.s]))
@@ -1565,7 +1566,7 @@ class main_w(object):  # pragma: no cover
         if (len(self.nd.pp.classSelect) == 0):
             self.nd.preProcInit()
 
-        self.w.rDolphinExport.setChecked(self.nd.pp.rDolphinExport)
+        #self.w.rDolphinExport.setChecked(self.nd.pp.rDolphinExport)
         self.fillPreProcessingNumbers()
         sel = self.w.selectClassTW.selectedIndexes()
         cls = np.array([])
@@ -2081,6 +2082,15 @@ class main_w(object):  # pragma: no cover
         self.w.acqPars.setText(acqStr)
         # end setAcqPars
 
+    def setAvoidNegValues(self):
+        if (self.nd.pp.preProcFill == False):
+            if (self.w.avoidNegValues.isChecked() == True):
+                self.nd.pp.avoidNegativeValues = True
+            else:
+                self.nd.pp.avoidNegativeValues = False
+
+        # end setAvoidNegValues
+
     def setBucketPPMPreProc(self):
         try:
             bucketPPM = float(self.w.bucketPpmLE.text())
@@ -2318,11 +2328,113 @@ class main_w(object):  # pragma: no cover
         # end setExportDelimiterTab
 
     def setExportFileName(self):
-        self.nd.pp.exportFileName = self.w.exportFileName.text()
+        if self.nd.pp.exportMethod == 0:
+            self.nd.pp.exportExcel = self.w.exportFileName.text()
+
+        if self.nd.pp.exportMethod == 1:
+            self.nd.pp.exportFileName = self.w.exportFileName.text()
+
+        if self.nd.pp.exportMethod == 2:
+            self.nd.pp.exportMetaboAnalyst = self.w.exportFileName.text()
+
+        if self.nd.pp.exportMethod == 3:
+            self.nd.pp.exportrDolphin = self.w.exportFileName.text()
+
+        if self.nd.pp.exportMethod == 4:
+            self.nd.pp.exportBatman = self.w.exportFileName.text()
+
+        if self.nd.pp.exportMethod == 5:
+            self.nd.pp.exportBruker = self.w.exportFileName.text()
+
         # end setExportFileName
 
+    def setExportMethod(self):
+        if self.nd.pp.exportMethod == 0:
+            self.w.delimiterLabel.setHidden(True)
+            self.w.exportDelimiterTab.setHidden(True)
+            self.w.exportDelimiterCharacter.setHidden(True)
+            self.w.exportCharacter.setHidden(True)
+            self.w.samplesInRowsLabel.setHidden(False)
+            self.w.samplesInComboBox.setHidden(False)
+            self.w.exportPath.setText(self.nd.pp.exportExcelPath)
+            self.w.exportFileName.setText(self.nd.pp.exportExcel)
+
+        if self.nd.pp.exportMethod == 1:
+            self.w.delimiterLabel.setHidden(False)
+            self.w.exportDelimiterTab.setHidden(False)
+            self.w.exportDelimiterCharacter.setHidden(False)
+            self.w.exportCharacter.setHidden(False)
+            self.w.samplesInRowsLabel.setHidden(False)
+            self.w.samplesInComboBox.setHidden(False)
+            self.w.exportPath.setText(self.nd.pp.exportPathName)
+            self.w.exportFileName.setText(self.nd.pp.exportFileName)
+
+        if self.nd.pp.exportMethod == 2:
+            self.w.delimiterLabel.setHidden(True)
+            self.w.exportDelimiterTab.setHidden(True)
+            self.w.exportDelimiterCharacter.setHidden(True)
+            self.w.exportCharacter.setHidden(True)
+            self.w.samplesInRowsLabel.setHidden(True)
+            self.w.samplesInComboBox.setHidden(True)
+            self.w.exportPath.setText(self.nd.pp.exportMetaboAnalystPath)
+            self.w.exportFileName.setText(self.nd.pp.exportMetaboAnalyst)
+
+        if self.nd.pp.exportMethod == 3:
+            self.w.delimiterLabel.setHidden(True)
+            self.w.exportDelimiterTab.setHidden(True)
+            self.w.exportDelimiterCharacter.setHidden(True)
+            self.w.exportCharacter.setHidden(True)
+            self.w.samplesInRowsLabel.setHidden(True)
+            self.w.samplesInComboBox.setHidden(True)
+            self.w.exportPath.setText(self.nd.pp.exportrDolphinPath)
+            self.w.exportFileName.setText(self.nd.pp.exportrDolphin)
+
+        if self.nd.pp.exportMethod == 4:
+            self.w.delimiterLabel.setHidden(True)
+            self.w.exportDelimiterTab.setHidden(True)
+            self.w.exportDelimiterCharacter.setHidden(True)
+            self.w.exportCharacter.setHidden(True)
+            self.w.samplesInRowsLabel.setHidden(True)
+            self.w.samplesInComboBox.setHidden(True)
+            self.w.exportPath.setText(self.nd.pp.exportBatmanPath)
+            self.w.exportFileName.setText(self.nd.pp.exportBatman)
+
+        if self.nd.pp.exportMethod == 5:
+            self.w.delimiterLabel.setHidden(True)
+            self.w.exportDelimiterTab.setHidden(True)
+            self.w.exportDelimiterCharacter.setHidden(True)
+            self.w.exportCharacter.setHidden(True)
+            self.w.samplesInRowsLabel.setHidden(True)
+            self.w.samplesInComboBox.setHidden(True)
+            self.w.exportPath.setText(self.nd.pp.exportBrukerPath)
+            self.w.exportFileName.setText(self.nd.pp.exportBruker)
+
+        # end setExportMethod
+
+    def setExportMethodOptions(self):
+        self.nd.pp.exportMethod = self.w.exportMethod.currentIndex()
+        self.setExportMethod()
+        # end setExportMethodOptions
+
     def setExportPath(self):
-        self.nd.pp.exportPathName = self.w.exportPath.text()
+        if self.nd.pp.exportMethod == 0:
+            self.nd.pp.exportExcelPath = self.w.exportPath.text()
+
+        if self.nd.pp.exportMethod == 1:
+            self.nd.pp.exportPathName = self.w.exportPath.text()
+
+        if self.nd.pp.exportMethod == 2:
+            self.nd.pp.exportMetaboAnalystPath = self.w.exportPath.text()
+
+        if self.nd.pp.exportMethod == 3:
+            self.nd.pp.exportrDolphinPath = self.w.exportPath.text()
+
+        if self.nd.pp.exportMethod == 4:
+            self.nd.pp.exportBatmanPath = self.w.exportPath.text()
+
+        if self.nd.pp.exportMethod == 5:
+            self.nd.pp.exportBrukerPath = self.w.exportPath.text()
+
         # end setExportPath
 
     def setExportDataSet(self):
@@ -2336,14 +2448,33 @@ class main_w(object):  # pragma: no cover
         # end setExportDataSet
 
     def setExportTable(self):
-        pfName = QFileDialog.getSaveFileName()
-        pfName = pfName[0]
-        if (len(pfName) > 0):
-            pfName = os.path.split(pfName)
-            self.w.exportPath.setText(pfName[0])
-            self.w.exportFileName.setText(pfName[1])
-            self.nd.pp.exportPathName = pfName[0]
-            self.nd.pp.exportFileName = pfName[1]
+        pName = QFileDialog.getExistingDirectory()
+        #pName = pName[0]
+        if (len(pName) > 0):
+            if self.nd.pp.exportMethod == 0:
+                self.w.exportPath.setText(pName)
+                self.nd.pp.exportExcelPath = pName
+
+            if self.nd.pp.exportMethod == 1:
+                self.w.exportPath.setText(pName)
+                self.nd.pp.exportPathName = pName
+
+            if self.nd.pp.exportMethod == 2:
+                self.w.exportPath.setText(pName)
+                self.nd.pp.exportMetaboAnalystPath = pName
+
+            if self.nd.pp.exportMethod == 3:
+                self.w.exportPath.setText(pName)
+                self.nd.pp.exportrDolphinPath = pName
+
+            if self.nd.pp.exportMethod == 4:
+                self.w.exportPath.setText(pName)
+                self.nd.pp.exportBatmanPath = pName
+
+            if self.nd.pp.exportMethod == 5:
+                self.w.exportPath.setText(pName)
+                self.nd.pp.exportBrukerPath = pName
+
 
         # end setExportTable
 
@@ -2466,6 +2597,15 @@ class main_w(object):  # pragma: no cover
     def setPreProcessingOptions(self):
         curIdx = self.w.preProcessingSelect.currentIndex()
         self.w.preProcessingWidget.setCurrentIndex(curIdx)
+        if self.nd.nmrdat[self.nd.s][0].acq.manufacturer == 'Bruker':
+            if self.w.exportMethod.count() == 5:
+                self.w.exportMethod.addItem('Bruker Dataset')
+
+        else:
+            if self.w.exportMethod.count() == 6:
+                self.w.exportMethod.removeItem(5)
+
+
         self.plotSpcPreProc()
         # end setPreProcessingOption
 
@@ -2522,9 +2662,9 @@ class main_w(object):  # pragma: no cover
         self.w.pulseProgram.setText(self.nd.nmrdat[self.nd.s][self.nd.e].pulseProgram)
         # end setPulseProgram
 
-    def setrDolphinExport(self):
-        self.nd.pp.rDolphinExport = self.w.rDolphinExport.isChecked()
-
+    #def setrDolphinExport(self):
+    #    self.nd.pp.rDolphinExport = self.w.rDolphinExport.isChecked()
+    #
     def setSamplesInComboBox(self):
         self.nd.pp.exportSamplesInRowsCols = self.w.samplesInComboBox.currentIndex()
         # end setSamplesInComboBox
@@ -2742,6 +2882,7 @@ class main_w(object):  # pragma: no cover
         self.w.runPreProcessingButton.setHidden(False)
         self.w.resetPreProcessingButton.setHidden(False)
         self.w.writeScriptButton.setHidden(False)
+        self.setExportMethod()
         # self.setSelectClass()
         self.plotSpcPreProc()
         # end showPreProcessing

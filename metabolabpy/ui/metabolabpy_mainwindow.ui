@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1054</width>
-    <height>771</height>
+    <width>1242</width>
+    <height>782</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1549,7 +1549,7 @@
                 <property name="sizeHint" stdset="0">
                  <size>
                   <width>20</width>
-                  <height>169</height>
+                  <height>175</height>
                  </size>
                 </property>
                </spacer>
@@ -1638,7 +1638,7 @@
                 <property name="sizeHint" stdset="0">
                  <size>
                   <width>20</width>
-                  <height>147</height>
+                  <height>153</height>
                  </size>
                 </property>
                </spacer>
@@ -1651,7 +1651,7 @@
                 <property name="sizeHint" stdset="0">
                  <size>
                   <width>20</width>
-                  <height>147</height>
+                  <height>153</height>
                  </size>
                 </property>
                </spacer>
@@ -1755,6 +1755,13 @@
                   </property>
                  </widget>
                 </item>
+                <item>
+                 <widget class="QPushButton" name="exportPathSelectButton">
+                  <property name="text">
+                   <string>Set</string>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </item>
               <item>
@@ -1762,7 +1769,7 @@
                 <item>
                  <widget class="QLabel" name="label_56">
                   <property name="text">
-                   <string>Export Filename</string>
+                   <string>Export Data Filename</string>
                   </property>
                  </widget>
                 </item>
@@ -1814,7 +1821,7 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_44">
                 <item>
-                 <widget class="QLabel" name="label_58">
+                 <widget class="QLabel" name="delimiterLabel">
                   <property name="text">
                    <string>Delimiter</string>
                   </property>
@@ -1860,7 +1867,7 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_47">
                 <item>
-                 <widget class="QLabel" name="label_65">
+                 <widget class="QLabel" name="samplesInRowsLabel">
                   <property name="text">
                    <string>Samples in</string>
                   </property>
@@ -1898,10 +1905,37 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_40">
                 <item>
-                 <widget class="QCheckBox" name="rDolphinExport">
-                  <property name="text">
-                   <string>rDolphin Export</string>
-                  </property>
+                 <widget class="QComboBox" name="exportMethod">
+                  <item>
+                   <property name="text">
+                    <string>Excel Workbook (.xlsx)</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>CSV Export (.csv)</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>MetaboAnalyst (.csv)</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>rDolphin (.csv)</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Batman (.txt)</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Bruker Dataset</string>
+                   </property>
+                  </item>
                  </widget>
                 </item>
                 <item>
@@ -1918,9 +1952,9 @@
                  </spacer>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="exportPathSelectButton">
+                 <widget class="QCheckBox" name="avoidNegValues">
                   <property name="text">
-                   <string>Select</string>
+                   <string>Avoid Neg. Values</string>
                   </property>
                  </widget>
                 </item>
@@ -1934,6 +1968,9 @@
            <layout class="QHBoxLayout" name="horizontalLayout_41">
             <item>
              <widget class="QPushButton" name="writeScriptButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="text">
                <string>Write Script</string>
               </property>
@@ -4090,7 +4127,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1054</width>
+     <width>1242</width>
      <height>22</height>
     </rect>
    </property>
