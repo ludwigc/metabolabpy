@@ -161,6 +161,7 @@ class nmrDataSetTestCase(unittest.TestCase):
         nd.pp.exportPathName = os.path.expanduser("~")
         nd.pp.exportFileName = "testExport.csv"
         nd.pp.classSelect = ["1"]
+        nd.pp.exportMethod = 1
         nd.exportDataSet()
         self.assertEqual(os.path.isfile(nd.pp.exportPathName + os.sep + nd.pp.exportFileName), True)
         os.remove(nd.pp.exportPathName + os.sep + nd.pp.exportFileName)

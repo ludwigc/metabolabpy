@@ -62,7 +62,7 @@ class MplWidget(QWidget): # pragma: no cover
 # ------------------ MplWidget ------------------
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.__version__ = '0.6.0'
+        self.__version__ = '0.6.1'
         self.zoomWasOn = False
         self.panWasOn = False
         self.nd = nmrDataSet.NmrDataSet()
@@ -1698,7 +1698,7 @@ class main_w(object):  # pragma: no cover
         if (len(dataPath) > 0):
             if(str(dataSets[0]) == 'all'):
                 folders = []
-                for r, d, f in os.walk(dataPath):
+                for r, d, f in os.walk(dataPath[0]):
                     for folder in d:
                         if(os.path.isfile(os.path.join(r, folder, 'fid'))):
                             if(folder != '99999'):
@@ -1714,7 +1714,7 @@ class main_w(object):  # pragma: no cover
 
             if(str(dataSets[0]) == 'all1d'):
                 folders = []
-                for r, d, f in os.walk(dataPath):
+                for r, d, f in os.walk(dataPath[0]):
                     for folder in d:
                         if(os.path.isfile(os.path.join(r, folder, 'fid'))):
                             if(folder != '99999'):
@@ -1727,7 +1727,7 @@ class main_w(object):  # pragma: no cover
 
             if(str(dataSets[0]) == 'all2d'):
                 folders = []
-                for r, d, f in os.walk(dataPath):
+                for r, d, f in os.walk(dataPath[0]):
                     for folder in d:
                         if(os.path.isfile(os.path.join(r, folder, 'ser'))):
                             folders.append(folder.zfill(zFill))
@@ -1737,7 +1737,24 @@ class main_w(object):  # pragma: no cover
                 for k in range(len(folders)):
                     dataSets.append(int(folders[k]))
 
-            self.nd.readSpcs(dataPath, dataSets)
+            if len(dataPath) > 1:
+                dp = []
+                for d in dataPath:
+                    if os.path.isfile(os.path.join(d, dataSets[0], 'fid')) or os.path.isfile(os.path.join(d, dataSets[0], 'ser')):
+                        dp.append(d)
+
+                dataPath = dp
+
+            else:
+                ds = []
+                for d in dataSets:
+                    if os.path.isfile(os.path.join(dataPath[0], str(d), 'fid')) or os.path.isfile(os.path.join(dataPath[0], str(d), 'ser')):
+                        ds.append(d)
+
+                dataSets = ds
+
+            if len(dataPath) > 0 and len(dataSets) > 0:
+                self.nd.readSpcs(dataPath, dataSets)
 
         # end readSpcs
 

@@ -302,6 +302,11 @@ class NmrData:
         f = open(fName, 'w')
         f.write(self.acq.acqusText)
         f.close()
+        # pulseprogram file
+        fName = pathName + os.sep + expName + os.sep + 'pulseprogram'
+        f = open(fName, 'w')
+        f.write(self.pulseProgram)
+        f.close()
         # audita.txt file
         fName = pathName + os.sep + expName + os.sep + 'audita.txt'
         f = open(fName, 'w')
@@ -337,7 +342,7 @@ class NmrData:
         ftMod  = int(self.proc.regEx.ftMod.findall(self.proc.procsText)[0])
         ncProc = int(self.proc.regEx.ncProc.findall(self.proc.procsText)[0])
         procsText = self.proc.procsText.replace(origSI, str(len(self.spc[0])))
-        procsText = procsText.replace('FT_mod= ' + str(ftMod), 'FT_mod= 0')
+        procsText = procsText.replace('FT_mod= ' + str(ftMod), 'FT_mod= 6')
         procsText = procsText.replace('NC_proc= '+ str(ncProc), 'NC_proc= 0')
         fName = pathName + os.sep + expName + os.sep + 'pdata' + os.sep + '1' + os.sep + 'procs'
         f = open(fName, 'w')
@@ -352,6 +357,11 @@ class NmrData:
         fName = pathName + os.sep + expName + os.sep + 'pdata' + os.sep + '1' + os.sep + 'outd'
         f = open(fName, 'w')
         f.write(self.outd)
+        f.close()
+        # title file
+        fName = pathName + os.sep + expName + os.sep + 'pdata' + os.sep + '1' + os.sep + 'title'
+        f = open(fName, 'w')
+        f.write(self.title)
         f.close()
         # end exportBruker1d
 

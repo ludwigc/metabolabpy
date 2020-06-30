@@ -4,3 +4,4 @@ matplotlib
 pyside2
 openpyxl
 psutil
+argparse
