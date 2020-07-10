@@ -36,7 +36,7 @@ class AcqRegEx:
         self.td               = re.compile(r'##\$TD= (\d+)')
         self.decim            = re.compile(r'##\$DECIM= (\d+)')
         self.dspfvs           = re.compile(r'##\$DSPFVS= (\d+)')
-        self.grpdly           = re.compile(r'##\$GRPDLY= (\d+(\.\d+)?)')
+        self.grpdly           = re.compile(r'##\$GRPDLY= (-?\d+(\.\d+)?)')
         self.byteOrder        = re.compile(r'##\$BYTORDA= (\d+)')
         self.aqMode           = re.compile(r'##\$AQ_mod= (\d+)')
         self.digMod           = re.compile(r'##\$DIGMOD= (\d+)')

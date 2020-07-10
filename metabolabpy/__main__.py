@@ -62,7 +62,7 @@ class MplWidget(QWidget): # pragma: no cover
 # ------------------ MplWidget ------------------
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.__version__ = '0.6.1'
+        self.__version__ = '0.6.2'
         self.zoomWasOn = False
         self.panWasOn = False
         self.nd = nmrDataSet.NmrDataSet()
@@ -1107,7 +1107,7 @@ class main_w(object):  # pragma: no cover
         self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc = i
         # end get_iSpc_p6
 
-    def ginput(self, nClicks = 2):
+    def ginput(self, nClicks = 1):
         self.w.MplWidget.canvas.setFocus()
         self.showNMRSpectrum()
         xy = self.w.MplWidget.canvas.axes.figure.ginput(nClicks)
@@ -1117,7 +1117,7 @@ class main_w(object):  # pragma: no cover
             xVect[k] = xy[k][0]
             yVect[k] = xy[k][1]
 
-        print("x-values: {} / xDiff: {}".format(xVect, -np.diff(xVect)))
+        print("x-values: {} / xDiff [ppm]: {} / xDiff [Hz]: {}".format(xVect, np.abs(np.diff(xVect)), np.abs(np.diff(xVect))*self.nd.nmrdat[self.nd.s][self.nd.e].acq.sfo1))
         print("y-values: {} / yDiff: {}".format(yVect, -np.diff(yVect)))
         self.showConsole()
         # end ginput
@@ -2602,8 +2602,10 @@ class main_w(object):  # pragma: no cover
 
     def setPreProcessing(self):
         if (self.w.preprocessing.isChecked() == True):
+            if len(self.nd.nmrdat[self.nd.s]) != len(self.nd.pp.classSelect):
+                self.nd.preProcInit()
+
             self.showPreProcessing()
-            # self.nd.preProcInit()
             self.fillPreProcessingNumbers()
             self.nd.noiseFilteringInit()
         else:

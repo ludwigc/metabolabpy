@@ -144,6 +144,8 @@ class AcqPars:
         self.dspfvs           = int(self.regEx.dspfvs.findall(self.acqusText)[0])
         if self.acqusText.find("$GRPDLY=") > -1:
             self.groupDelay       = float(self.regEx.grpdly.findall(self.acqusText)[0][0])
+            if self.groupDelay < 0:
+                self.groupDelay = 0
 
         self.byteOrder        = int(self.regEx.byteOrder.findall(self.acqusText)[0])
         self.aqMode           = int(self.regEx.aqMode.findall(self.acqusText)[0])
