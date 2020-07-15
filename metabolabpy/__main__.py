@@ -1,38 +1,42 @@
 #!/usr/bin/env python
 
-import argparse                             # pragma: no cover
-from PySide2.QtUiTools import QUiLoader     # pragma: no cover
-from PySide2.QtCore import QFile            # pragma: no cover
-from PySide2.QtWidgets import *             # pragma: no cover
-from PySide2 import QtWidgets               # pragma: no cover
-from PySide2.QtGui import *                 # pragma: no cover
-from PySide2 import QtGui                   # pragma: no cover
-from PySide2 import QtCore                  # pragma: no cover
-from PySide2.QtCore import SIGNAL           # pragma: no cover
-import matplotlib                           # pragma: no cover
-matplotlib.use('Qt5Agg')                    # pragma: no cover
-from matplotlib.backends.backend_qt5agg import (FigureCanvas, NavigationToolbar2QT as NavigationToolbar)# pragma: no cover
-from matplotlib.figure import Figure        # pragma: no cover
-import matplotlib.pyplot as pl              # pragma: no cover
-import numpy as np                          # pragma: no cover
-import io                                   # pragma: no cover
-import sys                                  # pragma: no cover
-from metabolabpy.nmr import nmrDataSet      # pragma: no cover
-from metabolabpy.GUI import phCorr          # pragma: no cover
-import matplotlib                           # pragma: no cover
-import time                                 # pragma: no cover
-import platform                             # pragma: no cover
-import math                                 # pragma: no cover
-from metabolabpy.nmr import nmrConfig       # pragma: no cover
-import os                                   # pragma: no cover
-import traceback                            # pragma: no cover
-import shutil                               # pragma: no cover
-import scipy.io                             # pragma: no cover
+import argparse  # pragma: no cover
+from PySide2.QtUiTools import QUiLoader  # pragma: no cover
+from PySide2.QtCore import QFile  # pragma: no cover
+from PySide2.QtWidgets import *  # pragma: no cover
+from PySide2 import QtWidgets  # pragma: no cover
+from PySide2.QtGui import *  # pragma: no cover
+from PySide2 import QtGui  # pragma: no cover
+from PySide2 import QtCore  # pragma: no cover
+from PySide2.QtCore import SIGNAL  # pragma: no cover
+import matplotlib  # pragma: no cover
+
+matplotlib.use('Qt5Agg')  # pragma: no cover
+from matplotlib.backends.backend_qt5agg import (FigureCanvas,
+                                                NavigationToolbar2QT as NavigationToolbar)  # pragma: no cover
+from matplotlib.figure import Figure  # pragma: no cover
+import matplotlib.pyplot as pl  # pragma: no cover
+import numpy as np  # pragma: no cover
+import io  # pragma: no cover
+import sys  # pragma: no cover
+from metabolabpy.nmr import nmrDataSet  # pragma: no cover
+from metabolabpy.GUI import phCorr  # pragma: no cover
+import matplotlib  # pragma: no cover
+import time  # pragma: no cover
+import platform  # pragma: no cover
+import math  # pragma: no cover
+from metabolabpy.nmr import nmrConfig  # pragma: no cover
+import os  # pragma: no cover
+import traceback  # pragma: no cover
+import shutil  # pragma: no cover
+import scipy.io  # pragma: no cover
 import inspect
+
+
 # import pandas as pd                       # pragma: no cover
 
 # ------------------ MplWidget ------------------
-class MplWidget(QWidget): # pragma: no cover
+class MplWidget(QWidget):  # pragma: no cover
 
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
@@ -77,8 +81,9 @@ class main_w(object):  # pragma: no cover
         self.zoom = False
 
         self.hidePreProcessing()
+        self.w.preprocessing.setVisible(False)
         # connections
-        #self.w.rDolphinExport.clicked.connect(self.setrDolphinExport)
+        # self.w.rDolphinExport.clicked.connect(self.setrDolphinExport)
         self.w.exportPath.textChanged.connect(self.setExportPath)
         self.w.exportFileName.textChanged.connect(self.setExportFileName)
         self.w.exportDelimiterTab.toggled.connect(self.setExportDelimiterTab)
@@ -125,6 +130,9 @@ class main_w(object):  # pragma: no cover
         self.w.bucketPpmLE.returnPressed.connect(self.setBucketPPMPreProc)
         self.w.bucketDataPointsLE.returnPressed.connect(self.setBucketPointsPreProc)
         self.w.actionVertical_AutoScale.triggered.connect(self.verticalAutoScale)
+        self.w.actionZoom.triggered.connect(self.setZoom)
+        self.w.actionPan.triggered.connect(self.setPan)
+        self.w.actionPlot_spc.triggered.connect(self.plotSpc)
         self.w.actionSave.triggered.connect(self.saveButton)
         self.w.actionLoad.triggered.connect(self.loadButton)
         self.w.actionActivate_Command_Line.triggered.connect(self.activateCommandLine)
@@ -260,7 +268,9 @@ class main_w(object):  # pragma: no cover
         self.w.iSpc_p5.returnPressed.connect(self.get_iSpc_p5)
         self.w.iSpc_p6.returnPressed.connect(self.get_iSpc_p6)
         self.setFontSize()
+        self.w.MplWidget.toolbar.setVisible(False)
         self.w.MplWidget.setFocus()
+        self.setZoom()
         # end __init__
 
     def activateCommandLine(self):
@@ -335,7 +345,7 @@ class main_w(object):  # pragma: no cover
         self.plotSpc()
         # end autophase1dAll
 
-    def autoref(self, tmsp = True):
+    def autoref(self, tmsp=True):
         self.nd.autoref(tmsp)
         self.w.nmrSpectrum.setCurrentIndex(0)
         self.changeDataSetExp()
@@ -372,8 +382,8 @@ class main_w(object):  # pragma: no cover
 
                 self.nd.e = self.w.expBox.value() - 1
                 keepZoom = self.w.keepZoom.isChecked()
-                if (not ((oldSet == self.nd.s) and (oldExp == self.nd.e))):
-                    if(self.nd.nmrdat[oldSet][oldExp].dim != self.nd.nmrdat[self.nd.s][self.nd.e].dim):
+                if not ((oldSet == self.nd.s) and (oldExp == self.nd.e)):
+                    if (self.nd.nmrdat[oldSet][oldExp].dim != self.nd.nmrdat[self.nd.s][self.nd.e].dim):
                         self.keepXZoom = True
                         self.keepZoom = False
                         self.w.keepZoom.setChecked(False)
@@ -395,16 +405,16 @@ class main_w(object):  # pragma: no cover
 
                     self.keepZoom = keepZoom
                     self.w.keepZoom.setChecked(keepZoom)
-                else:
-                    if (self.phCorrActive == False):
-                        if (self.w.autoPlot.isChecked()):
-                            self.plotSpc()
-                        elif (self.w.nmrSpectrum.currentIndex() == 0):
-                            self.plotSpc()
-
-                    else:
-                        self.phCorr.spc = self.nd.nmrdat[self.nd.s][self.nd.e].spc
-                        self.phCorrPlotSpc()
+                #else:
+                #    if (self.phCorrActive == False):
+                #        if (self.w.autoPlot.isChecked()):
+                #            self.plotSpc()
+                #        elif (self.w.nmrSpectrum.currentIndex() == 0):
+                #            self.plotSpc()
+                #
+                #    else:
+                #        self.phCorr.spc = self.nd.nmrdat[self.nd.s][self.nd.e].spc
+                #        self.phCorrPlotSpc()
 
                 self.keepZoom = False
 
@@ -451,7 +461,6 @@ class main_w(object):  # pragma: no cover
                     for l in range(len(self.nd.nmrdat[k])):
                         self.nd.nmrdat[k][l].disp.phRefDS = self.w.phRefDS.value()
                         self.nd.nmrdat[k][l].disp.phRefExp = self.w.phRefExp.value()
-
 
         # end changeDataSetExpPhRef
 
@@ -615,10 +624,12 @@ class main_w(object):  # pragma: no cover
         # end execCmd
 
     def execScript(self):
+        zoomChecked = self.w.keepZoom.isChecked()
+        self.w.keepZoom.setChecked(False)
         codeOut = io.StringIO()
         codeErr = io.StringIO()
         code = self.w.script.toPlainText()
-        code = code.replace('\\', '\\'*2)
+        code = code.replace('\\', '\\' * 2)
         try:
             exec(code)
         except:  # (SyntaxError, NameError, TypeError, ZeroDivisionError, AttributeError):
@@ -642,9 +653,17 @@ class main_w(object):  # pragma: no cover
         self.w.console.setTextColor('Black')
         codeOut.close()
         codeErr.close()
-        if(len(self.nd.nmrdat[0])>0):
+        if (len(self.nd.nmrdat[0]) > 0):
             self.updateGUI()
 
+        self.w.setBox.valueChanged.disconnect()
+        self.w.expBox.valueChanged.disconnect()
+        self.w.expBox.setValue(self.nd.e+1)
+        self.w.setBox.setValue(self.nd.s+1)
+        self.w.setBox.valueChanged.connect(lambda: self.changeDataSetExp())
+        self.w.expBox.valueChanged.connect(lambda: self.changeDataSetExp())
+        if (zoomChecked == True):
+            self.w.keepZoom.setChecked(True)
         # end execScript
 
     def fillPreProcessingNumbers(self):
@@ -1017,7 +1036,7 @@ class main_w(object):  # pragma: no cover
         xd = line.get_xdata()
         yd = line.get_ydata()
         lo, hi = self.w.MplWidget.canvas.axes.get_xlim()
-        y_displayed = yd[((xd > min(lo,hi)) & (xd < max(lo,hi)))]
+        y_displayed = yd[((xd > min(lo, hi)) & (xd < max(lo, hi)))]
         h = np.max(y_displayed) - np.min(y_displayed)
         bot = np.min(y_displayed) - margin * h
         top = np.max(y_displayed) + margin * h
@@ -1107,7 +1126,7 @@ class main_w(object):  # pragma: no cover
         self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc = i
         # end get_iSpc_p6
 
-    def ginput(self, nClicks = 1):
+    def ginput(self, nClicks=1):
         self.w.MplWidget.canvas.setFocus()
         self.showNMRSpectrum()
         xy = self.w.MplWidget.canvas.axes.figure.ginput(nClicks)
@@ -1117,7 +1136,9 @@ class main_w(object):  # pragma: no cover
             xVect[k] = xy[k][0]
             yVect[k] = xy[k][1]
 
-        print("x-values: {} / xDiff [ppm]: {} / xDiff [Hz]: {}".format(xVect, np.abs(np.diff(xVect)), np.abs(np.diff(xVect))*self.nd.nmrdat[self.nd.s][self.nd.e].acq.sfo1))
+        print("x-values: {} / xDiff [ppm]: {} / xDiff [Hz]: {}".format(xVect, np.abs(np.diff(xVect)),
+                                                                       np.abs(np.diff(xVect)) *
+                                                                       self.nd.nmrdat[self.nd.s][self.nd.e].acq.sfo1))
         print("y-values: {} / yDiff: {}".format(yVect, -np.diff(yVect)))
         self.showConsole()
         # end ginput
@@ -1163,7 +1184,7 @@ class main_w(object):  # pragma: no cover
     def loadExampleScript(self):
         idx = self.w.exampleScripts.view().selectedIndexes()[0].row()
         self.w.exampleScripts.setCurrentIndex(idx)
-        if(idx == 0):
+        if (idx == 0):
             fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "example1DScript.py")
 
         if (idx == 1):
@@ -1178,7 +1199,7 @@ class main_w(object):  # pragma: no cover
         if (idx == 4):
             fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "example2DNMRPipeScript.py")
 
-        f = open(fName,'r')
+        f = open(fName, 'r')
         scriptText = f.read()
         self.w.script.setText(scriptText)
         # end loadExampleScript
@@ -1187,7 +1208,6 @@ class main_w(object):  # pragma: no cover
         self.nd.load(fileName)
         self.w.script.insertHtml(self.nd.script)
         self.w.console.insertHtml(self.nd.console)
-        self.plotSpc()
         self.resetPlot()
         self.updateGUI()
         self.w.console.verticalScrollBar().setValue(self.w.console.verticalScrollBar().maximum())
@@ -1230,7 +1250,7 @@ class main_w(object):  # pragma: no cover
                     self.phCorr.start = event.ydata
 
                 if (mods == QtCore.Qt.AltModifier):
-                    f.canvas.manager.toolbar.zoom()
+                    self.w.MplWidget.canvas.manager.toolbar.zoom()
 
             else:
                 if (event.button == 2):
@@ -1511,7 +1531,7 @@ class main_w(object):  # pragma: no cover
                 self.w.MplWidget.canvas.axes.set_xlim(xlim)
                 self.w.MplWidget.canvas.axes.set_ylim(ylim)
 
-            #self.w.MplWidget.canvas.toolbar.update()
+            # self.w.MplWidget.canvas.toolbar.update()
             self.w.MplWidget.canvas.draw()
             if (self.keepXZoom == True):
                 self.w.MplWidget.canvas.axes.set_xlim(xlim)
@@ -1527,11 +1547,11 @@ class main_w(object):  # pragma: no cover
             self.w.MplWidget.canvas.axes.contour(self.nd.nmrdat[self.nd.s][self.nd.e].ppm1,
                                                  self.nd.nmrdat[self.nd.s][self.nd.e].ppm2,
                                                  self.nd.nmrdat[self.nd.s][self.nd.e].spc.real, posLev, colors=posCol,
-                                                 linestyles='solid')
+                                                 linestyles='solid', antialiased=True)
             self.w.MplWidget.canvas.axes.contour(self.nd.nmrdat[self.nd.s][self.nd.e].ppm1,
                                                  self.nd.nmrdat[self.nd.s][self.nd.e].ppm2,
                                                  self.nd.nmrdat[self.nd.s][self.nd.e].spc.real, negLev, colors=negCol,
-                                                 linestyles='solid')
+                                                 linestyles='solid', antialiased=True)
             self.w.MplWidget.canvas.axes.set_xlabel(xlabel)
             self.w.MplWidget.canvas.axes.set_ylabel(ylabel)
             self.w.MplWidget.canvas.axes.autoscale()
@@ -1545,9 +1565,9 @@ class main_w(object):  # pragma: no cover
                     self.w.MplWidget.canvas.axes.set_xlim(xlim)
                     self.keepXZoom = False
 
-
-            #self.w.MplWidget.canvas.toolbar.update()
+            # self.w.MplWidget.canvas.toolbar.update()
             self.w.MplWidget.canvas.draw()
+
 
         self.keepZoom = False
         # end plotSpc
@@ -1566,7 +1586,7 @@ class main_w(object):  # pragma: no cover
         if (len(self.nd.pp.classSelect) == 0):
             self.nd.preProcInit()
 
-        #self.w.rDolphinExport.setChecked(self.nd.pp.rDolphinExport)
+        # self.w.rDolphinExport.setChecked(self.nd.pp.rDolphinExport)
         self.fillPreProcessingNumbers()
         sel = self.w.selectClassTW.selectedIndexes()
         cls = np.array([])
@@ -1625,7 +1645,7 @@ class main_w(object):  # pragma: no cover
             self.w.MplWidget.canvas.axes.set_xlim(xlim)
             self.w.MplWidget.canvas.axes.set_ylim(ylim)
 
-        #self.w.MplWidget.canvas.toolbar.update()
+        # self.w.MplWidget.canvas.toolbar.update()
         self.w.MplWidget.canvas.draw()
 
     def previousCommand(self):
@@ -1669,17 +1689,17 @@ class main_w(object):  # pragma: no cover
 
         # end readNMRSpc
 
-    def readNMRPipeSpcs(self, dataPath, dataSets, procDataName = 'test.dat'):
+    def readNMRPipeSpcs(self, dataPath, dataSets, procDataName='test.dat'):
         zFill = 25
-        if(dataPath[0] == 'interactive'):
+        if (dataPath[0] == 'interactive'):
             dataPath = [QFileDialog.getExistingDirectory()]
 
         if (len(dataPath) > 0):
-            if(str(dataSets) == 'all'):
+            if (str(dataSets) == 'all'):
                 folders = []
                 for r, d, f in os.walk(dataPath):
                     for folder in d:
-                        if(os.path.isfile(os.path.join(r, folder, procDataName))):
+                        if (os.path.isfile(os.path.join(r, folder, procDataName))):
                             folders.append(folder.zfill(zFill).rstrip('.proc'))
 
                 folders.sort()
@@ -1692,19 +1712,19 @@ class main_w(object):  # pragma: no cover
 
     def readSpcs(self, dataPath, dataSets):
         zFill = 25
-        if(dataPath[0] == 'interactive'):
+        if (dataPath[0] == 'interactive'):
             dataPath = [QFileDialog.getExistingDirectory()]
 
         if (len(dataPath) > 0):
-            if(str(dataSets[0]) == 'all'):
+            if (str(dataSets[0]) == 'all'):
                 folders = []
                 for r, d, f in os.walk(dataPath[0]):
                     for folder in d:
-                        if(os.path.isfile(os.path.join(r, folder, 'fid'))):
-                            if(folder != '99999'):
+                        if (os.path.isfile(os.path.join(r, folder, 'fid'))):
+                            if (folder != '99999'):
                                 folders.append(folder.zfill(zFill))
 
-                        if(os.path.isfile(os.path.join(r, folder, 'ser'))):
+                        if (os.path.isfile(os.path.join(r, folder, 'ser'))):
                             folders.append(folder.zfill(zFill))
 
                 folders.sort()
@@ -1712,12 +1732,12 @@ class main_w(object):  # pragma: no cover
                 for k in range(len(folders)):
                     dataSets.append(int(folders[k]))
 
-            if(str(dataSets[0]) == 'all1d'):
+            if (str(dataSets[0]) == 'all1d'):
                 folders = []
                 for r, d, f in os.walk(dataPath[0]):
                     for folder in d:
-                        if(os.path.isfile(os.path.join(r, folder, 'fid'))):
-                            if(folder != '99999'):
+                        if (os.path.isfile(os.path.join(r, folder, 'fid'))):
+                            if (folder != '99999'):
                                 folders.append(folder.zfill(zFill))
 
                 folders.sort()
@@ -1725,11 +1745,11 @@ class main_w(object):  # pragma: no cover
                 for k in range(len(folders)):
                     dataSets.append(int(folders[k]))
 
-            if(str(dataSets[0]) == 'all2d'):
+            if (str(dataSets[0]) == 'all2d'):
                 folders = []
                 for r, d, f in os.walk(dataPath[0]):
                     for folder in d:
-                        if(os.path.isfile(os.path.join(r, folder, 'ser'))):
+                        if (os.path.isfile(os.path.join(r, folder, 'ser'))):
                             folders.append(folder.zfill(zFill))
 
                 folders.sort()
@@ -1740,7 +1760,8 @@ class main_w(object):  # pragma: no cover
             if len(dataPath) > 1:
                 dp = []
                 for d in dataPath:
-                    if os.path.isfile(os.path.join(d, dataSets[0], 'fid')) or os.path.isfile(os.path.join(d, dataSets[0], 'ser')):
+                    if os.path.isfile(os.path.join(d, dataSets[0], 'fid')) or os.path.isfile(
+                            os.path.join(d, dataSets[0], 'ser')):
                         dp.append(d)
 
                 dataPath = dp
@@ -1748,7 +1769,8 @@ class main_w(object):  # pragma: no cover
             else:
                 ds = []
                 for d in dataSets:
-                    if os.path.isfile(os.path.join(dataPath[0], str(d), 'fid')) or os.path.isfile(os.path.join(dataPath[0], str(d), 'ser')):
+                    if os.path.isfile(os.path.join(dataPath[0], str(d), 'fid')) or os.path.isfile(
+                            os.path.join(dataPath[0], str(d), 'ser')):
                         ds.append(d)
 
                 dataSets = ds
@@ -1758,8 +1780,7 @@ class main_w(object):  # pragma: no cover
 
         # end readSpcs
 
-
-    def reference1d(self, refShift = 0.0):
+    def reference1d(self, refShift=0.0):
         self.w.MplWidget.canvas.setFocus()
         self.showNMRSpectrum()
         xy = self.w.MplWidget.canvas.axes.figure.ginput(1)
@@ -1814,7 +1835,8 @@ class main_w(object):  # pragma: no cover
         # end saveConfig
 
     def saveMat(self):
-        scipy.io.savemat('/Users/ludwigc/metabolabpy.mat', {'spc': self.nd.nmrdat[0][0].spc, 'fid': self.nd.nmrdat[0][0].fid})
+        scipy.io.savemat('/Users/ludwigc/metabolabpy.mat',
+                         {'spc': self.nd.nmrdat[0][0].spc, 'fid': self.nd.nmrdat[0][0].fid})
         # end saveMat
 
     def saveScript(self, fName=""):
@@ -2466,7 +2488,7 @@ class main_w(object):  # pragma: no cover
 
     def setExportTable(self):
         pName = QFileDialog.getExistingDirectory()
-        #pName = pName[0]
+        # pName = pName[0]
         if (len(pName) > 0):
             if self.nd.pp.exportMethod == 0:
                 self.w.exportPath.setText(pName)
@@ -2491,7 +2513,6 @@ class main_w(object):  # pragma: no cover
             if self.nd.pp.exportMethod == 5:
                 self.w.exportPath.setText(pName)
                 self.nd.pp.exportBrukerPath = pName
-
 
         # end setExportTable
 
@@ -2624,7 +2645,6 @@ class main_w(object):  # pragma: no cover
             if self.w.exportMethod.count() == 6:
                 self.w.exportMethod.removeItem(5)
 
-
         self.plotSpcPreProc()
         # end setPreProcessingOption
 
@@ -2681,7 +2701,7 @@ class main_w(object):  # pragma: no cover
         self.w.pulseProgram.setText(self.nd.nmrdat[self.nd.s][self.nd.e].pulseProgram)
         # end setPulseProgram
 
-    #def setrDolphinExport(self):
+    # def setrDolphinExport(self):
     #    self.nd.pp.rDolphinExport = self.w.rDolphinExport.isChecked()
     #
     def setSamplesInComboBox(self):
@@ -2780,7 +2800,7 @@ class main_w(object):  # pragma: no cover
 
     def setSymJ(self):
         curIdx = self.w.symJ.currentIndex()
-        if(curIdx == 0):
+        if (curIdx == 0):
             self.nd.nmrdat[self.nd.s][self.nd.e].proc.symj = True
             self.nd.nmrdat[self.nd.s][self.nd.e].proc.tilt = True
             self.w.tilt.setCurrentIndex(0)
@@ -2791,7 +2811,7 @@ class main_w(object):  # pragma: no cover
 
     def setTilt(self):
         curIdx = self.w.tilt.currentIndex()
-        if(curIdx == 0):
+        if (curIdx == 0):
             self.nd.nmrdat[self.nd.s][self.nd.e].proc.tilt = True
         else:
             self.nd.nmrdat[self.nd.s][self.nd.e].proc.tilt = False
@@ -2846,6 +2866,45 @@ class main_w(object):  # pragma: no cover
         self.nd.pp.varY0 = float(self.w.y0LE.text())
         # end setVarLambda
 
+    def setPan(self, event):
+        try:
+            self.w.MplWidget.canvas.figure.canvas.toolbar.pan()
+        except:
+            pass
+
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.setZoomRelease)
+        cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
+
+    def setZoom(self):
+        if (self.w.MplWidget.canvas.figure.canvas.toolbar._active != 'ZOOM'):
+            try:
+                self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
+            except:
+                pass
+
+            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.setZoomRelease)
+
+        else:
+            try:
+                self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
+            except:
+                pass
+
+            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.setZoomRelease)
+            cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
+
+    def setZoomOff(self):
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.setZoomRelease)
+        cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
+
+    def setZoomRelease(self, event):
+        if (event.button > 1):
+            # Right MB click will unzoom the plot
+            try:
+                self.w.MplWidget.canvas.figure.canvas.toolbar.home()
+            except:
+                pass
+
     def show(self):
         self.w.show()
         # end show
@@ -2855,7 +2914,7 @@ class main_w(object):  # pragma: no cover
         # end showAcquisitionParameters
 
     def showAutoBaseline(self):
-        self.w.statusBar().showMessage("Automatic basline correction in progress...")
+        self.w.statusBar().showMessage("Automatic baseline correction in progress...")
         # end showAutoBaseline
 
     def showAutoPhase(self):
@@ -2880,8 +2939,8 @@ class main_w(object):  # pragma: no cover
 
     def showNMRSpectrum(self):
         self.w.nmrSpectrum.setCurrentIndex(0)
-        if (self.w.preprocessing.isChecked() == False):
-            self.plotSpc()
+        #if (self.w.preprocessing.isChecked() == False):
+        #    self.plotSpc()
         # end showNMRSpectrum
 
     def showPhCorr(self):
@@ -2928,6 +2987,8 @@ class main_w(object):  # pragma: no cover
             except:
                 pass
 
+            self.setZoomOff()
+
         if (self.w.MplWidget.canvas.figure.canvas.toolbar._active == 'PAN'):
             try:
                 self.w.panWasOn = True
@@ -2935,7 +2996,7 @@ class main_w(object):  # pragma: no cover
             except:
                 pass
 
-        if(self.nd.nmrdat[s][e].dim == 1):
+        if (self.nd.nmrdat[s][e].dim == 1):
             if (self.phCorrActive == False):
                 self.phCorr.spc = self.nd.nmrdat[s][e].spc
                 self.phCorr.spcMax = max(max(abs(self.phCorr.spc)))
@@ -2944,7 +3005,7 @@ class main_w(object):  # pragma: no cover
                 cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease)
                 self.phCorrActive = True
                 self.showPhCorr()
-                self.w.MplWidget.canvas.figure.canvas.toolbar.setEnabled(False)
+                # self.w.MplWidget.canvas.figure.canvas.toolbar.setEnabled(False)
                 self.phCorrPlotSpc()
             else:
                 cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick)
@@ -2952,34 +3013,40 @@ class main_w(object):  # pragma: no cover
                 cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
                 cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
                 self.phCorrActive = False
-                self.w.MplWidget.canvas.figure.canvas.toolbar.setEnabled(True)
+                # self.w.MplWidget.canvas.figure.canvas.toolbar.setEnabled(True)
                 self.showVersion()
                 self.plotSpc()
                 zOn = self.zoomWasOn
                 pOn = self.panWasOn
                 self.zoomWasOn = False
                 self.panWasOn = False
-                if(zOn ==  True):
+                if (zOn == True):
                     self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
+                    self.setZoom()
 
-                if(pOn ==  True):
+                if (pOn == True):
                     self.w.MplWidget.canvas.figure.canvas.toolbar.pan()
+                    self.setPan()
 
         # end startStopPhCorr
 
     def tabIndexChanged(self):
-        if (self.w.nmrSpectrum.currentIndex() == 0):
-            if (self.w.preprocessing.isChecked() == False):
-                self.plotSpc()
-
+        #if (self.w.nmrSpectrum.currentIndex() == 0):
+        #    if (self.w.preprocessing.isChecked() == False):
+        #        self.plotSpc()
+        a = 3
         # end tabIndexChanged
 
     def updateGUI(self):
         s = self.nd.s
         e = self.nd.e
+        self.w.setBox.valueChanged.disconnect()
+        self.w.expBox.valueChanged.disconnect()
         self.w.expBox.setValue(e + 1)
         self.w.setBox.setValue(s + 1)
-        #self.plotSpc()
+        self.w.setBox.valueChanged.connect(lambda: self.changeDataSetExp())
+        self.w.expBox.valueChanged.connect(lambda: self.changeDataSetExp())
+        # self.plotSpc()
         self.setDispPars()
         self.setProcPars()
         self.setAcqPars()
@@ -2987,15 +3054,15 @@ class main_w(object):  # pragma: no cover
         self.setPulseProgram()
         self.w.expBox.setValue(e + 1)
         if (self.nd.nmrdat[s][e].dim == 1):
-            self.w.preprocessing.setEnabled(True)
+            self.w.preprocessing.setVisible(True)
         else:
-            self.w.preprocessing.setEnabled(False)
+            self.w.preprocessing.setVisible(False)
 
         return "updated GUI"
         # end updateGUI
 
     def verticalAutoScale(self):
-        if(self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1):
+        if (self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1):
             lines = self.w.MplWidget.canvas.axes.get_lines()
             bottom, top = np.inf, -np.inf
             for line in lines:
@@ -3003,8 +3070,10 @@ class main_w(object):  # pragma: no cover
                 if (newBottom < bottom): bottom = newBottom
                 if (newTop > top): top = newTop
 
-            self.w.MplWidget.canvas.axes.set_ylim(bottom, top)
-            #self.w.MplWidget.canvas.toolbar.update()
+            if bottom != np.inf and top != -np.inf:
+                self.w.MplWidget.canvas.axes.set_ylim(bottom, top)
+
+            # self.w.MplWidget.canvas.toolbar.update()
             self.w.MplWidget.canvas.draw()
 
         # end verticalAutoScale
@@ -3116,7 +3185,7 @@ def main():  # pragma: no cover
                     action="store_true")
     ap.add_argument("fileName", metavar="fileName", type=str, help="load MetaboLabPy DataSet File")
     dd = ap.parse_known_args()
-    #dd = ap.parse_known_intermixed_args()
+    # dd = ap.parse_known_intermixed_args()
     if (len(dd[1]) > 0):
         sys.argv.pop()
 
@@ -3179,5 +3248,5 @@ def main():  # pragma: no cover
     sys.exit(app.exec_())
 
 
-if __name__ == "__main__": # pragma: no cover
+if __name__ == "__main__":  # pragma: no cover
     main()

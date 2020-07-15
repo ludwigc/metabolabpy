@@ -151,7 +151,7 @@ class NmrDataSet:
                         self.nmrdat[self.s][0].ppm1 < self.pp.compressEnd[k]))
             self.deselect[idx] = np.ones(len(idx))
             self.deselect[int(np.round(np.mean(idx)))] = 0
-            print(idx)
+            #print(idx)
             for l in range(len(self.nmrdat[self.s])):
                 val = np.sum(self.nmrdat[self.s][l].spc[0][idx])
                 self.nmrdat[self.s][l].spc[0][idx] = np.zeros(len(idx))
@@ -497,7 +497,7 @@ class NmrDataSet:
             for k in range(len(self.nmrdat[self.s])):
                 mmax = max(np.max(self.nmrdat[0][0].spc[0].real), mmax)
 
-            scaleFactor = int(2 * mmax / 2147483647)
+            scaleFactor = 2 * mmax / 2147483647
             for k in range(len(self.nmrdat[self.s])):
                 self.nmrdat[self.s][k].exportBruker1d(self.pp.exportBrukerPath + os.sep + self.pp.exportBruker, str(k+1), scaleFactor)
 
@@ -820,8 +820,15 @@ class NmrDataSet:
         # end readSpc
 
     def readNMRPipeSpcs(self, dataPath, dataExp, procDataName = 'test.dat'):
-        for k in range(len(dataExp)):
-            self.readNMRPipeSpc(dataPath, str(dataExp[k]), procDataName)
+        if len(dataExp) > 1:
+            for k in range(len(dataExp)):
+                self.readNMRPipeSpc(dataPath[0], str(dataExp[k]), procDataName)
+
+
+        else:
+            for k in range(len(dataPath)):
+                self.readNMRPipeSpc(dataPath[k], str(dataExp[0]), procDataName)
+
 
     # end readSpcs
 

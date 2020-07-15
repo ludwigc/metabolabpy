@@ -47,7 +47,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>10</width>
+          <width>13</width>
           <height>20</height>
          </size>
         </property>
@@ -56,7 +56,7 @@
       <item>
        <widget class="QCheckBox" name="preprocessing">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string>Data Pre-Processing</string>
@@ -162,20 +162,6 @@
          <string>Quit</string>
         </property>
        </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="2" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout_43">
-      <item>
-       <widget class="QLabel" name="label_57">
-        <property name="text">
-         <string>&gt;&gt;&gt;</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="cmdLine"/>
       </item>
      </layout>
     </item>
@@ -4120,6 +4106,20 @@
       </widget>
      </widget>
     </item>
+    <item row="2" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_43">
+      <item>
+       <widget class="QLabel" name="label_57">
+        <property name="text">
+         <string>&gt;&gt;&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="cmdLine"/>
+      </item>
+     </layout>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -4159,6 +4159,8 @@
     <addaction name="actionScale_2D_Spectrum_Down"/>
     <addaction name="actionScale_all_2D_Spectra_Up"/>
     <addaction name="actionScale_all_2D_Spectra_Down"/>
+    <addaction name="actionZoom"/>
+    <addaction name="actionPan"/>
    </widget>
    <widget class="QMenu" name="menuData">
     <property name="title">
@@ -4290,13 +4292,16 @@
    <property name="text">
     <string>Plot fid</string>
    </property>
+   <property name="shortcut">
+    <string>Meta+Alt+F</string>
+   </property>
   </action>
   <action name="actionPlot_spc">
    <property name="text">
     <string>Plot spc</string>
    </property>
    <property name="shortcut">
-    <string>Alt+S</string>
+    <string>Meta+Alt+S</string>
    </property>
   </action>
   <action name="actionNone">
@@ -4631,6 +4636,22 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+Num+-</string>
+   </property>
+  </action>
+  <action name="actionZoom">
+   <property name="text">
+    <string>Zoom</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+Alt+Z</string>
+   </property>
+  </action>
+  <action name="actionPan">
+   <property name="text">
+    <string>Pan</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+Alt+P</string>
    </property>
   </action>
  </widget>
