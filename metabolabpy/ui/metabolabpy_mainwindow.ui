@@ -7,8 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>1242</width>
-    <height>782</height>
+    <height>804</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>14</pointsize>
+   </font>
   </property>
   <property name="windowTitle">
    <string>MetaboLabPy GUI</string>
@@ -4186,6 +4191,15 @@
      <addaction name="actionZoomCorrect_Phase"/>
      <addaction name="actionAutomatic_Phase_Correction"/>
      <addaction name="actionAutomatic_Baseline_Correction"/>
+     <addaction name="separator"/>
+     <addaction name="actionPickColRow"/>
+     <addaction name="actionEmptyColRow"/>
+     <addaction name="actionRemoveLast"/>
+     <addaction name="actionHorzPhCorr2d"/>
+     <addaction name="actionVertPhCorr2d"/>
+     <addaction name="actionCancelPhCorr2d"/>
+     <addaction name="actionApplyPhCorr"/>
+     <addaction name="actionCancelPhCorr"/>
     </widget>
     <addaction name="menuApply_Window_Function"/>
     <addaction name="separator"/>
@@ -4652,6 +4666,70 @@
    </property>
    <property name="shortcut">
     <string>Meta+Alt+P</string>
+   </property>
+  </action>
+  <action name="actionPickColRow">
+   <property name="text">
+    <string>PickColRow</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+K</string>
+   </property>
+  </action>
+  <action name="actionEmptyColRow">
+   <property name="text">
+    <string>EmptyColRow</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+E</string>
+   </property>
+  </action>
+  <action name="actionHorzPhCorr2d">
+   <property name="text">
+    <string>HorzPhCorr2d</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+1</string>
+   </property>
+  </action>
+  <action name="actionVertPhCorr2d">
+   <property name="text">
+    <string>VertPhCorr2d</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+2</string>
+   </property>
+  </action>
+  <action name="actionCancelPhCorr2d">
+   <property name="text">
+    <string>CancelPhCorr2d</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+X</string>
+   </property>
+  </action>
+  <action name="actionRemoveLast">
+   <property name="text">
+    <string>RemoveLast</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+R</string>
+   </property>
+  </action>
+  <action name="actionApplyPhCorr">
+   <property name="text">
+    <string>ApplyPhCorr</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+Shift+P</string>
+   </property>
+  </action>
+  <action name="actionCancelPhCorr">
+   <property name="text">
+    <string>CancelPhCorr</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+Shift+X</string>
    </property>
   </action>
  </widget>

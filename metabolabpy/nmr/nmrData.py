@@ -468,10 +468,8 @@ class NmrData:
         # end phase2
 
     def phase2a(self, ph0, ph1, dim=0):
-        mat = np.copy(self.spc)
-        if (mat.imag.sum() == 0):
-            mat = self.hilbert(mat, dim)
-
+        mat = np.copy(self.spc.real)
+        mat = self.hilbert(mat, dim)
         if (dim == 1):
             mat = np.ndarray.transpose(mat)
 
@@ -486,7 +484,7 @@ class NmrData:
         if (dim == 1):
             mat = np.ndarray.transpose(mat)
 
-        self.spc = np.copy(mat)
+        self.spc = np.copy(mat.real)
         # end phase2a
 
     def phase2d(self, ph0, ph1, dim):

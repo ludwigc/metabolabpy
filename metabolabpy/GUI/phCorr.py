@@ -18,9 +18,21 @@ class PhCorr: # pragma: no cover
         self.horOffset      = 0.0
         self.spcMax         = 0.0
         self.scale          = 1.0
-        self.spc            = np.array([[]], dtype = 'complex')
+        self.spc            = np.array([[]], dtype='complex')
+        self.spc2           = np.array([[]], dtype='complex')
         self.xData          = 0.0
         self.yData          = 0.0
+        self.spcRow         = []
+        self.spcCol         = []
+        self.spcRowPts      = []
+        self.spcColPts      = []
+        self.pivot2d        = np.array([0.0, 0.0])
+        self.pivotPoints2d  = np.array([-1, -1])
+        self.ph0_2d         = np.array([0.0, 0.0])
+        self.ph1_2d         = np.array([0.0, 0.0])
+        self.ppm            = np.array([], dtype='float')
+        self.dim            = 0
+        self.nDims          = 1
         # end __init__
 
     def __str__(self):
