@@ -173,6 +173,9 @@ class NmrData:
                 refP = np.where(spc == np.amax(spc))
                 self.refPoint[0] -= refP[0][0] - int((max(pts) - min(pts)) / 2) + 1
 
+            self.proc.refPoint[0] = self.refPoint[0]
+            self.proc.refPoint[1] = self.refPoint[1]
+
         if (self.dim == 1):
             if (tmsp == True):
                 self.refPoint[0] = self.ppm2points(0.0, 0)
@@ -611,23 +614,28 @@ class NmrData:
 
     def procSpc2D(self, testQuad2d=False, noAbs=False):
         fid = np.copy(self.fid)
+        if self.proc.multFactor[0] == 0:
+            self.proc.multFactor[0] = self.proc.nPoints[0] / len(self.fid[0])
+
+        if self.proc.multFactor[1] == 0:
+            self.proc.multFactor[1] = self.proc.nPoints[1] / len(self.fid)
+
         npts2 = len(self.spc)
         npts1 = len(self.spc[0])
-        if self.proc.refPoint[0] == 0:
-            self.proc.refPoint[0] = self.refPoint[0]
-
         if npts1 > 0:
             if self.proc.stripStart < 1:
                 stsr = 1
             else:
                 stsr = self.proc.stripStart
 
-            self.refPoint[0] = int((self.proc.refPoint[0])*self.proc.nPoints[0]/len(self.fid[0]))  #- stsr + 1
+            if self.proc.nPoints[0] != npts1:
+                self.refPoint[0] = int((self.proc.refPoint[0])*self.proc.nPoints[0] / (self.proc.multFactor[0] * len(self.fid[0])))  #- stsr + 1
 
         if npts2 > 1:
-            self.refPoint[1] = int(self.refPoint[1]*self.proc.nPoints[1]/npts2)
+            if self.proc.nPoints[1] != npts2:
+                self.refPoint[1] = int(self.proc.refPoint[1] * self.proc.nPoints[1] / (self.proc.multFactor[1] * len(self.fid)))
 
-        self.spc = np.resize(self.spc, (self.proc.nPoints[0], self.proc.nPoints[1]))
+        self.spc = np.copy(np.resize(self.spc, (self.proc.nPoints[0], self.proc.nPoints[1])))
         self.spc *= 0
         if (self.proc.nPoints[0] > len(fid[0])):
             fid = np.resize(fid, (self.proc.nPoints[1], self.proc.nPoints[0]))
@@ -690,6 +698,7 @@ class NmrData:
             self.ppm1 = self.ppm1[stsr-1:stsi]
             self.spc = np.ndarray.transpose(self.spc)
 
+        self.spc = np.copy(self.spc.real)
         # end procSpc2D
 
     def quad2D(self, fid):
@@ -735,6 +744,10 @@ class NmrData:
         self.proc.sw_h[1] = npd.fdf1sw
         self.refShift[1] = npd.fdf1orig / self.acq.sfo2
         self.refPoint[1] = 0
+        self.proc.phaseInversion = False
+        self.proc.multFactor = [1, 1]
+        self.proc.nPoints[0] = len(self.spc[0])
+        self.proc.nPoints[1] = len(self.spc)
         self.calcPPM()
         # end readPipe2D
 

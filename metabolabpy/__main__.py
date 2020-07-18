@@ -285,6 +285,10 @@ class main_w(object):  # pragma: no cover
     def apply2dPhCorr(self):
         s = self.nd.s
         e = self.nd.e
+        if self.nd.nmrdat[s][e].proc.phaseInversion:
+            self.phCorr.ph0_2d[self.phCorr.dim] *= -1
+            self.phCorr.ph1_2d[self.phCorr.dim] *= -1
+
         cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick2d)
         cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease2d)
         cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
@@ -293,9 +297,14 @@ class main_w(object):  # pragma: no cover
         self.w.actionCancelPhCorr.triggered.disconnect()
         ph0 = ((self.phCorr.ph0_2d[self.phCorr.dim] + 180.0) % 360.0) - 180.0
         ph1 = self.phCorr.ph1_2d[self.phCorr.dim]
-        self.nd.nmrdat[s][e].phase2a(ph0, ph1, self.phCorr.dim)
+        if self.nd.nmrdat[s][e].proc.phaseInversion is False:
+            self.nd.nmrdat[s][e].phase2a(ph0, ph1, self.phCorr.dim)
+        else:
+            self.nd.nmrdat[s][e].phase2a(-ph0, -ph1, self.phCorr.dim)
+
         ph0 = ((ph0 + self.nd.nmrdat[s][e].proc.ph0[self.phCorr.dim] + 180.0) % 360.0) - 180.0
         ph1 = ph1 + self.nd.nmrdat[s][e].proc.ph1[self.phCorr.dim]
+
         self.nd.nmrdat[s][e].proc.ph0[self.phCorr.dim] = ph0
         self.nd.nmrdat[s][e].proc.ph1[self.phCorr.dim] = ph1
         self.phCorr.ph0_2d[self.phCorr.dim] = 0
@@ -2061,7 +2070,11 @@ class main_w(object):  # pragma: no cover
             self.nd.readSpc(dsName, expName)
             self.setJres()
             self.nd.ft()
-            self.nd.autoref()
+            if self.nd.nmrdat[self.nd.s][self.nd.e].dim == 0:
+                self.nd.autoref(True)
+            else:
+                self.nd.autoref(False)
+
             self.nd.e = len(self.nd.nmrdat[self.nd.s]) - 1
             self.plotSpc()
             self.w.keepZoom.setChecked(kz)
@@ -2184,6 +2197,8 @@ class main_w(object):  # pragma: no cover
         self.nd.nmrdat[self.nd.s][self.nd.e].refShift[0] = refShift[0]
         self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[1] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][1], 1)
         self.nd.nmrdat[self.nd.s][self.nd.e].refShift[1] = refShift[1]
+        self.nd.nmrdat[self.nd.s][self.nd.e].proc.refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0]*self.nd.nmrdat[self.nd.s][self.nd.e].proc.nPoints[0]/(len(self.nd.nmrdat[self.nd.s][self.nd.e].fid[0])*self.nd.nmrdat[self.nd.s][self.nd.e].proc.multFactor[0])
+        self.nd.nmrdat[self.nd.s][self.nd.e].proc.refPoint[1] = self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[1]*self.nd.nmrdat[self.nd.s][self.nd.e].proc.nPoints[1]/(len(self.nd.nmrdat[self.nd.s][self.nd.e].fid)*self.nd.nmrdat[self.nd.s][self.nd.e].proc.multFactor[1])
         self.nd.nmrdat[self.nd.s][self.nd.e].calcPPM()
         self.resetPlot()
         # end reference1d

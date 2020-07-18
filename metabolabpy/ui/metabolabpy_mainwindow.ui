@@ -4799,7 +4799,7 @@
     <string>ApplyPhCorr</string>
    </property>
    <property name="shortcut">
-    <string>Alt+Shift+A</string>
+    <string>Alt+Shift+P</string>
    </property>
   </action>
   <action name="actionCancelPhCorr">

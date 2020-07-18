@@ -42,6 +42,8 @@ class ProcPars:
         self.fidOffsetCorrection   = 0
         self.stripStart            = 0
         self.stripEnd              = 0
+        self.phaseInversion        = True
+        self.multFactor            = [0, 0]
         self.windowFunctions       = {
             0             : "None",
             1             : "Exponential",
