@@ -222,6 +222,8 @@ class main_w(object):  # pragma: no cover
         self.w.extrapolationSize.returnPressed.connect(self.getProcPars22)
         self.w.windowSize.returnPressed.connect(self.getProcPars23)
         self.w.fidOffsetCorrection.returnPressed.connect(self.getProcPars24)
+        self.w.stripTransformStart.returnPressed.connect(self.getProcPars25)
+        self.w.stripTransformEnd.returnPressed.connect(self.getProcPars26)
         self.w.phRefDS.valueChanged.connect(self.changeDataSetExpPhRef)
         self.w.phRefExp.valueChanged.connect(self.changeDataSetExpPhRef)
         self.w.phRefColour.currentIndexChanged.connect(self.getDispPars15)
@@ -239,7 +241,6 @@ class main_w(object):  # pragma: no cover
         self.w.exportPathSelectButton.clicked.connect(self.setExportTable)
         self.w.actionQuit.triggered.connect(self.quit_app)
         self.w.dispPlotButton.clicked.connect(self.plotSpcDisp)
-        self.w.nmrSpectrum.currentChanged.connect(self.tabIndexChanged)
         self.showVersion()
         self.keepZoom = False
         self.keepXZoom = False
@@ -280,6 +281,42 @@ class main_w(object):  # pragma: no cover
             self.w.cmdLine.setFocus()
 
         # end activateCommandLine
+
+    def apply2dPhCorr(self):
+        s = self.nd.s
+        e = self.nd.e
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick2d)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease2d)
+        cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
+        cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
+        self.w.actionApplyPhCorr.triggered.disconnect()
+        self.w.actionCancelPhCorr.triggered.disconnect()
+        ph0 = ((self.phCorr.ph0_2d[self.phCorr.dim] + 180.0) % 360.0) - 180.0
+        ph1 = self.phCorr.ph1_2d[self.phCorr.dim]
+        self.nd.nmrdat[s][e].phase2a(ph0, ph1, self.phCorr.dim)
+        ph0 = ((ph0 + self.nd.nmrdat[s][e].proc.ph0[self.phCorr.dim] + 180.0) % 360.0) - 180.0
+        ph1 = ph1 + self.nd.nmrdat[s][e].proc.ph1[self.phCorr.dim]
+        self.nd.nmrdat[s][e].proc.ph0[self.phCorr.dim] = ph0
+        self.nd.nmrdat[s][e].proc.ph1[self.phCorr.dim] = ph1
+        self.phCorr.ph0_2d[self.phCorr.dim] = 0
+        self.phCorr.ph1_2d[self.phCorr.dim] = 0
+        self.phCorr.spc = np.array([[]], dtype='complex')
+        self.phCorr.spc2 = np.array([[]], dtype='complex')
+        zoomStatus = self.w.keepZoom.isChecked()
+        self.w.keepZoom.setChecked(False)
+        self.plotSpc()
+        self.w.keepZoom.setChecked(zoomStatus)
+        self.plot2dColRow()
+        if (self.zoomWasOn == True):
+            self.setZoomOff()
+            self.setZoom()
+
+        if (self.panWasOn == True):
+            self.setPan()
+
+        self.showPhCorr2d()
+        self.setProcPars()
+        # end apply2dPhCorr
 
     def autobaseline1d(self):
         self.showAutoBaseline()
@@ -359,6 +396,30 @@ class main_w(object):  # pragma: no cover
         self.changeDataSetExp()
         self.plotSpc()
         # end baseline1d
+
+    def cancel2dPhCorr(self):
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick2d)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease2d)
+        cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
+        cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
+        self.w.actionApplyPhCorr.triggered.disconnect()
+        self.w.actionCancelPhCorr.triggered.disconnect()
+        self.phCorr.ph0_2d[self.phCorr.dim] = 0
+        self.phCorr.ph1_2d[self.phCorr.dim] = 0
+        zoomStatus = self.w.keepZoom.isChecked()
+        self.w.keepZoom.setChecked(False)
+        self.plotSpc()
+        self.w.keepZoom.setChecked(zoomStatus)
+        self.plot2dColRow()
+        if (self.zoomWasOn == True):
+            self.setZoomOff()
+            self.setZoom()
+
+        if (self.panWasOn == True):
+            self.setPan()
+
+        self.showPhCorr2d()
+        # end cancel2dPhCorr
 
     def changeDataSetExp(self):
         cidx = self.w.nmrSpectrum.currentIndex()
@@ -579,6 +640,17 @@ class main_w(object):  # pragma: no cover
         self.w.MplWidget.canvas.flush_events()
         self.w.MplWidget.canvas.draw()
         # end dataPreProcessing
+
+    def emptyColRow(self):
+        while len(self.w.MplWidget.canvas.axes.lines) > 0:
+            self.w.MplWidget.canvas.axes.lines[0].remove()
+
+        self.w.MplWidget.canvas.draw()
+        self.phCorr.spcRow = []
+        self.phCorr.spcCol = []
+        self.phCorr.spcRowPts = []
+        self.phCorr.spcColPts = []
+        # end emptyColRow
 
     def enableBaseline(self):
         for k in range(len(self.nd.nmrdat[self.nd.s])):
@@ -1035,6 +1107,18 @@ class main_w(object):  # pragma: no cover
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
         # end getProcPars24
 
+    def getProcPars25(self):
+        p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
+        p.stripStart = int(self.w.stripTransformStart.text())
+        self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
+        # end getProcPars25
+
+    def getProcPars26(self):
+        p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
+        p.stripEnd = int(self.w.stripTransformEnd.text())
+        self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
+        # end getProcPars25
+
     def get_bottom_top(self, line):
         margin = 0.1
         xd = line.get_xdata()
@@ -1171,6 +1255,72 @@ class main_w(object):  # pragma: no cover
         self.w.writeScriptButton.setHidden(True)
         self.plotSpc()
         # end hidePreProcessing
+
+    def hilbert(self, mat):
+        npts = len(mat[0])
+        npts1 = len(mat)
+        v1 = np.ones(npts1)
+        mat1 = np.array([[]], dtype='complex')
+        mat1 = np.resize(mat1, (npts1, npts))
+        bMat = np.zeros(int(2 * npts), dtype='complex')
+        bMat[:(npts + 1)] = np.ones(npts + 1)
+        bMat[1:npts] += bMat[1:npts]
+        zMat = np.zeros(int(2 * npts), dtype='complex')
+        bMat = np.outer(v1, bMat)
+        zMat = np.outer(v1, zMat)
+        zMat[:, :npts] = mat
+        zMat = np.fft.ifft(bMat * np.fft.fft(zMat))
+        mat = zMat[:, :npts]
+        return mat
+        # end hilbert
+
+    def horzPhCorr2d(self):
+        s = self.nd.s
+        e = self.nd.e
+        self.phCorr.nDims = 2
+        self.phCorr.dim = 0
+        nLines = len(self.phCorr.spcRowPts)
+        if nLines > 0:
+            npts0 = len(self.nd.nmrdat[s][e].spc)
+            npts = len(self.nd.nmrdat[s][e].spc[0])
+            self.phCorr.spc = np.zeros((nLines, npts), dtype='complex')
+            spc1 = np.copy(self.nd.nmrdat[s][e].spc)
+            for k in range(nLines):
+                spc = np.array([spc1[npts0 - self.phCorr.spcRowPts[k]]])
+                spc = self.hilbert(spc)
+                self.phCorr.spc[k] = spc[0]
+
+            self.phCorr.ppm = self.nd.nmrdat[s][e].ppm1
+            if self.phCorr.pivotPoints2d[0] < 0:
+                self.phCorr.pivotPoints2d[0] = int(len(self.phCorr.ppm) / 2)
+                self.phCorr.pivot2d[0] = self.nd.nmrdat[s][e].points2ppm(self.phCorr.pivotPoints2d[0], 0)
+
+        self.showPhCorr2d_1d(self.phCorr.dim)
+        self.phCorr.spcMax = np.max(np.max(np.abs(self.phCorr.spc)))
+        if (self.w.MplWidget.canvas.figure.canvas.toolbar._active == 'ZOOM'):
+            try:
+                self.zoomWasOn = True
+                self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
+            except:
+                pass
+
+            self.setZoomOff()
+
+        if (self.w.MplWidget.canvas.figure.canvas.toolbar._active == 'PAN'):
+            try:
+                self.w.panWasOn = True
+                self.w.MplWidget.canvas.figure.canvas.toolbar.pan()
+            except:
+                pass
+
+        self.phCorr.maxPh0 = 90.0
+        self.phCorr.maxPh1 = 90.0
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick2d)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease2d)
+        self.w.actionApplyPhCorr.triggered.connect(self.apply2dPhCorr)
+        self.w.actionCancelPhCorr.triggered.connect(self.cancel2dPhCorr)
+        self.phCorrPlotSpc2d(False)
+        # end horzPhCorr2d
 
     def loadButton(self):
         selectedDirectory = QFileDialog.getExistingDirectory()
@@ -1534,9 +1684,6 @@ class main_w(object):  # pragma: no cover
             cid3 = self.w.MplWidget.canvas.mpl_connect('motion_notify_event', self.onPhCorrDraw2d)
             cid3 = self.w.MplWidget.canvas.mpl_disconnect(cid3)
             self.phCorr.spc2 = np.copy(self.phCorr.spc)
-            # self.nd.nmrdat[s][e].spc = self.phCorr.spc
-            # self.setProcPars()
-            # self.nd.ft()
             self.phCorrPlotSpc2d()
         else:
             # zoom mode activated
@@ -1668,6 +1815,38 @@ class main_w(object):  # pragma: no cover
         phases[1] = ph[0] - ph[len(ph) - 1]
         return phases
         # end phasesRemovePivot
+
+    def pickColRow(self):
+        self.w.statusBar().showMessage("Click to add row/col")
+        xy = self.w.MplWidget.canvas.axes.figure.ginput(1)
+        self.showPhCorr2d()
+        xyPts = []
+        xy2 = []
+        xyPts.append(self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0], 0))
+        xyPts.append(self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][1], 1))
+        self.phCorr.spcRowPts.append(xyPts[1])
+        self.phCorr.spcColPts.append(xyPts[0])
+        xy2.append(self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(xyPts[0], 0))
+        xy2.append(self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(xyPts[1], 1))
+        self.phCorr.spcRow.append(xy2[1])
+        self.phCorr.spcCol.append(xy2[0])
+        self.plot2dColRow()
+        # end pickColRow
+
+    def plot2dColRow(self):
+        while len(self.w.MplWidget.canvas.axes.lines) > 0:
+            self.w.MplWidget.canvas.axes.lines[0].remove()
+
+        self.w.MplWidget.canvas.axes.set_prop_cycle(None)
+        ppm1 = self.nd.nmrdat[self.nd.s][self.nd.e].ppm1
+        ppm2 = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2
+        for k in range(len(self.phCorr.spcRow)):
+            pid = self.w.MplWidget.canvas.axes.plot([self.phCorr.spcCol[k], self.phCorr.spcCol[k]],
+                                                    [np.min(ppm2), np.max(ppm2)])
+            self.w.MplWidget.canvas.axes.plot([np.min(ppm1), np.max(ppm1)],
+                                              [self.phCorr.spcRow[k], self.phCorr.spcRow[k]], color=pid[0].get_color())
+
+        self.w.MplWidget.canvas.draw()
 
     def plotSpc(self):
         self.keepZoom = self.w.keepZoom.isChecked()
@@ -2008,6 +2187,18 @@ class main_w(object):  # pragma: no cover
         self.nd.nmrdat[self.nd.s][self.nd.e].calcPPM()
         self.resetPlot()
         # end reference1d
+
+    def removeLastColRow(self):
+        nLines = len(self.w.MplWidget.canvas.axes.lines)
+        if nLines > 0:
+            self.w.MplWidget.canvas.axes.lines[nLines - 1].remove()
+            self.phCorr.spcRow = self.phCorr.spcRow[:-1]
+            self.phCorr.spcCol = self.phCorr.spcCol[:-1]
+            self.phCorr.spcRowPts = self.phCorr.spcRowPts[:-1]
+            self.phCorr.spcColPts = self.phCorr.spcColPts[:-1]
+            self.plot2dColRow()
+
+        # end removeLastColRow
 
     def resetConfig(self):
         self.cf = nmrConfig.NmrConfig()
@@ -2895,6 +3086,8 @@ class main_w(object):  # pragma: no cover
         self.w.phaseCorrection.setCurrentIndex(p.phCorr[0])
         self.w.phaseCorrection_2.setCurrentIndex(p.phCorr[1])
         self.w.waterSuppression.setCurrentIndex(p.waterSuppression)
+        self.w.stripTransformStart.setText(str(p.stripStart))
+        self.w.stripTransformEnd.setText(str(p.stripEnd))
         self.w.winType.setCurrentIndex(p.convWindowType[0])
         self.w.gibbs.setCurrentIndex(p.gibbsP.get(p.gibbs[0]))
         self.w.gibbs_2.setCurrentIndex(p.gibbsP.get(p.gibbs[1]))
@@ -3287,141 +3480,56 @@ class main_w(object):  # pragma: no cover
                 self.plotSpc()
                 zOn = self.zoomWasOn
                 pOn = self.panWasOn
-                print(zOn)
                 self.zoomWasOn = False
                 self.panWasOn = False
                 if (zOn == True):
-                    #self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
                     self.setZoomOff()
                     self.setZoom()
                     cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.setZoomRelease)
 
                 if (pOn == True):
-                    #self.w.MplWidget.canvas.figure.canvas.toolbar.pan()
-                    self.setPan()
+                        self.setPan()
 
         # end startStopPhCorr
 
-    def pickColRow(self):
-        self.w.statusBar().showMessage("Click to add row/col")
-        xy = self.w.MplWidget.canvas.axes.figure.ginput(1)
-        self.showPhCorr2d()
-        xyPts = []
-        xy2 = []
-        xyPts.append(self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0], 0))
-        xyPts.append(self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][1], 1))
-        self.phCorr.spcRowPts.append(xyPts[1])
-        self.phCorr.spcColPts.append(xyPts[0])
-        xy2.append(self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(xyPts[0], 0))
-        xy2.append(self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(xyPts[1], 1))
-        self.phCorr.spcRow.append(xy2[1])
-        self.phCorr.spcCol.append(xy2[0])
-        self.plot2dColRow()
-        # end pickColRow
-
-    def plot2dColRow(self):
-        while len(self.w.MplWidget.canvas.axes.lines) > 0:
-            self.w.MplWidget.canvas.axes.lines[0].remove()
-
-        self.w.MplWidget.canvas.axes.set_prop_cycle(None)
-        ppm1 = self.nd.nmrdat[self.nd.s][self.nd.e].ppm1
-        ppm2 = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2
-        for k in range(len(self.phCorr.spcRow)):
-            pid = self.w.MplWidget.canvas.axes.plot([self.phCorr.spcCol[k], self.phCorr.spcCol[k]],
-                                                    [np.min(ppm2), np.max(ppm2)])
-            self.w.MplWidget.canvas.axes.plot([np.min(ppm1), np.max(ppm1)],
-                                              [self.phCorr.spcRow[k], self.phCorr.spcRow[k]], color=pid[0].get_color())
-
-        self.w.MplWidget.canvas.draw()
-
-    def emptyColRow(self):
-        while len(self.w.MplWidget.canvas.axes.lines) > 0:
-            self.w.MplWidget.canvas.axes.lines[0].remove()
-
-        self.w.MplWidget.canvas.draw()
-        self.phCorr.spcRow = []
-        self.phCorr.spcCol = []
-        self.phCorr.spcRowPts = []
-        self.phCorr.spcColPts = []
-        # end emptyColRow
-
-    def removeLastColRow(self):
-        nLines = len(self.w.MplWidget.canvas.axes.lines)
-        if nLines > 0:
-            self.w.MplWidget.canvas.axes.lines[nLines - 1].remove()
-            self.phCorr.spcRow = self.phCorr.spcRow[:-1]
-            self.phCorr.spcCol = self.phCorr.spcCol[:-1]
-            self.phCorr.spcRowPts = self.phCorr.spcRowPts[:-1]
-            self.phCorr.spcColPts = self.phCorr.spcColPts[:-1]
-            self.plot2dColRow()
-
-        # end removeLastColRow
-
-    def hilbert(self, mat):
-        npts = len(mat[0])
-        npts1 = len(mat)
-        v1 = np.ones(npts1)
-        mat1 = np.array([[]], dtype='complex')
-        mat1 = np.resize(mat1, (npts1, npts))
-        bMat = np.zeros(int(2 * npts), dtype='complex')
-        bMat[:(npts + 1)] = np.ones(npts + 1)
-        bMat[1:npts] += bMat[1:npts]
-        zMat = np.zeros(int(2 * npts), dtype='complex')
-        bMat = np.outer(v1, bMat)
-        zMat = np.outer(v1, zMat)
-        zMat[:, :npts] = mat
-        zMat = np.fft.ifft(bMat * np.fft.fft(zMat))
-        mat = zMat[:, :npts]
-        return mat
-        # end hilbert
-
-    def horzPhCorr2d(self):
+    def updateGUI(self):
         s = self.nd.s
         e = self.nd.e
-        self.phCorr.nDims = 2
-        self.phCorr.dim = 0
-        nLines = len(self.phCorr.spcRowPts)
-        if nLines > 0:
-            npts0 = len(self.nd.nmrdat[s][e].spc)
-            npts = len(self.nd.nmrdat[s][e].spc[0])
-            self.phCorr.spc = np.zeros((nLines, npts), dtype='complex')
-            spc1 = np.copy(self.nd.nmrdat[s][e].spc)
-            for k in range(nLines):
-                spc = np.array([spc1[npts0 - self.phCorr.spcRowPts[k]]])
-                spc = self.hilbert(spc)
-                self.phCorr.spc[k] = spc[0]
+        self.w.setBox.valueChanged.disconnect()
+        self.w.expBox.valueChanged.disconnect()
+        self.w.expBox.setValue(e + 1)
+        self.w.setBox.setValue(s + 1)
+        self.w.setBox.valueChanged.connect(lambda: self.changeDataSetExp())
+        self.w.expBox.valueChanged.connect(lambda: self.changeDataSetExp())
+        self.setDispPars()
+        self.setProcPars()
+        self.setAcqPars()
+        self.setTitleFile()
+        self.setPulseProgram()
+        self.w.expBox.setValue(e + 1)
+        if (self.nd.nmrdat[s][e].dim == 1):
+            self.w.preprocessing.setVisible(True)
+        else:
+            self.w.preprocessing.setVisible(False)
 
-            self.phCorr.ppm = self.nd.nmrdat[s][e].ppm1
-            if self.phCorr.pivotPoints2d[0] < 0:
-                self.phCorr.pivotPoints2d[0] = int(len(self.phCorr.ppm) / 2)
-                self.phCorr.pivot2d[0] = self.nd.nmrdat[s][e].points2ppm(self.phCorr.pivotPoints2d[0], 0)
+        return "updated GUI"
+        # end updateGUI
 
-        self.showPhCorr2d_1d(self.phCorr.dim)
-        self.phCorr.spcMax = np.max(np.max(np.abs(self.phCorr.spc)))
-        if (self.w.MplWidget.canvas.figure.canvas.toolbar._active == 'ZOOM'):
-            try:
-                self.zoomWasOn = True
-                self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
-            except:
-                pass
+    def verticalAutoScale(self):
+        if (self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1):
+            lines = self.w.MplWidget.canvas.axes.get_lines()
+            bottom, top = np.inf, -np.inf
+            for line in lines:
+                newBottom, newTop = self.get_bottom_top(line)
+                if (newBottom < bottom): bottom = newBottom
+                if (newTop > top): top = newTop
 
-            self.setZoomOff()
+            if bottom != np.inf and top != -np.inf:
+                self.w.MplWidget.canvas.axes.set_ylim(bottom, top)
 
-        if (self.w.MplWidget.canvas.figure.canvas.toolbar._active == 'PAN'):
-            try:
-                self.w.panWasOn = True
-                self.w.MplWidget.canvas.figure.canvas.toolbar.pan()
-            except:
-                pass
+            self.w.MplWidget.canvas.draw()
 
-        self.phCorr.maxPh0 = 90.0
-        self.phCorr.maxPh1 = 90.0
-        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick2d)
-        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease2d)
-        self.w.actionApplyPhCorr.triggered.connect(self.apply2dPhCorr)
-        self.w.actionCancelPhCorr.triggered.connect(self.cancel2dPhCorr)
-        self.phCorrPlotSpc2d(False)
-        # end horzPhCorr2d
+        # end verticalAutoScale
 
     def vertPhCorr2d(self):
         s = self.nd.s
@@ -3471,113 +3579,6 @@ class main_w(object):  # pragma: no cover
         self.w.actionCancelPhCorr.triggered.connect(self.cancel2dPhCorr)
         self.phCorrPlotSpc2d(False)
         # end vertPhCorr2d
-
-    def apply2dPhCorr(self):
-        s = self.nd.s
-        e = self.nd.e
-        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick2d)
-        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease2d)
-        cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
-        cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
-        self.w.actionApplyPhCorr.triggered.disconnect()
-        self.w.actionCancelPhCorr.triggered.disconnect()
-        #ph0 = ((self.phCorr.ph0_2d[self.phCorr.dim] + self.nd.nmrdat[s][e].proc.ph0[self.phCorr.dim] + 180.0) % 360.0) - 180.0
-        #ph1 = self.phCorr.ph1_2d[self.phCorr.dim] + self.nd.nmrdat[s][e].proc.ph1[self.phCorr.dim]
-        ph0 = ((self.phCorr.ph0_2d[self.phCorr.dim] + 180.0) % 360.0) - 180.0
-        ph1 = self.phCorr.ph1_2d[self.phCorr.dim]
-        self.nd.nmrdat[s][e].proc.ph0[self.phCorr.dim] = ph0
-        self.nd.nmrdat[s][e].proc.ph1[self.phCorr.dim] = ph1
-        self.nd.nmrdat[s][e].phase2a(ph0, ph1, self.phCorr.dim)
-        self.phCorr.ph0_2d[self.phCorr.dim] = 0
-        self.phCorr.ph1_2d[self.phCorr.dim] = 0
-        self.phCorr.spc = np.array([[]], dtype='complex')
-        self.phCorr.spc2 = np.array([[]], dtype='complex')
-        zoomStatus = self.w.keepZoom.isChecked()
-        self.w.keepZoom.setChecked(False)
-        self.plotSpc()
-        self.w.keepZoom.setChecked(zoomStatus)
-        self.plot2dColRow()
-        if (self.zoomWasOn == True):
-            self.setZoomOff()
-            self.setZoom()
-
-        if (self.panWasOn == True):
-            self.setPan()
-
-        self.showPhCorr2d()
-        # end apply2dPhCorr
-
-    def cancel2dPhCorr(self):
-        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick2d)
-        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease2d)
-        cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
-        cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
-        self.w.actionApplyPhCorr.triggered.disconnect()
-        self.w.actionCancelPhCorr.triggered.disconnect()
-        self.phCorr.ph0_2d[self.phCorr.dim] = 0
-        self.phCorr.ph1_2d[self.phCorr.dim] = 0
-        zoomStatus = self.w.keepZoom.isChecked()
-        self.w.keepZoom.setChecked(False)
-        self.plotSpc()
-        self.w.keepZoom.setChecked(zoomStatus)
-        self.plot2dColRow()
-        if (self.zoomWasOn == True):
-            self.setZoomOff()
-            self.setZoom()
-
-        if (self.panWasOn == True):
-            self.setPan()
-
-        self.showPhCorr2d()
-        # end cancel2dPhCorr
-
-    def tabIndexChanged(self):
-        # if (self.w.nmrSpectrum.currentIndex() == 0):
-        #    if (self.w.preprocessing.isChecked() == False):
-        #        self.plotSpc()
-        a = 3
-        # end tabIndexChanged
-
-    def updateGUI(self):
-        s = self.nd.s
-        e = self.nd.e
-        self.w.setBox.valueChanged.disconnect()
-        self.w.expBox.valueChanged.disconnect()
-        self.w.expBox.setValue(e + 1)
-        self.w.setBox.setValue(s + 1)
-        self.w.setBox.valueChanged.connect(lambda: self.changeDataSetExp())
-        self.w.expBox.valueChanged.connect(lambda: self.changeDataSetExp())
-        # self.plotSpc()
-        self.setDispPars()
-        self.setProcPars()
-        self.setAcqPars()
-        self.setTitleFile()
-        self.setPulseProgram()
-        self.w.expBox.setValue(e + 1)
-        if (self.nd.nmrdat[s][e].dim == 1):
-            self.w.preprocessing.setVisible(True)
-        else:
-            self.w.preprocessing.setVisible(False)
-
-        return "updated GUI"
-        # end updateGUI
-
-    def verticalAutoScale(self):
-        if (self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1):
-            lines = self.w.MplWidget.canvas.axes.get_lines()
-            bottom, top = np.inf, -np.inf
-            for line in lines:
-                newBottom, newTop = self.get_bottom_top(line)
-                if (newBottom < bottom): bottom = newBottom
-                if (newTop > top): top = newTop
-
-            if bottom != np.inf and top != -np.inf:
-                self.w.MplWidget.canvas.axes.set_ylim(bottom, top)
-
-            # self.w.MplWidget.canvas.toolbar.update()
-            self.w.MplWidget.canvas.draw()
-
-        # end verticalAutoScale
 
     def zeroAcqPars(self):
         self.w.acqPars.setText("")

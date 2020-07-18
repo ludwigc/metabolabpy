@@ -38,7 +38,10 @@ class ProcPars:
         self.regEx                 = procRegEx.ProcRegEx()
         self.regExVarian           = procProcparRegEx.ProcProcparRegEx()
         self.sw_h                  = np.array([0.0, 0.0, 0.0])
+        self.sf                    = np.array([0.0, 0.0, 0.0])
         self.fidOffsetCorrection   = 0
+        self.stripStart            = 0
+        self.stripEnd              = 0
         self.windowFunctions       = {
             0             : "None",
             1             : "Exponential",
@@ -97,14 +100,29 @@ class ProcPars:
         self.lb[0]          = float(self.regEx.lb.findall(self.procsText)[0][0])
         self.gb[0]          = float(self.regEx.gb.findall(self.procsText)[0][0])
         self.ssb[0]         = float(self.regEx.ssb.findall(self.procsText)[0][0])
+        self.sf[0]          = float(self.regEx.sf.findall(self.procsText)[0][0])
+        #self.stripStart     = int(self.regEx.stsr.findall(self.procsText)[0][0])
+        #self.stripEnd       = int(self.regEx.stsi.findall(self.procsText)[0][0])
         if self.ssb[0] == 2.0:
             self.ssb[0] = 90.0
 
         if self.procsText.find("$AXNUC=") > -1:
             self.axisNucleus[0] = self.regEx.axisNucleus.findall(self.procsText)[0]
+            self.axisNucleus[0] = self.axisNucleus[0].replace('<', '')
+            self.axisNucleus[0] = self.axisNucleus[0].replace('>', '')
+
+        if self.proc2sText.find("$AXNUC=") > -1:
+            self.axisNucleus[1] = self.regEx.axisNucleus.findall(self.proc2sText)[0]
+            self.axisNucleus[1] = self.axisNucleus[1].replace('<', '')
+            self.axisNucleus[1] = self.axisNucleus[1].replace('>', '')
 
         self.windowType[0]  = int(self.regEx.wdw.findall(self.procsText)[0])
         self.aunmp          = self.regEx.aunmp.findall(self.procsText)[0]
+        try:
+            self.sf[1] = float(self.regEx.sf.findall(self.proc2sText)[0][0])
+        except:
+            pass
+
         try:
             self.ph0[1]         = float(self.regEx.ph0.findall(self.proc2sText)[0][0])
             self.ph1[1]         = float(self.regEx.ph1.findall(self.proc2sText)[0][0])
@@ -116,9 +134,9 @@ class ProcPars:
                 self.ssb[1] = 90.0
 
             self.wdw[1]         = float(self.regEx.wdw.findall(self.proc2sText)[0][0])
-            self.axisNucleus[1] = self.regEx.axisNucleus.findall(self.proc2sText)[0]
+            #self.axisNucleus[1] = self.regEx.axisNucleus.findall(self.proc2sText)[0]
             self.windowType[1]  = int(self.regEx.wdw.findall(self.proc2sText)[0])
-            
+
         except:
             a = 2+3
             #print("1D data")

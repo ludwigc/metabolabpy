@@ -20,5 +20,8 @@ class ProcRegEx:
         self.si               = re.compile(r'##\$SI= (\d+)')
         self.ftMod            = re.compile(r'##\$FT_mod= (\d+)')
         self.ncProc           = re.compile(r'##\$NC_proc= (-?\d+)')
+        self.sf               = re.compile(r'##\$SF= (\d+(\d.\d+)?)')
+        self.stsr             = re.compile(r'##\$STSR= (\d+(\d+)?)')
+        self.stsi             = re.compile(r'##\$STSI= (\d+(\d+)?)')
         # end __init__
 

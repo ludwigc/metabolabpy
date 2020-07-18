@@ -203,11 +203,22 @@ class NmrData:
         # end baseline1d
 
     def calcPPM(self):
-        npts = int(len(self.spc[0]))
-        if (self.disp.axisType1 == 'ppm'):
-            self.ppm1 = self.points2ppm(np.linspace(npts - 1, 0, npts), 0)
+        if self.proc.stripStart == 0:
+            stsr = 1
         else:
-            self.ppm1 = self.points2Hz(np.linspace(npts - 1, 0, npts), 0)
+            stsr = self.proc.stripStart
+
+        if self.proc.stripEnd > stsr:
+            stsi = self.proc.stripEnd
+        else:
+            stsi = int(len(self.spc[0]))
+
+        if (self.disp.axisType1 == 'ppm'):
+            self.ppm1 = self.points2ppm(np.linspace(self.proc.nPoints[0] - 1, 0, self.proc.nPoints[0]), 0)
+        else:
+            self.ppm1 = self.points2Hz(np.linspace(self.proc.nPoints[0] - 1, 0, self.proc.nPoints[0]), 0)
+
+        self.ppm1 = self.ppm1[stsr-1:stsi]
 
         if (self.dim > 1):
             npts = int(len(self.spc))
@@ -452,8 +463,7 @@ class NmrData:
         t = complex()
         frac = np.linspace(0, 1, npts)
         ph = ph0 + frac * ph1
-        self.spc[0] = np.cos(ph) * self.spc[0].real + np.sin(ph) * self.spc[0].imag + 1j * (
-                -np.sin(ph) * self.spc[0].real + np.cos(ph) * self.spc[0].imag)
+        self.spc[0] = np.cos(ph) * self.spc[0].real + np.sin(ph) * self.spc[0].imag + 1j * (-np.sin(ph) * self.spc[0].real + np.cos(ph) * self.spc[0].imag)
         # end phase
 
     def phase2(self, mat, ph0, ph1):
@@ -533,10 +543,14 @@ class NmrData:
         sw = self.acq.sw_h[dim]
         if (dim == 0):
             sfo = self.acq.sfo1
-            npts = int(len(self.spc[0]))
+            npts = self.proc.nPoints[0] #int(len(self.spc[0]))
 
         if (dim == 1):
-            sfo = self.acq.sfo2
+            if self.acq.manufacturer == 'Bruker':
+                sfo = self.proc.sf[1]
+            else:
+                sfo = self.acq.sfo2
+
             npts = int(len(self.spc))
 
         ppm = (sw / sfo) * (points / (npts - 1) - self.refPoint[dim] / (npts - 1)) + self.refShift[dim]
@@ -550,7 +564,11 @@ class NmrData:
             npts = int(len(self.spc[0]))
 
         if (dim == 1):
-            sfo = self.acq.sfo2
+            if self.acq.manufacturer == 'Bruker':
+                sfo = self.proc.sf[1]
+            else:
+                sfo = self.acq.sfo2
+
             npts = int(len(self.spc))
 
         points = np.round(((ppm - self.refShift[dim]) * (sfo / sw) + self.refPoint[dim] / (npts - 1)) * (npts - 1))
@@ -573,7 +591,7 @@ class NmrData:
         if (self.dim == 2):
             self.procSpc2D()
 
-        self.autoRef()
+        #self.autoRef()
         self.calcPPM()
         # end procSpc
 
@@ -593,6 +611,22 @@ class NmrData:
 
     def procSpc2D(self, testQuad2d=False, noAbs=False):
         fid = np.copy(self.fid)
+        npts2 = len(self.spc)
+        npts1 = len(self.spc[0])
+        if self.proc.refPoint[0] == 0:
+            self.proc.refPoint[0] = self.refPoint[0]
+
+        if npts1 > 0:
+            if self.proc.stripStart < 1:
+                stsr = 1
+            else:
+                stsr = self.proc.stripStart
+
+            self.refPoint[0] = int((self.proc.refPoint[0])*self.proc.nPoints[0]/len(self.fid[0]))  #- stsr + 1
+
+        if npts2 > 1:
+            self.refPoint[1] = int(self.refPoint[1]*self.proc.nPoints[1]/npts2)
+
         self.spc = np.resize(self.spc, (self.proc.nPoints[0], self.proc.nPoints[1]))
         self.spc *= 0
         if (self.proc.nPoints[0] > len(fid[0])):
@@ -643,6 +677,18 @@ class NmrData:
 
                 if (self.proc.symj == True):
                     self.symjres()
+
+        if self.proc.stripStart == 0:
+            stsr = 1
+        else:
+            stsr = self.proc.stripStart
+
+        if self.proc.stripEnd > stsr:
+            stsi = self.proc.stripEnd
+            self.spc = np.ndarray.transpose(self.spc)
+            self.spc = self.spc[stsr-1:stsi]
+            self.ppm1 = self.ppm1[stsr-1:stsi]
+            self.spc = np.ndarray.transpose(self.spc)
 
         # end procSpc2D
 
@@ -782,6 +828,8 @@ class NmrData:
                 self.outd = fid.read()
                 fid.close()
 
+            self.acq.sfo2 = self.proc.sf[1]
+            self.disp.yLabel = self.proc.axisNucleus[1]
 
         else:
             titleFile1 = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'text'
