@@ -64,6 +64,37 @@ class MplWidget(QWidget):  # pragma: no cover
 
 
 # ------------------ MplWidget ------------------
+
+# ------------------ MplWidget ------------------
+class MplWidget2(QWidget):  # pragma: no cover
+
+    def __init__(self, parent=None):
+        QWidget.__init__(self, parent)
+
+        self.canvas = FigureCanvas(Figure())
+
+        vertical_layout = QVBoxLayout()
+        vertical_layout.addWidget(self.canvas)
+        self.toolbar = NavigationToolbar(self.canvas, self)
+        vertical_layout.addWidget(self.toolbar)
+
+        self.canvas.axes = self.canvas.figure.add_subplot(111)
+        self.setLayout(vertical_layout)
+        home = NavigationToolbar.home
+
+        def new_home(self, *args, **kwargs):
+            self.canvas.axes.autoscale()
+            self.canvas.draw()
+            self.canvas.toolbar.update()
+            home(self, *args, **kwargs)
+
+        NavigationToolbar.home = new_home
+        self.phCorr = phCorr.PhCorr()
+        # end __init__
+
+
+# ------------------ MplWidget2 ------------------
+
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.__version__ = '0.6.3'
@@ -77,11 +108,20 @@ class main_w(object):  # pragma: no cover
         self.file.open(QFile.ReadOnly)
         self.loader = QUiLoader()
         self.loader.registerCustomWidget(MplWidget)
+        self.loader.registerCustomWidget(MplWidget2)
         self.w = self.loader.load(self.file)
         self.zoom = False
 
         self.hidePreProcessing()
         self.w.preprocessing.setVisible(False)
+        self.w.hsqcAnalysis.setVisible(False)
+        self.w.multipletAnalysis.setVisible(False)
+        self.w.isotopomerAnalysis.setVisible(False)
+        self.w.nmrSpectrum.setTabEnabled(1, False)
+        self.w.nmrSpectrum.setTabEnabled(2, False)
+        self.w.nmrSpectrum.setTabEnabled(3, False)
+        self.w.nmrSpectrum.setTabEnabled(4, False)
+        self.w.nmrSpectrum.setStyleSheet("QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
         # connections
         # self.w.rDolphinExport.clicked.connect(self.setrDolphinExport)
         self.w.exportPath.textChanged.connect(self.setExportPath)
@@ -132,6 +172,8 @@ class main_w(object):  # pragma: no cover
         self.w.actionVertical_AutoScale.triggered.connect(self.verticalAutoScale)
         self.w.actionZoom.triggered.connect(self.setZoom)
         self.w.actionPan.triggered.connect(self.setPan)
+        self.w.actionShow_Next_Tab.triggered.connect(self.nextTab)
+        self.w.actionShow_Previous_Tab.triggered.connect(self.previousTab)
         self.w.actionPlot_spc.triggered.connect(self.plotSpc)
         self.w.actionSave.triggered.connect(self.saveButton)
         self.w.actionLoad.triggered.connect(self.loadButton)
@@ -145,6 +187,9 @@ class main_w(object):  # pragma: no cover
         self.w.y0LE.textChanged.connect(self.setVary0)
         self.w.actionRead_NMR_Spectrum.triggered.connect(self.readNMRSpc)
         self.w.preprocessing.stateChanged.connect(self.setPreProcessing)
+        self.w.hsqcAnalysis.stateChanged.connect(self.setHsqcAnalysis)
+        self.w.multipletAnalysis.stateChanged.connect(self.setMultipletAnalysis)
+        self.w.isotopomerAnalysis.stateChanged.connect(self.setIsotopomerAnalysis)
         self.w.preserveOverallScale.stateChanged.connect(self.setPreserveOverallScale)
         self.w.actionReset.triggered.connect(self.resetPlot)
         self.w.actionShow_NMR_Spectrum.triggered.connect(self.showNMRSpectrum)
@@ -270,6 +315,7 @@ class main_w(object):  # pragma: no cover
         self.w.iSpc_p6.returnPressed.connect(self.get_iSpc_p6)
         self.setFontSize()
         self.w.MplWidget.toolbar.setVisible(False)
+        self.w.MplWidget2.toolbar.setVisible(False)
         self.w.MplWidget.setFocus()
         self.setZoom()
         # end __init__
@@ -673,7 +719,7 @@ class main_w(object):  # pragma: no cover
     def execCmd(self):
         cmdText = self.w.cmdLine.text()
         if (len(cmdText) > 0):
-            self.w.nmrSpectrum.setCurrentIndex(7)
+            self.w.nmrSpectrum.setCurrentIndex(11)
             self.w.cmdLine.setText("")
             self.nd.cmdBuffer = np.append(self.nd.cmdBuffer, cmdText)
             self.nd.cmdIdx = len(self.nd.cmdBuffer)
@@ -1395,6 +1441,32 @@ class main_w(object):  # pragma: no cover
 
         # end nextCommand
 
+    def nextTab(self):
+        cidx = self.w.nmrSpectrum.currentIndex()
+        while self.w.nmrSpectrum.isTabEnabled(cidx + 1) is False and cidx < 10:
+            cidx += 1
+
+        if cidx < 11:
+            self.w.nmrSpectrum.setCurrentIndex(cidx + 1)
+        else:
+            self.w.nmrSpectrum.setCurrentIndex(0)
+
+
+        #end nextTab
+
+    def previousTab(self):
+        cidx = self.w.nmrSpectrum.currentIndex()
+        while self.w.nmrSpectrum.isTabEnabled(cidx - 1) is False and cidx > 1:
+            cidx -= 1
+
+        if cidx > 0:
+            self.w.nmrSpectrum.setCurrentIndex(cidx - 1)
+            self.w.nmrSpectrum.setFocus()
+        else:
+            self.w.nmrSpectrum.setCurrentIndex(11)
+
+        # end previousTab
+
     def onPhCorrClick(self, event):
         s = self.nd.s
         e = self.nd.e
@@ -1718,7 +1790,7 @@ class main_w(object):  # pragma: no cover
             scriptText = f.read()
             self.w.script.setText(scriptText)
 
-        self.w.nmrSpectrum.setCurrentIndex(6)
+        self.w.nmrSpectrum.setCurrentIndex(10)
         # end openScript
 
     def phCorrPlotSpc(self):
@@ -2316,7 +2388,7 @@ class main_w(object):  # pragma: no cover
         # end scaleAll2DSpectraDown
 
     def scriptEditor(self):
-        self.w.nmrSpectrum.setCurrentIndex(6)
+        self.w.nmrSpectrum.setCurrentIndex(10)
         # end scriptEditor
 
     def selectAddCompressPreProc(self):
@@ -3059,6 +3131,52 @@ class main_w(object):  # pragma: no cover
 
         # end setPreProcessing
 
+    def setHsqcAnalysis(self):
+        if (self.w.hsqcAnalysis.isChecked() == True):
+            self.w.multipletAnalysis.setVisible(True)
+            self.w.isotopomerAnalysis.setVisible(True)
+            self.w.nmrSpectrum.setTabEnabled(1, True)
+            self.w.nmrSpectrum.setTabEnabled(2, True)
+            self.w.nmrSpectrum.setStyleSheet("QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
+            self.w.nmrSpectrum.setCurrentIndex(1)
+            self.activateCommandLine()
+            self.activateCommandLine()
+        else:
+            self.w.multipletAnalysis.setChecked(False)
+            self.w.isotopomerAnalysis.setChecked(False)
+            self.w.multipletAnalysis.setVisible(False)
+            self.w.isotopomerAnalysis.setVisible(False)
+            self.w.nmrSpectrum.setTabEnabled(1, False)
+            self.w.nmrSpectrum.setTabEnabled(2, False)
+            self.w.nmrSpectrum.setStyleSheet("QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
+            self.w.nmrSpectrum.setCurrentIndex(0)
+
+        # end setHsqcAnalysis
+
+    def setMultipletAnalysis(self):
+        if (self.w.multipletAnalysis.isChecked() == True):
+            self.w.nmrSpectrum.setTabEnabled(3, True)
+            self.w.nmrSpectrum.setStyleSheet("QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
+            self.w.nmrSpectrum.setCurrentIndex(3)
+        else:
+            self.w.nmrSpectrum.setTabEnabled(3, False)
+            self.w.nmrSpectrum.setStyleSheet("QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
+            self.w.nmrSpectrum.setCurrentIndex(1)
+
+        # end setMultipletAnalysis
+
+    def setIsotopomerAnalysis(self):
+        if (self.w.isotopomerAnalysis.isChecked() == True):
+            self.w.nmrSpectrum.setTabEnabled(4, True)
+            self.w.nmrSpectrum.setStyleSheet("QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
+            self.w.nmrSpectrum.setCurrentIndex(4)
+        else:
+            self.w.nmrSpectrum.setTabEnabled(4, False)
+            self.w.nmrSpectrum.setStyleSheet("QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
+            self.w.nmrSpectrum.setCurrentIndex(1)
+
+        # end setIsotopomerAnalysis
+
     def setPreProcessingOptions(self):
         curIdx = self.w.preProcessingSelect.currentIndex()
         self.w.preProcessingWidget.setCurrentIndex(curIdx)
@@ -3252,7 +3370,7 @@ class main_w(object):  # pragma: no cover
         # end setTitleFile
 
     def setupProcessingParameters(self):
-        self.w.nmrSpectrum.setCurrentIndex(1)
+        self.w.nmrSpectrum.setCurrentIndex(5)
         # end setupProcessingParameters
 
     def setVarianceStabilisation(self):
@@ -3337,7 +3455,7 @@ class main_w(object):  # pragma: no cover
         # end show
 
     def showAcquisitionParameters(self):
-        self.w.nmrSpectrum.setCurrentIndex(3)
+        self.w.nmrSpectrum.setCurrentIndex(7)
         # end showAcquisitionParameters
 
     def showAutoBaseline(self):
@@ -3349,11 +3467,11 @@ class main_w(object):  # pragma: no cover
         # end showAutoPhase
 
     def showConsole(self):
-        self.w.nmrSpectrum.setCurrentIndex(7)
+        self.w.nmrSpectrum.setCurrentIndex(11)
         # end showConsole
 
     def showDisplayParameters(self):
-        self.w.nmrSpectrum.setCurrentIndex(2)
+        self.w.nmrSpectrum.setCurrentIndex(6)
         # end showDisplayParameters
 
     def showMainWindow(self):
@@ -3403,11 +3521,11 @@ class main_w(object):  # pragma: no cover
         # end showPreProcessing
 
     def showPulseProgram(self):
-        self.w.nmrSpectrum.setCurrentIndex(5)
+        self.w.nmrSpectrum.setCurrentIndex(9)
         # end showPulseProgram
 
     def showTitleFileInformation(self):
-        self.w.nmrSpectrum.setCurrentIndex(4)
+        self.w.nmrSpectrum.setCurrentIndex(8)
         # end showTitleFileInformation
 
     def showVersion(self):
@@ -3527,6 +3645,17 @@ class main_w(object):  # pragma: no cover
         else:
             self.w.preprocessing.setVisible(False)
 
+        if self.nd.nmrdat[s][e].dim > 1:
+            if self.nd.nmrdat[self.nd.s][self.nd.e].acq.pulProgName.find("hsqc") > 0 or self.nd.nmrdat[self.nd.s][self.nd.e].acq.pulProgName.find("hmqc") > 0:
+                self.w.hsqcAnalysis.setVisible(True)
+            else:
+                self.w.hsqcAnalysis.setVisible(False)
+
+        else:
+            self.w.hsqcAnalysis.setVisible(False)
+
+        self.w.multipletAnalysis.setVisible(False)
+        self.w.isotopomerAnalysis.setVisible(False)
         return "updated GUI"
         # end updateGUI
 

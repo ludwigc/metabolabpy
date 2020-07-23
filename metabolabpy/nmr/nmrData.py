@@ -160,7 +160,7 @@ class NmrData:
 
         self.refPoint[0] = int(len(self.spc[0]) / 2)
         if (self.dim == 2):
-            self.refShift[1] = self.acq.o2 / self.acq.bf2
+            self.refShift[1] = (self.acq.spcFrequency[1] + self.acq.spcOffset[1])/ self.acq.spcFrequency[1]
             self.refPoint[1] = int(len(self.spc) / 2)
             if (tmsp == True):
                 self.refPoint[0] = self.ppm2points(0.0, 0)
@@ -551,6 +551,9 @@ class NmrData:
         if (dim == 1):
             if self.acq.manufacturer == 'Bruker':
                 sfo = self.proc.sf[1]
+                if sfo == 0.0:
+                    sfo = self.acq.sfo2
+
             else:
                 sfo = self.acq.sfo2
 
