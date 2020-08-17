@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1373</width>
-    <height>782</height>
+    <width>1363</width>
+    <height>860</height>
    </rect>
   </property>
   <property name="font">
@@ -19,7 +19,7 @@
    <string>MetaboLabPy GUI</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout_24">
+   <layout class="QGridLayout" name="gridLayout_13">
     <item row="0" column="0">
      <widget class="QTabWidget" name="nmrSpectrum">
       <property name="enabled">
@@ -32,8 +32,8 @@
        <attribute name="title">
         <string>NMR Spectrum</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_13">
-        <item row="0" column="0">
+       <layout class="QGridLayout" name="gridLayout_26">
+        <item row="0" column="0" rowspan="3">
          <widget class="MplWidget" name="MplWidget" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -43,8 +43,8 @@
           </property>
           <property name="minimumSize">
            <size>
-            <width>0</width>
-            <height>0</height>
+            <width>500</width>
+            <height>500</height>
            </size>
           </property>
           <property name="mouseTracking">
@@ -56,6 +56,11 @@
          <layout class="QVBoxLayout" name="verticalLayout_14">
           <item>
            <widget class="QGroupBox" name="preProcessingGroupBox">
+            <property name="font">
+             <font>
+              <pointsize>15</pointsize>
+             </font>
+            </property>
             <property name="title">
              <string>Data Pre-Processing</string>
             </property>
@@ -1845,6 +1850,248 @@
              </widget>
             </item>
            </layout>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="1">
+         <spacer name="verticalSpacer_16">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>17</width>
+            <height>37</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="2" column="1">
+         <spacer name="verticalSpacer_15">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>65</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="3" column="0" colspan="2">
+         <layout class="QGridLayout" name="gridLayout_24">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetFixedSize</enum>
+          </property>
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="exitPhCorr1d">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Exit</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="7">
+           <widget class="QPushButton" name="vertPhCorr2d">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Vert. PhCorr</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QPushButton" name="emptyRowColPhCorr2d">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Empty Row/Col</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QPushButton" name="pickRowColPhCorr2d">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Pick Row/Col</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="10">
+           <widget class="QPushButton" name="applyPhCorr2d">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Apply 2D PhCorr</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5">
+           <widget class="QPushButton" name="removeRowColPhCorr2d">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Remove last Row/Col</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="zoomPhCorr1d">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Zoom</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QPushButton" name="exitZoomPhCorr1d">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Exit Zoom</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="8">
+           <widget class="QPushButton" name="exitPhCorr2d">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Exit</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="6">
+           <widget class="QPushButton" name="horzPhCorr2d">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Hor. PhCorr</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="9">
+           <widget class="QPushButton" name="zoomPhCorr2d">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Zoom</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="11">
+           <widget class="QPushButton" name="cancelPhCorr2d">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Cancel PhCorr</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="13">
+           <spacer name="horizontalSpacer_44">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>128</width>
+              <height>13</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="12">
+           <widget class="QPushButton" name="exitZoomPhCorr2d">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Exit Zoom</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -4488,26 +4735,13 @@
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer_25">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
        <spacer name="horizontalSpacer_2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>40</width>
+          <width>41</width>
           <height>20</height>
          </size>
         </property>
@@ -4594,7 +4828,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1373</width>
+     <width>1363</width>
      <height>22</height>
     </rect>
    </property>
@@ -4650,18 +4884,8 @@
       <string>Phase/Baseline Correction</string>
      </property>
      <addaction name="actionCorrect_Phase"/>
-     <addaction name="actionZoomCorrect_Phase"/>
      <addaction name="actionAutomatic_Phase_Correction"/>
      <addaction name="actionAutomatic_Baseline_Correction"/>
-     <addaction name="separator"/>
-     <addaction name="actionPickColRow"/>
-     <addaction name="actionEmptyColRow"/>
-     <addaction name="actionRemoveLast"/>
-     <addaction name="actionHorzPhCorr2d"/>
-     <addaction name="actionVertPhCorr2d"/>
-     <addaction name="actionCancelPhCorr2d"/>
-     <addaction name="actionApplyPhCorr"/>
-     <addaction name="actionCancelPhCorr"/>
     </widget>
     <addaction name="menuApply_Window_Function"/>
     <addaction name="separator"/>
@@ -4858,7 +5082,7 @@
   </action>
   <action name="actionCorrect_Phase">
    <property name="text">
-    <string>Correct Phase</string>
+    <string>Interactive Phase Correction</string>
    </property>
    <property name="shortcut">
     <string>Alt+P</string>

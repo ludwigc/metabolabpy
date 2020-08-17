@@ -10,6 +10,7 @@ from PySide2 import QtGui  # pragma: no cover
 from PySide2 import QtCore  # pragma: no cover
 from PySide2.QtCore import SIGNAL  # pragma: no cover
 import matplotlib  # pragma: no cover
+from time import sleep
 
 matplotlib.use('Qt5Agg')  # pragma: no cover
 from matplotlib.backends.backend_qt5agg import (FigureCanvas,
@@ -181,7 +182,10 @@ class main_w(object):  # pragma: no cover
         self.w.actionPrevious_command.triggered.connect(self.previousCommand)
         self.w.actionNext_command.triggered.connect(self.nextCommand)
         self.w.actionCorrect_Phase.triggered.connect(self.startStopPhCorr)
-        self.w.actionZoomCorrect_Phase.triggered.connect(self.zoomPhCorr)
+        #self.w.actionZoomCorrect_Phase.triggered.connect(self.zoomPhCorr)
+        self.w.zoomPhCorr1d.clicked.connect(self.zoomPhCorr)
+        self.w.exitZoomPhCorr1d.clicked.connect(self.zoomPhCorr)
+        self.w.exitPhCorr1d.clicked.connect(self.startStopPhCorr)
         self.w.actionClear.triggered.connect(self.clear)
         self.w.lambdaLE.textChanged.connect(self.setVarLambda)
         self.w.y0LE.textChanged.connect(self.setVary0)
@@ -318,6 +322,29 @@ class main_w(object):  # pragma: no cover
         self.w.MplWidget2.toolbar.setVisible(False)
         self.w.MplWidget.setFocus()
         self.setZoom()
+        self.w.pickRowColPhCorr2d.clicked.connect(self.pickColRow)
+        self.w.emptyRowColPhCorr2d.clicked.connect(self.emptyColRow)
+        self.w.removeRowColPhCorr2d.clicked.connect(self.removeLastColRow)
+        self.w.horzPhCorr2d.clicked.connect(self.horzPhCorr2d)
+        self.w.vertPhCorr2d.clicked.connect(self.vertPhCorr2d)
+        self.w.exitPhCorr2d.clicked.connect(self.startStopPhCorr)
+        self.w.applyPhCorr2d.clicked.connect(self.apply2dPhCorr)
+        self.w.cancelPhCorr2d.clicked.connect(self.cancel2dPhCorr)
+        self.w.zoomPhCorr2d.clicked.connect(self.zoomPhCorr)
+        self.w.exitZoomPhCorr2d.clicked.connect(self.zoomPhCorr)
+        self.w.exitPhCorr1d.setVisible(False)
+        self.w.zoomPhCorr1d.setVisible(False)
+        self.w.exitZoomPhCorr1d.setVisible(False)
+        self.w.pickRowColPhCorr2d.setVisible(False)
+        self.w.emptyRowColPhCorr2d.setVisible(False)
+        self.w.removeRowColPhCorr2d.setVisible(False)
+        self.w.horzPhCorr2d.setVisible(False)
+        self.w.vertPhCorr2d.setVisible(False)
+        self.w.zoomPhCorr2d.setVisible(False)
+        self.w.applyPhCorr2d.setVisible(False)
+        self.w.cancelPhCorr2d.setVisible(False)
+        self.w.exitPhCorr2d.setVisible(False)
+        self.w.exitZoomPhCorr2d.setVisible(False)
         # end __init__
 
     def activateCommandLine(self):
@@ -339,8 +366,18 @@ class main_w(object):  # pragma: no cover
         cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease2d)
         cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
-        self.w.actionApplyPhCorr.triggered.disconnect()
-        self.w.actionCancelPhCorr.triggered.disconnect()
+        #self.w.actionApplyPhCorr.triggered.disconnect()
+        #self.w.actionCancelPhCorr.triggered.disconnect()
+        self.w.pickRowColPhCorr2d.setVisible(True)
+        self.w.emptyRowColPhCorr2d.setVisible(True)
+        self.w.removeRowColPhCorr2d.setVisible(True)
+        self.w.horzPhCorr2d.setVisible(True)
+        self.w.vertPhCorr2d.setVisible(True)
+        self.w.zoomPhCorr2d.setVisible(False)
+        self.w.applyPhCorr2d.setVisible(False)
+        self.w.cancelPhCorr2d.setVisible(False)
+        self.w.exitPhCorr2d.setVisible(True)
+        self.w.exitZoomPhCorr2d.setVisible(False)
         ph0 = ((self.phCorr.ph0_2d[self.phCorr.dim] + 180.0) % 360.0) - 180.0
         ph1 = self.phCorr.ph1_2d[self.phCorr.dim]
         if self.nd.nmrdat[s][e].proc.phaseInversion is False:
@@ -371,6 +408,8 @@ class main_w(object):  # pragma: no cover
 
         self.showPhCorr2d()
         self.setProcPars()
+        self.showAcquisitionParameters()
+        self.showNMRSpectrum()
         # end apply2dPhCorr
 
     def autobaseline1d(self):
@@ -457,8 +496,18 @@ class main_w(object):  # pragma: no cover
         cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease2d)
         cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
-        self.w.actionApplyPhCorr.triggered.disconnect()
-        self.w.actionCancelPhCorr.triggered.disconnect()
+        #self.w.actionApplyPhCorr.triggered.disconnect()
+        #self.w.actionCancelPhCorr.triggered.disconnect()
+        self.w.pickRowColPhCorr2d.setVisible(True)
+        self.w.emptyRowColPhCorr2d.setVisible(True)
+        self.w.removeRowColPhCorr2d.setVisible(True)
+        self.w.horzPhCorr2d.setVisible(True)
+        self.w.vertPhCorr2d.setVisible(True)
+        self.w.zoomPhCorr2d.setVisible(False)
+        self.w.applyPhCorr2d.setVisible(False)
+        self.w.cancelPhCorr2d.setVisible(False)
+        self.w.exitPhCorr2d.setVisible(True)
+        self.w.exitZoomPhCorr2d.setVisible(False)
         self.phCorr.ph0_2d[self.phCorr.dim] = 0
         self.phCorr.ph1_2d[self.phCorr.dim] = 0
         zoomStatus = self.w.keepZoom.isChecked()
@@ -474,6 +523,8 @@ class main_w(object):  # pragma: no cover
             self.setPan()
 
         self.showPhCorr2d()
+        self.showAcquisitionParameters()
+        self.showNMRSpectrum()
         # end cancel2dPhCorr
 
     def changeDataSetExp(self):
@@ -705,6 +756,8 @@ class main_w(object):  # pragma: no cover
         self.phCorr.spcCol = []
         self.phCorr.spcRowPts = []
         self.phCorr.spcColPts = []
+        self.showAcquisitionParameters()
+        self.showNMRSpectrum()
         # end emptyColRow
 
     def enableBaseline(self):
@@ -1372,9 +1425,21 @@ class main_w(object):  # pragma: no cover
         self.phCorr.maxPh1 = 90.0
         cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick2d)
         cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease2d)
-        self.w.actionApplyPhCorr.triggered.connect(self.apply2dPhCorr)
-        self.w.actionCancelPhCorr.triggered.connect(self.cancel2dPhCorr)
+        #self.w.actionApplyPhCorr.triggered.connect(self.apply2dPhCorr)
+        #self.w.actionCancelPhCorr.triggered.connect(self.cancel2dPhCorr)
+        self.w.pickRowColPhCorr2d.setVisible(False)
+        self.w.emptyRowColPhCorr2d.setVisible(False)
+        self.w.removeRowColPhCorr2d.setVisible(False)
+        self.w.horzPhCorr2d.setVisible(False)
+        self.w.vertPhCorr2d.setVisible(False)
+        self.w.zoomPhCorr2d.setVisible(True)
+        self.w.applyPhCorr2d.setVisible(True)
+        self.w.cancelPhCorr2d.setVisible(True)
+        self.w.exitPhCorr2d.setVisible(False)
+        self.w.exitZoomPhCorr2d.setVisible(False)
         self.phCorrPlotSpc2d(False)
+        self.showAcquisitionParameters()
+        self.showNMRSpectrum()
         # end horzPhCorr2d
 
     def loadButton(self):
@@ -1427,6 +1492,7 @@ class main_w(object):  # pragma: no cover
         self.updateGUI()
         self.w.console.verticalScrollBar().setValue(self.w.console.verticalScrollBar().maximum())
         self.showTitleFileInformation()
+        self.showAcquisitionParameters()
         self.showNMRSpectrum()
         # end loadFile
 
@@ -1836,7 +1902,11 @@ class main_w(object):  # pragma: no cover
         # a figure object and redirecting the error output
         codeErr = io.StringIO()
         sys.stderr = codeErr
-        self.w.MplWidget.canvas.figure()
+        try:
+            self.w.MplWidget.canvas.figure()
+        except:
+            pass
+
         sys.stderr = sys.__stderr__
         # end phCorrPlotSpc
 
@@ -1874,7 +1944,11 @@ class main_w(object):  # pragma: no cover
         # a figure object and redirecting the error output
         codeErr = io.StringIO()
         sys.stderr = codeErr
-        self.w.MplWidget.canvas.figure()
+        try:
+            self.w.MplWidget.canvas.figure()
+        except:
+            pass
+
         sys.stderr = sys.__stderr__
         # end phCorrPlotSpc2d
 
@@ -1898,7 +1972,10 @@ class main_w(object):  # pragma: no cover
         # end phasesRemovePivot
 
     def pickColRow(self):
+        self.w.statusBar().clearMessage()
         self.w.statusBar().showMessage("Click to add row/col")
+        self.showAcquisitionParameters()
+        self.showNMRSpectrum()
         xy = self.w.MplWidget.canvas.axes.figure.ginput(1)
         self.showPhCorr2d()
         xyPts = []
@@ -2284,6 +2361,8 @@ class main_w(object):  # pragma: no cover
             self.phCorr.spcRowPts = self.phCorr.spcRowPts[:-1]
             self.phCorr.spcColPts = self.phCorr.spcColPts[:-1]
             self.plot2dColRow()
+            self.showAcquisitionParameters()
+            self.showNMRSpectrum()
 
         # end removeLastColRow
 
@@ -3459,11 +3538,17 @@ class main_w(object):  # pragma: no cover
         # end showAcquisitionParameters
 
     def showAutoBaseline(self):
+        self.w.statusBar().clearMessage()
         self.w.statusBar().showMessage("Automatic baseline correction in progress...")
+        self.showAcquisitionParameters()
+        self.showNMRSpectrum()
         # end showAutoBaseline
 
     def showAutoPhase(self):
+        self.w.statusBar().clearMessage()
         self.w.statusBar().showMessage("Automatic phase correction in progress...")
+        self.showAcquisitionParameters()
+        self.showNMRSpectrum()
         # end showAutoPhase
 
     def showConsole(self):
@@ -3489,23 +3574,39 @@ class main_w(object):  # pragma: no cover
         # end showNMRSpectrum
 
     def showPhCorr(self):
+        self.w.statusBar().clearMessage()
         self.w.statusBar().showMessage(
-            "Left Mouse Button (MB) for ph0, Right MB or Left MB + shift for ph1, Middle MB or Left MB + Cmd to set pivot        |        Press Alt+p to exit    |   Press Alt+z to zoom")
+            "Left Mouse Button (MB) for ph0, Right MB or Left MB + shift for ph1, Middle MB or Left MB + Cmd to set pivot")
+        #    #"Left Mouse Button (MB) for ph0, Right MB or Left MB + shift for ph1, Middle MB or Left MB + Cmd to set pivot        |        Press Alt+p to exit    |   Press Alt+z to zoom")
+        self.showAcquisitionParameters()
+        self.showNMRSpectrum()
         # end showPhCorr
 
     def showPhCorr2d(self):
+        self.w.statusBar().clearMessage()
         self.w.statusBar().showMessage(
-            "Press: Alt+k to pick row/col | Alt+e to empty selection | Alt+r to remove last row/col | Alt+1 for horizontal phase correction | Alt+2 for vertical phase correction | Alt+x to eXit")
+            "2D Interactive Phase Correction")
+        #    "Press: Alt+k to pick row/col | Alt+e to empty selection | Alt+r to remove last row/col | Alt+1 for horizontal phase correction | Alt+2 for vertical phase correction | Alt+x to eXit")
+        self.showAcquisitionParameters()
+        self.showNMRSpectrum()
         # end showPhCorr2d
 
     def showPhCorr2d_1d(self, dim=0):
+        self.w.statusBar().clearMessage()
         self.w.statusBar().showMessage(
-            "Left Mouse Button (MB) for ph0, Right MB or Left MB + shift for ph1, Middle MB or Left MB + Cmd to set pivot | Press: Alt+Shift+p to apply phCorr | Alt+Shift+x to cancel | Alt+z to zoom")
+            "Left Mouse Button (MB) for ph0, Right MB or Left MB + shift for ph1, Middle MB or Left MB + Cmd to set pivot")
+        #    "Left Mouse Button (MB) for ph0, Right MB or Left MB + shift for ph1, Middle MB or Left MB + Cmd to set pivot | Press: Alt+Shift+p to apply phCorr | Alt+Shift+x to cancel | Alt+z to zoom")
+        self.showAcquisitionParameters()
+        self.showNMRSpectrum()
         # end showPhCorr2d
 
     def showPhZoom(self):
+        self.w.statusBar().clearMessage()
         self.w.statusBar().showMessage(
-            "Left Mouse Button (MB) for rectangular zoom, Right MB to unzoom        |        Press Alt+z to exit to phase correction")
+            "Left Mouse Button (MB) for rectangular zoom, Right MB to unzoom")
+        #    "Left Mouse Button (MB) for rectangular zoom, Right MB to unzoom        |        Press Alt+z to exit to phase correction")
+        self.showAcquisitionParameters()
+        self.showNMRSpectrum()
         # end showPhZoom
 
     def showPreProcessing(self):
@@ -3529,7 +3630,10 @@ class main_w(object):  # pragma: no cover
         # end showTitleFileInformation
 
     def showVersion(self):
+        self.w.statusBar().clearMessage()
         self.w.statusBar().showMessage("MetaboLabPy " + self.__version__)
+        self.showAcquisitionParameters()
+        self.showNMRSpectrum()
         # end showVersion
 
     def startStopPhCorr(self):
@@ -3561,6 +3665,10 @@ class main_w(object):  # pragma: no cover
                 self.phCorrActive = True
                 self.showPhCorr()
                 # self.w.MplWidget.canvas.figure.canvas.toolbar.setEnabled(False)
+                self.w.exitPhCorr1d.setVisible(True)
+                self.w.zoomPhCorr1d.setVisible(True)
+                self.w.exitZoomPhCorr1d.setVisible(False)
+                self.updateGUI()
                 self.phCorrPlotSpc()
             else:
                 cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick)
@@ -3570,19 +3678,22 @@ class main_w(object):  # pragma: no cover
                 self.phCorrActive = False
                 # self.w.MplWidget.canvas.figure.canvas.toolbar.setEnabled(True)
                 self.showVersion()
+                self.w.exitPhCorr1d.setVisible(False)
+                self.w.zoomPhCorr1d.setVisible(False)
+                self.w.exitZoomPhCorr1d.setVisible(False)
+                self.updateGUI()
                 self.plotSpc()
-                zOn = self.zoomWasOn
-                pOn = self.panWasOn
-                self.zoomWasOn = False
-                self.panWasOn = False
-                if (zOn == True):
-                    self.setZoom()
-                    self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
-
-                if (pOn == True):
-                    self.setPan()
-                    self.w.MplWidget.canvas.figure.canvas.toolbar.pan()
-
+                #zOn = self.zoomWasOn
+                #pOn = self.panWasOn
+                #self.zoomWasOn = False
+                #self.panWasOn = False
+                #if (zOn == True):
+                self.setZoom()
+                #    #self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
+                #
+                #if (pOn == True):
+                #    self.setPan()
+                #    #self.w.MplWidget.canvas.figure.canvas.toolbar.pan()
 
         else:  # dim == 2
             if (self.phCorrActive == False):
@@ -3592,25 +3703,37 @@ class main_w(object):  # pragma: no cover
                 if (self.panWasOn == True):
                     self.setPan()
 
-                self.w.actionPickColRow.triggered.connect(self.pickColRow)
-                self.w.actionEmptyColRow.triggered.connect(self.emptyColRow)
-                self.w.actionRemoveLast.triggered.connect(self.removeLastColRow)
-                self.w.actionHorzPhCorr2d.triggered.connect(self.horzPhCorr2d)
-                self.w.actionVertPhCorr2d.triggered.connect(self.vertPhCorr2d)
-                self.w.actionCancelPhCorr2d.triggered.connect(self.startStopPhCorr)
+                #self.w.actionPickColRow.triggered.connect(self.pickColRow)
+                #self.w.actionEmptyColRow.triggered.connect(self.emptyColRow)
+                #self.w.actionRemoveLast.triggered.connect(self.removeLastColRow)
+                #self.w.actionHorzPhCorr2d.triggered.connect(self.horzPhCorr2d)
+                #self.w.actionVertPhCorr2d.triggered.connect(self.vertPhCorr2d)
+                #self.w.actionCancelPhCorr2d.triggered.connect(self.startStopPhCorr)
+                self.w.pickRowColPhCorr2d.setVisible(True)
+                self.w.emptyRowColPhCorr2d.setVisible(True)
+                self.w.removeRowColPhCorr2d.setVisible(True)
+                self.w.horzPhCorr2d.setVisible(True)
+                self.w.vertPhCorr2d.setVisible(True)
+                self.w.exitPhCorr2d.setVisible(True)
                 self.phCorrActive = True
                 self.showPhCorr2d()
             else:
-                self.w.actionPickColRow.triggered.disconnect(self.pickColRow)
-                self.w.actionEmptyColRow.triggered.disconnect(self.emptyColRow)
-                self.w.actionRemoveLast.triggered.disconnect(self.removeLastColRow)
-                self.w.actionHorzPhCorr2d.triggered.disconnect(self.horzPhCorr2d)
-                self.w.actionVertPhCorr2d.triggered.disconnect(self.vertPhCorr2d)
-                self.w.actionCancelPhCorr2d.triggered.disconnect(self.startStopPhCorr)
+                #self.w.actionPickColRow.triggered.disconnect(self.pickColRow)
+                #self.w.actionEmptyColRow.triggered.disconnect(self.emptyColRow)
+                #self.w.actionRemoveLast.triggered.disconnect(self.removeLastColRow)
+                #self.w.actionHorzPhCorr2d.triggered.disconnect(self.horzPhCorr2d)
+                #self.w.actionVertPhCorr2d.triggered.disconnect(self.vertPhCorr2d)
+                #self.w.actionCancelPhCorr2d.triggered.disconnect(self.startStopPhCorr)
                 self.emptyColRow()
+                self.w.pickRowColPhCorr2d.setVisible(False)
+                self.w.emptyRowColPhCorr2d.setVisible(False)
+                self.w.removeRowColPhCorr2d.setVisible(False)
+                self.w.horzPhCorr2d.setVisible(False)
+                self.w.vertPhCorr2d.setVisible(False)
+                self.w.exitPhCorr2d.setVisible(False)
                 self.phCorrActive = False
                 self.showVersion()
-                self.plotSpc()
+                #self.plotSpc()
                 zOn = self.zoomWasOn
                 pOn = self.panWasOn
                 self.zoomWasOn = False
@@ -3623,6 +3746,8 @@ class main_w(object):  # pragma: no cover
                 if (pOn == True):
                         self.setPan()
 
+        self.showAcquisitionParameters()
+        self.showNMRSpectrum()
         # end startStopPhCorr
 
     def updateGUI(self):
@@ -3719,9 +3844,22 @@ class main_w(object):  # pragma: no cover
         self.phCorr.maxPh1 = 90.0
         cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick2d)
         cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease2d)
-        self.w.actionApplyPhCorr.triggered.connect(self.apply2dPhCorr)
-        self.w.actionCancelPhCorr.triggered.connect(self.cancel2dPhCorr)
+        #self.w.actionApplyPhCorr.triggered.connect(self.apply2dPhCorr)
+        #self.w.actionCancelPhCorr.triggered.connect(self.cancel2dPhCorr)
         self.phCorrPlotSpc2d(False)
+        self.w.pickRowColPhCorr2d.setVisible(False)
+        self.w.emptyRowColPhCorr2d.setVisible(False)
+        self.w.removeRowColPhCorr2d.setVisible(False)
+        self.w.horzPhCorr2d.setVisible(False)
+        self.w.vertPhCorr2d.setVisible(False)
+        self.w.zoomPhCorr2d.setVisible(True)
+        self.w.applyPhCorr2d.setVisible(True)
+        self.w.cancelPhCorr2d.setVisible(True)
+        self.w.exitPhCorr2d.setVisible(False)
+        self.w.exitZoomPhCorr2d.setVisible(False)
+        self.phCorrPlotSpc2d(False)
+        self.showAcquisitionParameters()
+        self.showNMRSpectrum()
         # end vertPhCorr2d
 
     def zeroAcqPars(self):
@@ -3808,6 +3946,16 @@ class main_w(object):  # pragma: no cover
                 # Enable zoom
                 self.zoom = True
                 self.showPhZoom()
+                if self.phCorr.nDims == 1:
+                    self.w.exitPhCorr1d.setVisible(False)
+                    self.w.zoomPhCorr1d.setVisible(False)
+                    self.w.exitZoomPhCorr1d.setVisible(True)
+                else:
+                    self.w.zoomPhCorr2d.setVisible(False)
+                    self.w.applyPhCorr2d.setVisible(False)
+                    self.w.cancelPhCorr2d.setVisible(False)
+                    self.w.exitZoomPhCorr2d.setVisible(True)
+
                 try:
                     self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
                 except:
@@ -3819,10 +3967,21 @@ class main_w(object):  # pragma: no cover
                 if self.phCorr.nDims == 1:
                     self.showPhCorr()
                     self.zoomWasOn = False
+                    self.w.exitPhCorr1d.setVisible(True)
+                    self.w.zoomPhCorr1d.setVisible(True)
+                    self.w.exitZoomPhCorr1d.setVisible(False)
                 else:
                     self.showPhCorr2d_1d()
+                    self.w.zoomPhCorr2d.setVisible(True)
+                    self.w.applyPhCorr2d.setVisible(True)
+                    self.w.cancelPhCorr2d.setVisible(True)
+                    self.w.exitZoomPhCorr2d.setVisible(False)
+                    self.setZoomOff()
 
 
+
+        self.showAcquisitionParameters()
+        self.showNMRSpectrum()
         # end zoomPhCorr
 
 
