@@ -194,15 +194,6 @@ class NmrDataSet:
             self.nmrdat[self.s][k].spc[0][idx]  = np.zeros(len(idx))
             self.nmrdat[self.s][k].spc[0][idx2] = np.zeros(len(idx2))
         
-        mVal = 0
-        for k in range(len(self.nmrdat[self.s])):
-            mVal = min(mVal,np.min(self.nmrdat[self.s][k].spc[0].real))
-
-        if mVal < 0 and self.pp.avoidNegativeValues:
-            for k in range(len(self.nmrdat[self.s])):
-                self.nmrdat[self.s][k].spc[0] -= mVal
-
-        
         for k in range(len(self.nmrdat[self.s])):
             self.nmrdat[self.s][k].spc[0][idx]  = np.zeros(len(idx))
             self.nmrdat[self.s][k].spc[0][idx2] = np.zeros(len(idx2))
@@ -215,7 +206,24 @@ class NmrDataSet:
             
         if(self.pp.flagScaleSpectra == True):
             self.scaleSpectra()
-        
+
+        spc = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
+        nSpc = len(self.nmrdat[self.s])
+        for k in range(nSpc):
+            spc += self.nmrdat[self.s][k].spc[0].real
+
+        idx = np.where(spc == 0)
+        mVal = 0
+        for k in range(len(self.nmrdat[self.s])):
+            mVal = min(mVal,np.min(self.nmrdat[self.s][k].spc[0].real))
+
+        if mVal < 0 and self.pp.avoidNegativeValues:
+            for k in range(len(self.nmrdat[self.s])):
+                self.nmrdat[self.s][k].spc[0] -= mVal
+
+        for k in range(len(self.nmrdat[self.s])):
+            self.nmrdat[self.s][k].spc[0][idx] = np.zeros(len(idx))
+
         if(self.pp.flagVarianceStabilisation == True):
             self.varianceStabilisation()
             
