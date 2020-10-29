@@ -762,9 +762,9 @@ class NmrData:
         if self.acq.manufacturer == 'Bruker':
             titleFile = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'pdata' + os.sep + '1' + os.sep + 'title'
             if (os.path.isfile(titleFile)):
-                fid = open(titleFile, "r")
-                self.title = fid.read()
-                fid.close()
+                    fid = open(titleFile, "r")
+                    self.title = fid.read()
+                    fid.close()
 
             acquFile = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'acqu'
             if (os.path.isfile(acquFile)):

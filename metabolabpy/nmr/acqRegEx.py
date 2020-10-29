@@ -46,6 +46,7 @@ class AcqRegEx:
         self.spinRate         = re.compile(r'##\$MASR= (\d+)')
         self.pulProg          = re.compile(r'##\$PULPROG= (.+)')
         self.aunm             = re.compile(r'##\$AUNM= (.+)')
+        self.autopos          = re.compile(r'##\$AUTOPOS= (.+)')
         self.nucleus          = re.compile(r'##\$NUC\d= (.+)')
         self.nucleusIndex     = re.compile(r'##\$NUC(\d)=.+')
         self.instrument       = re.compile(r'##\$INSTRUM= (.+)')

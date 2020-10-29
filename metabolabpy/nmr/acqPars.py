@@ -102,6 +102,7 @@ class AcqPars:
         self.np2              = 1
         self.phase            = np.array([], dtype = 'int')
         self.phase2           = np.array([], dtype = 'int')
+        self.autopos          = ''
         # end __init__
         
     def __str__(self): # pragma: no cover
@@ -156,6 +157,7 @@ class AcqPars:
         self.spinRate         = int(self.regEx.spinRate.findall(self.acqusText)[0])
         self.pulProgName      = self.regEx.pulProg.findall(self.acqusText)[0]
         self.aunm             = self.regEx.aunm.findall(self.acqusText)[0]
+        self.autopos          = self.regEx.autopos.findall(self.acqusText)[0]
         self.instrument       = self.regEx.instrument.findall(self.acqusText)[0]
         self.dataType         = int(self.regEx.dataType.findall(self.acqusText)[0])
         self.solvent          = self.regEx.solvent.findall(self.acqusText)[0]
