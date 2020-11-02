@@ -106,7 +106,7 @@ class nmrDataSetTestCase(unittest.TestCase):
         self.assertEqual(nd.nmrdat[0][0].refPoint[0], 132)
         self.assertEqual(nd.nmrdat[0][0].refShift[0], 0.0)
         self.assertEqual(nd.nmrdat[0][0].refPoint[1], 1792)
-        self.assertAlmostEqual(nd.nmrdat[0][0].refShift[1], 80.0, 6)
+        self.assertAlmostEqual(nd.nmrdat[0][0].refShift[1], 80.0, 4)
 
     def test_clear(self):
         pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
@@ -254,7 +254,7 @@ class nmrDataSetTestCase(unittest.TestCase):
         self.assertEqual(len(nd.nmrdat[0][0].spc[0]), 922)
 
     def test_readNMRPipeSpcs(self):
-        pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        pName = [os.path.join(os.path.dirname(__file__), "data", "nmrData")]  # directory of test data set
         eName = ["5"]  # 2D HSQC NMRPipe data in exp 5
         nd = nmrDataSet.NmrDataSet()  # create nmrDataSet object
         nd.readNMRPipeSpcs(pName, eName)

@@ -119,10 +119,10 @@ class nmrDataTestCase(unittest.TestCase):
         nd.readSpc()
         nd.procSpc2D()
         nd.calcPPM()
-        self.assertAlmostEqual(nd.ppm1[0], 12.016570688775726)
-        self.assertAlmostEqual(nd.ppm1[-1], 0.0)
-        self.assertAlmostEqual(nd.ppm2[0], 0.08331489010884505)
-        self.assertAlmostEqual(nd.ppm2[-1], 0.0)
+        self.assertAlmostEqual(nd.ppm1[0], 12.01657, 4)
+        self.assertAlmostEqual(nd.ppm1[-1], 0.0, )
+        self.assertAlmostEqual(nd.ppm2[0], 0.08333, 4)
+        self.assertAlmostEqual(nd.ppm2[-1], 0.0, 4)
 
     def test_conv(self):
         pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
@@ -339,7 +339,7 @@ class nmrDataTestCase(unittest.TestCase):
         pts3 = nd.ppm2points(0, 1)
         pts4 = nd.ppm2points(10, 1)
         self.assertEqual(pts2 - pts1, 79)
-        self.assertEqual(pts4 - pts3, 224)
+        self.assertEqual(pts4 - pts3, 223)
 
     def test_ppm2points2d(self):
         pName = os.path.join(os.path.dirname(__file__), "data",
@@ -355,7 +355,7 @@ class nmrDataTestCase(unittest.TestCase):
         ppm[0].append(20.7576)
         pts = nd.ppm2points2d(ppm)
         self.assertEqual(int(pts[0][0]), 129)
-        self.assertEqual(int(pts[0][1]), 465)
+        self.assertEqual(int(pts[0][1]), 462)
 
     def test_procSpc(self):
         pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
@@ -537,7 +537,7 @@ class nmrDataTestCase(unittest.TestCase):
 
         nd.symjres()
         pt = np.where(np.transpose(nd.spc)[1406].real == np.amax(np.transpose(nd.spc)[1406].real))[0][0]
-        self.assertEqual(pt, 37)
+        self.assertEqual(pt, 57)
 
     def test_tiltJRes(self):
         pName = os.path.join(os.path.dirname(__file__), "data",
@@ -555,7 +555,7 @@ class nmrDataTestCase(unittest.TestCase):
             nd.spc[k] = np.abs(nd.spc[k])
 
         pt = np.where(np.transpose(nd.spc)[1406].real == np.amax(np.transpose(nd.spc)[1406].real))[0][0]
-        self.assertEqual(pt, 116)
+        self.assertEqual(pt, 115)
 
     def test_waterSupp(self):
         pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set

@@ -3772,7 +3772,7 @@ class main_w(object):  # pragma: no cover
 
         if self.nd.nmrdat[s][e].dim > 1:
             if self.nd.nmrdat[self.nd.s][self.nd.e].acq.pulProgName.find("hsqc") > 0 or self.nd.nmrdat[self.nd.s][self.nd.e].acq.pulProgName.find("hmqc") > 0:
-                self.w.hsqcAnalysis.setVisible(True)
+                self.w.hsqcAnalysis.setVisible(False) # develop set true
             else:
                 self.w.hsqcAnalysis.setVisible(False)
 

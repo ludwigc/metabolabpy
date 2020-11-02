@@ -160,7 +160,7 @@ class NmrData:
 
         self.refPoint[0] = int(len(self.spc[0]) / 2)
         if (self.dim == 2):
-            self.refShift[1] = (self.acq.spcFrequency[1] + self.acq.spcOffset[1])/ self.acq.spcFrequency[1]
+            self.refShift[1] = (self.acq.spcFrequency[1] + self.acq.spcOffset[1]) / self.acq.spcFrequency[1] - 1.0
             self.refPoint[1] = int(len(self.spc) / 2)
             if (tmsp == True):
                 self.refPoint[0] = self.ppm2points(0.0, 0)
@@ -1049,7 +1049,7 @@ class NmrData:
             fid1 = ifft(self.spc[k])
             fid1 = self.phase2(fid1, 0, -npts * 360.0)
 
-            self.spc[k] = fft(fid1)
+            self.spc[k] = fft(fid1).real
 
         # end tiltJRes
 
