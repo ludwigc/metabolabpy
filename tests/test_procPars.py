@@ -24,5 +24,12 @@ class procParsTestCase(unittest.TestCase):
         pp = procPars.ProcPars()                                              # create nmrDataSet object
         pp.read(pName)                                                        # check if Bruker procs data can be read
 
+
+    def test_readVProcPars(self):
+        pName = os.path.join(os.path.dirname(__file__), "data", "nmrData", "varianData.fid")  # directory of spectrum
+        pp = procPars.ProcPars()  # create nmrDataSet object
+        pp.read(pName)  # check if Varian procpar data can be read
+
+
 if __name__ == "__main__":
     unittest.main()

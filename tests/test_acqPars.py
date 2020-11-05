@@ -24,6 +24,11 @@ class acqParsTestCase(unittest.TestCase):
         ap = acqPars.AcqPars()  # create nmrDataSet object
         ap.read(pName)  # check if Bruker acqus data can be read
 
+    def test_readVAcqPars(self):
+        pName = os.path.join(os.path.dirname(__file__), "data", "nmrData", "varianData.fid")  # directory of spectrum
+        ap = acqPars.AcqPars()  # create nmrDataSet object
+        ap.read(pName)  # check if Varian procpar data can be read
+
 
 if __name__ == "__main__":
     unittest.main()
