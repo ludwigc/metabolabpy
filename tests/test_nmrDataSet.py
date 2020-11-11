@@ -193,6 +193,107 @@ class nmrDataSetTestCase(unittest.TestCase):
         pts = len(nd.nmrdat[0][0].spc[0])
         self.assertEqual(pts,1024)
 
+    def test_compressBuckets(self):
+        pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        eName = "1"  # 1D NMR data in exp 1
+        nd = nmrDataSet.NmrDataSet()  # create nmrDataSet object
+        nd.readSpc(pName, eName)  # check if Bruker data can be read
+        nd.nmrdat[0][0].proc.ph0[0] = -18.49143139318872
+        nd.nmrdat[0][0].proc.ph1[0] = -0.7082407011136772
+        nd.ft()
+        nd.pp.compressStart = [6.5448]
+        nd.pp.compressEnd = [7.4705]
+        nd.pp.flagCompressBuckets = True
+        nd.dataPreProcessing()
+        pts = nd.nmrdat[0][0].ppm2points([nd.pp.compressEnd[0], nd.pp.compressStart[0]], 0)
+        npts = len(nd.nmrdat[0][0].spc[0])
+        spc = nd.nmrdat[0][0].spc[0][npts - pts[0]:npts - pts[1]].real
+        self.assertEqual(spc.max(), spc.sum())
+
+    def test_avoidNegativeValues(self):
+        pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        eName = "1"  # 1D NMR data in exp 1
+        nd = nmrDataSet.NmrDataSet()  # create nmrDataSet object
+        nd.readSpc(pName, eName)  # check if Bruker data can be read
+        nd.nmrdat[0][0].proc.ph0[0] = -18.49143139318872
+        nd.nmrdat[0][0].proc.ph1[0] = -0.7082407011136772
+        nd.ft()
+        nd.pp.avoidNegativeValues = True
+        nd.dataPreProcessing()
+        self.assertEqual(nd.nmrdat[0][0].spc[0].real.min(), 0.0)
+
+    def test_segmentalAlignment(self):
+        pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        eName = "10"  # 1D NMR data in exp 1
+        nd = nmrDataSet.NmrDataSet()  # create nmrDataSet object
+        nd.readSpc(pName, eName)  # check if Bruker data can be read
+        nd.nmrdat[0][0].proc.ph0[0] = -85.94556
+        nd.nmrdat[0][0].proc.ph1[0] =   6.64201
+        nd.nmrdat[0][0].proc.lb[0] = 2.0
+        nd.ft()
+        nd.nmrdat[0][0].autobaseline1d()
+        nd.nmrdat[0][0].autoRef()
+        eName = "11"  # 1D NMR data in exp 1
+        nd.readSpc(pName, eName)  # check if Bruker data can be read
+        nd.nmrdat[0][1].proc.ph0[0] = -79.29513383337031
+        nd.nmrdat[0][1].proc.ph1[0] =   7.790498486770286
+        nd.nmrdat[0][1].proc.lb[0] = 2.0
+        nd.e = 1
+        nd.ft()
+        nd.nmrdat[0][0].autobaseline1d()
+        nd.nmrdat[0][1].autobaseline1d()
+        nd.nmrdat[0][0].autoRef()
+        nd.nmrdat[0][1].autoRef()
+        startPpm = 8.1091
+        endPpm = 8.1825
+        nd.pp.segStart = [startPpm]
+        nd.pp.segEnd = [endPpm]
+        nd.pp.flagSegmentalAlignment = True
+        nd.pp.segAlignRefSpc = 1
+        nd.dataPreProcessing()
+        pts1 = len(nd.nmrdat[0][0].spc[0]) - nd.nmrdat[0][0].ppm2points([endPpm, startPpm], 0)
+        spc1 = nd.nmrdat[0][0].spc[0][pts1[0]:pts1[1]].real
+        spc2 = nd.nmrdat[0][1].spc[0][pts1[0]:pts1[1]].real
+        self.assertEqual(np.argmax(spc1), np.argmax(spc2))
+
+    def test_scaleSpectra(self):
+        pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        eName = "10"  # 1D NMR data in exp 1
+        nd = nmrDataSet.NmrDataSet()  # create nmrDataSet object
+        nd.readSpc(pName, eName)  # check if Bruker data can be read
+        nd.nmrdat[0][0].proc.ph0[0] = -85.94556
+        nd.nmrdat[0][0].proc.ph1[0] =   6.64201
+        nd.nmrdat[0][0].proc.lb[0] = 0.3
+        nd.ft()
+        nd.nmrdat[0][0].autobaseline1d()
+        nd.nmrdat[0][0].autoRef()
+        eName = "11"  # 1D NMR data in exp 1
+        nd.readSpc(pName, eName)  # check if Bruker data can be read
+        nd.nmrdat[0][1].proc.ph0[0] = -79.29513383337031
+        nd.nmrdat[0][1].proc.ph1[0] =   7.790498486770286
+        nd.nmrdat[0][1].proc.lb[0] = 0.3
+        nd.e = 1
+        nd.ft()
+        nd.pp.flagScaleSpectra = True
+        nd.pp.scaleSpectraRefSpc = 1
+        self.assertAlmostEqual(nd.nmrdat[0][1].spc[0].real.max() / 10331062121.45446, 1.0, 1)
+        nd.pp.scalePQN = True
+        nd.dataPreProcessing()
+        self.assertAlmostEqual(nd.nmrdat[0][1].spc[0].real.max() / 7644944702.898952, 1.0, 1)
+        nd.resetDataPreProcessing()
+        self.assertAlmostEqual(nd.nmrdat[0][0].spc[0].real.max() / 9406699558.794441, 1.0, 1)
+        nd.pp.scalePQN = False
+        nd.pp.flagScaleSpectra = True
+        nd.pp.preserveOverallScale = True
+        nd.dataPreProcessing()
+        self.assertAlmostEqual(nd.nmrdat[0][0].spc[0].real.max() / 11455353501.485264, 1.0, 1)
+        nd.resetDataPreProcessing()
+        nd.pp.preserveOverallScale = False
+        nd.dataPreProcessing()
+        self.assertAlmostEqual(nd.nmrdat[0][0].spc[0].real.max() / 0.011113980938806603, 1.0, 1)
+
+
+
     def test_pjres(self):
         pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         eName = "2"  # 2D JresNMR data in exp 1

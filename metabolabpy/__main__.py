@@ -32,7 +32,8 @@ import traceback  # pragma: no cover
 import shutil  # pragma: no cover
 import scipy.io  # pragma: no cover
 import inspect
-
+from io import StringIO
+import contextlib
 
 # import pandas as pd                       # pragma: no cover
 
@@ -178,6 +179,7 @@ class main_w(object):  # pragma: no cover
         self.w.actionPlot_spc.triggered.connect(self.plotSpc)
         self.w.actionSave.triggered.connect(self.saveButton)
         self.w.actionLoad.triggered.connect(self.loadButton)
+        self.w.actionOpen_NMRPipe.triggered.connect(self.readNMRPipeSpc)
         self.w.actionActivate_Command_Line.triggered.connect(self.activateCommandLine)
         self.w.actionPrevious_command.triggered.connect(self.previousCommand)
         self.w.actionNext_command.triggered.connect(self.nextCommand)
@@ -413,6 +415,10 @@ class main_w(object):  # pragma: no cover
         # end apply2dPhCorr
 
     def autobaseline1d(self):
+        codeOut = io.StringIO()
+        codeErr = io.StringIO()
+        sys.stdout = codeOut
+        sys.stderr = codeErr
         self.showAutoBaseline()
         self.nd.ft()
         self.nd.autoref()
@@ -426,9 +432,21 @@ class main_w(object):  # pragma: no cover
         self.w.nmrSpectrum.setCurrentIndex(0)
         self.changeDataSetExp()
         self.plotSpc()
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
+        self.w.console.setTextColor('Black')
+        self.w.console.append(codeOut.getvalue())
+        self.w.console.setTextColor('Red')
+        self.w.console.append(codeErr.getvalue())
+        codeOut.close()
+        codeErr.close()
         # end autobaseline1d
 
     def autobaseline1dAll(self):
+        codeOut = io.StringIO()
+        codeErr = io.StringIO()
+        sys.stdout = codeOut
+        sys.stderr = codeErr
         self.showAutoBaseline()
         self.nd.ft()
         self.nd.autoref()
@@ -442,9 +460,21 @@ class main_w(object):  # pragma: no cover
         self.w.nmrSpectrum.setCurrentIndex(0)
         self.changeDataSetExp()
         self.plotSpc()
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
+        self.w.console.setTextColor('Black')
+        self.w.console.append(codeOut.getvalue())
+        self.w.console.setTextColor('Red')
+        self.w.console.append(codeErr.getvalue())
+        codeOut.close()
+        codeErr.close()
         # end autobaseline1dAll
 
     def autophase1d(self):
+        codeOut = io.StringIO()
+        codeErr = io.StringIO()
+        sys.stdout = codeOut
+        sys.stderr = codeErr
         self.showAutoPhase()
         self.nd.ft()
         self.nd.autoref()
@@ -458,9 +488,21 @@ class main_w(object):  # pragma: no cover
         self.w.nmrSpectrum.setCurrentIndex(0)
         self.changeDataSetExp()
         self.plotSpc()
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
+        self.w.console.setTextColor('Black')
+        self.w.console.append(codeOut.getvalue())
+        self.w.console.setTextColor('Red')
+        self.w.console.append(codeErr.getvalue())
+        codeOut.close()
+        codeErr.close()
         # end autophase1d
 
     def autophase1dAll(self):
+        codeOut = io.StringIO()
+        codeErr = io.StringIO()
+        sys.stdout = codeOut
+        sys.stderr = codeErr
         self.showAutoPhase()
         self.nd.ft()
         self.nd.autoref()
@@ -474,6 +516,14 @@ class main_w(object):  # pragma: no cover
         self.w.nmrSpectrum.setCurrentIndex(0)
         self.changeDataSetExp()
         self.plotSpc()
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
+        self.w.console.setTextColor('Black')
+        self.w.console.append(codeOut.getvalue())
+        self.w.console.setTextColor('Red')
+        self.w.console.append(codeErr.getvalue())
+        codeOut.close()
+        codeErr.close()
         # end autophase1dAll
 
     def autoref(self, tmsp=True):
@@ -812,28 +862,43 @@ class main_w(object):  # pragma: no cover
         self.w.keepZoom.setChecked(False)
         codeOut = io.StringIO()
         codeErr = io.StringIO()
+        sys.stdout = codeOut
+        sys.stderr = codeErr
         code = self.w.script.toPlainText()
         code = code.replace('\\', '\\' * 2)
         try:
             exec(code)
-        except:  # (SyntaxError, NameError, TypeError, ZeroDivisionError, AttributeError):
-            traceback.print_exc()
-            self.w.console.setTextColor('Red')
-            self.w.console.append(codeOut.getvalue())
-            self.w.console.append(codeErr.getvalue())
+            #self.w.console.append(codeOut.getvalue())
 
-        sys.stdout = codeOut
-        sys.stderr = codeErr
-        # restore stdout and stderr
+        except:  # (SyntaxError, NameError, TypeError, ZeroDivisionError, AttributeError):
+            self.w.nmrSpectrum.setCurrentIndex(11)
+            traceback.print_exc()
+            #self.w.console.setTextColor('Red')
+            #self.w.console.append(codeOut.getvalue())
+            #self.w.console.append(codeErr.getvalue())
+        #sys.stdout = codeOut
+        #sys.stderr = codeErr
+        #self.w.console.append(codeOut.getvalue())
+        ## restore stdout and stderr
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
-        self.w.console.setTextColor('Blue')
+        self.w.console.setTextColor('Gray')
+        self.w.console.append('--- ScriptStart ---------------------------------------------------------------------------------------------------------------------------------------------\n')
+        self.w.console.setTextColor('DarkBlue')
         self.w.console.append('Executing script...\n')
-        self.w.console.append(code)
+        self.w.console.setTextColor('Blue')
+        codeSplit = code.split('\n')
+        for k in range(len(codeSplit)):
+            self.w.console.append(str(k+1) + ': ' + str(codeSplit[k]))
+
+        self.w.console.setTextColor('Gray')
+        self.w.console.append('\n--- ScriptOutput ------------------------------------------------------------------------------------------------------------------------------------------\n')
         self.w.console.setTextColor('Black')
         self.w.console.append(codeOut.getvalue())
         self.w.console.setTextColor('Red')
         self.w.console.append(codeErr.getvalue())
+        self.w.console.setTextColor('Gray')
+        self.w.console.append('--- ScriptEnd ---------------------------------------------------------------------------------------------------------------------------------------------\n')
         self.w.console.setTextColor('Black')
         codeOut.close()
         codeErr.close()
@@ -2236,6 +2301,27 @@ class main_w(object):  # pragma: no cover
             self.updateGUI()
 
         # end readNMRSpc
+
+    def readNMRPipeSpc(self, sfile=False):
+        if sfile == False:
+            selectedFile = QFileDialog.getOpenFileName()
+            if len(selectedFile[0]) == 0:
+                return
+
+        else:
+            selectedFile = (sfile, '')
+
+        print(selectedFile)
+        fName = os.path.split(selectedFile[0])[1]
+        dataPath = os.path.split(os.path.split(selectedFile[0])[0])[0]
+        expNum = os.path.split(os.path.split(selectedFile[0])[0])[1]
+        if expNum.find('.') > -1:
+            expNum = expNum[:expNum.find('.')]
+
+        self.readNMRPipeSpcs([dataPath], [expNum], fName)
+        self.updateGUI()
+        self.resetPlot()
+        # end readNMRPipeSpc
 
     def readNMRPipeSpcs(self, dataPath, dataSets, procDataName='test.dat'):
         zFill = 25
@@ -3749,6 +3835,15 @@ class main_w(object):  # pragma: no cover
         self.showAcquisitionParameters()
         self.showNMRSpectrum()
         # end startStopPhCorr
+
+    @contextlib.contextmanager
+    def stdoutIO(self, stdout=None):
+        old = sys.stdout
+        if stdout is None:
+            stdout = StringIO()
+        sys.stdout = stdout
+        yield stdout
+        sys.stdout = old
 
     def updateGUI(self):
         s = self.nd.s

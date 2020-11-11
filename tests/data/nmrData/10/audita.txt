@@ -1,0 +1,23 @@
+##TITLE= Audit trail, TOPSPIN		Version 3.0
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= jinkang
+$$ /opt/topspin3.0/data/byrnej/nmr/29022012-byrnej/1/audita.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2012-02-29 13:57:26.277 +0000>,<jinkang>,<CZC8290D4T>,<go>,<TOPSPIN 3.0>,
+      <created by zg
+	started at 2012-02-29 13:45:16.821 +0000,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       86 90 A0 23 B2 65 CF 29 21 0C E9 63 6F 5B 80 5A
+       data hash MD5: 32K
+       6E F3 61 B5 49 60 E1 02 88 BF 20 90 DB 6F 4C B4>)
+(   2,<2012-02-29 13:57:28.861 +0000>,<jinkang>,<CZC8290D4T>,<audit>,<TOPSPIN 3.0>,
+      <user comment:
+       ICON-NMR User ID: byrnej
+       data hash MD5: 32K
+       6E F3 61 B5 49 60 E1 02 88 BF 20 90 DB 6F 4C B4>)
+##END=
+
+$$ hash MD5
+$$ 04 23 7A B1 28 00 56 57 82 27 14 BC 10 4C 48 0E

@@ -1,0 +1,14 @@
+##TITLE= Audit trail, TOPSPIN		Version 3.0
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= jinkang
+$$ /opt/topspin3.0/data/byrnej/nmr/29022012-byrnej/3/pdata/900/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2012-02-29 14:26:14.274 +0000>,<jinkang>,<CZC8290D4T>,<go>,<TOPSPIN 3.0>,
+      <1H wobble curve at 600.133 MHz
+       data hash MD5: 512
+       82 D2 98 90 10 A1 AD BD 95 81 2A E3 41 F5 9C CF>)
+##END=
+
+$$ hash MD5
+$$ 32 49 F1 86 32 02 21 4B B7 C5 93 21 AB 16 FD 3E

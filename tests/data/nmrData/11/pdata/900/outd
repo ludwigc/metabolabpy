@@ -1,0 +1,16 @@
+##TITLE= Parameter file, TOPSPIN		Version 3.0
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= jinkang
+$$ 2012-02-29 14:26:14.267 +0000  jinkang@CZC8290D4T
+$$ /opt/topspin3.0/data/byrnej/nmr/29022012-byrnej/3/pdata/900/outd
+$$ process /opt/topspin3.0/prog/mod/go
+##$CURPLOT= <>
+##$CURPRIN= <>
+##$DFORMAT= <>
+##$LAYOUT= <>
+##$LFORMAT= <>
+##$PFORMAT= <>
+##END=
