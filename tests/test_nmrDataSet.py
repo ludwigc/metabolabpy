@@ -157,14 +157,64 @@ class nmrDataSetTestCase(unittest.TestCase):
         nd.pp.excludeStart = [8.9]
         nd.pp.excludeEnd   = [11.0]
         nd.pp.flagExcludeRegion = True
+        nd.pp.bucketPoints = 64
+        nd.pp.flagBucketSpectra = True
         nd.dataPreProcessing()
+        nd.pp.exportExcelPath = os.path.expanduser("~")
         nd.pp.exportPathName = os.path.expanduser("~")
+        nd.pp.exportMetaboAnalystPath = os.path.expanduser("~")
+        nd.pp.exportrDolphinPath = os.path.expanduser("~")
+        nd.pp.exportBatmanPath = os.path.expanduser("~")
+        nd.pp.exportBrukerPath = os.path.expanduser("~")
         nd.pp.exportFileName = "testExport.csv"
+        nd.pp.exportSamplesInRowsCols = 0
         nd.pp.classSelect = ["1"]
         nd.pp.exportMethod = 1
         nd.exportDataSet()
         self.assertEqual(os.path.isfile(nd.pp.exportPathName + os.sep + nd.pp.exportFileName), True)
         os.remove(nd.pp.exportPathName + os.sep + nd.pp.exportFileName)
+        nd.pp.exportFileName = "testExport.csv"
+        nd.pp.exportSamplesInRowsCols = 1
+        nd.pp.exportMethod = 1
+        nd.exportDataSet()
+        self.assertEqual(os.path.isfile(nd.pp.exportPathName + os.sep + nd.pp.exportFileName), True)
+        os.remove(nd.pp.exportPathName + os.sep + nd.pp.exportFileName)
+        nd.pp.exportExcel = "testExport.xlsx"
+        nd.pp.exportSamplesInRowsCols = 0
+        nd.pp.exportMethod = 0
+        nd.exportDataSet()
+        self.assertEqual(os.path.isfile(nd.pp.exportExcelPath + os.sep + nd.pp.exportExcel), True)
+        os.remove(nd.pp.exportExcelPath + os.sep + nd.pp.exportExcel)
+        nd.pp.exportExcel = "testExport.xlsx"
+        nd.pp.exportSamplesInRowsCols = 1
+        nd.pp.exportMethod = 0
+        nd.exportDataSet()
+        self.assertEqual(os.path.isfile(nd.pp.exportExcelPath + os.sep + nd.pp.exportExcel), True)
+        os.remove(nd.pp.exportExcelPath + os.sep + nd.pp.exportExcel)
+        nd.pp.exportMetaboAnalyst = "metaboAnalystExport.csv"
+        nd.pp.exportSamplesInRowsCols = 0
+        nd.pp.exportMethod = 2
+        nd.exportDataSet()
+        self.assertEqual(os.path.isfile(nd.pp.exportMetaboAnalystPath + os.sep + nd.pp.exportMetaboAnalyst), True)
+        os.remove(nd.pp.exportMetaboAnalystPath + os.sep + nd.pp.exportMetaboAnalyst)
+        nd.pp.exportrDolphin = "rDolphinExport.csv"
+        nd.pp.exportSamplesInRowsCols = 0
+        nd.pp.exportMethod = 3
+        nd.exportDataSet()
+        self.assertEqual(os.path.isfile(nd.pp.exportrDolphinPath + os.sep + nd.pp.exportrDolphin), True)
+        os.remove(nd.pp.exportrDolphinPath + os.sep + nd.pp.exportrDolphin)
+        nd.pp.exportBatman = "batmanExport.txt"
+        nd.pp.exportSamplesInRowsCols = 0
+        nd.pp.exportMethod = 4
+        nd.exportDataSet()
+        self.assertEqual(os.path.isfile(nd.pp.exportBatmanPath + os.sep + nd.pp.exportBatman), True)
+        os.remove(nd.pp.exportBatmanPath + os.sep + nd.pp.exportBatman)
+        nd.pp.exportBruker = "brukerExport"
+        nd.pp.exportSamplesInRowsCols = 0
+        nd.pp.exportMethod = 5
+        nd.exportDataSet()
+        self.assertEqual(os.path.isfile(nd.pp.exportBrukerPath + os.sep + nd.pp.exportBruker + os.sep + '1' + os.sep + 'acqus'), True)
+        shutil.rmtree(nd.pp.exportBrukerPath + os.sep + nd.pp.exportBruker)
 
     def test_noiseFiltering(self):
         pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
