@@ -638,6 +638,7 @@ class NmrData:
             if self.proc.nPoints[1] != npts2:
                 self.refPoint[1] = int(self.proc.refPoint[1] * self.proc.nPoints[1] / (self.proc.multFactor[1] * len(self.fid)))
 
+        self.spc = np.copy(np.array([[]], dtype='complex'))
         self.spc = np.copy(np.resize(self.spc, (self.proc.nPoints[0], self.proc.nPoints[1])))
         self.spc *= 0
         if (self.proc.nPoints[0] > len(fid[0])):
@@ -676,18 +677,21 @@ class NmrData:
                     fid2 = self.phase2(fid2, self.proc.ph0[1], self.proc.ph1[1])
                     self.spc[k] = fid2.real
                 else:
-                    self.spc[k] = fid2
+                    self.spc[k] = np.copy(fid2)
 
-            self.spc = np.ndarray.transpose(self.spc)
+            self.spc = np.copy(np.ndarray.transpose(self.spc))
             if ((self.acq.fnMode == 1) and (self.proc.tilt == True)):
                 self.tiltJRes()
 
             if self.acq.fnMode == 1 and noAbs is False:
                 for k in range(len(self.spc)):
-                    self.spc[k] = np.abs(self.spc[k])
+                    self.spc[k] = np.copy(np.abs(self.spc[k]))
 
                 if (self.proc.symj == True):
                     self.symjres()
+
+        else:
+            self.spc = np.copy(self.fid)
 
         if self.proc.stripStart == 0:
             stsr = 1
@@ -762,9 +766,9 @@ class NmrData:
         if self.acq.manufacturer == 'Bruker':
             titleFile = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'pdata' + os.sep + '1' + os.sep + 'title'
             if (os.path.isfile(titleFile)):
-                    fid = open(titleFile, "r")
-                    self.title = fid.read()
-                    fid.close()
+                fid = open(titleFile, "r")
+                self.title = fid.read()
+                fid.close()
 
             acquFile = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'acqu'
             if (os.path.isfile(acquFile)):
@@ -1049,7 +1053,7 @@ class NmrData:
             fid1 = ifft(self.spc[k])
             fid1 = self.phase2(fid1, 0, -npts * 360.0)
 
-            self.spc[k] = fft(fid1).real
+            self.spc[k] = fft(fid1)
 
         # end tiltJRes
 
