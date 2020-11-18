@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import setuptools
 import sys
@@ -7,8 +7,8 @@ import metabolabpy
 
 def main():
 
-    if sys.version_info[0] != 3 and sys.version_info[1] >= 7:
-        sys.exit("Python-3.7 is required ")
+    if not ((sys.version_info[0] != 3) or (sys.version_info[1] >= 7)):
+        sys.exit("Python >=3.7 is required ")
 
     # read the contents of your README file
     with open('README.rst', encoding='utf-8') as f:
@@ -30,7 +30,7 @@ def main():
         include_package_data=True,
         classifiers=[
           "Programming Language :: Python :: 3",
-          "Programming Language :: Python :: 3.7",
+          "Programming Language :: Python :: 3.8",
           "Topic :: Scientific/Engineering :: Bio-Informatics",
           "Topic :: Scientific/Engineering :: Chemistry",
           "Topic :: Utilities",
