@@ -103,7 +103,7 @@ class nmrDataSetTestCase(unittest.TestCase):
         nd.readSpc(pName, eName)  # check if Bruker data can be read
         nd.ft()
         nd.autoref()
-        self.assertEqual(nd.nmrdat[0][0].refPoint[0], 132)
+        self.assertEqual(nd.nmrdat[0][0].refPoint[0], 152)
         self.assertEqual(nd.nmrdat[0][0].refShift[0], 0.0)
         self.assertEqual(nd.nmrdat[0][0].refPoint[1], 1792)
         self.assertAlmostEqual(nd.nmrdat[0][0].refShift[1], 80.0, 4)

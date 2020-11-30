@@ -81,21 +81,33 @@ class NmrData:
             wdwf = np.exp(-lb * 2 * math.pi * t - 2 * math.pi * (t ** 2) / ((2 * math.pi * gb * len(fid) / sw_h)))
 
         if (self.proc.windowType[dim] == 3):  # sine window
-            npts = int(min(self.acq.nDataPoints[dim] / 2, len(fid)))
+            if self.acq.fnMode == 1 or self.acq.fnMode == 2:
+                npts = int(min(self.acq.nDataPoints[dim], len(fid)))
+            else:
+                npts = int(min(self.acq.nDataPoints[dim] / 2, len(fid)))
+
             t = (np.linspace(0.0, npts - 1, npts)) / (npts - 1)
             wdwf = np.zeros(len(fid))
             ssb2 = ssb * math.pi / 180.0
             wdwf[:npts] = np.sin(ssb2 + (math.pi - ssb2) * t)
 
         if (self.proc.windowType[dim] == 4):  # qsine window
-            npts = int(min(self.acq.nDataPoints[dim] / 2, len(fid)))
+            if self.acq.fnMode == 1 or self.acq.fnMode == 2:
+                npts = int(min(self.acq.nDataPoints[dim], len(fid)))
+            else:
+                npts = int(min(self.acq.nDataPoints[dim] / 2, len(fid)))
+
             t = (np.linspace(0.0, npts - 1, npts)) / (npts - 1)
             wdwf = np.zeros(len(fid))
             ssb2 = ssb * math.pi / 180.0
             wdwf[:npts] = np.sin(ssb2 + (math.pi - ssb2) * t) ** 2
 
         if (self.proc.windowType[dim] == 5):  # sem window
-            npts = int(min(self.acq.nDataPoints[dim] / 2, len(fid)))
+            if self.acq.fnMode == 1 or self.acq.fnMode == 2:
+                npts = int(min(self.acq.nDataPoints[dim], len(fid)))
+            else:
+                npts = int(min(self.acq.nDataPoints[dim] / 2, len(fid)))
+
             t1 = (np.linspace(0.0, npts - 1 - groupDelay, npts)) / sw_h
             t2 = (np.linspace(0.0, npts - 1, npts)) / (npts - 1)
             wdwf = np.zeros(len(fid))
@@ -645,15 +657,15 @@ class NmrData:
             fid = np.resize(fid, (self.proc.nPoints[1], self.proc.nPoints[0]))
             fid *= 0
             for k in range(len(self.fid)):
-                fid[k][:len(self.fid[k])] = self.fid[k][:]
+                fid[k][:len(self.fid[k])] = np.copy(self.fid[k][:])
 
         if (self.proc.nPoints[0] < len(fid[0])):
             fid = np.resize(fid, (len(fid), self.proc.nPoints[0]))
             for k in range(len(fid)):
-                fid[k] = self.fid[k][:self.proc.nPoints[0]]
+                fid[k] = np.copy(self.fid[k][:self.proc.nPoints[0]])
 
         for k in range(len(self.fid)):
-            fid2 = fid[k]
+            fid2 = np.copy(fid[k])
             fid2 = self.waterSupp(fid2)
             fid2 = self.fidOffsetCorrection(fid2)
             fid2 = self.gibbs(fid2)
@@ -661,10 +673,12 @@ class NmrData:
                                 self.acq.sw_h[0])
             fid2 = self.zeroFill(fid2, 0)
             fid2 = fftshift(fft(fid2))
-            fid2 = self.phase2(fid2, self.proc.ph0[0], 360.0 * self.acq.groupDelay + self.proc.ph1[0])
-            fid[k] = fid2
+            if self.acq.fnMode != 1:
+                fid2 = self.phase2(fid2, self.proc.ph0[0], 360.0 * self.acq.groupDelay + self.proc.ph1[0])
 
-        fid = np.ndarray.transpose(fid)
+            fid[k] = np.copy(fid2)
+
+        fid = np.copy(np.ndarray.transpose(np.conj(fid)))
         if testQuad2d == False:
             fid = self.quad2D(fid)
             for k in range(len(fid)):
@@ -681,6 +695,7 @@ class NmrData:
 
             self.spc = np.copy(np.ndarray.transpose(self.spc))
             if ((self.acq.fnMode == 1) and (self.proc.tilt == True)):
+                #self.spc = np.copy(self.hilbert(self.spc, 0))
                 self.tiltJRes()
 
             if self.acq.fnMode == 1 and noAbs is False:
@@ -1047,13 +1062,14 @@ class NmrData:
         hzPerPoint = self.acq.sw_h[0] / len(self.spc[0])
         sw2 = self.acq.sw_h[1]
         npts2 = len(self.spc)
-        hzVect = np.linspace(-sw2 / 2.0, sw2 / 2.0, npts2)
+        hzVect = np.linspace( sw2 / 2.0, -sw2 / 2.0, npts2)
+        #hzVect = hzVect - (hzVect[1] - hzVect[0]) / 2.0
         for k in range(npts2):
             npts = hzVect[k] / hzPerPoint
-            fid1 = ifft(self.spc[k])
+            fid1 = np.copy(ifft(self.spc[k]))
             fid1 = self.phase2(fid1, 0, -npts * 360.0)
 
-            self.spc[k] = fft(fid1)
+            self.spc[k] = np.copy(fft(fid1))
 
         # end tiltJRes
 

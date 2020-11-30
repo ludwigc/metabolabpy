@@ -532,7 +532,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.proc.symj = True
         nd.procSpc2D()
         pt = np.where(np.transpose(nd.spc)[1406].real == np.amax(np.transpose(nd.spc)[1406].real))[0][0]
-        self.assertEqual(pt, 37)
+        self.assertEqual(pt, 23)
 
     def test_tiltJRes(self):
         pName = os.path.join(os.path.dirname(__file__), "data",
@@ -546,7 +546,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.proc.symj = False
         nd.procSpc2D()
         pt = np.where(np.transpose(nd.spc)[1406].real == np.amax(np.transpose(nd.spc)[1406].real))[0][0]
-        self.assertEqual(pt, 116)
+        self.assertEqual(pt, 78)
 
     def test_waterSupp(self):
         pName = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
