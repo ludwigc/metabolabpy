@@ -1,0 +1,19 @@
+##TITLE= Parameter file, TOPSPIN		Version 3.0
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 33	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= jinkang
+$$ 2012-02-29 14:23:03.936 +0000  metabolabpy@spectrometer
+$$ /metabolabpyTest/2
+$$ process /opt/topspin3.0/prog/mod/go
+##$ACQT0= 0
+##$BF1= 600.13
+##$FnMODE= 1
+##$NUC1= <1H>
+##$O1= 2820.61200039152
+##$SFO1= 600.132820612
+##$SW= 0.083314890108845
+##$SW_h= 50
+##$TD= 32
+##END=
