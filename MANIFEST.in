@@ -6,3 +6,6 @@ include metabolabpy/ui/*
 include metabolabpy/icon/*
 include metabolabpy/png/*
 include metabolabpy/exampleScripts/*
+include metabolabpy/nmr/web/*
+include metabolabpy/nmr/web/*/*
+include metabolabpy/nmr/web/*/*/*
