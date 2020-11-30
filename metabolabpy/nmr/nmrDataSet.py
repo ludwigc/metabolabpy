@@ -1,13 +1,16 @@
-import numpy as np
-import os
-import pickle
+import numpy as np # pragma: no cover
+import os # pragma: no cover
+import pickle # pragma: no cover
 
-from metabolabpy.nmr import nmrData as nd
-from metabolabpy.nmr import nmrPreProc as npp
-import math
-from openpyxl import Workbook
-from string import ascii_uppercase
-import itertools
+from metabolabpy.nmr import nmrData as nd # pragma: no cover
+from metabolabpy.nmr import nmrPreProc as npp # pragma: no cover
+import math # pragma: no cover
+from openpyxl import Workbook # pragma: no cover
+from string import ascii_uppercase # pragma: no cover
+import itertools # pragma: no cover
+import webbrowser # pragma: no cover
+import matplotlib # pragma: no cover
+import matplotlib.pyplot as pl  # pragma: no cover
 
 class NmrDataSet:
 
@@ -23,6 +26,7 @@ class NmrDataSet:
         self.script            = ""
         self.console           = ""
         self.fileFormatVersion = 0.1
+        self.keepZoom          = True
         # end __init__
 
     def __str__(self): # pragma: no cover
@@ -532,6 +536,12 @@ class NmrDataSet:
         return "Finished ftAll"
         # end ftAll
 
+    def help(self):
+        fName = os.path.join(os.path.dirname(__file__), "web", "introduction", "index.html")
+        url = "file://" + fName
+        webbrowser.open(url, new=2)
+        # end help
+
     def iter_all_strings(self):
         for size in itertools.count(1):
             for s in itertools.product(ascii_uppercase, repeat=size):
@@ -790,6 +800,98 @@ class NmrDataSet:
 
 
         # end jresProject
+
+    def plotSpc(self):
+        pl.plot()
+        ax = pl.gca()
+        xlim = ax.get_xlim()
+        ylim = ax.get_ylim()
+        ax.clear()
+        if (len(self.nmrdat[self.s]) == 0):
+            return
+
+        if (len(self.nmrdat[self.s][self.e].spc) == 0):
+            return
+
+        d = self.nmrdat[self.s][self.e].disp
+        if (d.posCol == "RGB"):
+            posCol = d.posColRGB
+        else:
+            posCol = d.posCol
+
+        if (d.negCol == "RGB"):
+            negCol = d.negColRGB
+        else:
+            negCol = d.negCol
+
+        posCol = matplotlib.colors.to_hex(posCol)
+        negCol = matplotlib.colors.to_hex(negCol)
+        xlabel = d.xLabel + " [" + d.axisType1 + "]"
+        ylabel = d.yLabel + " [" + d.axisType2 + "]"
+        if (self.nmrdat[self.s][self.e].dim == 1):
+            for k in range(len(self.nmrdat[self.s])):
+                if ((k != self.e) and (self.nmrdat[self.s][k].disp.displaySpc == True)):
+                    d = self.nmrdat[self.s][k].disp
+                    if (d.posCol == "RGB"):
+                        posCol = d.posColRGB
+                    else:
+                        posCol = d.posCol
+
+                    if (d.negCol == "RGB"):
+                        negCol = d.negColRGB
+                    else:
+                        negCol = d.negCol
+
+                    posCol = matplotlib.colors.to_hex(posCol)
+                    negCol = matplotlib.colors.to_hex(negCol)
+                    pl.plot(self.nmrdat[self.s][k].ppm1, self.nmrdat[self.s][k].spc[0].real, color=posCol)
+
+            d = self.nmrdat[self.s][self.e].disp
+            if (d.posCol == "RGB"):
+                posCol = d.posColRGB
+            else:
+                posCol = d.posCol
+
+            if (d.negCol == "RGB"):
+                negCol = d.negColRGB
+            else:
+                negCol = d.negCol
+
+            posCol = matplotlib.colors.to_hex(posCol)
+            negCol = matplotlib.colors.to_hex(negCol)
+            xlabel = d.xLabel + " [" + d.axisType1 + "]"
+            ylabel = d.yLabel + " [" + d.axisType2 + "]"
+            pl.plot(self.nmrdat[self.s][self.e].ppm1, self.nmrdat[self.s][self.e].spc[0].real, color=posCol)
+            ax = pl.gca()
+            ax.set_xlabel(xlabel)
+            ax.autoscale()
+            ax.invert_xaxis()
+            if (self.keepZoom == True):
+                if xlim[0] != -0.05 and xlim[1] != 1.05 and ylim[0] != -0.05 and ylim[1] != 1.05:
+                    ax.set_xlim(xlim)
+                    ax.set_ylim(ylim)
+
+
+        else:
+            mm = np.max(np.abs(self.nmrdat[self.s][self.e].spc.real))
+            posLev = np.linspace(d.minLevel * mm, d.maxLevel * mm, d.nLevels)
+            negLev = np.linspace(-d.maxLevel * mm, -d.minLevel * mm, d.nLevels)
+            pl.contour(self.nmrdat[self.s][self.e].ppm1,
+                                                 self.nmrdat[self.s][self.e].ppm2,
+                                                 self.nmrdat[self.s][self.e].spc.real, posLev, colors=posCol,
+                                                 linestyles='solid', antialiased=True)
+            pl.contour(self.nmrdat[self.s][self.e].ppm1,
+                                                 self.nmrdat[self.s][self.e].ppm2,
+                                                 self.nmrdat[self.s][self.e].spc.real, negLev, colors=negCol,
+                                                 linestyles='solid', antialiased=True)
+            ax = pl.gca()
+            ax.set_xlabel(xlabel)
+            ax.set_ylabel(ylabel)
+            ax.autoscale()
+            ax.invert_xaxis()
+            ax.invert_yaxis()
+
+        # end plotSpc
 
     def preProcInit(self):
         self.pp.init(len(self.nmrdat[self.s]))
@@ -1059,6 +1161,20 @@ class NmrDataSet:
             self.deselect[idx] = np.ones(len(idx))
 
     # end segmentalAlignment
+
+    def selectPlotAll(self):
+        for k in range(len(self.nmrdat[self.s])):
+            self.nmrdat[self.s][k].disp.displaySpc = True
+
+        self.plotSpc()
+        # end selectPlotAll
+
+    def selectPlotClear(self):
+        for k in range(len(self.nmrdat[self.s])):
+            self.nmrdat[self.s][k].disp.displaySpc = False
+
+        self.plotSpc()
+        # end selectPlotClear
 
     def setGb(self, gb):
         nExp = len(self.nmrdat[self.s])

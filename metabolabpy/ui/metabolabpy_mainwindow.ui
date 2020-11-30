@@ -4817,13 +4817,29 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="consoleTab">
        <attribute name="title">
         <string>cOnsole</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_12">
         <item row="0" column="0">
          <widget class="QTextBrowser" name="console"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="helpTab">
+       <attribute name="title">
+        <string>Help</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_27">
+        <item row="0" column="0">
+         <widget class="QWebEngineView" name="helpView">
+          <property name="url">
+           <url>
+            <string>about:blank</string>
+           </url>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -4909,6 +4925,7 @@
     <addaction name="actionShow_pulseProgram"/>
     <addaction name="actionScript_Editor"/>
     <addaction name="actionConsole"/>
+    <addaction name="actionHelp"/>
     <addaction name="separator"/>
     <addaction name="actionClear"/>
     <addaction name="separator"/>
@@ -5454,9 +5471,22 @@
     <string>Ctrl+N</string>
    </property>
   </action>
+  <action name="actionHelp">
+   <property name="text">
+    <string>Help</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+H</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
+  <customwidget>
+   <class>QWebEngineView</class>
+   <extends>QWidget</extends>
+   <header location="global">QtWebEngineWidgets/QWebEngineView</header>
+  </customwidget>
   <customwidget>
    <class>MplWidget</class>
    <extends>QWidget</extends>

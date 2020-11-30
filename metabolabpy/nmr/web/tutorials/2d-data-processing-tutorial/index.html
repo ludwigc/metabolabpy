@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+				<title>2D Data Processing Tutorial | MetaboLabPy</title>
+		<meta name="robots" content="all" />
+		<meta name="generator" content="Sandvox 2.10.8" />
+		<meta name="viewport" content="width=769" />
+		<link rel="shortcut icon" type="image/x-icon" href="../favicon.ico" />
+		<link rel="canonical" href="./2d-data-processing-tutorial/index.html" />
+		
+		<link rel="stylesheet" type="text/css" href="../sandvox_CleanSheets/main.css" title="Clean Sheets" /><!--[if lt IE 6]>
+		<link rel="stylesheet" type="text/css" href="../sandvox_CleanSheets/ie.css" /><![endif]-->
+		<!--
+		Photo credits for this website's design: <../tutorials/index.htmlsandvox_CleanSheets/Credits.rtf>
+		Licensing for this website's design:     <../tutorials/index.htmlsandvox_CleanSheets/License.rtf>
+		-->
+		
+		<script type="text/javascript">
+		
+		  var _gaq = _gaq || [];
+		  _gaq.push(['_setAccount', 'UA-25948776-1']);
+		  _gaq.push(['_trackPageview']);
+		
+		  (function() {
+		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		  })();
+		
+		</script>
+	</head>
+	<body class="sandvox has-page-title no-sidebar no-custom-banner no-navigation no-IR" id="beregond_bham_ac_uk_ludwigc_tutorials" >
+				<div id="page-container">
+			<div id="page">
+				<div id="page-top" class="has-logo has-title has-tagline">
+					<div id="title">
+						<a href="../index.html" class="imageLink"><span id="logo-container"><span id="logo" data-img-src="../_Media/metabolabpy_med.png" data-img-src-hr="../_Media/metabolabpy_med_hr.png" data-alt="metabolabpy" data-width="200" data-height="100" style="width:200px; height:100px;">
+									<noscript><img src="../_Media/metabolabpy_med.png" alt="metabolabpy" width="200" height="100" /></noscript>
+								</span>
+							</span>
+						</a>
+						<h1 class="title in"><a href="../index.html"><span class="in"><span style="font-style: normal; font-weight: normal; font-size: 36px; font-family: &quot;Arial Rounded MT Bold&quot;;">MetaboLabPy</span></span></a></h1>
+						<p id="tagline"><span class="in">Advanced NMR Data Processing in Python</span></p>
+					</div><!-- title -->
+					<div id="sitemenu-container">
+						<div id="sitemenu">
+							<h2 class="hidden">Site Navigation<a href="#page-content" rel="nofollow">[Skip]</a></h2>
+							<div id="sitemenu-content">
+								<ul>
+									<li class="i1 o"><a href="../index.html" title="1D Data Processing Tutorial"><span class="in">1D Data Processing Tutorial</span></a></li>
+									<li class="i2 e last-item last currentPage"><span class="in">2D Data Processing Tutorial</span></li>
+								</ul>
+							</div> <!-- /sitemenu-content -->
+						</div> <!-- /sitemenu -->
+					</div> <!-- sitemenu-container -->
+				</div> <!-- page-top -->
+				<div class="clear below-page-top"></div>
+				<div id="page-content" class="no-navigation">
+					<div id="main">
+						<div id="main-top"></div>
+						<div id="main-content">
+							<h2 class="title"><span class="in"><span style="font-style: normal; font-weight: normal; font-size: 24px; font-family: &quot;Arial Rounded MT Bold&quot;;">2D Data Processing Tutorial</span></span></h2>
+							<div class="article">
+								<div class="article-content">
+									<div class="RichTextElement">
+										<div><p><br /></p>
+											<p style="text-align: justify;"><span style="font-size: 18px; font-family: Arial;">1.</span><span style="font-size: 18px; font-family: Arial;" class="Apple-tab-span">	</span><span style="font-size: 18px; font-family: Arial;">Press Ctrl+Shift+c</span></p><p style="text-align: justify;"><span style="font-size: 18px; font-family: Arial;">2.</span><span style="font-size: 18px; font-family: Arial;" class="Apple-tab-span">	</span><span style="font-size: 18px; font-family: Arial;">Read 2D data set and process NMR data using the proc2d.py script: Click on Script tab, then click Open Script and select proc2d.py. Click on eXecute Script.</span></p><p style="text-align: justify;"><span style="font-size: 18px; font-family: Arial;">3.</span><span style="font-size: 18px; font-family: Arial;" class="Apple-tab-span">	</span><span style="font-size: 18px; font-family: Arial;">Try out different window functions, window function parameters and TILT and Sym-metrize parameters (Processing tab, se Dim2 tab to access processing paramters for indirect dimention). What is the effect on the resulting NMR spectrum and projec-tions?</span></p><p style="text-align: justify;"><span style="font-size: 18px; font-family: Arial;">4.</span><span style="font-size: 18px; font-family: Arial;" class="Apple-tab-span">	</span><span style="font-size: 18px; font-family: Arial;">Change window functions, TILT and symmetrisation options back to SEM (Dim1) and Sine (Dim2) and shift to 0.0 or both dimensions. Fourier transform the spectrum again.</span></p><p style="text-align: justify;"><span style="font-style: normal; font-size: 18px; font-family: Arial;"><strong>5.</strong></span><strong><span style="font-style: normal; font-size: 18px; font-family: Arial;" class="Apple-tab-span">	</span></strong><span style="font-style: normal; font-size: 18px; font-family: Arial;"><strong>Data Pre-Processing</strong></span></p>
+											
+											<div class="first blockquote-container wide right">
+												<div style="" class="graphic"><blockquote class="figure-content">
+														<p style="text-align: justify;"><span style="font-style: normal; font-size: 18px; font-family: Arial;">1.</span><span style="font-style: normal; font-size: 18px; font-family: Arial;" class="Apple-tab-span">	</span><span style="font-style: normal; font-size: 18px; font-family: Arial;">Change to pJres (Data set 2)</span></p><p style="text-align: justify;"><span style="font-style: normal; font-size: 18px; font-family: Arial;">2.</span><span style="font-style: normal; font-size: 18px; font-family: Arial;" class="Apple-tab-span">	</span><span style="font-style: normal; font-size: 18px; font-family: Arial;">Click Data Pre-Processing</span></p><p style="text-align: justify;"><span style="font-style: normal; font-size: 18px; font-family: Arial;">3.</span><span style="font-style: normal; font-size: 18px; font-family: Arial;" class="Apple-tab-span">	</span><span style="font-style: normal; font-size: 18px; font-family: Arial;">Check Exclude Region, add 3 exclude regions (region left of the signals at ap-proximately 9.15 ppm, water region around 4.8 ppm and the area of TMSP and right of that signal)</span></p><p style="text-align: justify;"><span style="font-style: normal; font-size: 18px; font-family: Arial;">4.</span><span style="font-style: normal; font-size: 18px; font-family: Arial;" class="Apple-tab-span">	</span><span style="font-style: normal; font-size: 18px; font-family: Arial;">Check Noise Filtering, set noise region and noise threshold</span></p><p style="text-align: justify;"><span style="font-style: normal; font-size: 18px; font-family: Arial;">5.</span><span style="font-style: normal; font-size: 18px; font-family: Arial;" class="Apple-tab-span">	</span><span style="font-style: normal; font-size: 18px; font-family: Arial;">Check on Bucket spectra and zoom in on a signal containing region. What ef-fect do different settings have? Click run to see the effect and reset to reset to original spectra</span></p><p style="text-align: justify;"><span style="font-style: normal; font-size: 18px; font-family: Arial;">6.</span><span style="font-style: normal; font-size: 18px; font-family: Arial;" class="Apple-tab-span">	</span><span style="font-style: normal; font-size: 18px; font-family: Arial;">Check Export DataSet and set the exportPath and fileName by clicking select</span></p><p style="text-align: justify;"><span style="font-style: normal; font-size: 18px; font-family: Arial;">7.</span><span style="font-style: normal; font-size: 18px; font-family: Arial;" class="Apple-tab-span">	</span><span style="font-style: normal; font-size: 18px; font-family: Arial;">Click run to export the pre-processed data set</span></p>
+														
+													</blockquote>
+												</div>
+											</div><p style="text-align: justify;"><br /></p><p><br /></p><p style="background-color: transparent; text-align: justify;" class="paragraph_style"><span style="font-style: normal; font-size: 24px; font-family: &quot;Arial Rounded MT Bold&quot;;">Return to <a href="../index.html"><span style="color: rgb(0, 0, 149);">1D Data Processing Tutorial</span></a></span></p>
+											
+										</div>
+									</div>
+								</div> <!-- /article-content -->
+								<div class="article-info">
+								</div> <!-- /article-info -->
+							</div> <!-- /article -->
+						</div> <!-- main-content -->
+						<div id="main-bottom"></div>
+					</div> <!-- main -->
+				</div> <!-- content -->
+				<div class="clear below-content"></div>
+				<div id="page-bottom">
+					<div id="page-bottom-contents">
+						<div>© Christian Ludwig 2020</div>
+						<div class="hidden"> <a rel="nofollow" href="#title">[Back To Top]</a></div>
+					</div>
+				</div> <!-- page-bottom -->
+			</div> <!-- container -->
+			<div id="extraDiv1"><span></span></div><div id="extraDiv2"><span></span></div><div id="extraDiv3"><span></span></div><div id="extraDiv4"><span></span></div><div id="extraDiv5"><span></span></div><div id="extraDiv6"><span></span></div>
+		</div> <!-- specific body type -->
+		<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
+		<script>
+		if (typeof jQuery === 'undefined') document.write('<scr'+'ipt src="../_Resources/jquery-1.9.1.min.js"></scr'+'ipt>');
+		</script>
+		
+		<script>
+		$(document).ready(function(){var e=window.devicePixelRatio&&window.devicePixelRatio>1?window.devicePixelRatio:1,t=window.innerWidth>window.innerHeight?screen.height:screen.width;$("span[data-img-src-hr]").each(function(){var n=$(this).data("width"),r=$(this).data("height"),i=$(this).data("alt"),s='<img src="',o=e>1&&n<2*t,u=0,a=$(this)[0].attributes;if(o){s+=$(this).data("img-src-hr")}else{s+=$(this).data("img-src")}s+='"';if(i)s+=' alt="'+i+'"';if(n)s+=' width="'+n+'"';if(r)s+=' height="'+r+'"';for(l=a.length;u<l;u++){var f=a[u].name;if(!f.match(/(data-width|data-height|data-alt|data-img-src)/g)){s+=" "+f+'="'+a[u].value+'"'}}s+=" />";$(this).replaceWith($(s))})})
+		</script>
+		
+	</body>
+</html>

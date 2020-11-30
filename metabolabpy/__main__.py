@@ -8,9 +8,13 @@ from PySide2 import QtWidgets  # pragma: no cover
 from PySide2.QtGui import *  # pragma: no cover
 from PySide2 import QtGui  # pragma: no cover
 from PySide2 import QtCore  # pragma: no cover
+from PySide2.QtWidgets import QFileDialog # pragma: no cover
 from PySide2.QtCore import SIGNAL  # pragma: no cover
 import matplotlib  # pragma: no cover
 from time import sleep
+from PySide2.QtCore import QUrl, Qt
+from PySide2.QtWebEngineCore import QWebEngineUrlSchemeHandler
+from PySide2.QtWebEngineWidgets import QWebEngineView, QWebEngineProfile, QWebEnginePage, QWebEngineSettings
 
 matplotlib.use('Qt5Agg')  # pragma: no cover
 from matplotlib.backends.backend_qt5agg import (FigureCanvas,
@@ -99,7 +103,7 @@ class MplWidget2(QWidget):  # pragma: no cover
 
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.__version__ = '0.6.6'
+        self.__version__ = '0.6.7'
         self.zoomWasOn = False
         self.panWasOn = False
         self.nd = nmrDataSet.NmrDataSet()
@@ -220,6 +224,7 @@ class main_w(object):  # pragma: no cover
         self.w.actionSelect_All.triggered.connect(self.selectPlotAll)
         self.w.actionClear_All.triggered.connect(self.selectPlotClear)
         self.w.actionConsole.triggered.connect(self.showConsole)
+        self.w.actionHelp.triggered.connect(self.showHelp)
         self.w.actionToggle_FullScreen.triggered.connect(self.showMainWindow)
         self.w.setBox.valueChanged.connect(self.changeDataSetExp)
         self.w.expBox.valueChanged.connect(self.changeDataSetExp)
@@ -347,6 +352,10 @@ class main_w(object):  # pragma: no cover
         self.w.cancelPhCorr2d.setVisible(False)
         self.w.exitPhCorr2d.setVisible(False)
         self.w.exitZoomPhCorr2d.setVisible(False)
+        fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "introduction", "index.html")
+        url = "file://" + fName
+        self.w.helpView.setUrl(url)
+        self.w.helpView.page().profile().downloadRequested.connect(self._download_requested)
         # end __init__
 
     def activateCommandLine(self):
@@ -1574,10 +1583,10 @@ class main_w(object):  # pragma: no cover
 
     def nextTab(self):
         cidx = self.w.nmrSpectrum.currentIndex()
-        while self.w.nmrSpectrum.isTabEnabled(cidx + 1) is False and cidx < 10:
+        while self.w.nmrSpectrum.isTabEnabled(cidx + 1) is False and cidx < 11:
             cidx += 1
 
-        if cidx < 11:
+        if cidx < 12:
             self.w.nmrSpectrum.setCurrentIndex(cidx + 1)
         else:
             self.w.nmrSpectrum.setCurrentIndex(0)
@@ -1594,7 +1603,7 @@ class main_w(object):  # pragma: no cover
             self.w.nmrSpectrum.setCurrentIndex(cidx - 1)
             self.w.nmrSpectrum.setFocus()
         else:
-            self.w.nmrSpectrum.setCurrentIndex(11)
+            self.w.nmrSpectrum.setCurrentIndex(12)
 
         # end previousTab
 
@@ -2465,6 +2474,13 @@ class main_w(object):  # pragma: no cover
         self.w.MplWidget.canvas.flush_events()
         self.w.MplWidget.canvas.draw()
         # end dataPreProcessing
+
+    def resetHelp(self):
+        fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "introduction", "index.html")
+        url = "file://" + fName
+        self.w.helpView.setUrl(url)
+        self.w.nmrSpectrum.setCurrentIndex(12)
+        # end resetHelp
 
     def resetPlot(self):
         zoomChecked = self.w.keepZoom.isChecked()
@@ -3645,6 +3661,10 @@ class main_w(object):  # pragma: no cover
         self.w.nmrSpectrum.setCurrentIndex(6)
         # end showDisplayParameters
 
+    def showHelp(self):
+        self.w.nmrSpectrum.setCurrentIndex(12)
+        # end showHelp
+
     def showMainWindow(self):
         if (self.w.isFullScreen() == True):
             self.w.showNormal()
@@ -3844,6 +3864,15 @@ class main_w(object):  # pragma: no cover
         sys.stdout = stdout
         yield stdout
         sys.stdout = old
+        #end stdoutIO
+
+    def tutorials(self):
+        #url = "http://beregond.bham.ac.uk/~ludwigc/tutorials"
+        fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "tutorials", "index.html")
+        url = "file://" + fName
+        self.w.helpView.setUrl(url)
+        self.w.nmrSpectrum.setCurrentIndex(12)
+        # end tutorials
 
     def updateGUI(self):
         s = self.nd.s
@@ -4079,6 +4108,49 @@ class main_w(object):  # pragma: no cover
         self.showNMRSpectrum()
         # end zoomPhCorr
 
+
+    def _download_requested(self, download_item) -> None:
+        codeOut = io.StringIO()
+        codeErr = io.StringIO()
+        sys.stdout = codeOut
+        sys.stderr = codeErr
+        dialog = QFileDialog(self.w)
+        path = dialog.getSaveFileName(dialog, "Save File", download_item.path())
+
+        if path[0]:
+            download_item.setPath(path[0])
+            print(f"downloading file to:( {download_item.path()} )")
+            download_item.accept()
+            self.download_item = download_item
+            download_item.finished.connect(self._download_finished)
+        else:
+            print("Download canceled")
+
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
+        self.w.console.setTextColor('Black')
+        self.w.console.append(codeOut.getvalue())
+        self.w.console.setTextColor('Red')
+        self.w.console.append(codeErr.getvalue())
+        codeOut.close()
+        codeErr.close()
+        self.w.nmrSpectrum.setCurrentIndex(11)
+
+    def _download_finished(self) -> None:
+        codeOut = io.StringIO()
+        codeErr = io.StringIO()
+        sys.stdout = codeOut
+        sys.stderr = codeErr
+        print("Download complete")
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
+        self.w.console.setTextColor('Black')
+        self.w.console.append(codeOut.getvalue())
+        self.w.console.setTextColor('Red')
+        self.w.console.append(codeErr.getvalue())
+        codeOut.close()
+        codeErr.close()
+        self.w.nmrSpectrum.setCurrentIndex(11)
 
 def main():  # pragma: no cover
     sys.argv.append('None')
