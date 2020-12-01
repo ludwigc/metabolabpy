@@ -98,12 +98,15 @@ class MplWidget2(QWidget):  # pragma: no cover
         self.phCorr = phCorr.PhCorr()
         # end __init__
 
+class QWebEngineView2(QWebEngineView):
+    def printCmd(self):
+        print("QWebEngineView2")
 
 # ------------------ MplWidget2 ------------------
 
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.__version__ = '0.6.8'
+        self.__version__ = '0.6.9'
         self.zoomWasOn = False
         self.panWasOn = False
         self.nd = nmrDataSet.NmrDataSet()
@@ -113,6 +116,7 @@ class main_w(object):  # pragma: no cover
         self.file = QFile(fName)
         self.file.open(QFile.ReadOnly)
         self.loader = QUiLoader()
+        self.loader.registerCustomWidget(QWebEngineView2)
         self.loader.registerCustomWidget(MplWidget)
         self.loader.registerCustomWidget(MplWidget2)
         self.w = self.loader.load(self.file)
@@ -353,7 +357,7 @@ class main_w(object):  # pragma: no cover
         self.w.exitPhCorr2d.setVisible(False)
         self.w.exitZoomPhCorr2d.setVisible(False)
         fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "introduction", "index.html")
-        url = "file://" + fName
+        url = "file:///" + fName.replace('\\', '/')
         self.w.helpView.setUrl(url)
         self.w.helpView.page().profile().downloadRequested.connect(self._download_requested)
         # end __init__
@@ -2477,7 +2481,7 @@ class main_w(object):  # pragma: no cover
 
     def resetHelp(self):
         fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "introduction", "index.html")
-        url = "file://" + fName
+        url = "file:///" + fName.replace('\\', '/')
         self.w.helpView.setUrl(url)
         self.w.nmrSpectrum.setCurrentIndex(12)
         # end resetHelp
@@ -3869,7 +3873,7 @@ class main_w(object):  # pragma: no cover
     def tutorials(self):
         #url = "http://beregond.bham.ac.uk/~ludwigc/tutorials"
         fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "tutorials", "index.html")
-        url = "file://" + fName
+        url = "file:///" + fName.replace('\\', '/')
         self.w.helpView.setUrl(url)
         self.w.nmrSpectrum.setCurrentIndex(12)
         # end tutorials

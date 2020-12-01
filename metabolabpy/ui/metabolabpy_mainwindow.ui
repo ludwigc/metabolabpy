@@ -193,7 +193,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>12</number>
       </property>
       <widget class="QWidget" name="spcTab">
        <attribute name="title">
@@ -4833,13 +4833,7 @@
        </attribute>
        <layout class="QGridLayout" name="gridLayout_27">
         <item row="0" column="0">
-         <widget class="QWebEngineView" name="helpView">
-          <property name="url">
-           <url>
-            <string>about:blank</string>
-           </url>
-          </property>
-         </widget>
+         <widget class="QWebEngineView2" name="helpView" native="true"/>
         </item>
        </layout>
       </widget>
@@ -5483,14 +5477,15 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>QWebEngineView</class>
-   <extends>QWidget</extends>
-   <header location="global">QtWebEngineWidgets/QWebEngineView</header>
-  </customwidget>
-  <customwidget>
    <class>MplWidget</class>
    <extends>QWidget</extends>
    <header location="global">mplwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QWebEngineView2</class>
+   <extends>QWidget</extends>
+   <header location="global">qwebengineview2.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
