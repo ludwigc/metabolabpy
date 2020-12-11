@@ -11,6 +11,7 @@ import itertools # pragma: no cover
 import webbrowser # pragma: no cover
 import matplotlib # pragma: no cover
 import matplotlib.pyplot as pl  # pragma: no cover
+import h5py
 
 class NmrDataSet:
 
@@ -896,6 +897,397 @@ class NmrDataSet:
     def preProcInit(self):
         self.pp.init(len(self.nmrdat[self.s]))
         # end preProcInit
+
+    def loadMetaboLabMat(self, sFile=False):
+        if sFile == False:
+            return
+
+        self.clear()
+        f = h5py.File(sFile, 'r')
+        try:
+            nDims = int(f[f[f['NMRDAT']['ACQUS'][0][0]]['DIM'][0][0]][0][0])
+            nSets = len(f['NMRDAT']['MAT'][0])
+            nExps = len(f['NMRDAT']['MAT'])
+        except:
+            nDims = int(f[f['NMRDAT']['ACQUS']['DIM'][0][0]][0][0])
+            nSets = 1
+            nExps = 1
+
+        print('Sets: {}, Exps: {}'.format(nSets, nExps))
+        for k in range(nSets):
+            for l in range(nExps):
+                nd1 = nd.NmrData()
+                fn = {
+                    6: 1,
+                    0: 2,
+                    3: 3,
+                    2: 4,
+                    1: 5,
+                    4: 6
+                }
+                # MetLab: 6,     0,    3,      2,            1,   4
+                # FnMode: 1,     2,    3,      4,            5,   6
+                #         jres, QF, TPPI, States, States-TPPI , E/A
+                ws = {
+                    0: 0,
+                    1: 2,
+                    2: 1,
+                    3: 3
+                }
+                wdw = {
+                'NONE': 0,
+                'EM': 1,
+                'GM': 2,
+                'SINE': 3,
+                'QSINE': 4,
+                'SEM': 5,
+                'none': 0,
+                'em': 1,
+                'gm': 2,
+                'sine': 3,
+                'qsine': 4,
+                'sem': 5
+                }
+                a = nd1.acq
+                p = nd1.proc
+                d = nd1.disp
+                try:
+                    a.byteOrder = int(f[f[f['NMRDAT']['ACQUS'][l][k]]['BYTEORDER'][0][0]][0][0])
+                    a.sw_h[0] = f[f[f['NMRDAT']['ACQUS'][l][k]]['SW_h'][0][0]][0][0]
+                    a.sfo1 = f[f[f['NMRDAT']['ACQUS'][l][k]]['SFO1'][0][0]][0][0]
+                    a.nDataPoints[0] = int(f[f[f['NMRDAT']['ACQUS'][l][k]]['TD'][0][0]][0][0])
+                    a.decim = int(f[f[f['NMRDAT']['ACQUS'][l][k]]['DECIM'][0][0]][0][0])
+                    a.dspfvs = int(f[f[f['NMRDAT']['ACQUS'][l][k]]['DSPFVS'][0][0]][0][0])
+                    a.groupDelay = int(f[f[f['NMRDAT']['ACQUS'][l][k]]['GRPDLY'][0][0]][0][0])
+                    a.sw[0] = a.sw_h[0] / a.sfo1
+                    try:
+                        a.temperature = int(f[f[f['NMRDAT']['ACQUS'][l][k]]['TE'][0][0]][0][0])
+                    except:
+                        a.temperature = 0.0
+
+                    if nDims > 1:
+                        a.sw_h[1] = f[f[f['NMRDAT']['ACQUS'][l][k]]['SW_h'][1][0]][0][0]
+                        a.sfo2 = f[f[f['NMRDAT']['ACQUS'][l][k]]['SFO1'][1][0]][0][0]
+                        a.sw[1] = a.sw_h[1] / a.sfo2
+                        a.nDataPoints[1] = int(f[f[f['NMRDAT']['ACQUS'][l][k]]['TD'][1][0]][0][0])
+                        a.fnMode = fn[int(f[f[f['NMRDAT']['PROC'][l][k]]['INC'][1][0]][0][0])]
+
+
+                    if nDims > 2:
+                        a.sw_h[2] = f[f[f['NMRDAT']['ACQUS'][l][k]]['SW_h'][2][0]][0][0]
+                        a.sfo3 = f[f[f['NMRDAT']['ACQUS'][l][k]]['SFO1'][2][0]][0][0]
+                        a.sw[2] = a.sw_h[2] / a.sfo3
+                        a.nDataPoints[2] = int(f[f[f['NMRDAT']['ACQUS'][l][k]]['TD'][2][0]][0][0])
+
+                    origDataSet = ''
+                    for kk in range(len(f[f['NMRDAT']['NAME'][l][k]])):
+                        origDataSet += chr(f[f['NMRDAT']['NAME'][l][k]][kk][0])
+
+                    nd1.origDataSet = origDataSet
+                    nd1.fidOffsetCorr = int(f[f[f['NMRDAT']['PROC'][l][k]]['BC'][0][0]][0][0])
+                    p.waterSuppression = ws[int(f[f[f['NMRDAT']['PROC'][l][k]]['SMO'][0][0]][0][0])]
+                    p.polyOrder = int(f[f[f['NMRDAT']['PROC'][l][k]]['SMO_order'][0][0]][0][0])
+                    p.convWindowSize[0] = int(f[f[f['NMRDAT']['PROC'][l][k]]['SOL'][0][0]][0][0])
+                    p.convExtrapolationSize[0] = int(f[f[f['NMRDAT']['PROC'][l][k]]['SOL'][0][0]][1][0])
+                    p.convWindowType[0] = int(f[f[f['NMRDAT']['PROC'][l][k]]['SOL'][0][0]][2][0])
+                    p.ph0[0] = -f[f[f['NMRDAT']['PROC'][l][k]]['PH0'][0][0]][0][0] - 90.0
+                    p.ph1[0] = -f[f[f['NMRDAT']['PROC'][l][k]]['PH1'][0][0]][0][0]
+                    p.gibbs[0] = bool(f[f[f['NMRDAT']['PROC'][l][k]]['GIBBS'][0][0]][0][0])
+                    wdwChars = len(f[f[f['NMRDAT']['PROC'][l][k]]['WDWF'][0][0]])
+                    wdwType = ''
+                    for kk in range(wdwChars):
+                        wdwType += chr(f[f[f['NMRDAT']['PROC'][l][k]]['WDWF'][0][0]][kk][0])
+
+                    p.windowType[0] = wdw[wdwType]
+                    p.lb[0] = f[f[f['NMRDAT']['PROC'][l][k]]['LB'][0][0]][0][0]
+                    p.gb[0] = f[f[f['NMRDAT']['PROC'][l][k]]['GB'][0][0]][0][0]
+                    p.ssb[0] = f[f[f['NMRDAT']['PROC'][l][k]]['SSB'][0][0]][0][0]
+                    p.nPoints[0] = int(f[f[f['NMRDAT']['PROC'][l][k]]['ZF'][0][0]][0][0])
+                    p.stripStart = f[f[f['NMRDAT']['PROC'][l][k]]['STRIP'][0][0]][0][0]
+                    p.stripEnd = f[f[f['NMRDAT']['PROC'][l][k]]['STRIP'][0][0]][1][0]
+                    p.refShift[0] = f[f[f['NMRDAT']['PROC'][l][k]]['REF'][0][0]][0][0]
+                    p.refPoint[0] = p.nPoints[0] - int(f[f[f['NMRDAT']['PROC'][l][k]]['REF'][0][0]][1][0])
+                    if nDims > 1:
+                        p.ph0[1] = -f[f[f['NMRDAT']['PROC'][l][k]]['PH0'][1][0]][0][0] - 90
+                        p.ph1[1] = -f[f[f['NMRDAT']['PROC'][l][k]]['PH1'][1][0]][0][0]
+                        p.gibbs[1] = bool(f[f[f['NMRDAT']['PROC'][l][k]]['GIBBS'][1][0]][0][0])
+                        wdwChars = len(f[f[f['NMRDAT']['PROC'][l][k]]['WDWF'][1][0]])
+                        wdwType = ''
+                        for kk in range(wdwChars):
+                            wdwType += chr(f[f[f['NMRDAT']['PROC'][l][k]]['WDWF'][1][0]][kk][0])
+
+                        p.windowType[1] = wdw[wdwType]
+                        p.lb[1] = f[f[f['NMRDAT']['PROC'][l][k]]['LB'][1][0]][0][0]
+                        p.gb[1] = f[f[f['NMRDAT']['PROC'][l][k]]['GB'][1][0]][0][0]
+                        p.ssb[1] = f[f[f['NMRDAT']['PROC'][l][k]]['SSB'][1][0]][0][0]
+                        p.nPoints[1] = int(f[f[f['NMRDAT']['PROC'][l][k]]['ZF'][1][0]][0][0])
+                        p.refShift[1] = f[f[f['NMRDAT']['PROC'][l][k]]['REF'][1][0]][0][0]
+                        p.refPoint[1] = p.nPoints[1] - int(f[f[f['NMRDAT']['PROC'][l][k]]['REF'][1][0]][1][0])
+                        p.tilt = bool(f[f[f['NMRDAT']['PROC'][l][k]]['TILT'][1][0]][0][0])
+                        p.symj = bool(f[f[f['NMRDAT']['PROC'][l][k]]['FOLDJ'][1][0]][0][0])
+
+                    if nDims > 2:
+                        p.ph0[2] = -f[f[f['NMRDAT']['PROC'][l][k]]['PH0'][2][0]][0][0] - 90
+                        p.ph1[2] = -f[f[f['NMRDAT']['PROC'][l][k]]['PH1'][2][0]][0][0]
+                        p.gibbs[2] = bool(f[f[f['NMRDAT']['PROC'][l][k]]['GIBBS'][2][0]][0][0])
+                        wdwChars = len(f[f[f['NMRDAT']['PROC'][l][k]]['WDWF'][2][0]])
+                        wdwType = ''
+                        for kk in range(wdwChars):
+                            wdwType += chr(f[f[f['NMRDAT']['PROC'][l][k]]['WDWF'][2][0]][kk][0])
+
+                        p.windowType[2] = wdw[wdwType]
+                        p.lb[2] = f[f[f['NMRDAT']['PROC'][l][k]]['LB'][2][0]][0][0]
+                        p.gb[2] = f[f[f['NMRDAT']['PROC'][l][k]]['GB'][2][0]][0][0]
+                        p.ssb[2] = f[f[f['NMRDAT']['PROC'][l][k]]['SSB'][2][0]][0][0]
+                        p.nPoints[2] = int(f[f[f['NMRDAT']['PROC'][l][k]]['ZF'][2][0]][0][0])
+                        p.refShift[2] = f[f[f['NMRDAT']['PROC'][l][k]]['REF'][2][0]][0][0]
+                        p.refPoint[2] = p.nPoints[2] - int(f[f[f['NMRDAT']['PROC'][l][k]]['REF'][2][0]][1][0])
+
+                    if nDims > 1:
+                        nd1.spc = np.resize(nd1.spc, (len(f[f['NMRDAT']['MAT'][l][k]][0]), len(f[f['NMRDAT']['MAT'][l][k]])))
+                        nd1.spc = np.transpose(np.array(f[f['NMRDAT']['MAT'][l][k]]))
+                    else:
+                        nd1.spc = np.resize(nd1.spc, (1, len(f[f['NMRDAT']['MAT'][l][k]][0])))
+                        dd = np.array(f[f['NMRDAT']['MAT'][l][k]][0])
+                        try:
+                            nd1.spc[0] = dd
+                        except:
+                            nd1.spc[0] = dd['real'] + 1j*dd['imag']
+
+                    if nDims > 1:
+                        nd1.fid = np.resize(nd1.fid, (len(f[f['NMRDAT']['SER'][l][k]]), len(f[f['NMRDAT']['SER'][l][k]][0])))
+                        nd1.fid = f[f['NMRDAT']['SER'][l][k]]
+                    else:
+                        nd1.fid = np.resize(nd1.fid, (1, len(f[f['NMRDAT']['SER'][l][k]][0])))
+                        fid = f[f['NMRDAT']['SER'][l][k]][0]
+                        try:
+                            nd1.fid[0] = fid
+                        except:
+                            nd1.fid[0] = fid['real'] + 1j*fid['imag']
+                        #
+                        #nd1.fid = np.copy(fid)
+
+                    d.posCol = 'RGB'
+                    posCol = (
+                        f[f[f['NMRDAT']['DISP'][l][k]]['Color'][0][0]][0][0],
+                        f[f[f['NMRDAT']['DISP'][l][k]]['Color'][0][0]][1][0],
+                        f[f[f['NMRDAT']['DISP'][l][k]]['Color'][0][0]][2][0]
+                    )
+                    negCol = (
+                        f[f[f['NMRDAT']['DISP'][l][k]]['Color'][1][0]][0][0],
+                        f[f[f['NMRDAT']['DISP'][l][k]]['Color'][1][0]][1][0],
+                        f[f[f['NMRDAT']['DISP'][l][k]]['Color'][1][0]][2][0]
+                    )
+                    d.posColRGB = posCol
+                    d.negColRGB = negCol
+                    d.nLevels = int(f[f['NMRDAT']['DISP'][l][k]]['nlev'][0][0])
+                    d.minLevel = f[f['NMRDAT']['DISP'][l][k]]['minlev'][0][0]
+                    d.maxLevel = f[f['NMRDAT']['DISP'][l][k]]['maxlev'][0][0]
+                    axTyp = {
+                        0: 'ppm',
+                        1: 'ppm',
+                        2: 'Hz'
+                    }
+                    d.axisType1 = axTyp[int(f[f['NMRDAT']['DISP'][l][k]]['ax_typ'][0][0])]
+                    d.axisType2 = axTyp[int(f[f['NMRDAT']['DISP'][l][k]]['ax_typ'][0][0])]
+                    nd1.acq = a
+                    nd1.proc = p
+                    nd1disp = d
+                    nd1.dim = nDims
+                    nd1.refPoint = p.refPoint
+                    nd1.refShift = p.refShift
+                    nd1.calcPPM()
+                    print("l = {}, k = {}".format(l, k))
+                    print(len(f[f['NMRDAT']['COMMENT'][l][k]]))
+                    if len(f[f['NMRDAT']['COMMENT'][l][k]]) < 3:
+                        title = ''
+                    else:
+                        nLines = len(f[f['NMRDAT']['COMMENT'][l][k]][0])
+                        nChar = len(f[f['NMRDAT']['COMMENT'][l][k]])
+                        title = ''
+                        for kk in range(nLines):
+                            for ll in range(nChar):
+                                title += chr(f[f['NMRDAT']['COMMENT'][l][k]][ll][kk])
+
+                            title += '\n'
+
+
+                except:
+                    a.byteOrder = int(f[f['NMRDAT']['ACQUS']['BYTEORDER'][0][0]][0][0])
+                    a.sw_h[0] = f[f['NMRDAT']['ACQUS']['SW_h'][0][0]][0][0]
+                    a.sfo1 = f[f['NMRDAT']['ACQUS']['SFO1'][0][0]][0][0]
+                    a.nDataPoints[0] = int(f[f['NMRDAT']['ACQUS']['TD'][0][0]][0][0])
+                    a.decim = int(f[f['NMRDAT']['ACQUS']['DECIM'][0][0]][0][0])
+                    a.dspfvs = int(f[f['NMRDAT']['ACQUS']['DSPFVS'][0][0]][0][0])
+                    a.groupDelay = int(f[f['NMRDAT']['ACQUS']['GRPDLY'][0][0]][0][0])
+                    a.sw[0] = a.sw_h[0] / a.sfo1
+                    try:
+                        a.temperature = int(f[f['NMRDAT']['ACQUS']['TE'][0][0]][0][0])
+                    except:
+                        a.temperature = 0.0
+
+                    if nDims > 1:
+                        a.sw_h[1] = f[f['NMRDAT']['ACQUS']['SW_h'][1][0]][0][0]
+                        a.sfo2 = f[f['NMRDAT']['ACQUS']['SFO1'][1][0]][0][0]
+                        a.sw[1] = a.sw_h[1] / a.sfo2
+                        a.nDataPoints[1] = int(f[f['NMRDAT']['ACQUS']['TD'][1][0]][0][0])
+                        a.fnMode = fn[int(f[f['NMRDAT']['PROC']['INC'][1][0]][0][0])]
+
+                    if nDims > 2:
+                        a.sw_h[2] = f[f['NMRDAT']['ACQUS']['SW_h'][2][0]][0][0]
+                        a.sfo3 = f[f['NMRDAT']['ACQUS']['SFO1'][2][0]][0][0]
+                        a.sw[2] = a.sw_h[2] / a.sfo3
+                        a.nDataPoints[2] = int(f[f['NMRDAT']['ACQUS']['TD'][2][0]][0][0])
+
+                    origDataSet = ''
+                    for kk in range(len(f['NMRDAT']['NAME'])):
+                        origDataSet += chr(f['NMRDAT']['NAME'][kk][0])
+
+                    nd1.origDataSet = origDataSet
+                    nd1.fidOffsetCorr = int(f[f['NMRDAT']['PROC']['BC'][0][0]][0][0])
+                    p.waterSuppression = ws[int(f[f['NMRDAT']['PROC']['SMO'][0][0]][0][0])]
+                    p.polyOrder = int(f[f['NMRDAT']['PROC']['SMO_order'][0][0]][0][0])
+                    p.convWindowSize[0] = int(f[f['NMRDAT']['PROC']['SOL'][0][0]][0][0])
+                    p.convExtrapolationSize[0] = int(f[f['NMRDAT']['PROC']['SOL'][0][0]][1][0])
+                    p.convWindowType[0] = int(f[f['NMRDAT']['PROC']['SOL'][0][0]][2][0])
+                    p.ph0[0] = -f[f['NMRDAT']['PROC']['PH0'][0][0]][0][0] - 90
+                    p.ph1[0] = -f[f['NMRDAT']['PROC']['PH1'][0][0]][0][0]
+                    p.gibbs[0] = bool(f[f['NMRDAT']['PROC']['GIBBS'][0][0]][0][0])
+                    wdwChars = len(f[f['NMRDAT']['PROC']['WDWF'][0][0]])
+                    wdwType = ''
+                    for kk in range(wdwChars):
+                        wdwType += chr(f[f['NMRDAT']['PROC']['WDWF'][0][0]][kk][0])
+
+                    p.windowType[0] = wdw[wdwType]
+                    p.lb[0] = f[f['NMRDAT']['PROC']['LB'][0][0]][0][0]
+                    p.gb[0] = f[f['NMRDAT']['PROC']['GB'][0][0]][0][0]
+                    p.ssb[0] = f[f['NMRDAT']['PROC']['SSB'][0][0]][0][0]
+                    p.nPoints[0] = int(f[f['NMRDAT']['PROC']['ZF'][0][0]][0][0])
+                    p.stripStart = f[f['NMRDAT']['PROC']['STRIP'][0][0]][0][0]
+                    p.stripEnd = f[f['NMRDAT']['PROC']['STRIP'][0][0]][1][0]
+                    p.refShift[0] = f[f['NMRDAT']['PROC']['REF'][0][0]][0][0]
+                    p.refPoint[0] = p.nPoints[0] - int(f[f['NMRDAT']['PROC']['REF'][0][0]][1][0])
+                    if nDims > 1:
+                        p.ph0[1] = -f[f['NMRDAT']['PROC']['PH0'][1][0]][0][0] - 90
+                        p.ph1[1] = -f[f['NMRDAT']['PROC']['PH1'][1][0]][0][0]
+                        p.gibbs[1] = bool(f[f['NMRDAT']['PROC']['GIBBS'][1][0]][0][0])
+                        wdwChars = len(f[f['NMRDAT']['PROC']['WDWF'][1][0]])
+                        wdwType = ''
+                        for kk in range(wdwChars):
+                            wdwType += chr(f[f['NMRDAT']['PROC']['WDWF'][1][0]][kk][0])
+
+                        p.windowType[1] = wdw[wdwType]
+                        p.lb[1] = f[f['NMRDAT']['PROC']['LB'][1][0]][0][0]
+                        p.gb[1] = f[f['NMRDAT']['PROC']['GB'][1][0]][0][0]
+                        p.ssb[1] = f[f['NMRDAT']['PROC']['SSB'][1][0]][0][0]
+                        p.nPoints[1] = int(f[f['NMRDAT']['PROC']['ZF'][1][0]][0][0])
+                        p.refShift[1] = f[f['NMRDAT']['PROC']['REF'][1][0]][0][0]
+                        p.refPoint[1] = p.nPoints[1] - int(f[f['NMRDAT']['PROC']['REF'][1][0]][1][0])
+                        p.tilt = bool(f[f['NMRDAT']['PROC']['TILT'][1][0]][0][0])
+                        p.symj = bool(f[f['NMRDAT']['PROC']['FOLDJ'][1][0]][0][0])
+
+                    if nDims > 2:
+                        p.ph0[2] = -f[f['NMRDAT']['PROC']['PH0'][2][0]][0][0] - 90
+                        p.ph1[2] = -f[f['NMRDAT']['PROC']['PH1'][2][0]][0][0]
+                        p.gibbs[2] = bool(f[f['NMRDAT']['PROC']['GIBBS'][2][0]][0][0])
+                        wdwChars = len(f[f['NMRDAT']['PROC']['WDWF'][2][0]])
+                        wdwType = ''
+                        for kk in range(wdwChars):
+                            wdwType += chr(f[f['NMRDAT']['PROC']['WDWF'][2][0]][kk][0])
+
+                        p.windowType[2] = wdw[wdwType]
+                        p.lb[2] = f[f['NMRDAT']['PROC']['LB'][2][0]][0][0]
+                        p.gb[2] = f[f['NMRDAT']['PROC']['GB'][2][0]][0][0]
+                        p.ssb[2] = f[f['NMRDAT']['PROC']['SSB'][2][0]][0][0]
+                        p.nPoints[2] = int(f[f['NMRDAT']['PROC']['ZF'][2][0]][0][0])
+                        p.refShift[2] = f[f['NMRDAT']['PROC']['REF'][2][0]][0][0]
+                        p.refPoint[2] = p.nPoints[2] - int(f[f['NMRDAT']['PROC']['REF'][2][0]][1][0])
+
+                    if nDims > 1:
+                        nd1.spc = np.resize(nd1.spc,
+                                            (len(f['NMRDAT']['MAT'][0]), len(f['NMRDAT']['MAT'])))
+                        nd1.spc = np.transpose(np.array(f['NMRDAT']['MAT']))
+                    else:
+                        nd1.spc = np.resize(nd1.spc, (1, len(f['NMRDAT']['MAT'][0])))
+                        dd = np.array(f['NMRDAT']['MAT'][0])
+                        try:
+                            nd1.spc[0] = dd
+                        except:
+                            nd1.spc[0] = dd['real'] + 1j * dd['imag']
+
+                    if nDims > 1:
+                        nd1.fid = np.resize(nd1.fid,
+                                            (len(f['NMRDAT']['SER']), len(f['NMRDAT']['SER'][0])))
+                        nd1.fid = f['NMRDAT']['SER']
+                    else:
+                        nd1.fid = np.resize(nd1.fid, (1, len(f['NMRDAT']['SER'][0])))
+                        fid = f['NMRDAT']['SER'][0]
+                        try:
+                            nd1.fid[0] = fid
+                        except:
+                            nd1.fid[0] = fid['real'] + 1j * fid['imag']
+                        #
+                        # nd1.fid = np.copy(fid)
+
+                    d.posCol = 'RGB'
+                    posCol = (
+                        f[f['NMRDAT']['DISP']['Color'][0][0]][0][0],
+                        f[f['NMRDAT']['DISP']['Color'][0][0]][1][0],
+                        f[f['NMRDAT']['DISP']['Color'][0][0]][2][0]
+                    )
+                    negCol = (
+                        f[f['NMRDAT']['DISP']['Color'][1][0]][0][0],
+                        f[f['NMRDAT']['DISP']['Color'][1][0]][1][0],
+                        f[f['NMRDAT']['DISP']['Color'][1][0]][2][0]
+                    )
+                    d.posColRGB = posCol
+                    d.negColRGB = negCol
+                    d.nLevels = int(f['NMRDAT']['DISP']['nlev'][0][0])
+                    d.minLevel = f['NMRDAT']['DISP']['minlev'][0][0]
+                    d.maxLevel = f['NMRDAT']['DISP']['maxlev'][0][0]
+                    axTyp = {
+                        0: 'ppm',
+                        1: 'ppm',
+                        2: 'Hz'
+                    }
+                    d.axisType1 = axTyp[int(f['NMRDAT']['DISP']['ax_typ'][0][0])]
+                    d.axisType2 = axTyp[int(f['NMRDAT']['DISP']['ax_typ'][0][0])]
+                    nd1.acq = a
+                    nd1.proc = p
+                    nd1disp = d
+                    nd1.dim = nDims
+                    nd1.refPoint = p.refPoint
+                    nd1.refShift = p.refShift
+                    nd1.calcPPM()
+                    print("l = {}, k = {}".format(l, k))
+                    print(len(f['NMRDAT']['COMMENT']))
+                    if len(f['NMRDAT']['COMMENT']) < 3:
+                        title = ''
+                    else:
+                        nLines = len(f['NMRDAT']['COMMENT'][0])
+                        nChar = len(f['NMRDAT']['COMMENT'])
+                        title = ''
+                        for kk in range(nLines):
+                            for ll in range(nChar):
+                                title += chr(f['NMRDAT']['COMMENT'][ll][kk])
+
+                            title += '\n'
+
+
+                nd1.title = title
+                if len(self.nmrdat) < k+1:
+                    self.nmrdat.append([])
+
+                self.nmrdat[k].append(nd1)
+
+
+
+        self.s = 0
+        self.e = 0
+
+        # self.nd.loadMetaboLabMat()
+        # self.fid = np.resize(self.fid, (1, int(self.acq.nDataPoints[0] / 2)))
+        # end loadMetaboLabMat
         
     def readSpc(self, dataSetName, dataSetNumber):
         self.e            = len(self.nmrdat[self.s])

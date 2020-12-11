@@ -193,7 +193,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>12</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="spcTab">
        <attribute name="title">
@@ -4691,7 +4691,7 @@
          <widget class="QTextBrowser" name="acqPars">
           <property name="font">
            <font>
-            <family>.SF NS Text</family>
+            <family>Courier</family>
            </font>
           </property>
           <property name="lineWrapMode">
@@ -4708,6 +4708,11 @@
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
          <widget class="QTextBrowser" name="titleFile">
+          <property name="font">
+           <font>
+            <family>Courier</family>
+           </font>
+          </property>
           <property name="lineWrapMode">
            <enum>QTextEdit::NoWrap</enum>
           </property>
@@ -4724,7 +4729,13 @@
        </attribute>
        <layout class="QGridLayout" name="gridLayout_10">
         <item row="0" column="0">
-         <widget class="QTextBrowser" name="pulseProgram"/>
+         <widget class="QTextBrowser" name="pulseProgram">
+          <property name="font">
+           <font>
+            <family>Courier</family>
+           </font>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -4737,7 +4748,7 @@
          <widget class="QTextEdit" name="script">
           <property name="font">
            <font>
-            <family>.SF NS Text</family>
+            <family>Courier</family>
            </font>
           </property>
          </widget>
@@ -4823,7 +4834,13 @@
        </attribute>
        <layout class="QGridLayout" name="gridLayout_12">
         <item row="0" column="0">
-         <widget class="QTextBrowser" name="console"/>
+         <widget class="QTextBrowser" name="console">
+          <property name="font">
+           <font>
+            <family>Courier</family>
+           </font>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -4832,8 +4849,75 @@
         <string>Help</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_27">
-        <item row="0" column="0">
+        <item row="0" column="0" colspan="3">
          <widget class="QWebEngineView2" name="helpView" native="true"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QComboBox" name="helpComboBox">
+          <item>
+           <property name="text">
+            <string>Help</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>HMDB</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>SMPDB</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>BMRB</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>KEGG</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>NMRShiftDB2</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>SDBS</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>SpinCouple</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <spacer name="horizontalSpacer_24">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>1208</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="2">
+         <widget class="QCheckBox" name="autoUnzip">
+          <property name="text">
+           <string>Auto-unzip downloaded zip files</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -4858,6 +4942,7 @@
     <addaction name="actionLoad"/>
     <addaction name="actionRead_NMR_Spectrum"/>
     <addaction name="actionOpen_NMRPipe"/>
+    <addaction name="actionOpen_MetaboLab_mat"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuPlot">
@@ -5471,6 +5556,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+H</string>
+   </property>
+  </action>
+  <action name="actionOpen_MetaboLab_mat">
+   <property name="text">
+    <string>Open MetaboLab .mat</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+M</string>
    </property>
   </action>
  </widget>

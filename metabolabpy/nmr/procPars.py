@@ -18,7 +18,7 @@ class ProcPars:
         self.symj                  = False
         self.ph0                   = np.array([0.0, 0.0, 0.0])
         self.ph1                   = np.array([0.0, 0.0, 0.0])
-        self.phCorr                = np.array([1, 1, 0], dtype = 'int')
+        self.phCorr                = np.array([1, 1, 0], dtype='int')
         self.refShift              = np.array([0.0, 0.0, 0.0])
         self.refPoint              = np.array([0, 0, 0])
         self.nPoints               = np.array([0, 0, 0])
@@ -26,15 +26,15 @@ class ProcPars:
         self.lb                    = np.array([0.3, 0.0, 0.0])
         self.gb                    = np.array([0.0, 0.0, 0.0])
         self.ssb                   = np.array([0.0, 0.0, 0.0])
-        self.axisNucleus           = np.array(['      ','      ','      '], dtype = 'str')
+        self.axisNucleus           = np.array(['      ', '      ', '      '], dtype='str')
         self.aunmp                 = str('')
         self.polyOrder             = 4
         self.waterSuppression      = 0
         self.gibbs                 = np.array([True, True, False])
         self.convExtrapolationSize = np.array([32, 0, 0])
         self.convWindowSize        = np.array([32, 0, 0])
-        self.windowType            = np.array([1, 4, 0], dtype = 'int')
-        self.convWindowType        = np.array([0, 0, 0], dtype = 'int')
+        self.windowType            = np.array([1, 4, 0], dtype='int')
+        self.convWindowType        = np.array([0, 0, 0], dtype='int')
         self.regEx                 = procRegEx.ProcRegEx()
         self.regExVarian           = procProcparRegEx.ProcProcparRegEx()
         self.sw_h                  = np.array([0.0, 0.0, 0.0])

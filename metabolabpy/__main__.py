@@ -38,6 +38,7 @@ import scipy.io  # pragma: no cover
 import inspect
 from io import StringIO
 import contextlib
+import zipfile
 
 # import pandas as pd                       # pragma: no cover
 
@@ -180,6 +181,7 @@ class main_w(object):  # pragma: no cover
         self.w.bucketPpmLE.returnPressed.connect(self.setBucketPPMPreProc)
         self.w.bucketDataPointsLE.returnPressed.connect(self.setBucketPointsPreProc)
         self.w.actionVertical_AutoScale.triggered.connect(self.verticalAutoScale)
+        self.w.actionOpen_MetaboLab_mat.triggered.connect(self.loadMetaboLabFile)
         self.w.actionZoom.triggered.connect(self.setZoom)
         self.w.actionPan.triggered.connect(self.setPan)
         self.w.actionShow_Next_Tab.triggered.connect(self.nextTab)
@@ -294,6 +296,8 @@ class main_w(object):  # pragma: no cover
         self.w.actionOpen_Script.triggered.connect(self.openScript)
         self.w.actionSave_Script.triggered.connect(self.saveScript)
         self.w.actionExecute_Script.triggered.connect(self.execScript)
+        #self.w.helpComboBox.currentIndexChanged.connect(self.setHelp)
+        self.w.helpComboBox.activated.connect(self.setHelp)
         # Quit Button
         self.w.quitButton.clicked.connect(self.quit_app)
         self.w.saveButton.clicked.connect(self.saveButton)
@@ -896,7 +900,7 @@ class main_w(object):  # pragma: no cover
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
         self.w.console.setTextColor('Gray')
-        self.w.console.append('--- ScriptStart ---------------------------------------------------------------------------------------------------------------------------------------------\n')
+        self.w.console.append('--- ScriptStart -------------------------\n')
         self.w.console.setTextColor('DarkBlue')
         self.w.console.append('Executing script...\n')
         self.w.console.setTextColor('Blue')
@@ -905,13 +909,13 @@ class main_w(object):  # pragma: no cover
             self.w.console.append(str(k+1) + ': ' + str(codeSplit[k]))
 
         self.w.console.setTextColor('Gray')
-        self.w.console.append('\n--- ScriptOutput ------------------------------------------------------------------------------------------------------------------------------------------\n')
+        self.w.console.append('\n--- ScriptOutput ------------------------\n')
         self.w.console.setTextColor('Black')
         self.w.console.append(codeOut.getvalue())
         self.w.console.setTextColor('Red')
         self.w.console.append(codeErr.getvalue())
         self.w.console.setTextColor('Gray')
-        self.w.console.append('--- ScriptEnd ---------------------------------------------------------------------------------------------------------------------------------------------\n')
+        self.w.console.append('--- ScriptEnd ---------------------------\n')
         self.w.console.setTextColor('Black')
         codeOut.close()
         codeErr.close()
@@ -1573,6 +1577,30 @@ class main_w(object):  # pragma: no cover
         self.showAcquisitionParameters()
         self.showNMRSpectrum()
         # end loadFile
+
+    def loadMetaboLabFile(self, sfile=False):
+        if sfile == False:
+            selectedFile = QFileDialog.getOpenFileName(None, "Open MetaboLab .mat file", "", "Matlab files (*.mat)")
+            if len(selectedFile[0]) == 0:
+                return
+
+        else:
+            selectedFile = (sfile, '')
+
+        self.nd.clear()
+        kz = self.w.keepZoom.isChecked()
+        self.w.keepZoom.setChecked(False)
+        self.nd.loadMetaboLabMat(selectedFile[0])
+        self.plotSpc()
+        self.w.keepZoom.setChecked(kz)
+        self.setProcPars()
+        self.setAcqPars()
+        self.setTitleFile()
+        self.setPulseProgram()
+        self.w.expBox.setValue(self.nd.e + 1)
+        self.setDispPars()
+        self.updateGUI()
+        # end loadMetaboLabFile
 
     def nextCommand(self):
         if (self.w.cmdLine.hasFocus() == True):
@@ -2324,7 +2352,7 @@ class main_w(object):  # pragma: no cover
         else:
             selectedFile = (sfile, '')
 
-        print(selectedFile)
+        #print(selectedFile)
         fName = os.path.split(selectedFile[0])[1]
         dataPath = os.path.split(os.path.split(selectedFile[0])[0])[0]
         expNum = os.path.split(os.path.split(selectedFile[0])[0])[1]
@@ -2770,36 +2798,35 @@ class main_w(object):  # pragma: no cover
         s = self.nd.s
         e = self.nd.e
         a = self.nd.nmrdat[s][e].acq
-        acqStr = "originalDataset\t" + self.nd.nmrdat[s][e].origDataSet + "\n"
-        acqStr += "_________________________________________________________________________________________________________________________________________\n"
+        acqStr = "originalDataset      " + self.nd.nmrdat[s][e].origDataSet + "\n"
+        acqStr += "___________________________________________________________________________________________________\n"
         acqStr += "\n"
-        acqStr += "metaInfo\t\t"
+        acqStr += "metaInfo             "
         for k in range(len(a.title)):
             acqStr += a.title[k] + " "
 
-        acqStr += "\n\t\t"
-        acqStr += "Origin\t" + a.origin + "\n\t\t"
-        acqStr += "Owner\t" + a.owner + "\n"
-        acqStr += "_________________________________________________________________________________________________________________________________________\n"
+        acqStr += "\n                    "
+        acqStr += " Origin\t" + a.origin + "\n                    "
+        acqStr += " Owner\t" + a.owner + "\n"
+        acqStr += "___________________________________________________________________________________________________\n"
         acqStr += "\n"
-        acqStr += "probe\t\t\t" + a.probe + "\n"
+        acqStr += "probe                          " + a.probe + "\n"
         pp = a.pulProgName
         pp = pp[1:]
         pp = pp[:len(pp) - 1]
-        acqStr += "pulseProgram\t\t" + pp + "\n\n"
-        acqStr += "sw\t\t[ppm]\t{:4.2f}\t|\t{:4.2f}\t|\t{:4.2f}\n".format(a.sw[0], a.sw[1], a.sw[2])
-        acqStr += "sw\t\t[Hz]\t{:4.2f}\t|\t{:4.2f}\t|\t{:4.2f}\n".format(a.sw_h[0], a.sw_h[1], a.sw_h[2])
-        acqStr += "bf1/2/3\t\t[MHz]\t{:4.2f}\t|\t{:4.2f}\t|\t{:4.2f}\n".format(a.bf1, a.bf2, a.bf3)
-        acqStr += "sfo1/2/3\t\t[MHz]\t{:4.2f}\t|\t{:4.2f}\t|\t{:4.2f}\n".format(a.sfo1, a.sfo2, a.sfo3)
-        acqStr += "o1/2/3\t\t[Hz]\t{:4.2f}\t|\t{:4.2f}\t|\t{:4.2f}\n\n".format(a.o1, a.o2, a.o3)
-        acqStr += "nPoints\t\t\t{:0.0f}\t|\t{:0.0f}\t|\t{:0.0f}\n\n".format(a.nDataPoints[0], a.nDataPoints[1],
-                                                                            a.nDataPoints[2])
-        acqStr += "transients\t\t\t{:0.0f}\n".format(a.transients)
-        acqStr += "steadyStateScans\t\t{:0.0f}\n\n".format(a.steadyStateScans)
-        acqStr += "groupDelay\t\t\t {:0.0f}\n".format(a.groupDelay)
-        acqStr += "decim\t\t\t {:0.0f}\n".format(a.decim)
-        acqStr += "dspfvs\t\t\t {:0.0f}\n\n".format(a.dspfvs)
-        acqStr += "temperature\t\t[K]\t {:4.2f}\n".format(a.temperature)
+        acqStr += "pulseProgram                   " + pp + "\n\n"
+        acqStr += "sw                   [ppm]    " + "% 9.2f"%a.sw[0]           + "        |    % 9.2f"%a.sw[1]           + "        |    % 9.2f\n"%a.sw[2]
+        acqStr += "sw_h                 [Hz]     " + "% 9.2f"%a.sw_h[0]         + "        |    % 9.2f"%a.sw_h[1]         + "        |    % 9.2f\n"%a.sw_h[2]
+        acqStr += "bf1/2/3              [MHz]    " + "% 9.2f"%a.bf1             + "        |    % 9.2f"%a.bf2             + "        |    % 9.2f\n"%a.bf3
+        acqStr += "sfo1/2/3             [MHz]    " + "% 9.2f"%a.sfo1            + "        |    % 9.2f"%a.sfo2            + "        |    % 9.2f\n"%a.sfo3
+        acqStr += "o1/2/3               [Hz]     " + "% 9.2f"%a.o1              + "        |    % 9.2f"%a.o2              + "        |    % 9.2f\n"%a.o3
+        acqStr += "nPoints                       " + "% 6d"%a.nDataPoints[0] + "           |    % 6d"%a.nDataPoints[1] + "           |    % 6d\n"%a.nDataPoints[2]
+        acqStr += "transients                    " + "% 6d\n"%a.transients
+        acqStr += "steadyStateScans              " + "% 6d\n\n"%a.steadyStateScans
+        acqStr += "groupDelay           [us]     " + "% 9.2f\n"%a.groupDelay
+        acqStr += "decim                         " + "% 6d\n"%a.decim
+        acqStr += "dspfvs                        " + "% 6d\n"%a.dspfvs
+        acqStr += "temperature          [K]      " + "% 9.2f\n"%a.temperature
         self.w.acqPars.setText(acqStr)
         # end setAcqPars
 
@@ -3219,6 +3246,21 @@ class main_w(object):  # pragma: no cover
         self.w.pulseProgram.setFont(f)
         self.w.cmdLine.setFont(f)
         # end setFontSize
+
+    def setHelp(self):
+        url = []
+        idx = self.w.helpComboBox.currentIndex()
+        fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "introduction", "index.html")
+        url.append("file:///" + fName.replace('\\', '/'))
+        url.append("https://www.hmdb.ca")
+        url.append("https://www.smpdb.ca")
+        url.append("https://bmrb.io/metabolomics/")
+        url.append("https://www.genome.jp/kegg/pathway.html#metabolism")
+        url.append("https://nmrshiftdb.nmr.uni-koeln.de")
+        url.append("https://sdbs.db.aist.go.jp/sdbs/cgi-bin/cre_index.cgi")
+        url.append("http://dmar.riken.jp/spincouple/")
+        self.w.helpView.setUrl(url[idx])
+        # end setHelp
 
     def setJres(self):
         if (self.nd.nmrdat[self.nd.s][self.nd.e].acq.fnMode == 1):
@@ -4126,7 +4168,7 @@ class main_w(object):  # pragma: no cover
             print(f"downloading file to:( {download_item.path()} )")
             download_item.accept()
             self.download_item = download_item
-            download_item.finished.connect(self._download_finished)
+            self.download_item.finished.connect(self._download_finished)
         else:
             print("Download canceled")
 
@@ -4146,6 +4188,16 @@ class main_w(object):  # pragma: no cover
         sys.stdout = codeOut
         sys.stderr = codeErr
         print("Download complete")
+        if self.w.autoUnzip.isChecked() == True:
+            fName, fExt = os.path.splitext(self.download_item.downloadFileName())
+            if fExt == '.zip':
+                print('Extracting .zip-file')
+                with zipfile.ZipFile(os.path.join(self.download_item.downloadDirectory(), self.download_item.downloadFileName()), 'r') as zip_ref:
+                    zip_ref.extractall(self.download_item.downloadDirectory())
+
+                print('.zip-file extraction finished')
+
+
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
         self.w.console.setTextColor('Black')
