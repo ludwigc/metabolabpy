@@ -4942,7 +4942,6 @@
     <addaction name="actionLoad"/>
     <addaction name="actionRead_NMR_Spectrum"/>
     <addaction name="actionOpen_NMRPipe"/>
-    <addaction name="actionOpen_MetaboLab_mat"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuPlot">
@@ -5556,14 +5555,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+H</string>
-   </property>
-  </action>
-  <action name="actionOpen_MetaboLab_mat">
-   <property name="text">
-    <string>Open MetaboLab .mat</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+M</string>
    </property>
   </action>
  </widget>

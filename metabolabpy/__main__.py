@@ -181,7 +181,6 @@ class main_w(object):  # pragma: no cover
         self.w.bucketPpmLE.returnPressed.connect(self.setBucketPPMPreProc)
         self.w.bucketDataPointsLE.returnPressed.connect(self.setBucketPointsPreProc)
         self.w.actionVertical_AutoScale.triggered.connect(self.verticalAutoScale)
-        self.w.actionOpen_MetaboLab_mat.triggered.connect(self.loadMetaboLabFile)
         self.w.actionZoom.triggered.connect(self.setZoom)
         self.w.actionPan.triggered.connect(self.setPan)
         self.w.actionShow_Next_Tab.triggered.connect(self.nextTab)
@@ -1577,30 +1576,6 @@ class main_w(object):  # pragma: no cover
         self.showAcquisitionParameters()
         self.showNMRSpectrum()
         # end loadFile
-
-    def loadMetaboLabFile(self, sfile=False):
-        if sfile == False:
-            selectedFile = QFileDialog.getOpenFileName(None, "Open MetaboLab .mat file", "", "Matlab files (*.mat)")
-            if len(selectedFile[0]) == 0:
-                return
-
-        else:
-            selectedFile = (sfile, '')
-
-        self.nd.clear()
-        kz = self.w.keepZoom.isChecked()
-        self.w.keepZoom.setChecked(False)
-        self.nd.loadMetaboLabMat(selectedFile[0])
-        self.plotSpc()
-        self.w.keepZoom.setChecked(kz)
-        self.setProcPars()
-        self.setAcqPars()
-        self.setTitleFile()
-        self.setPulseProgram()
-        self.w.expBox.setValue(self.nd.e + 1)
-        self.setDispPars()
-        self.updateGUI()
-        # end loadMetaboLabFile
 
     def nextCommand(self):
         if (self.w.cmdLine.hasFocus() == True):
