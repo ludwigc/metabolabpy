@@ -5,4 +5,3 @@ pyside2
 openpyxl
 psutil
 argparse
-h5py
