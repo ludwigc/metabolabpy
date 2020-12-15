@@ -108,7 +108,7 @@ class QWebEngineView2(QWebEngineView):
 
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.__version__ = '0.6.12'
+        self.__version__ = '0.6.14'
         self.zoomWasOn = False
         self.panWasOn = False
         self.nd = nmrDataSet.NmrDataSet()
@@ -1443,7 +1443,7 @@ class main_w(object):  # pragma: no cover
         self.w.runPreProcessingButton.setHidden(True)
         self.w.resetPreProcessingButton.setHidden(True)
         self.w.writeScriptButton.setHidden(True)
-        self.plotSpc()
+        self.plotSpc(True)
         # end hidePreProcessing
 
     def hilbert(self, mat):
@@ -2088,7 +2088,7 @@ class main_w(object):  # pragma: no cover
 
         self.w.MplWidget.canvas.draw()
 
-    def plotSpc(self):
+    def plotSpc(self, hidePreProcessing = False):
         self.keepZoom = self.w.keepZoom.isChecked()
         xlim = self.w.MplWidget.canvas.axes.get_xlim()
         ylim = self.w.MplWidget.canvas.axes.get_ylim()
@@ -2196,7 +2196,9 @@ class main_w(object):  # pragma: no cover
             self.w.MplWidget.canvas.draw()
 
         self.keepZoom = False
-        pyautogui.click(clicks=1)
+        if hidePreProcessing == False:
+            pyautogui.click(clicks=1)
+
         # end plotSpc
 
     def plotSpcDisp(self):
