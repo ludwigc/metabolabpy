@@ -638,7 +638,7 @@ class NmrDataSet:
                 f.close()
                 nd2 = nd.NmrData()
                 for kk in nd2.__dict__.keys():
-                    if kk is not 'acq' and kk is not 'proc' and kk is not 'disp' and kk is not 'apc':
+                    if kk is not 'acq' and kk is not 'proc' and kk is not 'display' and kk is not 'apc':
                         if hasattr(n, kk):
                             exec('nd2.' + kk + '=n.' + kk)
 
@@ -685,16 +685,16 @@ class NmrDataSet:
                         nd2.proc = pc
 
 
-                    elif kk is 'disp':
+                    elif kk is 'display':
                         if hasattr(n, kk):
-                            d = n.disp
-                            dp = nd2.disp
+                            d = n.display
+                            dp = nd2.display
                             for kkk in dp.__dict__.keys():
                                 if hasattr(d, kkk):
                                     exec('dp.' + kkk+ '=d.' + kkk)
 
 
-                            nd2.disp = dp
+                            nd2.display = dp
 
 
                     elif kk is 'apc':
@@ -782,7 +782,7 @@ class NmrDataSet:
             self.nmrdat[set-1][k].fid = [[]]
             self.nmrdat[set-1][k].acq = self.nmrdat[self.s][k].acq
             self.nmrdat[set-1][k].proc = self.nmrdat[self.s][k].proc
-            self.nmrdat[set-1][k].disp = self.nmrdat[self.s][k].disp
+            self.nmrdat[set-1][k].display = self.nmrdat[self.s][k].display
             self.nmrdat[set-1][k].ppm1 = np.resize(self.nmrdat[set-1][k].ppm1, (len(self.nmrdat[self.s][k].ppm1)))
             self.nmrdat[set-1][k].ppm1 = np.copy(self.nmrdat[self.s][k].ppm1)
             self.nmrdat[set-1][k].spc = np.resize(self.nmrdat[set-1][k].spc, (1, len(self.nmrdat[self.s][k].spc[0])))
@@ -813,7 +813,7 @@ class NmrDataSet:
         if (len(self.nmrdat[self.s][self.e].spc) == 0):
             return
 
-        d = self.nmrdat[self.s][self.e].disp
+        d = self.nmrdat[self.s][self.e].display
         if (d.posCol == "RGB"):
             posCol = d.posColRGB
         else:
@@ -830,8 +830,8 @@ class NmrDataSet:
         ylabel = d.yLabel + " [" + d.axisType2 + "]"
         if (self.nmrdat[self.s][self.e].dim == 1):
             for k in range(len(self.nmrdat[self.s])):
-                if ((k != self.e) and (self.nmrdat[self.s][k].disp.displaySpc == True)):
-                    d = self.nmrdat[self.s][k].disp
+                if ((k != self.e) and (self.nmrdat[self.s][k].display.displaySpc == True)):
+                    d = self.nmrdat[self.s][k].display
                     if (d.posCol == "RGB"):
                         posCol = d.posColRGB
                     else:
@@ -846,7 +846,7 @@ class NmrDataSet:
                     negCol = matplotlib.colors.to_hex(negCol)
                     pl.plot(self.nmrdat[self.s][k].ppm1, self.nmrdat[self.s][k].spc[0].real, color=posCol)
 
-            d = self.nmrdat[self.s][self.e].disp
+            d = self.nmrdat[self.s][self.e].display
             if (d.posCol == "RGB"):
                 posCol = d.posColRGB
             else:
@@ -1164,14 +1164,14 @@ class NmrDataSet:
 
     def selectPlotAll(self):
         for k in range(len(self.nmrdat[self.s])):
-            self.nmrdat[self.s][k].disp.displaySpc = True
+            self.nmrdat[self.s][k].display.displaySpc = True
 
         self.plotSpc()
         # end selectPlotAll
 
     def selectPlotClear(self):
         for k in range(len(self.nmrdat[self.s])):
-            self.nmrdat[self.s][k].disp.displaySpc = False
+            self.nmrdat[self.s][k].display.displaySpc = False
 
         self.plotSpc()
         # end selectPlotClear

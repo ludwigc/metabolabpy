@@ -15,6 +15,7 @@ from time import sleep
 from PySide2.QtCore import QUrl, Qt
 from PySide2.QtWebEngineCore import QWebEngineUrlSchemeHandler
 from PySide2.QtWebEngineWidgets import QWebEngineView, QWebEngineProfile, QWebEnginePage, QWebEngineSettings
+import pyautogui # pragma: no cover
 
 matplotlib.use('Qt5Agg')  # pragma: no cover
 from matplotlib.backends.backend_qt5agg import (FigureCanvas,
@@ -107,7 +108,7 @@ class QWebEngineView2(QWebEngineView):
 
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.__version__ = '0.6.11'
+        self.__version__ = '0.6.12'
         self.zoomWasOn = False
         self.panWasOn = False
         self.nd = nmrDataSet.NmrDataSet()
@@ -696,8 +697,8 @@ class main_w(object):  # pragma: no cover
 
                 for k in range(len(self.nd.nmrdat)):
                     for l in range(len(self.nd.nmrdat[k])):
-                        self.nd.nmrdat[k][l].disp.phRefDS = self.w.phRefDS.value()
-                        self.nd.nmrdat[k][l].disp.phRefExp = self.w.phRefExp.value()
+                        self.nd.nmrdat[k][l].display.phRefDS = self.w.phRefDS.value()
+                        self.nd.nmrdat[k][l].display.phRefExp = self.w.phRefExp.value()
 
         # end changeDataSetExpPhRef
 
@@ -1050,19 +1051,19 @@ class main_w(object):  # pragma: no cover
         # end ftAll
 
     def getDispPars1(self):
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         d.posCol = d.colours.get(self.w.posCol.currentIndex())
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp = d
+        self.nd.nmrdat[self.nd.s][self.nd.e].display = d
         # end getDispPars1
 
     def getDispPars2(self):
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         d.negCol = d.colours.get(self.w.negCol.currentIndex())
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp = d
+        self.nd.nmrdat[self.nd.s][self.nd.e].display = d
         # end getDispPars2
 
     def getDispPars3(self):
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         posR = float(self.w.posColR.text())
         posG = float(self.w.posColG.text())
         posB = float(self.w.posColB.text())
@@ -1071,84 +1072,84 @@ class main_w(object):  # pragma: no cover
         negB = float(self.w.negColB.text())
         d.posColRGB = (posR, posG, posB)
         d.negColRGB = (negR, negG, negB)
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp = d
+        self.nd.nmrdat[self.nd.s][self.nd.e].display = d
         # end getDispPars3
 
     def getDispPars4(self):
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         d.nLevels = round(float(self.w.nLevels.text()))
         # end getDispPars4
 
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp = d
+        self.nd.nmrdat[self.nd.s][self.nd.e].display = d
 
     def getDispPars5(self):
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         d.minLevel = float(self.w.minLevel.text())
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp = d
+        self.nd.nmrdat[self.nd.s][self.nd.e].display = d
         # end getDispPars5
 
     def getDispPars6(self):
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         d.maxLevel = float(self.w.maxLevel.text())
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp = d
+        self.nd.nmrdat[self.nd.s][self.nd.e].display = d
         # end getDispPars6
 
     def getDispPars7(self):
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         d.axisType1 = d.axes.get(self.w.axisType1.currentIndex())
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp = d
+        self.nd.nmrdat[self.nd.s][self.nd.e].display = d
         self.nd.nmrdat[self.nd.s][self.nd.e].calcPPM()
         # end getDispPars7
 
     def getDispPars8(self):
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         d.axisType2 = d.axes.get(self.w.axisType2.currentIndex())
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp = d
+        self.nd.nmrdat[self.nd.s][self.nd.e].display = d
         self.nd.nmrdat[self.nd.s][self.nd.e].calcPPM()
         # end getDispPars8
 
     def getDispPars9(self):
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         d.displaySpc = d.falseTrue.get(self.w.displaySpc.currentIndex())
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp = d
+        self.nd.nmrdat[self.nd.s][self.nd.e].display = d
         # end getDispPars9
 
     def getDispPars10(self):
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         d.spcOffset = float(self.w.spcOffset.text())
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp = d
+        self.nd.nmrdat[self.nd.s][self.nd.e].display = d
         # end getDispPars10
 
     def getDispPars11(self):
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         d.spcScale = float(self.w.spcScale.text())
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp = d
+        self.nd.nmrdat[self.nd.s][self.nd.e].display = d
         # end getDispPars11
 
     def getDispPars12(self):
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         d.xLabel = self.w.xLabel.text()
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp = d
+        self.nd.nmrdat[self.nd.s][self.nd.e].display = d
         # end getDispPars12
 
     def getDispPars13(self):
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         d.yLabel = self.w.yLabel.text()
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp = d
+        self.nd.nmrdat[self.nd.s][self.nd.e].display = d
         # end getDispPars13
 
     def getDispPars14(self):
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         d.spcLabel = self.w.spcLabel.text()
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp = d
+        self.nd.nmrdat[self.nd.s][self.nd.e].display = d
         # end getDispPars14
 
     def getDispPars15(self):
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         d.phRefCol = d.colours2.get(self.w.phRefColour.currentIndex())
         for k in range(len(self.nd.nmrdat)):
             for l in range(len(self.nd.nmrdat[k])):
-                self.nd.nmrdat[k][l].disp.phRefCol = d.phRefCol
+                self.nd.nmrdat[k][l].display.phRefCol = d.phRefCol
 
         # end getDispPars15
 
@@ -1536,7 +1537,7 @@ class main_w(object):  # pragma: no cover
 
     def loadConfig(self):
         self.cf.readConfig()
-        self.w.phRefColour.setCurrentIndex(self.nd.nmrdat[0][0].disp.colours2.get(self.cf.phaseReferenceColour))
+        self.w.phRefColour.setCurrentIndex(self.nd.nmrdat[0][0].display.colours2.get(self.cf.phaseReferenceColour))
         self.w.autoPlot.setChecked(self.cf.autoPlot)
         self.w.keepZoom.setChecked(self.cf.keepZoom)
         self.w.fontSize.setValue(self.cf.fontSize)
@@ -1943,7 +1944,7 @@ class main_w(object):  # pragma: no cover
     def phCorrPlotSpc(self):
         xlim = self.w.MplWidget.canvas.axes.get_xlim()
         ylim = self.w.MplWidget.canvas.axes.get_ylim()
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         if (d.posCol == "RGB"):
             posCol = d.posColRGB
         else:
@@ -1996,7 +1997,7 @@ class main_w(object):  # pragma: no cover
             xlim = self.w.MplWidget.canvas.axes.get_xlim()
             ylim = self.w.MplWidget.canvas.axes.get_ylim()
 
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         self.w.MplWidget.canvas.axes.set_prop_cycle(None)
         if self.phCorr.dim == 0:
             xlabel = d.xLabel + " [" + d.axisType1 + "]"
@@ -2098,7 +2099,7 @@ class main_w(object):  # pragma: no cover
         if (len(self.nd.nmrdat[self.nd.s][self.nd.e].spc) == 0):
             return
 
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         if (d.posCol == "RGB"):
             posCol = d.posColRGB
         else:
@@ -2116,8 +2117,8 @@ class main_w(object):  # pragma: no cover
         if (self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1):
             self.w.MplWidget.canvas.axes.clear()
             for k in range(len(self.nd.nmrdat[self.nd.s])):
-                if ((k != self.nd.e) and (self.nd.nmrdat[self.nd.s][k].disp.displaySpc == True)):
-                    d = self.nd.nmrdat[self.nd.s][k].disp
+                if ((k != self.nd.e) and (self.nd.nmrdat[self.nd.s][k].display.displaySpc == True)):
+                    d = self.nd.nmrdat[self.nd.s][k].display
                     if (d.posCol == "RGB"):
                         posCol = d.posColRGB
                     else:
@@ -2133,7 +2134,7 @@ class main_w(object):  # pragma: no cover
                     self.w.MplWidget.canvas.axes.plot(self.nd.nmrdat[self.nd.s][k].ppm1,
                                                       self.nd.nmrdat[self.nd.s][k].spc[0].real, color=posCol)
 
-            d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+            d = self.nd.nmrdat[self.nd.s][self.nd.e].display
             if (d.posCol == "RGB"):
                 posCol = d.posColRGB
             else:
@@ -2195,6 +2196,7 @@ class main_w(object):  # pragma: no cover
             self.w.MplWidget.canvas.draw()
 
         self.keepZoom = False
+        pyautogui.click(clicks=1)
         # end plotSpc
 
     def plotSpcDisp(self):
@@ -2261,7 +2263,7 @@ class main_w(object):  # pragma: no cover
                 self.w.MplWidget.canvas.axes.axvspan(self.nd.pp.compressStart[k], self.nd.pp.compressEnd[k],
                                                      alpha=self.nd.pp.alpha, color=self.nd.pp.colour)
 
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         xlabel = d.xLabel + " [" + d.axisType1 + "]"
         self.w.MplWidget.canvas.axes.set_xlabel(xlabel)
         self.w.MplWidget.canvas.axes.autoscale()
@@ -2515,7 +2517,7 @@ class main_w(object):  # pragma: no cover
         self.cf.autoPlot = self.w.autoPlot.isChecked()
         self.cf.keepZoom = self.w.keepZoom.isChecked()
         self.cf.fontSize = self.w.fontSize.value()
-        self.cf.phaseReferenceColour = self.nd.nmrdat[0][0].disp.phRefCol
+        self.cf.phaseReferenceColour = self.nd.nmrdat[0][0].display.phRefCol
         self.cf.saveConfig()
         # end saveConfig
 
@@ -2540,36 +2542,36 @@ class main_w(object):  # pragma: no cover
         # end openScript
 
     def scale2DSpectrumUp(self):
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp.minLevel /= 1.1
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp.maxLevel /= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].display.minLevel /= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].display.maxLevel /= 1.1
         self.setDispPars()
         self.plotSpc()
         # end scale2DSpectrumUp
 
     def scale2DSpectrumDown(self):
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp.minLevel *= 1.1
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp.maxLevel *= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].display.minLevel *= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].display.maxLevel *= 1.1
         self.setDispPars()
         self.plotSpc()
         # end scale2DSpectrumDown
 
     def scaleAll2DSpectraUp(self):
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp.minLevel /= 1.1
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp.maxLevel /= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].display.minLevel /= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].display.maxLevel /= 1.1
         for k in range(len(self.nd.nmrdat[self.nd.s])):
-            self.nd.nmrdat[self.nd.s][k].disp.minLevel = self.nd.nmrdat[self.nd.s][self.nd.e].disp.minLevel
-            self.nd.nmrdat[self.nd.s][k].disp.maxLevel = self.nd.nmrdat[self.nd.s][self.nd.e].disp.maxLevel
+            self.nd.nmrdat[self.nd.s][k].display.minLevel = self.nd.nmrdat[self.nd.s][self.nd.e].display.minLevel
+            self.nd.nmrdat[self.nd.s][k].display.maxLevel = self.nd.nmrdat[self.nd.s][self.nd.e].display.maxLevel
 
         self.setDispPars()
         self.plotSpc()
         # end scaleAll2DSpectraUp
 
     def scaleAll2DSpectraDown(self):
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp.minLevel *= 1.1
-        self.nd.nmrdat[self.nd.s][self.nd.e].disp.maxLevel *= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].display.minLevel *= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].display.maxLevel *= 1.1
         for k in range(len(self.nd.nmrdat[self.nd.s])):
-            self.nd.nmrdat[self.nd.s][k].disp.minLevel = self.nd.nmrdat[self.nd.s][self.nd.e].disp.minLevel
-            self.nd.nmrdat[self.nd.s][k].disp.maxLevel = self.nd.nmrdat[self.nd.s][self.nd.e].disp.maxLevel
+            self.nd.nmrdat[self.nd.s][k].display.minLevel = self.nd.nmrdat[self.nd.s][self.nd.e].display.minLevel
+            self.nd.nmrdat[self.nd.s][k].display.maxLevel = self.nd.nmrdat[self.nd.s][self.nd.e].display.maxLevel
 
         self.setDispPars()
         self.plotSpc()
@@ -2733,7 +2735,7 @@ class main_w(object):  # pragma: no cover
 
     def selectPlotAll(self):
         for k in range(len(self.nd.nmrdat[self.nd.s])):
-            self.nd.nmrdat[self.nd.s][k].disp.displaySpc = True
+            self.nd.nmrdat[self.nd.s][k].display.displaySpc = True
 
         # self.plotSpc()
         self.w.nmrSpectrum.setCurrentIndex(0)
@@ -2744,7 +2746,7 @@ class main_w(object):  # pragma: no cover
 
     def selectPlotClear(self):
         for k in range(len(self.nd.nmrdat[self.nd.s])):
-            self.nd.nmrdat[self.nd.s][k].disp.displaySpc = False
+            self.nd.nmrdat[self.nd.s][k].display.displaySpc = False
 
         # self.plotSpc()
         self.w.nmrSpectrum.setCurrentIndex(0)
@@ -2756,12 +2758,12 @@ class main_w(object):  # pragma: no cover
     def selectPlotList(self, plotSelect):
         plotSelect = np.array(plotSelect)
         for k in range(len(self.nd.nmrdat[self.nd.s])):
-            self.nd.nmrdat[self.nd.s][k].disp.displaySpc = False
+            self.nd.nmrdat[self.nd.s][k].display.displaySpc = False
 
         plotSelect -= 1
         for k in range(len(plotSelect)):
             if ((plotSelect[k] > -1) and (plotSelect[k] < len(self.nd.nmrdat[self.nd.s]))):
-                self.nd.nmrdat[self.nd.s][plotSelect[k]].disp.displaySpc = True
+                self.nd.nmrdat[self.nd.s][plotSelect[k]].display.displaySpc = True
 
         # self.plotSpc()
         self.w.nmrSpectrum.setCurrentIndex(0)
@@ -2939,7 +2941,7 @@ class main_w(object):  # pragma: no cover
         # end setCompressPreProc
 
     def setDispPars(self):
-        d = self.nd.nmrdat[self.nd.s][self.nd.e].disp
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         self.w.posColR.setText(str(d.posColRGB[0]))
         self.w.posColG.setText(str(d.posColRGB[1]))
         self.w.posColB.setText(str(d.posColRGB[2]))
@@ -3239,8 +3241,8 @@ class main_w(object):  # pragma: no cover
 
     def setJres(self):
         if (self.nd.nmrdat[self.nd.s][self.nd.e].acq.fnMode == 1):
-            self.nd.nmrdat[self.nd.s][self.nd.e].disp.yLabel = '1H'
-            self.nd.nmrdat[self.nd.s][self.nd.e].disp.axisType2 = 'Hz'
+            self.nd.nmrdat[self.nd.s][self.nd.e].display.yLabel = '1H'
+            self.nd.nmrdat[self.nd.s][self.nd.e].display.axisType2 = 'Hz'
             self.nd.nmrdat[self.nd.s][self.nd.e].proc.windowType = np.array([5, 3, 0])
             self.nd.nmrdat[self.nd.s][self.nd.e].proc.lb[0] = 0.5
 
@@ -3623,22 +3625,24 @@ class main_w(object):  # pragma: no cover
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
 
     def setZoom(self):
-        if (self.w.MplWidget.canvas.figure.canvas.toolbar._active != 'ZOOM'):
-            try:
-                self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
-            except:
-                pass
+        #if (self.w.MplWidget.canvas.figure.canvas.toolbar._active != 'ZOOM'):
+        #    try:
+        #        self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
+        #    except:
+        #        pass
+        #
+        #    cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.setZoomRelease)
+        #
+        #else:
+        try:
+            self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
+        except:
+            pass
 
-            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.setZoomRelease)
-
-        else:
-            try:
-                self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
-            except:
-                pass
-
-            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.setZoomRelease)
-            cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.setZoomRelease)
+        #pyautogui.click(clicks=1)
+        #pyautogui.click(clicks=3)
+        #cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
 
     def setZoomOff(self):
         cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.setZoomRelease)
@@ -3651,6 +3655,9 @@ class main_w(object):  # pragma: no cover
                 self.w.MplWidget.canvas.figure.canvas.toolbar.home()
             except:
                 pass
+
+            pyautogui.click(clicks=1)
+
 
     def show(self):
         self.w.show()

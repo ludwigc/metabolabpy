@@ -28,7 +28,7 @@ class NmrData:
         self.phCorrMode = 0
         self.acq = acqPars.AcqPars()
         self.proc = procPars.ProcPars()
-        self.disp = dispPars.DispPars()
+        self.display = dispPars.DispPars()
         self.fidOffsetCorr = 0
         self.dataSetName = ''
         self.dataSetNumber = ''
@@ -228,7 +228,7 @@ class NmrData:
         else:
             stsi = int(len(self.spc[0]))
 
-        if (self.disp.axisType1 == 'ppm'):
+        if (self.display.axisType1 == 'ppm'):
             self.ppm1 = self.points2ppm(np.linspace(self.proc.nPoints[0] - 1, 0, self.proc.nPoints[0]), 0)
         else:
             self.ppm1 = self.points2Hz(np.linspace(self.proc.nPoints[0] - 1, 0, self.proc.nPoints[0]), 0)
@@ -237,7 +237,7 @@ class NmrData:
 
         if (self.dim > 1):
             npts = int(len(self.spc))
-            if (self.disp.axisType2 == 'ppm'):
+            if (self.display.axisType2 == 'ppm'):
                 self.ppm2 = self.points2ppm(np.linspace(npts - 1, 0, npts), 1)
             else:
                 self.ppm2 = self.points2Hz(np.linspace(npts - 1, 0, npts), 1)
@@ -864,7 +864,7 @@ class NmrData:
                 fid.close()
 
             self.acq.sfo2 = self.proc.sf[1]
-            self.disp.yLabel = self.proc.axisNucleus[1]
+            self.display.yLabel = self.proc.axisNucleus[1]
 
         else:
             titleFile1 = self.dataSetName + os.sep + self.dataSetNumber + os.sep + 'text'
