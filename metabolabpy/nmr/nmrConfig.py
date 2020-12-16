@@ -13,6 +13,18 @@ class NmrConfig:
         self.homeDir = os.path.expanduser('~')
         self.configFile = os.path.join(self.homeDir, self.fName)
         self.value = ""
+        self.posCol10 = 0.0
+        self.posCol11 = 0.0
+        self.posCol12 = 1.0
+        self.negCol10 = 1.0
+        self.negCol11 = 0.0
+        self.negCol12 = 0.0
+        self.posCol20 = 0.8
+        self.posCol21 = 0.8
+        self.posCol22 = 1.0
+        self.negCol20 = 1.0
+        self.negCol21 = 0.8
+        self.negCol22 = 0.8
 
     def makeConfig(self):
         config = configparser.ConfigParser()
@@ -21,7 +33,19 @@ class NmrConfig:
         config['GUI'] = {'autoPlot': autoPlot,
                          'keepZoom': keepZoom,
                          'fontSize': str(self.fontSize)}
-        config['Disp'] = {'phaseReferenceColour': self.phaseReferenceColour}
+        config['Disp'] = {'phaseReferenceColour': self.phaseReferenceColour,
+                          'posCol10': self.posCol10,
+                          'posCol11': self.posCol11,
+                          'posCol12': self.posCol12,
+                          'negCol10': self.negCol10,
+                          'negCol11': self.negCol11,
+                          'negCol12': self.negCol12,
+                          'posCol20': self.posCol20,
+                          'posCol21': self.posCol21,
+                          'posCol22': self.posCol22,
+                          'negCol20': self.negCol20,
+                          'negCol21': self.negCol21,
+                          'negCol22': self.negCol22}
         return config
 
     def saveConfig(self):
@@ -52,6 +76,42 @@ class NmrConfig:
 
     def set_phasereferencecolour(self, value):
         self.phaseReferenceColour = value
+
+    def set_poscol10(self, value):
+        self.posCol10 = float(value)
+
+    def set_poscol11(self, value):
+        self.posCol11 = float(value)
+
+    def set_poscol12(self, value):
+        self.posCol12 = float(value)
+
+    def set_negcol10(self, value):
+        self.negCol10 = float(value)
+
+    def set_negcol11(self, value):
+        self.negCol11 = float(value)
+
+    def set_negcol12(self, value):
+        self.negCol12 = float(value)
+
+    def set_poscol20(self, value):
+        self.posCol20 = float(value)
+
+    def set_poscol21(self, value):
+        self.posCol21 = float(value)
+
+    def set_poscol22(self, value):
+        self.posCol22 = float(value)
+
+    def set_negcol20(self, value):
+        self.negCol20 = float(value)
+
+    def set_negcol21(self, value):
+        self.negCol21 = float(value)
+
+    def set_negcol22(self, value):
+        self.negCol22 = float(value)
 
     def setValues(self, key, value):
         mName = "self.set_" + key

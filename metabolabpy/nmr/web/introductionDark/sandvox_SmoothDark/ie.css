@@ -1,0 +1,11 @@
+@charset "UTF-8";
+#page-content {
+    margin-left: 20px !important;
+}
+
+
+
+body.no-sidebar .photogrid-index {
+	width: 660px!important;
+	margin-left:30px;
+}

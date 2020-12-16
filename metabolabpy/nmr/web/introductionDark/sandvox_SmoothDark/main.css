@@ -1,0 +1,867 @@
+@charset "UTF-8";
+
+/*
+   css Copyright © 2005-2012 Karelia Software. All rights reserved.
+   css released under Creative Commons License  - http://creativecommons.org/licenses/by-sa/2.5/
+   All associated graphics belong to their respective owners and are licensed separately.
+*/
+
+/* IE7 hacks */
+
+*:first-child+html .gridItem img {
+	position:relative;
+	top:0px;
+}
+
+*:first-child+html .gridItem h3 {
+	position:relative;
+	top:0px;
+}
+
+/* Navigation arrows */
+div.text-navigation { text-align:center; margin-bottom:1em;}
+div.text-navigation div { display:inline; margin:0px 0.5em; }
+.collection-navigation .disabled-navigation { text-indent:-5000px; }
+
+/* 2.0 wrap compatibility. 2.0-compatible designs can further adjust these if they need */
+.wide { display:block; }
+
+.narrow.left {   /* Some designs won't respect without !important */
+    float:left!important;
+    clear:left!important;
+}
+.narrow.right {
+    float:right!important;
+    clear:right!important;
+}
+
+.wide.left   .graphic, img.wide.left,   .wide.left video,   .wide.left audio   { display:block; margin-left:0px; margin-right:auto; }
+.wide.center .graphic, img.wide.center, .wide.center video, .wide.center audio { display:block; margin-left:auto; margin-right:auto; }
+.wide.right  .graphic, img.wide.right,  .wide.right video,  .wide.right audio  { display:block; margin-left:auto; margin-right:0px; }
+
+
+.ImageElement.left, .AudioElement.left { text-align:left; }
+.ImageElement.center, .AudioElement.center { text-align:center; }
+.ImageElement.right, .AudioElement.right { text-align:right; }
+
+/* Captions should align themselves with the graphic */
+.graphic-container.left .caption { text-align:left; }
+.graphic-container.center .caption { text-align:center; }
+.graphic-container.right .caption { text-align:right; }
+
+/* Inline iframes need to display as a block to layout right */
+.graphic iframe { display:block; }
+
+/* Pagelet photo grids should be generally be auto width (some 1.x designs hardcoded an exact width) */
+.pagelet .photogrid-index { width:auto; }
+
+/* For content like amazon which forces white background. Design SHOULD set color for A tag and text color. */
+.whiteBackground
+{
+	background-color:white;
+}
+
+.article-info
+{
+	margin-bottom:1em;
+}
+
+/* Firefox reduce dotted lines on links */
+.photo-navigation a:focus, .replaced a:focus {overflow:hidden;}
+
+/* Disqus correction to prevent overflow scroll bars in some designs */
+#dsq-content { overflow:hidden; }
+#dsq-content .dsq-auth-header { width: auto!important; }
+#dsq-content .dsq-by { margin: 4px 6px 0px 0px; }
+#dsq-content .dsq-by a, #dsq-content .dsq-by a:hover { border: 0px none; }
+#dsq-content h3 { margin:0px; }
+
+/* Site menus. Don't wrap the top level items, and wrap sub-menu items normaly. */
+#sitemenu-content ul li span.in { white-space:nowrap;}
+* html #sitemenu-content ul li span.in {white-space: normal}
+*:first-child+html #sitemenu-content ul li span.in {white-space: normal}
+#sitemenu-content ul ul li span.in {white-space: normal}
+#sitemenu-content span.in { position: relative; }
+
+body { word-wrap:break-word; }
+
+/* Make sure scaled-down images look good in IE */
+img { -ms-interpolation-mode: bicubic; }
+
+/* 
+   css Copyright © 2005-2012 Karelia Software. All rights reserved.
+   css released under Creative Commons License 
+        - http://creativecommons.org/licenses/by-sa/2.5/ 
+   All associated graphics belong to their respective owners 
+        and are licensed separately. 
+*/
+
+a img { border: none; }
+
+ /* General styles  */
+
+.clear {
+	clear: both;
+	height: 0;
+}
+
+.hidden  {
+    display:none;
+}
+
+/* Images embedded in text.  "narrow" are 200 pixels wide or smaller. */
+.narrow {
+	display: block;
+	clear: right;
+    float: right;
+}
+img.wide {
+	clear: both;
+	display:block;
+}
+
+/* Block Level formatting, more or less in descending order */
+
+body {
+	font-family: "Lucida Grande", verdana, arial, helvetica, sans-serif;
+	font-size: 76%;
+	margin: 0;
+	background: #232323;
+	color: #bfc6ca;
+}
+
+h4, h5, h6 {
+	font-size: 100%;
+	margin: 0em 0em 0.8em 0em;
+}
+
+#page {
+    margin: auto;
+    width: 771px;
+    background: #4f4f4f url(background.png) repeat-y;
+}
+
+#page-top {
+    margin:0;
+    margin-left: 17px;
+    margin-right: 23px;
+	border-top: 1px solid #7a7a7a;
+	background: url(new_header_bkgd.png) no-repeat;
+}
+
+#title {
+    padding-top: 2px;
+	
+}
+
+h1 {
+    font-size: 2.9em;
+    text-align: left;
+    margin: 10px 25px 4px 25px;
+    display: block;
+    font-weight:normal;
+	text-shadow: 0px -1.5px 0px black;
+}
+
+/* IE Hack */
+
+/* Hides from IE5-mac \*/
+* html h1 {
+    height: 1%;
+}
+/* End hide from IE5-mac */
+
+h1 a {
+    text-decoration:none;
+    color: #bfc6ca;
+}
+
+h1 a:hover, h1 a:focus, h1 a:active {
+    border-bottom: 1px solid #bfc6ca;
+}
+
+/* gives better spacing in IE 7 */
+*:first-child+html #title {
+	border-bottom: 1px solid transparent;
+}
+
+#title img {
+    float: left;
+    margin: 3px;
+    margin-right: 10px;
+	position: relative;
+}
+
+#title p {
+    font-size: 0.9em;
+    text-align: left;
+    margin: 0px 25px 14px 25px;
+	font-style: italic;
+	text-shadow: 0px -1px 0px black;
+}
+
+/* IE Hack */
+/* Hides from IE5-mac \*/
+* html #title p {
+    height: 1%;
+}
+/* End hide from IE5-mac */
+
+
+/* BANNER HANDLING */
+
+body.has-custom-banner #page-top {
+	background: center top no-repeat;
+}
+
+body.has-custom-banner h1 {
+	margin-top: 32px;
+}
+
+body.has-custom-banner #title {
+	min-height: 140px;
+}
+
+* html body.has-custom-banner #title {
+	padding: 10px;
+}
+
+body.has-custom-banner #title h1, body.has-custom-banner #title h1 a, body.has-custom-banner #title p {
+	color: #fff;
+	font-weight: bold;
+}
+
+
+
+/* SITEMENU */
+
+#sitemenu-container {
+    clear:both;
+}
+
+#sitemenu {
+    background: rgb(10, 152, 210) url(links_bkgd.png) repeat-x;
+    min-height: 30px;
+    border-top: 1px solid #585858;
+    border-bottom: 1px solid #232323;
+	border-left: 1px solid #525252;
+	border-right: 1px solid #525252;
+	font-size: 1.1em;
+/* 	overflow: hidden; */
+}
+
+#sitemenu-content ul {
+    text-align: center;
+    padding: 3px 0px 0px 0px;
+	margin: 0 10px auto 10px;
+/* 	overflow: hidden; */
+	line-height: 200%;
+}
+
+#sitemenu-content ul li ul {
+    line-height: 160%;
+    background: #232323;
+}
+
+#sitemenu-content ul li ul li span.in {
+	border-color: #232323;
+}
+
+#sitemenu-content li {
+    margin: -1px 5px 0px 0px;
+    padding: 8px 5px 4px 5px;
+	display:inline;
+}
+
+#sitemenu-content a {
+    text-decoration: none;
+    color: white;
+    text-shadow: 0px 1.5px 2px black;
+}
+
+#sitemenu-content a:hover {
+	text-decoration: underline;
+}
+
+#sitemenu-content li li,
+#sitemenu-content li.currentPage li,
+#sitemenu-content li.currentParent li > a > span.in {
+    background: rgb(10, 152, 210) url(links_bkgd.png) repeat-x;
+}
+
+#sitemenu-content li.currentPage, 
+#sitemenu-content li li.currentParent > a > span.in,
+#sitemenu-content li.currentParent {
+	background: url(links_bkgd_current.png) top left repeat-x;
+	color: white;
+    text-shadow: 0px 1.5px 2px black;
+}
+
+#sitemenu-content ul ul li.currentPage {
+	text-decoration: underline;
+}
+
+#sitemenu-content ul ul li.currentPage li {
+	text-decoration: none;
+}
+
+#sitemenu-content ul li ul li span.in{
+	border-bottom:solid 1px #222 !important;
+}
+#page-content {
+    width: 731px;
+    margin: auto;
+    clear: both;
+}
+
+body.no-sidebar #page-content {
+    width: 726px;
+}
+
+#page-content a, #page-bottom a  {
+    color: #bfc6ca;
+    text-decoration: underline;
+}
+
+#page-content a:hover, #page-content a:focus, #page-content a:active, #page-bottom a:hover, #page-bottom a:focus, #page-bottom a:active {
+    color: #839ab1;
+}
+
+#page .imageLink {
+	border: 0px none;
+}
+
+#sidebar {
+	margin-top: 8px;
+    float: left;
+    width: 200px;
+	padding-right: 5px;
+	margin-right: 5px;
+    font-size: 0.8em;
+	background: url(sidebar_bkgd.png) top right repeat-y;
+}
+
+#sidebar p {
+    margin-left: 5px;
+    margin-right: 5px;
+    text-align: left;
+}
+
+.pagelet {
+    width:200px;
+    overflow:hidden;
+}
+
+#sidebar .pagelet h4, #sidebar h5.index-title{ text-align:center;}
+#sidebar h5.index-title{ border:0; margin:0; padding:0;}
+
+.callout .pagelet {
+	padding:5px;
+}
+
+.callout .pagelet.bordered {
+	background: #343434;	
+}
+
+.pagelet h4, .pagelet h5, .pagelet h6 {
+    margin: 0px 3px 6px 3px;
+	padding-top:14px;
+    font-weight: normal;
+    font-size: 1.3em;
+    text-shadow: 0px -1px 1px #343434;
+	border-bottom: 1px solid #3f3f3f;
+	padding-bottom: 4px;
+    text-align: center;
+}
+
+.pagelet.bordered h4 {
+	border-bottom-color: rgb(158,158,158);
+}
+
+.blockquote-container>.pagelet-body, .blockquote-container>.graphic {
+	position: relative;
+	padding: 10px 15px 10px 10px;
+	background: -27px 0px no-repeat;
+	background-image: url(QuotationMarks-SmoothDark.png);
+}
+
+.blockquote-container .pagelet-body:after, .blockquote-container .graphic:after {
+	display: block;
+	position: absolute;
+	height: 70px;
+	width: 70px;
+	bottom: 0px;
+	right: 0px;
+	content: "";
+	background: transparent 50px 50px no-repeat;
+	background-image: url(QuotationMarks-SmoothDark.png);
+} 
+
+.blockquote-container blockquote {
+	margin: 0px;
+	padding-left: 10px;
+	z-index: 100;
+	position: relative;
+	font-style: italic;
+}
+
+#sidebar blockquote p, blockquote p {
+	margin: 0px;
+}
+
+#main {
+    min-height: 190px;
+}
+
+/* photo-page, html-page (in some cases), iframe-page don't have sidebar */
+body.no-sidebar #main {
+    margin-left: 8px;
+    margin-right: 13px;
+    font-size: 1em;
+}
+
+/* Most other pages have sidebars */
+body.allow-sidebar #main {
+    margin-right: 10px;
+    float: right;
+    width: 490px;
+    font-size: 1em;
+}
+
+/* IE Hack */
+
+/* Hides from IE5-mac \*/
+* html .body.allow-sidebar #main {
+    margin:0;
+    padding:0;
+    margin-right: 2px;
+    width: 513px;
+}
+/* End hide from IE5-mac */
+
+/* IE5/Mac Love */
+* html>body.allow-sidebar #main {
+	width: 470px;
+}
+
+
+.has-photo-navigation h2 {
+	min-height:23px;
+	padding-right:130px;
+}
+
+h2 {
+    display: block;
+    font-weight: normal;
+    text-shadow: 0px -1px 1px #343434;
+   
+    padding-left: 15px;
+    padding-top: 13px;
+    padding-bottom: 13px;
+    margin: 0px -7px;
+    border-bottom: 1px solid #3f3f3f;
+}
+
+/* Hides from IE5-mac \*/
+* html h2 {
+    height: 30px;
+    margin-right: -15px;
+    margin-top: -15px;
+}
+/* End hide from IE5-mac */
+
+#main ul, #sidebar ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    margin-left: 5px;
+}
+
+#main li ul {
+	padding-top:8px!important;
+}
+
+#main ul li, #sidebar ul li {
+    padding-left: 25px;
+    background: url(bullet.png) no-repeat;
+    padding-bottom: 6px;
+	padding-top:2px;
+}
+
+ol {
+	padding-left: 25px;
+}
+
+dd {
+	margin-left: 25px;
+}
+
+.article, .no-callouts {
+	margin:0px 10px 10px 10px!important;
+	/*overflow: auto;*/
+	padding-bottom: 6px;
+	border-bottom: 1px solid #3f3f3f;
+}
+
+.article h3 {
+     padding: 5px;
+     text-shadow: 0px -1px 1px #343434;
+     font-weight: normal;
+}
+
+/* remove excessive spacing if the heading is used in a collection index */
+li h3 {
+	margin:0px;
+}
+
+
+
+.imageLink {
+	border: 0px none;
+}
+
+.article img {
+    border: none;
+}
+
+.article.narrow{
+    float: left; 
+	margin:5px 10px 5px 0; 
+}
+.narrow.left{
+	margin:5px 10px 5px 0;
+}
+.narrow.right{
+	margin:5px 0 5px 10px;
+}
+.article-info {
+	clear: right;
+}
+
+.article-thumbnail {
+    float: left;
+	margin: 5px 10px 5px 0;
+	clear:left;    
+}
+h3.index-title, .timestamp{
+	clear:left;
+}	
+.callout {
+    float: right;
+    margin: 10px;
+    margin-right: 0px;
+    border: 1px solid rgb(158, 158, 158);
+}
+
+.callout li, #sidebar li {
+    background: url(bullet.png) no-repeat !important;
+}
+
+.callout h4 {
+    font-weight: normal !important;
+    font-size: 1.1em !important;
+}
+
+#page-bottom {
+    background: url(footer.png) no-repeat bottom ;
+    font-size: 1em;
+    text-shadow: 0px -1px 1px #090909;
+    color: #b3b9bd;
+    min-height: 25px;
+	padding: 11px 30px 15px 30px; 
+}
+
+/*#page-bottom div {
+	overflow:hidden;
+	height:20px;
+}*/
+
+#page-bottom p {
+	display:inline;
+}
+
+#page-bottom p+p:before {
+	content: ' \002022  ';
+}
+
+div.photo-viewer-summary .article {
+    margin: auto;
+}
+
+.HTMLElement {
+    margin-bottom: 10px;
+}
+
+.ImageElement, .VideoElement {
+    text-align: center;
+/*	padding-top:20px;
+*/}
+
+
+.caption {
+    padding: 10px;
+}
+
+/* Used on Photo Grid Pages ... */
+
+.photogrid-index {
+    text-align: center;
+    margin: 10px;
+    padding: 5px;
+    width: 480px;
+	/*float:left;*/
+}
+
+.photogrid-index:after{font-size:0px; line-height:0px; height:0px; content:'.'; visibility:hidden; display:block; clear:both}
+
+body.no-sidebar .photogrid-index {
+	width: 634px;
+	margin-left:33px;
+}
+
+* html body.no-sidebar .photogrid-index {
+	width:652px!important;
+}
+
+/* IE:Mac Hackery */
+/*\*//*/
+.photogrid-index { 
+	margin-right:0px;
+}
+/**/
+
+.photogrid-index a {
+	color:#000;
+	text-decoration:none;
+	border:0px;
+}
+
+.photogrid-index a:hover {
+	text-decoration:underline;
+}
+
+.gridItem {
+    float: left;
+    position:relative;
+    width:152px;
+    height:192px;	/* room for caption */
+    overflow: hidden;
+    margin: 3px;
+    padding-top: 6px;
+}
+
+.gridItem h3 {
+    font-size:12px;
+    font-weight:normal;
+    margin-top: 10px;
+    margin-left: 7px;
+    margin-right: 7px;
+    padding: 0px;
+    height: 48px;
+    overflow: hidden;
+    position:absolute;
+	top: 140px; /* needs to leave 38px from the bottom of the gridItem */
+	width: 136px;
+	border: 0px;
+}
+
+.gridItem img {
+    border: 1px solid rgb(80, 80, 80);
+    margin: auto;
+    display:block;
+    position: absolute;
+    top: 0;
+    bottom: 40px;
+    right: 0;
+    left: 0;
+}
+
+* html .gridItem img {
+	position: relative;
+	top:6px;
+}
+
+/* IE Hack */
+/* Hides from IE5-mac \*/
+
+
+* html .gridItem h3 {
+	position: relative;
+	top: 0px;
+}
+
+#sidebar .photogrid-index{
+	width:auto;
+	margin-left:20px;
+}
+
+
+/* End hide from IE5-mac */
+
+
+/* Used on index summary pages */
+.listing-index li h3 a {
+    font-weight:normal;
+}
+
+
+/* make linked lists look less blue */
+li a {
+	text-decoration:none;
+}
+
+li a:hover {
+	text-decoration:underline;
+}
+
+/* Individual Photo Pages */
+
+.photo-navigation {
+    position: relative;
+    z-index: 100;
+    height: 3px;
+    padding:0px;
+}
+
+/* Hides from IE5-mac \*/
+* html .photo-navigation {
+    margin-top: 2px;
+}
+/* End hide from IE5-mac */
+
+.photo-navigation a:active {
+    border: none;
+}
+
+#previous-photo	{
+    width: 35px;
+    height: 35px;
+    background: url(photo-buttons-disabled.png)		no-repeat;
+    position: absolute;
+    left: 594px;
+    margin-top: -42px;
+    text-indent: -5000em;
+}
+
+.allow-sidebar #previous-photo {
+	left:384px;
+}
+
+
+#previous-photo a {
+    width: 35px;
+    height: 35px;
+    display: block;
+    background: url(photo-buttons.png)		no-repeat;
+}
+
+#next-photo {
+    text-indent: -5000em;
+    width: 35px;
+    height: 35px;
+    background: url(photo-buttons-disabled-03.png)		no-repeat;
+    position: absolute;
+    left: 664px;
+    margin-top: -42px;
+}
+
+.allow-sidebar #next-photo {
+	left: 454px;
+}
+
+#next-photo a {
+    width: 35px;
+    height: 35px;
+    display: block;
+    background: url(photo-buttons-03.png)		no-repeat;
+}
+
+#photo-list {
+    text-indent: -5000em;
+    width: 35px;
+    height: 35px;
+    background: url(photo-buttons-disabled-02.png)		no-repeat;
+    position: absolute;
+    left: 629px;
+    margin-top: -42px;
+}
+
+.allow-sidebar #photo-list {
+	left:419px;
+}
+
+
+
+#photo-list a {
+    width: 35px;
+    height: 35px;
+    display: block;
+    background: url(photo-buttons-02.png)		no-repeat;
+}
+
+
+.text-navigation{width:auto!important; padding:15px 0;}
+.text-navigation #previous-photo, .text-navigation #next-photo, .text-navigation  #photo-list, .text-navigation a, .text-navigation a:hover{
+	background:none!important;
+	width:auto!important;
+	font-weight:bold;
+	text-indent:0!important;
+	left:auto;
+	position:relative;
+	display:inline!important;
+}
+
+.whiteBackground p
+{
+	color:#4f4f4f;
+}
+.whiteBackground p a{
+ 	color:#335c85!important;
+ }
+
+
+
+/* IE:Mac Hackery */
+
+/*\*//*/
+
+
+.article {
+    margin:0;
+    margin-top: -30px;
+    background: none;
+    border: none;
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+.article p {
+    clear: none;
+}
+
+.article a {
+    text-decoration: underline;
+    border-bottom: none;
+}
+
+.article a:hover, a:focus, a:active {
+    border-bottom: none;
+    color: blue;
+}
+
+.article-summary {
+    padding: 0;
+    margin: 0;
+    clear: none;
+}
+
+#page-bottom p {
+    margin-top: 0;
+}
+
+/**/
+.no-page-title .photo-navigation {margin-top:49px;}
+
+
+.callout-container, .graphic-container { clear:both; }
+
