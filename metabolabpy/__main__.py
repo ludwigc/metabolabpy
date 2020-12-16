@@ -1,5 +1,31 @@
 #!/usr/bin/env python
+import sys   # pragma: no cover
+import matplotlib   # pragma: no cover
+if "linux" in sys.platform:  # pragma: no cover
+    gui_env = ['TkAgg', 'GTKAgg', 'Qt5Agg', 'WXAgg']  # pragma: no cover
+elif sys.platform == "darwin":  # pragma: no cover
+    try:  # pragma: no cover
+        import PySide2  # pragma: no cover
+        gui_env = ['Qt5Agg']  # pragma: no cover
+    except ImportError:  # pragma: no cover
+        gui_env = ['TkAgg', 'GTKAgg', 'Qt5Agg', 'WXAgg']  # pragma: no cover
+else:  # pragma: no cover
+    pass  # pragma: no cover
 
+if sys.platform != "win32":  # pragma: no cover
+    for gui in gui_env:  # pragma: no cover
+        try:  # pragma: no cover
+            matplotlib.use(gui, warn=False, force=True)  # pragma: no cover
+            break  # pragma: no cover
+        except:  # pragma: no cover
+            continue  # pragma: no cover
+
+
+#matplotlib.use('Qt5Agg')  # pragma: no cover
+from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as FigureCanvas,
+                                                NavigationToolbar2QT as NavigationToolbar)  # pragma: no cover
+from matplotlib.figure import Figure  # pragma: no cover
+import matplotlib.pyplot as pl  # pragma: no cover
 import argparse  # pragma: no cover
 from PySide2.QtUiTools import QUiLoader  # pragma: no cover
 from PySide2.QtCore import QFile  # pragma: no cover
@@ -10,21 +36,13 @@ from PySide2 import QtGui  # pragma: no cover
 from PySide2 import QtCore  # pragma: no cover
 from PySide2.QtWidgets import QFileDialog # pragma: no cover
 from PySide2.QtCore import SIGNAL  # pragma: no cover
-import matplotlib  # pragma: no cover
 from time import sleep
 from PySide2.QtCore import QUrl, Qt
 from PySide2.QtWebEngineCore import QWebEngineUrlSchemeHandler
 from PySide2.QtWebEngineWidgets import QWebEngineView, QWebEngineProfile, QWebEnginePage, QWebEngineSettings
-import pyautogui # pragma: no cover
-
-matplotlib.use('Qt5Agg')  # pragma: no cover
-from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as FigureCanvas,
-                                                NavigationToolbar2QT as NavigationToolbar)  # pragma: no cover
-from matplotlib.figure import Figure  # pragma: no cover
-import matplotlib.pyplot as pl  # pragma: no cover
+import pyautogui  # pragma: no cover
 import numpy as np  # pragma: no cover
 import io  # pragma: no cover
-import sys  # pragma: no cover
 from metabolabpy.nmr import nmrDataSet  # pragma: no cover
 from metabolabpy.GUI import phCorr  # pragma: no cover
 import time  # pragma: no cover
@@ -108,7 +126,7 @@ class QWebEngineView2(QWebEngineView):
 
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.__version__ = '0.6.15'
+        self.__version__ = '0.6.16'
         self.zoomWasOn = True
         self.panWasOn = False
         self.stdPosCol1 = (0.0, 0.0, 1.0)
