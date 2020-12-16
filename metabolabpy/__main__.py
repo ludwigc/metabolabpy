@@ -40,7 +40,11 @@ from time import sleep
 from PySide2.QtCore import QUrl, Qt
 from PySide2.QtWebEngineCore import QWebEngineUrlSchemeHandler
 from PySide2.QtWebEngineWidgets import QWebEngineView, QWebEngineProfile, QWebEnginePage, QWebEngineSettings
-import pyautogui  # pragma: no cover
+try:  # pragma: no cover
+    import pyautogui  # pragma: no cover
+except:  # pragma: no cover
+    pass  # pragma: no cover
+
 import numpy as np  # pragma: no cover
 import io  # pragma: no cover
 from metabolabpy.nmr import nmrDataSet  # pragma: no cover
