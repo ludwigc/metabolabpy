@@ -642,7 +642,7 @@ class NmrDataSet:
                         if hasattr(n, kk):
                             exec('nd2.' + kk + '=n.' + kk)
 
-                    elif kk is 'acq':
+                    elif kk == 'acq':
                         if hasattr(n, kk):
                             a = n.acq
                             aq = nd2.acq
@@ -664,7 +664,7 @@ class NmrDataSet:
                             nd2.acq = aq
 
 
-                    elif kk is 'proc':
+                    elif kk == 'proc':
                         if hasattr(n, kk):
                             p = n.proc
                             pc = nd2.proc
@@ -685,7 +685,7 @@ class NmrDataSet:
                         nd2.proc = pc
 
 
-                    elif kk is 'display':
+                    elif kk == 'display':
                         if hasattr(n, kk):
                             d = n.display
                             dp = nd2.display
@@ -697,7 +697,7 @@ class NmrDataSet:
                             nd2.display = dp
 
 
-                    elif kk is 'apc':
+                    elif kk == 'apc':
                         if hasattr(n, kk):
                             ab = n.apc
                             ac = nd2.apc
