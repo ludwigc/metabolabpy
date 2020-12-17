@@ -404,20 +404,13 @@ class main_w(object):  # pragma: no cover
         self.w.actionSet_dark_mode_requires_restart.triggered.connect(self.setDarkMode)
         self.setColours()
         self.w.MplWidget.canvas.draw()
-        txtCol = self.w.console.palette().foreground().color()
-        if txtCol.red() == 255 and txtCol.green() == 255 and txtCol.blue() == 255:
-            fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "introductionDark", "index.html")
-        else:
-            fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "introduction", "index.html")
-
-        url = "file:///" + fName.replace('\\', '/')
-        self.w.helpView.setUrl(url)
-        self.w.helpView.page().profile().downloadRequested.connect(self._download_requested)
+        self.w.setStyleSheet("font-size: " + str(self.cf.fontSize) + "pt")
         if self.cf.mode == 'dark':
             self.loadDarkMode()
         else:
             self.loadLightMode()
 
+        self.w.helpView.page().profile().downloadRequested.connect(self._download_requested)
         # end __init__
 
     def activateCommandLine(self):
@@ -3490,6 +3483,7 @@ class main_w(object):  # pragma: no cover
         # self.w.console.setFont(f)
         self.w.pulseProgram.setFont(f)
         self.w.cmdLine.setFont(f)
+        self.w.setStyleSheet("font-size: " + str(fontSize) + "pt")
         # end setFontSize
 
     def setHelp(self):
