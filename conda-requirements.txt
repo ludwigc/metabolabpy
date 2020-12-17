@@ -10,6 +10,5 @@ scipy
 matplotlib
 pyside2
 openpyxl
-psutil
 pyautogui
 qtmodern
