@@ -22,8 +22,12 @@ if sys.platform != "win32":  # pragma: no cover
 
 
 #matplotlib.use('Qt5Agg')  # pragma: no cover
-from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as FigureCanvas,
-                                                NavigationToolbar2QT as NavigationToolbar)  # pragma: no cover
+try:
+    from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as FigureCanvas,
+                                                    NavigationToolbar2QT as NavigationToolbar)  # pragma: no cover
+except:
+    pass
+
 from matplotlib.figure import Figure  # pragma: no cover
 import matplotlib.pyplot as pl  # pragma: no cover
 import argparse  # pragma: no cover
