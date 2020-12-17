@@ -5018,6 +5018,9 @@
     <addaction name="actionLoad_Default"/>
     <addaction name="actionReset_Config"/>
     <addaction name="separator"/>
+    <addaction name="actionSet_light_mode_requires_restart"/>
+    <addaction name="actionSet_dark_mode_requires_restart"/>
+    <addaction name="separator"/>
     <addaction name="actionToggle_FullScreen"/>
    </widget>
    <widget class="QMenu" name="menuCommand_Line">
@@ -5555,6 +5558,16 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+H</string>
+   </property>
+  </action>
+  <action name="actionSet_light_mode_requires_restart">
+   <property name="text">
+    <string>Set 'light' mode (requires restart)</string>
+   </property>
+  </action>
+  <action name="actionSet_dark_mode_requires_restart">
+   <property name="text">
+    <string>Set 'dark' mode (requires restart)</string>
    </property>
   </action>
  </widget>

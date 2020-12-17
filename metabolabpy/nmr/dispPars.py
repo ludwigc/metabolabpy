@@ -9,10 +9,17 @@ class DispPars:
     def __init__(self):
         self.cf         = nmrConfig.NmrConfig()
         self.cf.readConfig()
-        self.posCol     = "RGB"     #(r,g,b) or colour string (e.g. 'b')
-        self.posColRGB  = (0,0,1)   
-        self.negCol     = "RGB"     #(r,g,b) or colour string (e.g. 'r')
-        self.negColRGB  = (1,0,0)
+        if self.cf.mode == 'light':
+            self.posCol     = "RGB"     #(r,g,b) or colour string (e.g. 'b')
+            self.posColRGB  = (self.cf.posCol10,self.cf.posCol11,self.cf.posCol12)
+            self.negCol     = "RGB"     #(r,g,b) or colour string (e.g. 'r')
+            self.negColRGB  = (self.cf.negCol10,self.cf.negCol11,self.cf.negCol12)
+        else:
+            self.posCol     = "RGB"     #(r,g,b) or colour string (e.g. 'b')
+            self.posColRGB  = (self.cf.posCol20,self.cf.posCol21,self.cf.posCol22)
+            self.negCol     = "RGB"     #(r,g,b) or colour string (e.g. 'r')
+            self.negColRGB  = (self.cf.negCol20,self.cf.negCol21,self.cf.negCol22)
+
         self.phRefCol   = self.cf.phaseReferenceColour
         self.phRefDS    = 1
         self.phRefExp   = 1

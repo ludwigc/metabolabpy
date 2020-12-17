@@ -1,7 +1,8 @@
 numpy
 scipy
 matplotlib
-pyside2
 openpyxl
 psutil
+pyside2
 pyautogui
+qtmodern

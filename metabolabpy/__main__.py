@@ -45,6 +45,7 @@ try:  # pragma: no cover
 except:  # pragma: no cover
     pass  # pragma: no cover
 
+import qtmodern.styles
 import numpy as np  # pragma: no cover
 import io  # pragma: no cover
 from metabolabpy.nmr import nmrDataSet  # pragma: no cover
@@ -130,7 +131,7 @@ class QWebEngineView2(QWebEngineView):
 
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.__version__ = '0.6.16'
+        self.__version__ = '0.6.17'
         self.zoomWasOn = True
         self.panWasOn = False
         self.stdPosCol1 = (0.0, 0.0, 1.0)
@@ -395,6 +396,8 @@ class main_w(object):  # pragma: no cover
         self.w.cancelPhCorr2d.setVisible(False)
         self.w.exitPhCorr2d.setVisible(False)
         self.w.exitZoomPhCorr2d.setVisible(False)
+        self.w.actionSet_light_mode_requires_restart.triggered.connect(self.setLightMode)
+        self.w.actionSet_dark_mode_requires_restart.triggered.connect(self.setDarkMode)
         self.setColours()
         self.w.MplWidget.canvas.draw()
         txtCol = self.w.console.palette().foreground().color()
@@ -406,6 +409,11 @@ class main_w(object):  # pragma: no cover
         url = "file:///" + fName.replace('\\', '/')
         self.w.helpView.setUrl(url)
         self.w.helpView.page().profile().downloadRequested.connect(self._download_requested)
+        if self.cf.mode == 'dark':
+            self.loadDarkMode()
+        else:
+            self.loadLightMode()
+
         # end __init__
 
     def activateCommandLine(self):
@@ -1719,6 +1727,37 @@ class main_w(object):  # pragma: no cover
         self.w.script.setText(scriptText)
         # end loadExampleScript
 
+    def loadDarkMode(self):
+        for k in range(len(self.nd.nmrdat[self.nd.s])):
+            self.nd.nmrdat[self.nd.s][k].display.posColRGB = self.stdPosCol2
+            self.nd.nmrdat[self.nd.s][k].display.negColRGB = self.stdNegCol2
+
+        idx = self.w.helpComboBox.currentIndex()
+        url = []
+        fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "introductionDark", "index.html")
+        url.append("file:///" + fName.replace('\\', '/'))
+        url.append("https://www.hmdb.ca")
+        url.append("https://www.smpdb.ca")
+        url.append("https://bmrb.io/metabolomics/")
+        url.append("https://www.genome.jp/kegg/pathway.html#metabolism")
+        url.append("https://nmrshiftdb.nmr.uni-koeln.de")
+        url.append("https://sdbs.db.aist.go.jp/sdbs/cgi-bin/cre_index.cgi")
+        url.append("http://dmar.riken.jp/spincouple/")
+        self.w.helpView.setUrl(url[idx])
+        bg     = ( 42/255,  42/255,  42/255)
+        fg     = (255/255, 255/255, 255/255)
+        self.w.MplWidget.canvas.figure.set_facecolor(bg)
+        self.w.MplWidget.canvas.axes.set_facecolor(bg)
+        self.w.MplWidget.canvas.axes.xaxis.label.set_color(fg)
+        self.w.MplWidget.canvas.axes.yaxis.label.set_color(fg)
+        self.w.MplWidget.canvas.axes.tick_params(axis = 'x', colors = fg)
+        self.w.MplWidget.canvas.axes.tick_params(axis = 'y', colors = fg)
+        self.w.MplWidget.canvas.axes.spines['bottom'].set_color(fg)
+        self.w.MplWidget.canvas.axes.spines['top'].set_color(fg)
+        self.w.MplWidget.canvas.axes.spines['left'].set_color(fg)
+        self.w.MplWidget.canvas.axes.spines['right'].set_color(fg)
+        # end loadDarkMode
+
     def loadFile(self, fileName):
         self.nd.load(fileName)
         self.w.script.insertHtml(self.nd.script)
@@ -1730,6 +1769,37 @@ class main_w(object):  # pragma: no cover
         self.showAcquisitionParameters()
         self.showNMRSpectrum()
         # end loadFile
+
+    def loadLightMode(self):
+        for k in range(len(self.nd.nmrdat[self.nd.s])):
+            self.nd.nmrdat[self.nd.s][k].display.posColRGB = self.stdPosCol1
+            self.nd.nmrdat[self.nd.s][k].display.negColRGB = self.stdNegCol1
+
+        idx = self.w.helpComboBox.currentIndex()
+        url = []
+        fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "introduction", "index.html")
+        url.append("file:///" + fName.replace('\\', '/'))
+        url.append("https://www.hmdb.ca")
+        url.append("https://www.smpdb.ca")
+        url.append("https://bmrb.io/metabolomics/")
+        url.append("https://www.genome.jp/kegg/pathway.html#metabolism")
+        url.append("https://nmrshiftdb.nmr.uni-koeln.de")
+        url.append("https://sdbs.db.aist.go.jp/sdbs/cgi-bin/cre_index.cgi")
+        url.append("http://dmar.riken.jp/spincouple/")
+        self.w.helpView.setUrl(url[idx])
+        bg     = (255/255, 255/255, 255/255)
+        fg     = (  0/255,   0/255,   0/255)
+        self.w.MplWidget.canvas.figure.set_facecolor(bg)
+        self.w.MplWidget.canvas.axes.set_facecolor(bg)
+        self.w.MplWidget.canvas.axes.xaxis.label.set_color(fg)
+        self.w.MplWidget.canvas.axes.yaxis.label.set_color(fg)
+        self.w.MplWidget.canvas.axes.tick_params(axis = 'x', colors = fg)
+        self.w.MplWidget.canvas.axes.tick_params(axis = 'y', colors = fg)
+        self.w.MplWidget.canvas.axes.spines['bottom'].set_color(fg)
+        self.w.MplWidget.canvas.axes.spines['top'].set_color(fg)
+        self.w.MplWidget.canvas.axes.spines['left'].set_color(fg)
+        self.w.MplWidget.canvas.axes.spines['right'].set_color(fg)
+        # end loadLightMode
 
     def nextCommand(self):
         if (self.w.cmdLine.hasFocus() == True):
@@ -3128,6 +3198,12 @@ class main_w(object):  # pragma: no cover
 
         # end setCompressPreProc
 
+    def setDarkMode(self):
+        self.cf.readConfig()
+        self.cf.mode = 'dark'
+        self.cf.saveConfig()
+        # end saveConfig
+
     def setDispPars(self):
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         self.w.posColR.setText(str(d.posColRGB[0]))
@@ -3441,14 +3517,12 @@ class main_w(object):  # pragma: no cover
 
         # end setJres
 
-    def setMode(self):
-        #cIdx = self.w.nmrSpectrum.currentIndex()
-        self.setHelp()
-        self.setStandardColours()
-        self.setColours()
-        self.w.MplWidget.canvas.draw()
-        #self.w.nmrSpectrum.setCurrentIndex(cIdx)
-        # end setMode
+
+    def setLightMode(self):
+        self.cf.readConfig()
+        self.cf.mode = 'light'
+        self.cf.saveConfig()
+        # end saveConfig
 
     def setNoiseFiltering(self):
         if (self.nd.pp.preProcFill == False):
@@ -3538,9 +3612,8 @@ class main_w(object):  # pragma: no cover
         # end setPreProcessing
 
     def setStandardColours(self):
-        txtCol = self.w.console.palette().foreground().color()
         for k in range(len(self.nd.nmrdat[self.nd.s])):
-            if txtCol.red() == 255 and txtCol.green() == 255 and txtCol.blue() == 255:
+            if self.cf.mode == 'dark':
                 self.nd.nmrdat[self.nd.s][k].display.posColRGB = self.stdPosCol2
                 self.nd.nmrdat[self.nd.s][k].display.negColRGB = self.stdNegCol2
             else:
@@ -4391,7 +4464,6 @@ def main():  # pragma: no cover
     app.setWindowIcon(icon)
     app.setApplicationDisplayName("MetaboLabPy")
     w = main_w()
-    w.show()
     if (args["FullScreen"] == True):
         w.w.showFullScreen()
 
@@ -4434,6 +4506,14 @@ def main():  # pragma: no cover
             w.scriptEditor()
             w.execScript()
 
+    cf = nmrConfig.NmrConfig()
+    cf.readConfig()
+    if cf.mode == 'light':
+        qtmodern.styles.light(app)
+    else:
+        qtmodern.styles.dark(app)
+
+    w.show()
     sys.exit(app.exec_())
 
 

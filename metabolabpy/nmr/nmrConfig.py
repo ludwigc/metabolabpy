@@ -25,6 +25,7 @@ class NmrConfig:
         self.negCol20 = 1.0
         self.negCol21 = 0.8
         self.negCol22 = 0.8
+        self.mode = 'light'
 
     def makeConfig(self):
         config = configparser.ConfigParser()
@@ -32,7 +33,8 @@ class NmrConfig:
         keepZoom = 'yes' if self.keepZoom is True else 'no'
         config['GUI'] = {'autoPlot': autoPlot,
                          'keepZoom': keepZoom,
-                         'fontSize': str(self.fontSize)}
+                         'fontSize': str(self.fontSize),
+                         'mode': self.mode}
         config['Disp'] = {'phaseReferenceColour': self.phaseReferenceColour,
                           'posCol10': self.posCol10,
                           'posCol11': self.posCol11,
@@ -112,6 +114,9 @@ class NmrConfig:
 
     def set_negcol22(self, value):
         self.negCol22 = float(value)
+
+    def set_mode(self, value):
+        self.mode = value
 
     def setValues(self, key, value):
         mName = "self.set_" + key

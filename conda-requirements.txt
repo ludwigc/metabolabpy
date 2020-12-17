@@ -12,3 +12,4 @@ pyside2
 openpyxl
 psutil
 pyautogui
+qtmodern
