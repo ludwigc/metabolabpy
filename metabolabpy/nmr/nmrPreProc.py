@@ -4,6 +4,7 @@ NMR data pre-processing
 '''
 
 import numpy as np
+from metabolabpy.nmr import nmrConfig  # pragma: no cover
 import os
 
 
@@ -70,6 +71,20 @@ class NmrPreProc:
         self.exportSamplesInRowsCols   = 0
         self.exportMethod              = 0
         self.avoidNegativeValues       = False
+        self.cf                        = nmrConfig.NmrConfig()
+        self.cf.readConfig()
+        self.int1                      = 0.0
+        self.int2                      = 0.0
+        self.int3                      = 0.0
+        if self.cf.mode == 'dark':
+            self.int1 = 1.0
+            self.int2 = 0.6
+            self.int3 = 0.3
+        else:
+            self.int1 = 0.4
+            self.int2 = 0.8
+            self.int3 = 0.5
+
         # end __init__
 
     def __str__(self): # pragma: no cover
@@ -87,19 +102,38 @@ class NmrPreProc:
         return "pre-processing initialised"
         # end init
         
-    def initPlotColours(self, int1 = 0.4, int2 = 0.8, int3 = 0.4):
-        self.plotColours = [( 0.0,  0.0, int1),
-                            (int1,  0.0,  0.0),
-                            ( 0.0, int1,  0.0),
-                            ( 0.0, int1, int1),
-                            (int1, int1,  0.0),
-                            (int1,  0.0, int1),
-                            (int3, int3, int2),
-                            (int2, int3, int3),
-                            (int3, int2, int3),
-                            (int3, int2, int2),
-                            (int2, int2, int3),
-                            (int2, int3, int2)]
+    def initPlotColours(self):
+        int1 = self.int1
+        int2 = self.int2
+        int3 = self.int3
+        if self.cf.mode == 'dark':
+            self.plotColours = [(int1, int1,  0.0),
+                                ( 0.0, int1, int1),
+                                (int1,  0.0, int1),
+                                (int2, int2, int1),
+                                (int1, int2, int2),
+                                (int2, int1, int2),
+                                (int1, int1, int3),
+                                (int2, int3, int3),
+                                (int3, int2, int3),
+                                (int3, int2, int2),
+                                (int2, int2, int3),
+                                (int2, int3, int2)]
+
+        else:
+            self.plotColours = [(0.0, 0.0, int1),
+                                (int1, 0.0, 0.0),
+                                (0.0, int1, 0.0),
+                                (0.0, int1, int1),
+                                (int1, int1, 0.0),
+                                (int1, 0.0, int1),
+                                (int3, int3, int2),
+                                (int2, int3, int3),
+                                (int3, int2, int3),
+                                (int3, int2, int2),
+                                (int2, int2, int3),
+                                (int2, int3, int2)]
+
         # end initPlotColours
     
     def setAlpha(self, alpha):

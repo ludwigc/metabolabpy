@@ -135,7 +135,7 @@ class QWebEngineView2(QWebEngineView):
 
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.__version__ = '0.6.19'
+        self.__version__ = '0.6.20'
         self.zoomWasOn = True
         self.panWasOn = False
         self.stdPosCol1 = (0.0, 0.0, 1.0)
@@ -404,6 +404,8 @@ class main_w(object):  # pragma: no cover
         self.w.actionSet_dark_mode_requires_restart.triggered.connect(self.setDarkMode)
         self.w.MplWidget.canvas.draw()
         self.w.setStyleSheet("font-size: " + str(self.cf.fontSize) + "pt")
+        self.w.actionreInitialise_pre_processing_plot_colours.triggered.connect(self.nd.pp.initPlotColours)
+        self.w.actionreInitialise_plot_colours.triggered.connect(self.setStandardPlotColours)
         if self.cf.mode == 'dark':
             self.loadDarkMode()
         else:
@@ -1520,6 +1522,151 @@ class main_w(object):  # pragma: no cover
             self.ydata = []
             self.showConsole()
 
+    def onGinputClickRef1d(self, event):
+        self.curClicks += 1
+        if self.curClicks < self.nClicks:
+            self.xdata.append(event.xdata)
+            self.ydata.append(event.ydata)
+        else:
+            self.xdata.append(event.xdata)
+            self.ydata.append(event.ydata)
+            self.nClicks = 1
+            self.curClicks = 0
+            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickRef1d)
+            cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
+            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickRef1d)
+            cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
+            xy = []
+            for k in range(len(self.xdata)):
+                xy.append((self.xdata[k], self.ydata[k]))
+
+            self.xdata = []
+            self.ydata = []
+            self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0], 0)
+            self.nd.nmrdat[self.nd.s][self.nd.e].refShift[0] = refShift
+            self.nd.nmrdat[self.nd.s][self.nd.e].calcPPM()
+            self.resetPlot()
+
+    def onGinputClickCompress(self, event):
+        self.curClicks += 1
+        if self.curClicks < self.nClicks:
+            self.xdata.append(event.xdata)
+            self.ydata.append(event.ydata)
+        else:
+            self.xdata.append(event.xdata)
+            self.ydata.append(event.ydata)
+            self.nClicks = 1
+            self.curClicks = 0
+            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickCompress)
+            cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
+            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickCompress)
+            cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
+            xy = []
+            for k in range(len(self.xdata)):
+                xy.append((self.xdata[k], self.ydata[k]))
+
+            self.xdata = []
+            self.ydata = []
+            t = np.round(1e4 * np.array([xy[0][0], xy[1][0]])) / 1e4
+            self.nd.pp.compressStart = np.append(self.nd.pp.compressStart, min(t))
+            self.nd.pp.compressEnd = np.append(self.nd.pp.compressEnd, max(t))
+            self.fillPreProcessingNumbers()
+            self.w.compressBucketsTW.setFocus()
+            self.setPlotPreProc()
+            self.w.compressBucketsTW.setFocus()
+            self.plotSpcPreProc()
+            self.setCompressPreProc()
+
+    def onGinputClickExclude(self, event):
+        self.curClicks += 1
+        if self.curClicks < self.nClicks:
+            self.xdata.append(event.xdata)
+            self.ydata.append(event.ydata)
+        else:
+            self.xdata.append(event.xdata)
+            self.ydata.append(event.ydata)
+            self.nClicks = 1
+            self.curClicks = 0
+            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickExclude)
+            cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
+            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickExclude)
+            cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
+            xy = []
+            for k in range(len(self.xdata)):
+                xy.append((self.xdata[k], self.ydata[k]))
+
+            self.xdata = []
+            self.ydata = []
+            t = np.round(1e4 * np.array([xy[0][0], xy[1][0]])) / 1e4
+            self.nd.pp.excludeStart = np.append(self.nd.pp.excludeStart, min(t))
+            self.nd.pp.excludeEnd = np.append(self.nd.pp.excludeEnd, max(t))
+            self.fillPreProcessingNumbers()
+            self.w.excludeRegionTW.setFocus()
+            self.setPlotPreProc()
+            self.w.excludeRegionTW.setFocus()
+            self.plotSpcPreProc()
+            self.setExcludePreProc()
+
+    def onGinputClickSegAlign(self, event):
+        self.curClicks += 1
+        if self.curClicks < self.nClicks:
+            self.xdata.append(event.xdata)
+            self.ydata.append(event.ydata)
+        else:
+            self.xdata.append(event.xdata)
+            self.ydata.append(event.ydata)
+            self.nClicks = 1
+            self.curClicks = 0
+            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickSegAlign)
+            cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
+            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickSegAlign)
+            cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
+            xy = []
+            for k in range(len(self.xdata)):
+                xy.append((self.xdata[k], self.ydata[k]))
+
+            self.xdata = []
+            self.ydata = []
+            t = np.round(1e4 * np.array([xy[0][0], xy[1][0]])) / 1e4
+            self.nd.pp.segStart = np.append(self.nd.pp.segStart, min(t))
+            self.nd.pp.segEnd = np.append(self.nd.pp.segEnd, max(t))
+            self.fillPreProcessingNumbers()
+            self.w.segAlignTW.setFocus()
+            self.setPlotPreProc()
+            self.w.segAlignTW.setFocus()
+            self.plotSpcPreProc()
+            self.setSegAlignPreProc()
+
+
+    def onGinputClickRef2d(self, event):
+        self.curClicks += 1
+        if self.curClicks < self.nClicks:
+            self.xdata.append(event.xdata)
+            self.ydata.append(event.ydata)
+        else:
+            self.xdata.append(event.xdata)
+            self.ydata.append(event.ydata)
+            self.nClicks = 1
+            self.curClicks = 0
+            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickRef2d)
+            cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
+            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickRef2d)
+            cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
+            xy = []
+            for k in range(len(self.xdata)):
+                xy.append((self.xdata[k], self.ydata[k]))
+
+            self.xdata = []
+            self.ydata = []
+            self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0], 0)
+            self.nd.nmrdat[self.nd.s][self.nd.e].refShift[0] = refShift[0]
+            self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[1] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][1], 1)
+            self.nd.nmrdat[self.nd.s][self.nd.e].refShift[1] = refShift[1]
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0]*self.nd.nmrdat[self.nd.s][self.nd.e].proc.nPoints[0]/(len(self.nd.nmrdat[self.nd.s][self.nd.e].fid[0])*self.nd.nmrdat[self.nd.s][self.nd.e].proc.multFactor[0])
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.refPoint[1] = self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[1]*self.nd.nmrdat[self.nd.s][self.nd.e].proc.nPoints[1]/(len(self.nd.nmrdat[self.nd.s][self.nd.e].fid)*self.nd.nmrdat[self.nd.s][self.nd.e].proc.multFactor[1])
+            self.nd.nmrdat[self.nd.s][self.nd.e].calcPPM()
+            self.resetPlot()
+
     def onGinput2dClick(self, event):
         self.curClicks += 1
         if self.curClicks < self.nClicks:
@@ -1560,6 +1707,51 @@ class main_w(object):  # pragma: no cover
         self.nClicks = nClicks
         cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClick)
         cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClick)
+        cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
+        # end ginput
+
+    def ginputRef1d(self, nClicks=1):
+        self.w.MplWidget.canvas.setFocus()
+        self.showNMRSpectrum()
+        self.nClicks = nClicks
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickRef1d)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickRef1d)
+        cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
+        # end ginput
+
+    def ginputRef2d(self, nClicks=1):
+        self.w.MplWidget.canvas.setFocus()
+        self.showNMRSpectrum()
+        self.nClicks = nClicks
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickRef2d)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickRef2d)
+        cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
+        # end ginput
+
+    def ginputCompress(self, nClicks=1):
+        self.w.MplWidget.canvas.setFocus()
+        self.showNMRSpectrum()
+        self.nClicks = nClicks
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickCompress)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickCompress)
+        cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
+        # end ginput
+
+    def ginputExclude(self, nClicks=1):
+        self.w.MplWidget.canvas.setFocus()
+        self.showNMRSpectrum()
+        self.nClicks = nClicks
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickExclude)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickExclude)
+        cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
+        # end ginput
+
+    def ginputSegAlign(self, nClicks=1):
+        self.w.MplWidget.canvas.setFocus()
+        self.showNMRSpectrum()
+        self.nClicks = nClicks
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickSegAlign)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickSegAlign)
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
         # end ginput
 
@@ -1748,6 +1940,14 @@ class main_w(object):  # pragma: no cover
         self.w.MplWidget.canvas.axes.spines['left'].set_color(fg)
         self.w.MplWidget.canvas.axes.spines['right'].set_color(fg)
         # end loadDarkMode
+
+    def setStandardPlotColours(self):
+        self.cf.readConfig()
+        self.stdPosCol1 = (self.cf.posCol10,self.cf.posCol11,self.cf.posCol12)
+        self.stdNegCol1 = (self.cf.negCol10,self.cf.negCol11,self.cf.negCol12)
+        self.stdPosCol2 = (self.cf.posCol20,self.cf.posCol21,self.cf.posCol22)
+        self.stdNegCol2 = (self.cf.negCol20,self.cf.negCol21,self.cf.negCol22)
+        self.setStandardColours()
 
     def loadFile(self, fileName):
         self.nd.load(fileName)
@@ -2639,26 +2839,14 @@ class main_w(object):  # pragma: no cover
     def reference1d(self, refShift=0.0):
         self.w.MplWidget.canvas.setFocus()
         self.showNMRSpectrum()
-        xy = self.w.MplWidget.canvas.axes.figure.ginput(1)
-        self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0], 0)
-        self.nd.nmrdat[self.nd.s][self.nd.e].refShift[0] = refShift
-        self.nd.nmrdat[self.nd.s][self.nd.e].calcPPM()
-        self.resetPlot()
+        self.ginputRef1d(1)
         # end reference1d
 
     def reference2d(self, refShift=[0.0, 0.0]):
         self.w.MplWidget.canvas.setFocus()
         self.showNMRSpectrum()
-        xy = self.w.MplWidget.canvas.axes.figure.ginput(1)
-        self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0], 0)
-        self.nd.nmrdat[self.nd.s][self.nd.e].refShift[0] = refShift[0]
-        self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[1] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][1], 1)
-        self.nd.nmrdat[self.nd.s][self.nd.e].refShift[1] = refShift[1]
-        self.nd.nmrdat[self.nd.s][self.nd.e].proc.refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0]*self.nd.nmrdat[self.nd.s][self.nd.e].proc.nPoints[0]/(len(self.nd.nmrdat[self.nd.s][self.nd.e].fid[0])*self.nd.nmrdat[self.nd.s][self.nd.e].proc.multFactor[0])
-        self.nd.nmrdat[self.nd.s][self.nd.e].proc.refPoint[1] = self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[1]*self.nd.nmrdat[self.nd.s][self.nd.e].proc.nPoints[1]/(len(self.nd.nmrdat[self.nd.s][self.nd.e].fid)*self.nd.nmrdat[self.nd.s][self.nd.e].proc.multFactor[1])
-        self.nd.nmrdat[self.nd.s][self.nd.e].calcPPM()
-        self.resetPlot()
-        # end reference1d
+        self.ginputRef2d(1)
+        # end reference2d
 
     def removeLastColRow(self):
         nLines = len(self.w.MplWidget.canvas.axes.lines)
@@ -2802,42 +2990,15 @@ class main_w(object):  # pragma: no cover
         # end scriptEditor
 
     def selectAddCompressPreProc(self):
-        xy = self.w.MplWidget.canvas.axes.figure.ginput(2)
-        t = np.round(1e4 * np.array([xy[0][0], xy[1][0]])) / 1e4
-        self.nd.pp.compressStart = np.append(self.nd.pp.compressStart, min(t))
-        self.nd.pp.compressEnd = np.append(self.nd.pp.compressEnd, max(t))
-        self.fillPreProcessingNumbers()
-        self.w.compressBucketsTW.setFocus()
-        self.setPlotPreProc()
-        self.w.compressBucketsTW.setFocus()
-        self.plotSpcPreProc()
-        self.setCompressPreProc()
+        self.ginputCompress(2)
         # end selectAddExcludePreProc
 
     def selectAddExcludePreProc(self):
-        xy = self.w.MplWidget.canvas.axes.figure.ginput(2)
-        t = np.round(1e4 * np.array([xy[0][0], xy[1][0]])) / 1e4
-        self.nd.pp.excludeStart = np.append(self.nd.pp.excludeStart, min(t))
-        self.nd.pp.excludeEnd = np.append(self.nd.pp.excludeEnd, max(t))
-        self.fillPreProcessingNumbers()
-        self.w.excludeRegionTW.setFocus()
-        self.setPlotPreProc()
-        self.w.excludeRegionTW.setFocus()
-        self.plotSpcPreProc()
-        self.setExcludePreProc()
+        self.ginputExclude(2)
         # end selectAddExcludePreProc
 
     def selectAddSegAlignPreProc(self):
-        xy = self.w.MplWidget.canvas.axes.figure.ginput(2)
-        t = np.round(1e4 * np.array([xy[0][0], xy[1][0]])) / 1e4
-        self.nd.pp.segStart = np.append(self.nd.pp.segStart, min(t))
-        self.nd.pp.segEnd = np.append(self.nd.pp.segEnd, max(t))
-        self.fillPreProcessingNumbers()
-        self.w.segAlignTW.setFocus()
-        self.setPlotPreProc()
-        self.w.segAlignTW.setFocus()
-        self.plotSpcPreProc()
-        self.setSegAlignPreProc()
+        self.ginputSegAlign(2)
         # end selectAddExcludePreProc
 
     def selectAllPreProc(self):
