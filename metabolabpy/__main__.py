@@ -135,7 +135,7 @@ class QWebEngineView2(QWebEngineView):
 
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.__version__ = '0.6.17'
+        self.__version__ = '0.6.18'
         self.zoomWasOn = True
         self.panWasOn = False
         self.stdPosCol1 = (0.0, 0.0, 1.0)
@@ -402,7 +402,6 @@ class main_w(object):  # pragma: no cover
         self.w.exitZoomPhCorr2d.setVisible(False)
         self.w.actionSet_light_mode_requires_restart.triggered.connect(self.setLightMode)
         self.w.actionSet_dark_mode_requires_restart.triggered.connect(self.setDarkMode)
-        self.setColours()
         self.w.MplWidget.canvas.draw()
         self.w.setStyleSheet("font-size: " + str(self.cf.fontSize) + "pt")
         if self.cf.mode == 'dark':
@@ -904,10 +903,11 @@ class main_w(object):  # pragma: no cover
         # end enableBaseline
 
     def execCmd(self):
-        txtCol = self.w.console.palette().foreground().color()
-        if txtCol.red() == 255 and txtCol.green() == 255 and txtCol.blue() == 255:
+        if self.cf.mode == 'dark':
+            txtCol = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
             errCol = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
         else:
+            txtCol = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
             errCol = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
 
         cmdText = self.w.cmdLine.text()
@@ -948,13 +948,14 @@ class main_w(object):  # pragma: no cover
         # end execCmd
 
     def execScript(self):
-        txtCol = self.w.console.palette().foreground().color()
-        if txtCol.red() == 255 and txtCol.green() == 255 and txtCol.blue() == 255:
+        if self.cf.mode == 'dark':
+            txtCol = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
             errCol = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
             scrCol = QColor.fromRgbF(0.5, 0.5, 1.0, 1.0)
             scrCol2 = QColor.fromRgbF(0.4, 0.4, 1.0, 1.0)
             admCol = QColor.fromRgbF(1.0, 1.0, 0.5, 1.0)
         else:
+            txtCol = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
             errCol = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
             scrCol = QColor.fromRgbF(0.0, 0.0, 1.0, 1.0)
             scrCol2 = QColor.fromRgbF(0.0, 0.0, 0.6, 1.0)
@@ -970,18 +971,11 @@ class main_w(object):  # pragma: no cover
         code = code.replace('\\', '\\' * 2)
         try:
             exec(code)
-            #self.w.console.append(codeOut.getvalue())
 
         except:  # (SyntaxError, NameError, TypeError, ZeroDivisionError, AttributeError):
             self.w.nmrSpectrum.setCurrentIndex(11)
             traceback.print_exc()
-            #self.w.console.setTextColor('Red')
-            #self.w.console.append(codeOut.getvalue())
-            #self.w.console.append(codeErr.getvalue())
-        #sys.stdout = codeOut
-        #sys.stderr = codeErr
-        #self.w.console.append(codeOut.getvalue())
-        ## restore stdout and stderr
+
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
         self.w.console.setTextColor(admCol)
@@ -2366,7 +2360,6 @@ class main_w(object):  # pragma: no cover
                 self.w.MplWidget.canvas.axes.set_ylim(ylim)
 
             # self.w.MplWidget.canvas.toolbar.update()
-            self.setColours()
             self.w.MplWidget.canvas.draw()
             if (self.keepXZoom == True):
                 self.w.MplWidget.canvas.axes.set_xlim(xlim)
@@ -2401,7 +2394,6 @@ class main_w(object):  # pragma: no cover
                     self.keepXZoom = False
 
             # self.w.MplWidget.canvas.toolbar.update()
-            self.setColours()
             self.w.MplWidget.canvas.draw()
 
         self.keepZoom = False
@@ -3093,32 +3085,6 @@ class main_w(object):  # pragma: no cover
             self.nd.pp.classSelect = cls
 
         # end setChangePreProc
-
-    def setColours(self):
-        bgColR = self.w.console.palette().background().color().red()
-        bgColG = self.w.console.palette().background().color().green()
-        bgColB = self.w.console.palette().background().color().blue()
-        if bgColR/255 > 0.9 and bgColG/255 > 0.9 and bgColB/255 > 0.9:
-            bgColR = 255
-            bgColG = 255
-            bgColB = 255
-
-        fgColR = self.w.console.palette().foreground().color().red()
-        fgColG = self.w.console.palette().foreground().color().green()
-        fgColB = self.w.console.palette().foreground().color().blue()
-        bg     = (bgColR/255, bgColG/255, bgColB/255)
-        fg     = (fgColR/255, fgColG/255, fgColB/255)
-        self.w.MplWidget.canvas.figure.set_facecolor(bg)
-        self.w.MplWidget.canvas.axes.set_facecolor(bg)
-        self.w.MplWidget.canvas.axes.xaxis.label.set_color(fg)
-        self.w.MplWidget.canvas.axes.yaxis.label.set_color(fg)
-        self.w.MplWidget.canvas.axes.tick_params(axis = 'x', colors = fg)
-        self.w.MplWidget.canvas.axes.tick_params(axis = 'y', colors = fg)
-        self.w.MplWidget.canvas.axes.spines['bottom'].set_color(fg)
-        self.w.MplWidget.canvas.axes.spines['top'].set_color(fg)
-        self.w.MplWidget.canvas.axes.spines['left'].set_color(fg)
-        self.w.MplWidget.canvas.axes.spines['right'].set_color(fg)
-    # end setColors
 
     def setCompressBuckets(self):
         if (self.nd.pp.preProcFill == False):
