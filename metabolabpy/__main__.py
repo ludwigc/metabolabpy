@@ -2697,8 +2697,7 @@ class main_w(object):  # pragma: no cover
         # end dataPreProcessing
 
     def resetHelp(self):
-        txtCol = self.w.console.palette().foreground().color()
-        if txtCol.red() == 255 and txtCol.green() == 255 and txtCol.blue() == 255:
+        if self.cf.mode == 'dark':
             fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "introductionDark", "index.html")
         else:
             fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "introduction", "index.html")
@@ -3489,8 +3488,7 @@ class main_w(object):  # pragma: no cover
     def setHelp(self):
         url = []
         idx = self.w.helpComboBox.currentIndex()
-        txtCol = self.w.console.palette().foreground().color()
-        if txtCol.red() == 255 and txtCol.green() == 255 and txtCol.blue() == 255:
+        if self.cf.mode == 'dark':
             fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "introductionDark", "index.html")
         else:
             fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "introduction", "index.html")

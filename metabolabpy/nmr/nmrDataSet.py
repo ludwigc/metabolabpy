@@ -638,7 +638,7 @@ class NmrDataSet:
                 f.close()
                 nd2 = nd.NmrData()
                 for kk in nd2.__dict__.keys():
-                    if kk is not 'acq' and kk is not 'proc' and kk is not 'display' and kk is not 'apc':
+                    if kk != 'acq' and kk != 'proc' and kk != 'display' and kk != 'apc':
                         if hasattr(n, kk):
                             exec('nd2.' + kk + '=n.' + kk)
 
@@ -647,7 +647,7 @@ class NmrDataSet:
                             a = n.acq
                             aq = nd2.acq
                             for kkk in aq.__dict__.keys():
-                                if kkk is not 'regEx':
+                                if kkk != 'regEx':
                                     if hasattr(a, kkk):
                                         exec('aq.' + kkk + '=a.' + kkk)
 
@@ -669,7 +669,7 @@ class NmrDataSet:
                             p = n.proc
                             pc = nd2.proc
                             for kkk in pc.__dict__.keys():
-                                if kkk is not 'regEx':
+                                if kkk != 'regEx':
                                     if hasattr(p, kkk):
                                         exec('pc.' + kkk + '=p.' + kkk)
                                 else:
