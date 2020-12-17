@@ -140,9 +140,9 @@ Func InstallMetaboLabPy($installDir, $installMinicondaVar, $addToPath, $register
    GUICtrlSetData($messageBoard, $msgbData)
    $cmdStr = "cmd.exe" & ' /c "' & $condaExe & ' init cmd.exe&&'& $condaExe & ' activate metabolabpy"'
    RunWait($cmdStr)
-   $msgbData = GUICtrlRead($messageBoard) & "Installing Python 3.7.4, NumPy with Intel acceleration and MetaboLabPy..." & @CRLF
+   $msgbData = GUICtrlRead($messageBoard) & "Installing Python, NumPy, Scipy and scikit-learn with Intel acceleration and MetaboLabPy..." & @CRLF
    GUICtrlSetData($messageBoard, $msgbData)
-   $cmdStr = "cmd.exe" & ' /c " ' & $condaBat & ' activate metabolabpy && ' & $condaExe & ' install python==3.7.4 -y && ' & $condaExe & ' install numpy -y && pip install metabolabpy"'
+   $cmdStr = "cmd.exe" & ' /c " ' & $condaBat & ' activate metabolabpy && ' & $condaExe & ' install python -y && ' & $condaExe & ' install -c intel numpy scipy scikit-learn -y && pip install metabolabpy"'
    $msgbData = GUICtrlRead($messageBoard) & $cmdStr & @CRLF
    GUICtrlSetData($messageBoard, $msgbData)
    RunWait($cmdStr)
