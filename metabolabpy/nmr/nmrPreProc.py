@@ -76,15 +76,6 @@ class NmrPreProc:
         self.int1                      = 0.0
         self.int2                      = 0.0
         self.int3                      = 0.0
-        if self.cf.mode == 'dark':
-            self.int1 = 1.0
-            self.int2 = 0.6
-            self.int3 = 0.3
-        else:
-            self.int1 = 0.4
-            self.int2 = 0.8
-            self.int3 = 0.5
-
         # end __init__
 
     def __str__(self): # pragma: no cover
@@ -103,6 +94,16 @@ class NmrPreProc:
         # end init
         
     def initPlotColours(self):
+        self.cf.readConfig()
+        if self.cf.mode == 'dark':
+            self.int1 = 1.0
+            self.int2 = 0.6
+            self.int3 = 0.3
+        else:
+            self.int1 = 0.4
+            self.int2 = 0.8
+            self.int3 = 0.5
+
         int1 = self.int1
         int2 = self.int2
         int3 = self.int3

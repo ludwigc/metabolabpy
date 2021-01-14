@@ -624,7 +624,11 @@ class NmrData:
         spc = fftshift(fft(fid))
         self.spc = np.resize(self.spc, (1, len(spc)))
         self.spc[0] = np.copy(spc)
-        self.phase(self.proc.ph0[0], 360.0 * self.acq.groupDelay + self.proc.ph1[0], self.proc.nPoints[0])
+        self.phase(0, 360.0 * self.acq.groupDelay, self.proc.nPoints[0])
+        if self.proc.invertMatrix[0] == True:
+            self.spc[0] = np.copy(np.flip(self.spc[0]))
+
+        self.phase(self.proc.ph0[0], self.proc.ph1[0], self.proc.nPoints[0])
         # end procSpc1D
 
     def procSpc2D(self, testQuad2d=False, noAbs=False):
@@ -674,7 +678,13 @@ class NmrData:
             fid2 = self.zeroFill(fid2, 0)
             fid2 = fftshift(fft(fid2))
             if self.acq.fnMode != 1:
-                fid2 = self.phase2(fid2, self.proc.ph0[0], 360.0 * self.acq.groupDelay + self.proc.ph1[0])
+                fid2 = self.phase2(fid2, 0, 360.0 * self.acq.groupDelay)
+
+            if self.proc.invertMatrix[0] == True:
+                fid2 = np.flip(fid2)
+
+            if self.acq.fnMode != 1:
+                fid2 = self.phase2(fid2, self.proc.ph0[0], self.proc.ph1[0])
 
             fid[k] = np.copy(fid2)
 
@@ -687,6 +697,9 @@ class NmrData:
                 fid2 = self.apodise(fid2, 1, self.proc.lb[1], self.proc.gb[1], self.proc.ssb[1], 0.0, self.acq.sw_h[1])
                 fid2 = self.zeroFill(fid2, 1)
                 fid2 = fftshift(fft(fid2))
+                if self.proc.invertMatrix[1] == True:
+                    fid2 = np.flip(fid2)
+
                 if (self.acq.fnMode != 1):
                     fid2 = self.phase2(fid2, self.proc.ph0[1], self.proc.ph1[1])
                     self.spc[k] = fid2.real
@@ -907,7 +920,11 @@ class NmrData:
                         if self.acq.dataType == 1:
                             fid = np.fromfile(f, dtype=np.float64)
                         else:
-                            fid = np.fromfile(f, dtype=np.float32)
+                            if self.acq.dataType == 2:
+                                fid = np.fromfile(f, dtype=np.double)
+                            else:
+                                fid = np.fromfile(f, dtype=np.float32)
+
 
                 f.close()
                 self.fid[0].real = fid[0::2]

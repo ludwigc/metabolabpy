@@ -135,7 +135,7 @@ class QWebEngineView2(QWebEngineView):
 
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.__version__ = '0.6.20'
+        self.__version__ = '0.6.21'
         self.zoomWasOn = True
         self.panWasOn = False
         self.stdPosCol1 = (0.0, 0.0, 1.0)
@@ -173,6 +173,8 @@ class main_w(object):  # pragma: no cover
         # connections
         # self.w.rDolphinExport.clicked.connect(self.setrDolphinExport)
         self.w.exportPath.textChanged.connect(self.setExportPath)
+        self.w.invertMatrix_1.stateChanged.connect(self.setInvert)
+        self.w.invertMatrix_2.stateChanged.connect(self.setInvert)
         self.w.exportFileName.textChanged.connect(self.setExportFileName)
         self.w.exportDelimiterTab.toggled.connect(self.setExportDelimiterTab)
         self.w.exportCharacter.returnPressed.connect(self.setExportCharacter)
@@ -375,6 +377,7 @@ class main_w(object):  # pragma: no cover
         self.setFontSize()
         self.w.MplWidget.toolbar.setVisible(False)
         self.w.MplWidget2.toolbar.setVisible(False)
+        self.w.MplWidget3.toolbar.setVisible(False)
         self.w.MplWidget.setFocus()
         self.setZoom()
         self.w.pickRowColPhCorr2d.clicked.connect(self.pickColRow)
@@ -406,6 +409,7 @@ class main_w(object):  # pragma: no cover
         self.w.setStyleSheet("font-size: " + str(self.cf.fontSize) + "pt")
         self.w.actionreInitialise_pre_processing_plot_colours.triggered.connect(self.nd.pp.initPlotColours)
         self.w.actionreInitialise_plot_colours.triggered.connect(self.setStandardPlotColours)
+        self.empRefShift = 0.0
         if self.cf.mode == 'dark':
             self.loadDarkMode()
         else:
@@ -499,9 +503,16 @@ class main_w(object):  # pragma: no cover
         self.plotSpc()
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
-        self.w.console.setTextColor('Black')
+        if self.cf.mode == 'dark':
+            txtCol = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
+            errCol = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
+        else:
+            txtCol = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
+            errCol = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
+
+        self.w.console.setTextColor(txtCol)
         self.w.console.append(codeOut.getvalue())
-        self.w.console.setTextColor('Red')
+        self.w.console.setTextColor(errCol)
         self.w.console.append(codeErr.getvalue())
         codeOut.close()
         codeErr.close()
@@ -527,9 +538,16 @@ class main_w(object):  # pragma: no cover
         self.plotSpc()
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
-        self.w.console.setTextColor('Black')
+        if self.cf.mode == 'dark':
+            txtCol = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
+            errCol = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
+        else:
+            txtCol = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
+            errCol = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
+
+        self.w.console.setTextColor(txtCol)
         self.w.console.append(codeOut.getvalue())
-        self.w.console.setTextColor('Red')
+        self.w.console.setTextColor(errCol)
         self.w.console.append(codeErr.getvalue())
         codeOut.close()
         codeErr.close()
@@ -555,9 +573,16 @@ class main_w(object):  # pragma: no cover
         self.plotSpc()
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
-        self.w.console.setTextColor('Black')
+        if self.cf.mode == 'dark':
+            txtCol = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
+            errCol = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
+        else:
+            txtCol = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
+            errCol = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
+
+        self.w.console.setTextColor(txtCol)
         self.w.console.append(codeOut.getvalue())
-        self.w.console.setTextColor('Red')
+        self.w.console.setTextColor(errCol)
         self.w.console.append(codeErr.getvalue())
         codeOut.close()
         codeErr.close()
@@ -583,9 +608,16 @@ class main_w(object):  # pragma: no cover
         self.plotSpc()
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
-        self.w.console.setTextColor('Black')
+        if self.cf.mode == 'dark':
+            txtCol = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
+            errCol = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
+        else:
+            txtCol = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
+            errCol = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
+
+        self.w.console.setTextColor(txtCol)
         self.w.console.append(codeOut.getvalue())
-        self.w.console.setTextColor('Red')
+        self.w.console.setTextColor(errCol)
         self.w.console.append(codeErr.getvalue())
         codeOut.close()
         codeErr.close()
@@ -1543,7 +1575,7 @@ class main_w(object):  # pragma: no cover
             self.xdata = []
             self.ydata = []
             self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0], 0)
-            self.nd.nmrdat[self.nd.s][self.nd.e].refShift[0] = refShift
+            self.nd.nmrdat[self.nd.s][self.nd.e].refShift[0] = self.tempRefShift
             self.nd.nmrdat[self.nd.s][self.nd.e].calcPPM()
             self.resetPlot()
 
@@ -1714,6 +1746,7 @@ class main_w(object):  # pragma: no cover
         self.w.MplWidget.canvas.setFocus()
         self.showNMRSpectrum()
         self.nClicks = nClicks
+        #print("ginputRef1d")
         cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickRef1d)
         cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickRef1d)
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
@@ -1824,24 +1857,13 @@ class main_w(object):  # pragma: no cover
 
         self.showPhCorr2d_1d(self.phCorr.dim)
         self.phCorr.spcMax = np.max(np.max(np.abs(self.phCorr.spc)))
-        zwo = False
-        pwo = False
-        if self.zoomWasOn == True:
-            try:
-                zwo = True
-                self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
-            except:
-                pass
+        try:
+            zwo = True
+            self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
+        except:
+            pass
 
-            self.setZoomOff()
-
-        if self.w.panWasOn == True:
-            try:
-                pwo = True
-                self.w.MplWidget.canvas.figure.canvas.toolbar.pan()
-            except:
-                pass
-
+        self.setZoomOff()
         self.phCorr.maxPh0 = 90.0
         self.phCorr.maxPh1 = 90.0
         cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick2d)
@@ -1939,6 +1961,26 @@ class main_w(object):  # pragma: no cover
         self.w.MplWidget.canvas.axes.spines['top'].set_color(fg)
         self.w.MplWidget.canvas.axes.spines['left'].set_color(fg)
         self.w.MplWidget.canvas.axes.spines['right'].set_color(fg)
+        self.w.MplWidget2.canvas.figure.set_facecolor(bg)
+        self.w.MplWidget2.canvas.axes.set_facecolor(bg)
+        self.w.MplWidget2.canvas.axes.xaxis.label.set_color(fg)
+        self.w.MplWidget2.canvas.axes.yaxis.label.set_color(fg)
+        self.w.MplWidget2.canvas.axes.tick_params(axis = 'x', colors = fg)
+        self.w.MplWidget2.canvas.axes.tick_params(axis = 'y', colors = fg)
+        self.w.MplWidget2.canvas.axes.spines['bottom'].set_color(fg)
+        self.w.MplWidget2.canvas.axes.spines['top'].set_color(fg)
+        self.w.MplWidget2.canvas.axes.spines['left'].set_color(fg)
+        self.w.MplWidget2.canvas.axes.spines['right'].set_color(fg)
+        self.w.MplWidget3.canvas.figure.set_facecolor(bg)
+        self.w.MplWidget3.canvas.axes.set_facecolor(bg)
+        self.w.MplWidget3.canvas.axes.xaxis.label.set_color(fg)
+        self.w.MplWidget3.canvas.axes.yaxis.label.set_color(fg)
+        self.w.MplWidget3.canvas.axes.tick_params(axis = 'x', colors = fg)
+        self.w.MplWidget3.canvas.axes.tick_params(axis = 'y', colors = fg)
+        self.w.MplWidget3.canvas.axes.spines['bottom'].set_color(fg)
+        self.w.MplWidget3.canvas.axes.spines['top'].set_color(fg)
+        self.w.MplWidget3.canvas.axes.spines['left'].set_color(fg)
+        self.w.MplWidget3.canvas.axes.spines['right'].set_color(fg)
         # end loadDarkMode
 
     def setStandardPlotColours(self):
@@ -1990,6 +2032,26 @@ class main_w(object):  # pragma: no cover
         self.w.MplWidget.canvas.axes.spines['top'].set_color(fg)
         self.w.MplWidget.canvas.axes.spines['left'].set_color(fg)
         self.w.MplWidget.canvas.axes.spines['right'].set_color(fg)
+        self.w.MplWidget2.canvas.figure.set_facecolor(bg)
+        self.w.MplWidget2.canvas.axes.set_facecolor(bg)
+        self.w.MplWidget2.canvas.axes.xaxis.label.set_color(fg)
+        self.w.MplWidget2.canvas.axes.yaxis.label.set_color(fg)
+        self.w.MplWidget2.canvas.axes.tick_params(axis = 'x', colors = fg)
+        self.w.MplWidget2.canvas.axes.tick_params(axis = 'y', colors = fg)
+        self.w.MplWidget2.canvas.axes.spines['bottom'].set_color(fg)
+        self.w.MplWidget2.canvas.axes.spines['top'].set_color(fg)
+        self.w.MplWidget2.canvas.axes.spines['left'].set_color(fg)
+        self.w.MplWidget2.canvas.axes.spines['right'].set_color(fg)
+        self.w.MplWidget3.canvas.figure.set_facecolor(bg)
+        self.w.MplWidget3.canvas.axes.set_facecolor(bg)
+        self.w.MplWidget3.canvas.axes.xaxis.label.set_color(fg)
+        self.w.MplWidget3.canvas.axes.yaxis.label.set_color(fg)
+        self.w.MplWidget3.canvas.axes.tick_params(axis = 'x', colors = fg)
+        self.w.MplWidget3.canvas.axes.tick_params(axis = 'y', colors = fg)
+        self.w.MplWidget3.canvas.axes.spines['bottom'].set_color(fg)
+        self.w.MplWidget3.canvas.axes.spines['top'].set_color(fg)
+        self.w.MplWidget3.canvas.axes.spines['left'].set_color(fg)
+        self.w.MplWidget3.canvas.axes.spines['right'].set_color(fg)
         # end loadLightMode
 
     def nextCommand(self):
@@ -2837,6 +2899,7 @@ class main_w(object):  # pragma: no cover
         # end readSpcs
 
     def reference1d(self, refShift=0.0):
+        self.tempRefShift = refShift
         self.w.MplWidget.canvas.setFocus()
         self.showNMRSpectrum()
         self.ginputRef1d(1)
@@ -3118,7 +3181,6 @@ class main_w(object):  # pragma: no cover
         for k in range(len(self.nd.nmrdat[self.nd.s])):
             self.nd.nmrdat[self.nd.s][k].display.displaySpc = True
 
-        # self.plotSpc()
         self.w.nmrSpectrum.setCurrentIndex(0)
         self.changeDataSetExp()
         self.plotSpc()
@@ -3255,7 +3317,7 @@ class main_w(object):  # pragma: no cover
             else:
                 self.nd.pp.flagCompressBuckets = False
 
-        # end setExcludeRegion
+        # end setCompressBuckets
 
     def setCompressPreProc(self):
         if (self.nd.pp.preProcFill == False):
@@ -3630,6 +3692,13 @@ class main_w(object):  # pragma: no cover
         url.append("http://dmar.riken.jp/spincouple/")
         self.w.helpView.setUrl(url[idx])
         # end setHelp
+
+    def setInvert(self):
+        s = self.nd.s
+        e = self.nd.e
+        self.nd.nmrdat[s][e].proc.invertMatrix[0] = self.w.invertMatrix_1.isChecked()
+        self.nd.nmrdat[s][e].proc.invertMatrix[1] = self.w.invertMatrix_2.isChecked()
+        # end setInvert
 
     def setJres(self):
         if (self.nd.nmrdat[self.nd.s][self.nd.e].acq.fnMode == 1):
@@ -4176,24 +4245,16 @@ class main_w(object):  # pragma: no cover
     def startStopPhCorr(self):
         s = self.nd.s
         e = self.nd.e
-        if self.zoomWasOn == True:
+        #self.setZoomOff()
+
+        if (self.nd.nmrdat[s][e].dim == 1):
             try:
-                self.setZoom()
-                #self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
+                self.zoomWasOn = True
+                self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
             except:
                 pass
 
             self.setZoomOff()
-
-        if self.panWasOn == True:
-            try:
-                self.setPan()
-                self.setZoomOff()
-                #self.w.MplWidget.canvas.figure.canvas.toolbar.pan()
-            except:
-                pass
-
-        if (self.nd.nmrdat[s][e].dim == 1):
             if (self.phCorrActive == False):
                 self.phCorr.spc = self.nd.nmrdat[s][e].spc
                 self.phCorr.spcMax = max(max(abs(self.phCorr.spc)))
@@ -4221,16 +4282,20 @@ class main_w(object):  # pragma: no cover
                 self.w.exitZoomPhCorr1d.setVisible(False)
                 self.updateGUI()
                 self.plotSpc()
-                self.setZoom()
+                self.setZoomOff()
+                #self.setZoom()
+                #print("setted Zoom!")
+                cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.setZoomRelease)
 
         else:  # dim == 2
+            #try:
+            #    self.zoomWasOn = True
+            #    self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
+            #except:
+            #    pass
+            #
+            #self.setZoomOff()
             if (self.phCorrActive == False):
-                if (self.zoomWasOn == True):
-                    self.setZoom()
-
-                if (self.panWasOn == True):
-                    self.setPan()
-
                 self.w.pickRowColPhCorr2d.setVisible(True)
                 self.w.emptyRowColPhCorr2d.setVisible(True)
                 self.w.removeRowColPhCorr2d.setVisible(True)
@@ -4249,8 +4314,8 @@ class main_w(object):  # pragma: no cover
                 self.w.exitPhCorr2d.setVisible(False)
                 self.phCorrActive = False
                 self.showVersion()
-                self.setZoomOff()
-                self.setZoom()
+                #self.setZoomOff()
+                #self.setZoom()
                 cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.setZoomRelease)
 
         self.showAcquisitionParameters()
@@ -4290,6 +4355,8 @@ class main_w(object):  # pragma: no cover
         self.setTitleFile()
         self.setPulseProgram()
         self.w.expBox.setValue(e + 1)
+        self.w.invertMatrix_1.setChecked(self.nd.nmrdat[s][e].proc.invertMatrix[0])
+        self.w.invertMatrix_2.setChecked(self.nd.nmrdat[s][e].proc.invertMatrix[1])
         if (self.nd.nmrdat[s][e].dim == 1):
             self.w.preprocessing.setVisible(True)
         else:
@@ -4450,20 +4517,12 @@ class main_w(object):  # pragma: no cover
         # end zeroTitleFile
 
     def zoomPhCorr(self):
-        print(self.zoomWasOn)
-        zwo = False
-        pwo = False
         if (self.phCorrActive == True):
-            #if self.zoomWasOn == True:
             try:
-            #    print("setZoom")
                 self.setZoom()
-            #    #self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
-            #    zwo = True
             except:
                 pass
 
-            print(self.zoom)
             if (self.zoom == False):
                 # Enable zoom
                 self.zoom = True
@@ -4478,21 +4537,15 @@ class main_w(object):  # pragma: no cover
                     self.w.cancelPhCorr2d.setVisible(False)
                     self.w.exitZoomPhCorr2d.setVisible(True)
 
-                #try:
-                #    self.setZoom()
-                #    #self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
-                #except:
-                #    pass
-                #
             else:
                 # Disable zoom
                 self.zoom = False
                 if self.phCorr.nDims == 1:
                     self.showPhCorr()
-                    self.zoomWasOn = False
                     self.w.exitPhCorr1d.setVisible(True)
                     self.w.zoomPhCorr1d.setVisible(True)
                     self.w.exitZoomPhCorr1d.setVisible(False)
+                    self.setZoomOff()
                 else:
                     self.showPhCorr2d_1d()
                     self.w.zoomPhCorr2d.setVisible(True)
@@ -4527,9 +4580,16 @@ class main_w(object):  # pragma: no cover
 
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
-        self.w.console.setTextColor('Black')
+        if self.cf.mode == 'dark':
+            txtCol = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
+            errCol = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
+        else:
+            txtCol = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
+            errCol = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
+
+        self.w.console.setTextColor(txtCol)
         self.w.console.append(codeOut.getvalue())
-        self.w.console.setTextColor('Red')
+        self.w.console.setTextColor(errCol)
         self.w.console.append(codeErr.getvalue())
         codeOut.close()
         codeErr.close()
@@ -4553,9 +4613,16 @@ class main_w(object):  # pragma: no cover
 
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
-        self.w.console.setTextColor('Black')
+        if self.cf.mode == 'dark':
+            txtCol = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
+            errCol = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
+        else:
+            txtCol = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
+            errCol = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
+
+        self.w.console.setTextColor(txtCol)
         self.w.console.append(codeOut.getvalue())
-        self.w.console.setTextColor('Red')
+        self.w.console.setTextColor(errCol)
         self.w.console.append(codeErr.getvalue())
         codeOut.close()
         codeErr.close()

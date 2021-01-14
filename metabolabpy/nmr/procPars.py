@@ -44,6 +44,7 @@ class ProcPars:
         self.stripEnd              = 0
         self.phaseInversion        = True
         self.multFactor            = [0, 0]
+        self.invertMatrix          = [False, False, False]
         self.windowFunctions       = {
             0             : "None",
             1             : "Exponential",
