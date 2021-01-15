@@ -367,9 +367,15 @@ class nmrDataSetTestCase(unittest.TestCase):
         eName = "1"  # 1D data in exp 1
         nd = nmrDataSet.NmrDataSet()  # create nmrDataSet object
         nd.readSpc(pName, eName)  # check if Bruker data can be read
-        nd.pp.initPlotColours(0.4, 0.8, 0.4)
-        self.assertEqual(nd.pp.plotColours[0], (0.0, 0.0, 0.4))
-        self.assertEqual(nd.pp.plotColours[-1], (0.8, 0.4, 0.8))
+        nd.pp.cf.readConfig()
+        nd.pp.initPlotColours()
+        if nd.pp.cf.mode == 'dark':
+            self.assertEqual(nd.pp.plotColours[0], (1.0, 1.0, 0.0))
+            self.assertEqual(nd.pp.plotColours[-1], (0.6, 0.3, 0.6))
+        else:
+            self.assertEqual(nd.pp.plotColours[0], (0.0, 0.0, 0.4))
+            self.assertEqual(nd.pp.plotColours[-1], (0.8, 0.5, 0.8))
+
         # end test_preProcInitPlotColours
 
     def test_preProcSetAlpha(self):
