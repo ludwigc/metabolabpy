@@ -66,6 +66,8 @@ import inspect
 from io import StringIO
 import contextlib
 import zipfile
+from notebook import notebookapp
+import multiprocess
 
 # import pandas as pd                       # pragma: no cover
 
@@ -4241,6 +4243,17 @@ class main_w(object):  # pragma: no cover
         self.showAcquisitionParameters()
         self.showNMRSpectrum()
         # end showVersion
+
+    def startNotebook(self):
+        jobs = []
+        p = multiprocess.Process(target=notebookapp.main, args=(['/Users/ludwigc/jupyter', '--no-web', '--ip=127.0.0.1', '--port=9997'],))
+        #p = multiprocess.Process(target=notebookapp.main, args=(['/Users/ludwigc/jupyter','--no-web','--ip=127.0.0.1','--port=9997'],))
+        jobs.append(p)
+        p.start()
+        sleep(2)
+        self.w.helpView.setUrl("http://127.0.0.1:9997/notebooks/test2d.ipynb")
+        self.w.nmrSpectrum.setCurrentIndex(12)
+        # end startNotebook
 
     def startStopPhCorr(self):
         s = self.nd.s
