@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+conda activate metabolabpy
+
+appify $(which metabolabpy) MetaboLabPy

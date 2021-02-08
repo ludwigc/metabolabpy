@@ -11,6 +11,7 @@ import itertools # pragma: no cover
 import webbrowser # pragma: no cover
 import matplotlib # pragma: no cover
 import matplotlib.pyplot as pl  # pragma: no cover
+from metabolabpy.nmr import nmrConfig  # pragma: no cover
 
 class NmrDataSet:
 
@@ -890,6 +891,7 @@ class NmrDataSet:
             ax.autoscale()
             ax.invert_xaxis()
             ax.invert_yaxis()
+
 
         # end plotSpc
 

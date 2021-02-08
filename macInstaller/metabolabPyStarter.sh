@@ -7,7 +7,7 @@ end is_running
 set termRunning to is_running("Terminal")
 
 tell Application "Terminal"
-    set newTab to do script "metabolabpy"
+    set newTab to do script "conda activate metabolabpy; metabolabpy"
     set newWindow to id of front window
 
     tell window id newWindow

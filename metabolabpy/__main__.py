@@ -137,7 +137,7 @@ class QWebEngineView2(QWebEngineView):
 
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.__version__ = '0.6.21'
+        self.__version__ = '0.6.22'
         self.zoomWasOn = True
         self.panWasOn = False
         self.stdPosCol1 = (0.0, 0.0, 1.0)
@@ -412,6 +412,7 @@ class main_w(object):  # pragma: no cover
         self.w.actionreInitialise_pre_processing_plot_colours.triggered.connect(self.nd.pp.initPlotColours)
         self.w.actionreInitialise_plot_colours.triggered.connect(self.setStandardPlotColours)
         self.empRefShift = 0.0
+        self.p = []
         if self.cf.mode == 'dark':
             self.loadDarkMode()
         else:
@@ -2752,6 +2753,12 @@ class main_w(object):  # pragma: no cover
 
     def quit_app(self):
         # some actions to perform before actually quitting:
+        try:
+            self.p.terminate()
+            sleep(2)
+        except:
+            pass
+
         self.w.close()
         # end quit_app
 
@@ -4245,11 +4252,16 @@ class main_w(object):  # pragma: no cover
         # end showVersion
 
     def startNotebook(self):
+        try:
+            self.p.terminate()
+            sleep(2)
+        except:
+            pass
+    
         jobs = []
-        p = multiprocess.Process(target=notebookapp.main, args=(['/Users/ludwigc/jupyter', '--no-web', '--ip=127.0.0.1', '--port=9997'],))
-        #p = multiprocess.Process(target=notebookapp.main, args=(['/Users/ludwigc/jupyter','--no-web','--ip=127.0.0.1','--port=9997'],))
-        jobs.append(p)
-        p.start()
+        self.p = multiprocess.Process(target=notebookapp.main, args=(['/Users/ludwigc/jupyter', '--no-browser', '--ip=127.0.0.1', '--port=9997'],))
+        jobs.append(self.p)
+        self.p.start()
         sleep(2)
         self.w.helpView.setUrl("http://127.0.0.1:9997/notebooks/test2d.ipynb")
         self.w.nmrSpectrum.setCurrentIndex(12)
