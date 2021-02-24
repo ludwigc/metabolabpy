@@ -12,6 +12,7 @@ import time
 from metabolabpy.nmr import nmrpipeData
 from scipy.optimize import leastsq
 from metabolabpy.nmr import apcbc
+import metabolabpy.__init__ as mlVersion
 
 
 class NmrData:
@@ -58,11 +59,13 @@ class NmrData:
         self.proc2 = str('')
         self.proc3 = str('')
         self.outd = str('')
+        self.ver               = mlVersion.__version__
         # end __init__
 
     def __str__(self):  # pragma: no cover
-        rString = 'MetaboLabPy NMR Data (v. 0.1)\n'
-        rString += '__________________________________________________________________\n'
+        rString  = '______________________________________________________________________________________\n'
+        rString += '\nMetaboLabPy NMR Data (v. ' + self.ver + ')\n'
+        rString += '______________________________________________________________________________________\n\n'
         rString += self.title
         return rString
         # end __str__

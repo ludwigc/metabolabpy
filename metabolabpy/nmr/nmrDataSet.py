@@ -12,6 +12,7 @@ import webbrowser # pragma: no cover
 import matplotlib # pragma: no cover
 import matplotlib.pyplot as pl  # pragma: no cover
 from metabolabpy.nmr import nmrConfig  # pragma: no cover
+import metabolabpy.__init__ as mlVersion
 
 class NmrDataSet:
 
@@ -28,17 +29,26 @@ class NmrDataSet:
         self.console           = ""
         self.fileFormatVersion = 0.1
         self.keepZoom          = True
+        self.cf = nmrConfig.NmrConfig()
+        self.cf.readConfig()
+        self.spcpl             = []
+        self.ver               = mlVersion.__version__
         # end __init__
 
     def __str__(self): # pragma: no cover
-        rString  = 'MetaboLabPy NMR Data Set (v. 0.1)\n'
-        rString += '__________________________________________________________________\n'
-        rString += ' Number of data sets\t\t\t: {:0.0f}\n'.format(len(self.nmrdat))
+        rString  = '______________________________________________________________________________________\n'
+        if(len(self.nmrdat[self.s])>0):
+            rString += '\nMetaboLabPy NMR Data Set (v. ' + self.nmrdat[self.s][self.e].ver + ')\n'
+        else:
+            rString += '\nMetaboLabPy NMR Data Set (empty data set)\n'
+
+        rString += '______________________________________________________________________________________\n'
+        rString += '\n Number of data sets\t\t\t\t: {:0.0f}\n'.format(len(self.nmrdat))
         rString += ' Number of NMR spectra in current data set\t: {:0.0f}\n'.format(len(self.nmrdat[self.s]))
         if(len(self.nmrdat[self.s])>0):
-            rString += ' Current data set/exp\t\t\t: {:0.0f}/{:0.0f}\n'.format(self.s + 1,self.e + 1)
-            rString += '__________________________________________________________________\n'
-            rString += 'Current title file: \n'
+            rString += ' Current data set/exp\t\t\t\t: {:0.0f}/{:0.0f}\n'.format(self.s + 1,self.e + 1)
+            rString += '______________________________________________________________________________________\n'
+            rString += '\nCurrent title file: \n'
             rString += self.nmrdat[self.s][self.e].title
         return rString
         # end __str__
@@ -711,6 +721,9 @@ class NmrDataSet:
 
 
 
+                if hasattr(n, 'ver') == False:
+                    nd2.ver = '0.1'
+                    
                 self.nmrdat[k].append(nd2)
                 nd2 = []
                 fName = os.path.join(os.path.join(os.path.join(dataSetName, dataSets[k]), dataSetExps[k][l]),
@@ -893,6 +906,21 @@ class NmrDataSet:
             ax.invert_yaxis()
 
 
+        if self.cf.mode == 'dark':
+            bg     = ( 50/255,  58/255,  72/255)
+            fg     = (255/255, 255/255, 255/255)
+            pl.gcf().set_facecolor(bg)
+            pl.gca().set_facecolor(bg)
+            pl.gca().xaxis.label.set_color(fg)
+            pl.gca().yaxis.label.set_color(fg)
+            pl.gca().tick_params(axis = 'x', colors = fg)
+            pl.gca().tick_params(axis = 'y', colors = fg)
+            pl.gca().spines['bottom'].set_color(fg)
+            pl.gca().spines['top'].set_color(fg)
+            pl.gca().spines['left'].set_color(fg)
+            pl.gca().spines['right'].set_color(fg)
+
+
         # end plotSpc
 
     def preProcInit(self):
@@ -990,6 +1018,7 @@ class NmrDataSet:
                 
                 fName   = os.path.join(expPath,'nmrDataSet.dat')
                 f       = open(fName,'wb')
+                self.nmrdat[k][l].ver = self.ver
                 pickle.dump(self.nmrdat[k][l],f)
                 f.close()
                 fName   = os.path.join(expPath,'titleFile.txt')
@@ -1247,6 +1276,22 @@ class NmrDataSet:
         return "setSsb"
     # end setSsb
         
+    def setStandardPlotColours(self):
+        #self.cf.readConfig()
+        stdPosCol1 = (self.cf.posCol10,self.cf.posCol11,self.cf.posCol12)
+        stdNegCol1 = (self.cf.negCol10,self.cf.negCol11,self.cf.negCol12)
+        stdPosCol2 = (self.cf.posCol20,self.cf.posCol21,self.cf.posCol22)
+        stdNegCol2 = (self.cf.negCol20,self.cf.negCol21,self.cf.negCol22)
+        for k in range(len(self.nmrdat)):
+            for l in range(len(self.nmrdat[k])):
+                if self.cf.mode == 'dark':
+                    self.nmrdat[k][l].display.posColRGB = stdPosCol2
+                    self.nmrdat[k][l].display.negColRGB = stdNegCol2
+                else:
+                    self.nmrdat[k][l].display.posColRGB = stdPosCol1
+                    self.nmrdat[k][l].display.negColRGB = stdNegCol1
+
+
     def setWindowType(self, wt):
         nExp = len(self.nmrdat[self.s])
         for k in range(nExp):

@@ -1,14 +1,14 @@
 # Use this file to create a conda environment using:
-# conda create -n metabolabpy python=3.7 --file conda-requirements.txt -c intel -c conda-forge -c bioconda
+# conda create -n metabolabpy python=3.9 --file conda-requirements.txt -c bioconda
 #
-# to install accelerated packages for intel compatible processors run:
-#
-#	conda install numpy scipy scikit-learn -c intel --no-update-deps -y
 
 numpy
 scipy
 matplotlib
-pyside2
 openpyxl
+pyside2
 pyautogui
 qtmodern
+jupyter
+multiprocess
+jupyterthemes

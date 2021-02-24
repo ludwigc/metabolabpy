@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys   # pragma: no cover
 import matplotlib   # pragma: no cover
+matplotlib.use("Agg")
 if "linux" in sys.platform:  # pragma: no cover
     gui_env = ['TkAgg', 'GTKAgg', 'Qt5Agg', 'WXAgg']  # pragma: no cover
 elif sys.platform == "darwin":  # pragma: no cover
@@ -10,7 +11,7 @@ elif sys.platform == "darwin":  # pragma: no cover
     except ImportError:  # pragma: no cover
         gui_env = ['TkAgg', 'GTKAgg', 'Qt5Agg', 'WXAgg']  # pragma: no cover
 else:  # pragma: no cover
-    pass  # pragma: no cover
+    gui_env = ['TkAgg', 'GTKAgg', 'Qt5Agg', 'WXAgg']  # pragma: no cover
 
 if sys.platform != "win32":  # pragma: no cover
     for gui in gui_env:  # pragma: no cover
@@ -21,7 +22,6 @@ if sys.platform != "win32":  # pragma: no cover
             continue  # pragma: no cover
 
 
-#matplotlib.use('Qt5Agg')  # pragma: no cover
 try:
     from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as FigureCanvas,
                                                     NavigationToolbar2QT as NavigationToolbar)  # pragma: no cover
@@ -68,6 +68,8 @@ import contextlib
 import zipfile
 from notebook import notebookapp
 import multiprocess
+import subprocess
+import jupyterthemes
 
 # import pandas as pd                       # pragma: no cover
 
@@ -137,7 +139,7 @@ class QWebEngineView2(QWebEngineView):
 
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.__version__ = '0.6.22'
+        self.__version__ = '0.6.23'
         self.zoomWasOn = True
         self.panWasOn = False
         self.stdPosCol1 = (0.0, 0.0, 1.0)
@@ -417,7 +419,7 @@ class main_w(object):  # pragma: no cover
             self.loadDarkMode()
         else:
             self.loadLightMode()
-
+        #
         self.w.helpView.page().profile().downloadRequested.connect(self._download_requested)
         # end __init__
 
@@ -4258,12 +4260,23 @@ class main_w(object):  # pragma: no cover
         except:
             pass
     
+        if self.cf.mode == 'dark':
+            jupyterthemes.install_theme('chesterish')
+            #subprocess.run(["jt", "-tchesterish"])
+        else:
+            jupyterthemes.install_theme('grade3')
+            #subprocess.run(["jt", "-r"])
+
         jobs = []
         self.p = multiprocess.Process(target=notebookapp.main, args=(['/Users/ludwigc/jupyter', '--no-browser', '--ip=127.0.0.1', '--port=9997'],))
         jobs.append(self.p)
         self.p.start()
         sleep(2)
-        self.w.helpView.setUrl("http://127.0.0.1:9997/notebooks/test2d.ipynb")
+        if self.cf.mode == 'dark':
+            self.w.helpView.setUrl("http://127.0.0.1:9997/notebooks/test2d_dark.ipynb")
+        else:
+            self.w.helpView.setUrl("http://127.0.0.1:9997/notebooks/test2d_light.ipynb")
+
         self.w.nmrSpectrum.setCurrentIndex(12)
         # end startNotebook
 
@@ -4631,7 +4644,7 @@ class main_w(object):  # pragma: no cover
             if fExt == '.zip':
                 print('Extracting .zip-file')
                 with zipfile.ZipFile(os.path.join(self.download_item.downloadDirectory(), self.download_item.downloadFileName()), 'r') as zip_ref:
-                    zip_ref.extractall(self.download_item.downloadDirectory())
+                    zip_ref.extractall(os.path.join(self.download_item.downloadDirectory(), fName))
 
                 print('.zip-file extraction finished')
 

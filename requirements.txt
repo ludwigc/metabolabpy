@@ -7,3 +7,4 @@ pyautogui
 qtmodern
 jupyter
 multiprocess
+jupyterthemes
