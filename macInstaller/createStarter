@@ -3,6 +3,7 @@
 #conda activate metabolabpy
 
 appify $(which metabolabpy) MetaboLabPy
-cp -r mlStarter/* MetaboLabPy.app
+cp -r mlStarter/Contents MetaboLabPy.app
+cp mlStarter/Icon MetaboLabPy.app/Icon$'\r'
 
 mv MetaboLabPy.app /Applications
