@@ -6,10 +6,12 @@ if "linux" in sys.platform:  # pragma: no cover
     gui_env = ['TkAgg', 'GTKAgg', 'Qt5Agg', 'WXAgg']  # pragma: no cover
 elif sys.platform == "darwin":  # pragma: no cover
     try:  # pragma: no cover
-        import PySide2  # pragma: no cover
         gui_env = ['Qt5Agg']  # pragma: no cover
+        import PySide2  # pragma: no cover
     except ImportError:  # pragma: no cover
         gui_env = ['TkAgg', 'GTKAgg', 'Qt5Agg', 'WXAgg']  # pragma: no cover
+
+    matplotlib.use("Qt5Agg")
 else:  # pragma: no cover
     gui_env = ['TkAgg', 'GTKAgg', 'Qt5Agg', 'WXAgg']  # pragma: no cover
 
@@ -55,21 +57,24 @@ import io  # pragma: no cover
 from metabolabpy.nmr import nmrDataSet  # pragma: no cover
 from metabolabpy.GUI import phCorr  # pragma: no cover
 import time  # pragma: no cover
-import platform  # pragma: no cover
+#import platform  # pragma: no cover
 import math  # pragma: no cover
 from metabolabpy.nmr import nmrConfig  # pragma: no cover
 import os  # pragma: no cover
 import traceback  # pragma: no cover
 import shutil  # pragma: no cover
 import scipy.io  # pragma: no cover
-import inspect
+#import inspect
 from io import StringIO
 import contextlib
 import zipfile
 from notebook import notebookapp
 import multiprocess
-import subprocess
+#import subprocess
 import jupyterthemes
+import itertools
+import xlsxwriter
+from string import ascii_uppercase
 
 # import pandas as pd                       # pragma: no cover
 
@@ -139,7 +144,8 @@ class QWebEngineView2(QWebEngineView):
 
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.__version__ = '0.6.23'
+        self.exitedPeakPicking = False
+        self.__version__ = '0.6.25'
         self.zoomWasOn = True
         self.panWasOn = False
         self.stdPosCol1 = (0.0, 0.0, 1.0)
@@ -165,7 +171,10 @@ class main_w(object):  # pragma: no cover
         self.zoom = False
 
         self.hidePreProcessing()
+        self.hidePeakPicking()
         self.w.preprocessing.setVisible(False)
+        self.w.peakPicking.setVisible(False)
+        self.w.preProcPeak.setVisible(False)
         self.w.hsqcAnalysis.setVisible(False)
         self.w.multipletAnalysis.setVisible(False)
         self.w.isotopomerAnalysis.setVisible(False)
@@ -245,6 +254,14 @@ class main_w(object):  # pragma: no cover
         self.w.y0LE.textChanged.connect(self.setVary0)
         self.w.actionRead_NMR_Spectrum.triggered.connect(self.readNMRSpc)
         self.w.preprocessing.stateChanged.connect(self.setPreProcessing)
+        self.w.peakPicking.stateChanged.connect(self.setPeakPicking)
+        self.w.peakAddButton.clicked.connect(self.addPeak)
+        self.w.peakClearButton.clicked.connect(self.clearPeak)
+        self.w.peakWidget.cellChanged.connect(self.setAddPeak)
+        self.w.peakExportButton.clicked.connect(self.exportPeak)
+        self.w.intAllDS.stateChanged.connect(self.setDatasetsExps)
+        self.w.intAllExps.stateChanged.connect(self.setDatasetsExps)
+        self.w.exportFormatCB.currentIndexChanged.connect(self.setDatasetsExps)
         self.w.hsqcAnalysis.stateChanged.connect(self.setHsqcAnalysis)
         self.w.multipletAnalysis.stateChanged.connect(self.setMultipletAnalysis)
         self.w.isotopomerAnalysis.stateChanged.connect(self.setIsotopomerAnalysis)
@@ -421,6 +438,7 @@ class main_w(object):  # pragma: no cover
             self.loadLightMode()
         #
         self.w.helpView.page().profile().downloadRequested.connect(self._download_requested)
+        self.w.peakWidget.setColumnWidth(2,182)
         # end __init__
 
     def activateCommandLine(self):
@@ -430,6 +448,16 @@ class main_w(object):  # pragma: no cover
             self.w.cmdLine.setFocus()
 
         # end activateCommandLine
+
+    def addPeak(self):
+        self.ginputAddPeak(2)
+        # end addPeak
+
+    def clearPeak(self):
+        self.nd.clearPeak()
+        self.w.peakWidget.setRowCount(0)
+        self.plotSpc()
+        # end addPeak
 
     def apply2dPhCorr(self):
         s = self.nd.s
@@ -1048,7 +1076,89 @@ class main_w(object):  # pragma: no cover
         self.w.expBox.valueChanged.connect(lambda: self.changeDataSetExp())
         if (zoomChecked == True):
             self.w.keepZoom.setChecked(True)
+
         # end execScript
+
+    def exportPeak(self):
+        fName = QFileDialog.getSaveFileName(None, "Save Excel file", "", "*.xlsx", "*.xlsx")
+        fName = fName[0]
+        if len(fName) == 0:
+            return
+
+        workbook = xlsxwriter.Workbook(fName)
+        if self.nd.intAllDatasets == True:
+            ds = range(len(self.nd.nmrdat))
+        else:
+            ds = [self.nd.s]
+
+        for k in range(len(ds)):
+            worksheet = workbook.add_worksheet('Dataset ' + str(ds[k] + 1))
+            worksheet.set_column(1,   4, 15)
+            worksheet.set_column(5, 255, 30)
+            worksheet.set_row(2, 30)
+            #worksheet.set_default_row(64)
+            #my_format = workbook.add_format()
+            #my_format.set_align('vtop')
+            #my_format.set_align('hleft')
+            #worksheet.set_column('A:XFD', None, my_format)
+            if self.nd.intAllExps == True:
+                exps = range(len(self.nd.nmrdat[ds[k]]))
+            else:
+                exps = [self.nd.e]
+
+            abcString = []
+            for s in itertools.islice(self.iter_all_strings(), 5 + len(exps)):
+                abcString.append(s)
+
+            worksheet.write('B1','peakLabel')
+            worksheet.write('C1', 'peakMaxPPM')
+            worksheet.write('D1', 'startPeakPPM')
+            worksheet.write('E1', 'stopPeakPPM')
+            worksheet.write('A2','Sample #')
+            worksheet.write('A3', 'Sample ID')
+            for m in range(len(exps)):
+                worksheet.write(abcString[m+5] + '1', 'peakInt(exp ' + str(exps[m] + 1) +')')
+                worksheet.write(abcString[m+5] + '2', str(exps[m] + 1))
+                worksheet.write(abcString[m+5] + '3', self.nd.nmrdat[k][exps[m]].title)
+
+            for l in range(len(self.nd.nmrdat[self.nd.s][self.nd.e].startPeak)):
+                worksheet.write('B' + str(l + 4), self.nd.nmrdat[self.nd.s][self.nd.e].peakLabel[l])
+                worksheet.write('C' + str(l + 4), self.nd.nmrdat[self.nd.s][self.nd.e].peakMaxPPM[l])
+                worksheet.write('D' + str(l + 4), self.nd.nmrdat[self.nd.s][self.nd.e].startPeak[l])
+                worksheet.write('E' + str(l + 4), self.nd.nmrdat[self.nd.s][self.nd.e].endPeak[l])
+                for m in range(len(exps)):
+                    worksheet.write(abcString[m+5] + str(l + 4), self.nd.nmrdat[k][exps[m]].peakInt[l])
+
+        workbook.close()
+        # end exportPeak
+
+    def fillPeakNumbers(self):
+        self.nd.peakFill = True
+        s = self.nd.s
+        e = self.nd.e
+        nPeaks = len(self.nd.nmrdat[s][e].startPeak)
+        startPeak = self.nd.nmrdat[s][e].startPeak
+        endPeak   = self.nd.nmrdat[s][e].endPeak
+        peakLabel = self.nd.nmrdat[s][e].peakLabel
+        self.w.peakWidget.setRowCount(nPeaks)
+        for k in range(nPeaks):
+            #peakNumber = QTableWidgetItem(str(k))
+            #peakNumber.setTextAlignment(QtCore.Qt.AlignHCenter)
+            #self.w.peakWidget.setItem(k, 0, peakNumber)
+            #print('start: {}. end: {}, label: {}'.format(startPeak[k], endPeak[k], peakLabel[k]))
+            startPeakTW = QTableWidgetItem(str(startPeak[k]))
+            endPeakTW   = QTableWidgetItem(str(endPeak[k]))
+            peakLabelTW = QTableWidgetItem(str(peakLabel[k]))
+            startPeakTW.setTextAlignment(QtCore.Qt.AlignHCenter)
+            endPeakTW.setTextAlignment(QtCore.Qt.AlignHCenter)
+            peakLabelTW.setTextAlignment(QtCore.Qt.AlignHCenter)
+            self.w.peakWidget.setItem(k, 0, startPeakTW)
+            self.w.peakWidget.setItem(k, 1, endPeakTW)
+            self.w.peakWidget.setItem(k, 2, peakLabelTW)
+
+
+        self.nd.peakFill = False
+        # end fillPreProcessingNumbers
 
     def fillPreProcessingNumbers(self):
         self.nd.pp.preProcFill = True
@@ -1559,6 +1669,37 @@ class main_w(object):  # pragma: no cover
             self.ydata = []
             self.showConsole()
 
+    def onGinputClickAddPeak(self, event):
+        self.curClicks += 1
+        if self.curClicks < self.nClicks:
+            self.xdata.append(event.xdata)
+            self.ydata.append(event.ydata)
+        else:
+            self.xdata.append(event.xdata)
+            self.ydata.append(event.ydata)
+            self.nClicks = 1
+            self.curClicks = 0
+            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickAddPeak)
+            cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
+            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickAddPeak)
+            cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
+            xy = []
+            for k in range(len(self.xdata)):
+                xy.append((self.xdata[k], self.ydata[k]))
+
+            self.xdata = []
+            self.ydata = []
+            t = np.round(1e4 * np.array([xy[0][0], xy[1][0]])) / 1e4
+            self.nd.addPeak(t, '')
+            #self.nd.pp.excludeStart = np.append(self.nd.pp.excludeStart, min(t))
+            #self.nd.pp.excludeEnd = np.append(self.nd.pp.excludeEnd, max(t))
+            self.fillPeakNumbers()
+            #self.w.excludeRegionTW.setFocus()
+            #self.setPlotPreProc()
+            #self.w.excludeRegionTW.setFocus()
+            self.plotSpc()
+            #self.setExcludePreProc()
+
     def onGinputClickRef1d(self, event):
         self.curClicks += 1
         if self.curClicks < self.nClicks:
@@ -1747,6 +1888,15 @@ class main_w(object):  # pragma: no cover
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
         # end ginput
 
+    def ginputAddPeak(self, nClicks=2):
+        self.w.MplWidget.canvas.setFocus()
+        self.showNMRSpectrum()
+        self.nClicks = nClicks
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickAddPeak)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickAddPeak)
+        cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
+        # end ginput
+
     def ginputRef1d(self, nClicks=1):
         self.w.MplWidget.canvas.setFocus()
         self.showNMRSpectrum()
@@ -1775,7 +1925,7 @@ class main_w(object):  # pragma: no cover
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
         # end ginput
 
-    def ginputExclude(self, nClicks=1):
+    def ginputExclude(self, nClicks=2):
         self.w.MplWidget.canvas.setFocus()
         self.showNMRSpectrum()
         self.nClicks = nClicks
@@ -1812,6 +1962,8 @@ class main_w(object):  # pragma: no cover
         # end h
 
     def hidePreProcessing(self):
+        self.w.preProcessingTab.setHidden(True)
+        self.w.preProcPeak.setTabEnabled(0, False)
         self.w.preProcessingGroupBox.setHidden(True)
         self.w.preProcessingSelect.setHidden(True)
         self.w.preProcessingWidget.setHidden(True)
@@ -1820,6 +1972,30 @@ class main_w(object):  # pragma: no cover
         self.w.writeScriptButton.setHidden(True)
         self.plotSpc(True)
         # end hidePreProcessing
+
+    def hidePeakPicking(self):
+        self.w.peakPickingTab.setHidden(True)
+        self.w.preProcPeak.setTabEnabled(1, False)
+        self.w.peakWidget.setHidden(True)
+        self.w.peakAddButton.setHidden(True)
+        self.w.peakClearButton.setHidden(True)
+        self.w.peakExportButton.setHidden(True)
+        self.w.intAllExps.setHidden(True)
+        self.w.intAllDS.setHidden(True)
+        self.w.exportFormatCB.setHidden(True)
+
+    def showPeakPicking(self):
+        self.w.preProcPeak.setHidden(False)
+        self.w.peakPickingTab.setHidden(False)
+        self.w.preProcPeak.setTabEnabled(0, False)
+        self.w.preProcPeak.setTabEnabled(1, True)
+        self.w.peakWidget.setHidden(False)
+        self.w.peakAddButton.setHidden(False)
+        self.w.peakClearButton.setHidden(False)
+        self.w.peakExportButton.setHidden(False)
+        self.w.intAllExps.setHidden(False)
+        self.w.intAllDS.setHidden(False)
+        self.w.exportFormatCB.setHidden(False)
 
     def hilbert(self, mat):
         npts = len(mat[0])
@@ -1889,6 +2065,14 @@ class main_w(object):  # pragma: no cover
         self.showAcquisitionParameters()
         self.showNMRSpectrum()
         # end horzPhCorr2d
+
+    def iter_all_strings(self):
+        for size in itertools.count(1):
+            for s in itertools.product(ascii_uppercase, repeat=size):
+                yield "".join(s)
+
+
+        # end iter_all_strings+
 
     def loadButton(self):
         selectedDirectory = QFileDialog.getExistingDirectory()
@@ -2582,6 +2766,7 @@ class main_w(object):  # pragma: no cover
         negCol = matplotlib.colors.to_hex(negCol)
         xlabel = d.xLabel + " [" + d.axisType1 + "]"
         ylabel = d.yLabel + " [" + d.axisType2 + "]"
+        #print(self.nd.nmrdat[self.nd.s][self.nd.e].dim)
         if (self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1):
             self.w.MplWidget.canvas.axes.clear()
             for k in range(len(self.nd.nmrdat[self.nd.s])):
@@ -2617,6 +2802,15 @@ class main_w(object):  # pragma: no cover
             negCol = matplotlib.colors.to_hex(negCol)
             xlabel = d.xLabel + " [" + d.axisType1 + "]"
             ylabel = d.yLabel + " [" + d.axisType2 + "]"
+            if len(self.nd.nmrdat[self.nd.s][self.nd.e].startPeak) > 0:
+                if self.w.peakPicking.isChecked() == True:
+                    s = self.nd.s
+                    e = self.nd.e
+                    for k in range(len(self.nd.nmrdat[s][e].startPeak)):
+                        self.w.MplWidget.canvas.axes.axvspan(self.nd.nmrdat[s][e].startPeak[k],
+                                                             self.nd.nmrdat[s][e].endPeak[k],
+                                                             alpha=self.nd.pp.alpha, color=self.nd.pp.colour)
+
             self.w.MplWidget.canvas.axes.plot(self.nd.nmrdat[self.nd.s][self.nd.e].ppm1,
                                               self.nd.nmrdat[self.nd.s][self.nd.e].spc[0].real, color=posCol)
             self.w.MplWidget.canvas.axes.set_xlabel(xlabel)
@@ -2664,8 +2858,12 @@ class main_w(object):  # pragma: no cover
             self.w.MplWidget.canvas.draw()
 
         self.keepZoom = False
-        if hidePreProcessing == False:
-            pyautogui.click(clicks=1)
+        if hidePreProcessing == False and self.w.peakPicking.isChecked() == False:
+            if self.exitedPeakPicking == False:
+                pyautogui.click(clicks=1)
+            else:
+                self.exitedPeakPicking = True
+
 
         # end plotSpc
 
@@ -3063,6 +3261,28 @@ class main_w(object):  # pragma: no cover
         self.w.nmrSpectrum.setCurrentIndex(10)
         # end scriptEditor
 
+    def setDatasetsExps(self):
+        if self.w.intAllDS.isChecked() == True:
+            self.nd.intAllDatasets = True
+        else:
+            self.nd.intAllDatasets = False
+
+        if self.w.intAllExps.isChecked() == True:
+            self.nd.intAllExps= True
+        else:
+            self.nd.intAllExps = False
+
+        if self.w.exportFormatCB.currentIndex() == 0:
+            self.nd.exportPeakExcel = True
+        else:
+            self.nd.exportPeakExcel = False
+
+        startPeak = self.nd.nmrdat[self.nd.s][self.nd.e].startPeak
+        endPeak   = self.nd.nmrdat[self.nd.s][self.nd.e].endPeak
+        peakLabel = self.nd.nmrdat[self.nd.s][self.nd.e].peakLabel
+        self.nd.setPeak(startPeak, endPeak, peakLabel)
+        # end setDatasetsExps
+
     def selectAddCompressPreProc(self):
         self.ginputCompress(2)
         # end selectAddExcludePreProc
@@ -3401,6 +3621,7 @@ class main_w(object):  # pragma: no cover
         # end saveConfig
 
     def setDispPars(self):
+        #print("s: {}, e: {}".format(self.nd.s, self.nd.e))
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         self.w.posColR.setText(str(d.posColRGB[0]))
         self.w.posColG.setText(str(d.posColRGB[1]))
@@ -3425,6 +3646,68 @@ class main_w(object):  # pragma: no cover
         self.w.phRefDS.setValue(d.phRefDS)
         self.w.phRefExp.setValue(d.phRefExp)
         # end setDispPars
+
+    def setAddPeak(self):
+        if (self.nd.peakFill == False):
+            nRows     = self.w.peakWidget.rowCount()
+            startPeak = np.array([])
+            endPeak   = np.array([])
+            peakLabel = np.array([])
+            sPeak     = np.array([])
+            ePeak     = np.array([])
+            pLabel    = np.array([])
+            for k in range(nRows):
+                try:
+                    sPeak = np.append(sPeak, float(self.w.peakWidget.item(k, 0).text()))
+                except:
+                    sPeak = np.append(sPeak, -10000.0)
+
+                try:
+                    ePeak = np.append(ePeak, float(self.w.peakWidget.item(k, 1).text()))
+                except:
+                    ePeak = np.append(ePeak, -10000.0)
+
+                try:
+                    pLabel = np.append(pLabel, self.w.peakWidget.item(k, 2).text())
+                except:
+                    pLabel = np.append(pLabel, '')
+
+            print("s: {}, e: {}, l: {}".format(sPeak, ePeak, pLabel))
+            self.w.peakWidget.setRowCount(0)
+            self.w.peakWidget.setRowCount(nRows)
+            self.nd.peakFill = True
+            for k in np.arange(len(sPeak) - 1, -1, -1):  # range(len(tStart)):
+                pNumber1 = QTableWidgetItem(3 * k)
+                pNumber1.setTextAlignment(QtCore.Qt.AlignHCenter)
+                self.w.peakWidget.setItem(k, 0, pNumber1)
+                pNumber2 = QTableWidgetItem(3 * k + 1)
+                pNumber2.setTextAlignment(QtCore.Qt.AlignHCenter)
+                self.w.peakWidget.setItem(k, 1, pNumber2)
+                pLabel1 = QTableWidgetItem(3 * k + 2)
+                pLabel1.setTextAlignment(QtCore.Qt.AlignHCenter)
+                self.w.peakWidget.setItem(k, 3, pLabel1)
+                print("k: {}, sPeak[k]: {}, sPeak: {}".format(k, sPeak[k], sPeak))
+                if ((sPeak[k] > -10000.0) & (ePeak[k] > -10000.0)):
+                    pMin      = min(sPeak[k], ePeak[k])
+                    ePeak[k]  = max(sPeak[k], ePeak[k])
+                    sPeak[k]  = pMin
+                    startPeak = np.append(startPeak, sPeak[k])
+                    endPeak   = np.append(endPeak, ePeak[k])
+                    peakLabel = np.append(peakLabel, pLabel[k])
+                    sPeak     = np.delete(sPeak, k)
+                    ePeak     = np.delete(ePeak, k)
+
+
+            sortIdx = np.argsort(startPeak)
+            startPeak = startPeak[sortIdx]
+            endPeak   = endPeak[sortIdx]
+            peakLabel = peakLabel[sortIdx]
+            self.nd.setPeak(startPeak, endPeak, peakLabel)
+            self.setPeakPicking()
+            self.nd.peakFill = False
+            self.plotSpc()
+
+        # end setExcludePreProc
 
     def setExcludePreProc(self):
         if (self.nd.pp.preProcFill == False):
@@ -3803,6 +4086,9 @@ class main_w(object):  # pragma: no cover
 
     def setPreProcessing(self):
         if (self.w.preprocessing.isChecked() == True):
+            self.w.peakPicking.setChecked(False)
+            #self.w.peakPickingTab.setHidden(True)
+            self.w.preProcPeak.setCurrentIndex(0)
             if len(self.nd.nmrdat[self.nd.s]) != len(self.nd.pp.classSelect):
                 self.nd.preProcInit()
 
@@ -3811,7 +4097,39 @@ class main_w(object):  # pragma: no cover
             self.nd.noiseFilteringInit()
         else:
             self.hidePreProcessing()
+            self.w.preProcPeak.setHidden(True)
 
+        # end setPreProcessing
+
+    def setPeakPicking(self):
+        if (self.w.peakPicking.isChecked() == True):
+            self.w.preprocessing.setChecked(False)
+            #self.w.preProcessingTab.setHidden(True)
+            self.w.preProcPeak.setCurrentIndex(1)
+            if self.nd.intAllDatasets == True:
+                self.w.intAllDS.setChecked(True)
+            else:
+                self.w.intAllDS.setChecked(False)
+
+            if self.nd.intAllExps == True:
+                self.w.intAllExps.setChecked(True)
+            else:
+                self.w.intAllExps.setChecked(False)
+
+            if self.nd.exportPeakExcel == True:
+                self.w.exportFormatCB.setCurrentIndex(0)
+            else:
+                self.w.exportFormatCB.setCurrentIndex(1)
+
+            self.showPeakPicking()
+            self.fillPeakNumbers()
+        else:
+            self.exitedPeakPicking = True
+            self.hidePeakPicking()
+            self.w.preProcPeak.setHidden(True)
+            self.w.peakPicking.setChecked(False)
+
+        self.plotSpc()
         # end setPreProcessing
 
     def setStandardColours(self):
@@ -4227,6 +4545,11 @@ class main_w(object):  # pragma: no cover
         # end showPhZoom
 
     def showPreProcessing(self):
+        self.w.preProcPeak.setHidden(False)
+        self.w.preProcessingTab.setHidden(False)
+        self.w.peakPickingTab.setHidden(True)
+        self.w.preProcPeak.setTabEnabled(0, True)
+        self.w.preProcPeak.setTabEnabled(1, False)
         self.w.preProcessingGroupBox.setHidden(False)
         self.w.preProcessingSelect.setHidden(False)
         self.w.preProcessingWidget.setHidden(False)
@@ -4397,8 +4720,10 @@ class main_w(object):  # pragma: no cover
         self.w.invertMatrix_2.setChecked(self.nd.nmrdat[s][e].proc.invertMatrix[1])
         if (self.nd.nmrdat[s][e].dim == 1):
             self.w.preprocessing.setVisible(True)
+            self.w.peakPicking.setVisible(True)
         else:
             self.w.preprocessing.setVisible(False)
+            self.w.peakPicking.setVisible(False)
 
         if self.nd.nmrdat[s][e].dim > 1:
             if self.nd.nmrdat[self.nd.s][self.nd.e].acq.pulProgName.find("hsqc") > 0 or self.nd.nmrdat[self.nd.s][self.nd.e].acq.pulProgName.find("hmqc") > 0:

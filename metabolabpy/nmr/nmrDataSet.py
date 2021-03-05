@@ -33,7 +33,67 @@ class NmrDataSet:
         self.cf.readConfig()
         self.spcpl             = []
         self.ver               = mlVersion.__version__
+        self.intAllExps        = True
+        self.intAllDatasets    = False
+        self.exportPeakExcel   = True
+        self.exportPeakFile    = 'concentrations.xlsx'
+        self.exportPeakPath    = os.path.expanduser('~')
+        self.peakFill          = False
         # end __init__
+
+    def addPeak(self, startEnd=np.array([], dtype='float64'), peakLabel=''):
+        if len(startEnd) != 2:
+            return
+
+        if self.intAllDatasets == True:
+            ds = range(len(self.nmrdat))
+        else:
+            ds = [self.s]
+
+        for k in ds:
+            if self.intAllExps == True:
+                exps = range(len(self.nmrdat[k]))
+            else:
+                exps = self.e
+
+            for l in exps:
+                self.nmrdat[k][l].addPeak(startEnd, peakLabel)
+
+        # end addPeak
+
+    def setPeak(self, startPeak, endPeak, peakLabel):
+        if self.intAllDatasets == True:
+            ds = range(len(self.nmrdat))
+        else:
+            ds = [self.s]
+
+        for k in ds:
+            if self.intAllExps == True:
+                exps = range(len(self.nmrdat[k]))
+            else:
+                exps = [self.e]
+
+            for l in exps:
+                self.nmrdat[k][l].setPeak(startPeak, endPeak, peakLabel)
+
+        # end addPeak
+
+    def clearPeak(self):
+        if self.intAllDatasets == True:
+            ds = range(len(self.nmrdat))
+        else:
+            ds = [self.s]
+
+        for k in ds:
+            if self.intAllExps == True:
+                exps = range(len(self.nmrdat[k]))
+            else:
+                exps = [self.e]
+
+            for l in exps:
+                self.nmrdat[k][l].clearPeak()
+
+        # end addPeak
 
     def __str__(self): # pragma: no cover
         rString  = '______________________________________________________________________________________\n'
@@ -647,6 +707,11 @@ class NmrDataSet:
                 f = open(fName, 'rb')
                 n = pickle.load(f)
                 f.close()
+                if hasattr(n, 'ver'):
+                    vver = ''
+                else:
+                    vver = '0.1'
+
                 nd2 = nd.NmrData()
                 for kk in nd2.__dict__.keys():
                     if kk != 'acq' and kk != 'proc' and kk != 'display' and kk != 'apc':
@@ -721,7 +786,7 @@ class NmrDataSet:
 
 
 
-                if hasattr(n, 'ver') == False:
+                if vver == '0.1':
                     nd2.ver = '0.1'
                     
                 self.nmrdat[k].append(nd2)

@@ -8,3 +8,4 @@ qtmodern
 jupyter
 multiprocess
 jupyterthemes
+xlsxwriter

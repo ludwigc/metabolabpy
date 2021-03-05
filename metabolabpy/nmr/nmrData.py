@@ -23,6 +23,15 @@ class NmrData:
         self.ppm1 = np.array([], dtype='float64')
         self.ppm2 = np.array([], dtype='float64')
         self.ppm3 = np.array([], dtype='float64')
+        self.startPeak = np.array([], dtype='float64')
+        self.endPeak = np.array([], dtype='float64')
+        self.startPeakPoints = np.array([], dtype='int')
+        self.endPeakPoints = np.array([], dtype='int')
+        self.peakInt = np.array([], dtype='float64')
+        self.peakMax = np.array([], dtype='float64')
+        self.peakMaxPPM = np.array([], dtype='float64')
+        self.peakMaxPoints = np.array([], dtype='int')
+        self.peakLabel = np.array([], dtype='str')
         self.dim = 0
         self.title = np.array([], dtype='str')
         self.origDataSet = str('')
@@ -69,6 +78,63 @@ class NmrData:
         rString += self.title
         return rString
         # end __str__
+
+    def addPeak(self, startEnd=np.array([], dtype='float64'), peakLabel=''):
+        if len(startEnd) > 0:
+            startPeak = int(1e4*self.points2ppm(self.ppm2points(max(startEnd), 0), 0))/1e4
+            endPeak   = int(1e4*self.points2ppm(self.ppm2points(min(startEnd), 0), 0))/1e4
+            startPeakPoints = self.ppm2points(startPeak, 0)
+            endPeakPoints = self.ppm2points(endPeak, 0)
+            self.startPeak       = np.append(self.startPeak, startPeak)
+            self.endPeak         = np.append(self.endPeak, endPeak)
+            self.startPeakPoints = np.append(self.startPeakPoints, startPeakPoints)
+            self.endPeakPoints   = np.append(self.endPeakPoints, endPeakPoints)
+            self.peakLabel       = np.append(self.peakLabel, peakLabel)
+            npts                 = len(self.spc[0])
+            spc                  = self.spc[0][npts - startPeakPoints:npts - endPeakPoints].real
+            maxPos               = np.where(spc == np.max(spc))[0][0] + 1
+            self.peakMax         = np.append(self.peakMax, np.max(spc))
+            self.peakMaxPoints   = np.append(self.peakMaxPoints, startPeakPoints - maxPos)
+            self.peakMaxPPM      = np.append(self.peakMaxPPM, self.points2ppm(startPeakPoints - maxPos))
+            self.peakInt         = np.append(self.peakInt, sum(spc - np.mean([spc[0], spc[-1]])))
+            sortIdx              = np.argsort(self.startPeak)[::-1]
+            self.startPeak       = self.startPeak[sortIdx]
+            self.endPeak         = self.endPeak[sortIdx]
+            self.startPeakPoints = self.startPeakPoints[sortIdx]
+            self.endPeakPoints   = self.endPeakPoints[sortIdx]
+            self.peakLabel       = self.peakLabel[sortIdx]
+            self.peakMax         = self.peakMax[sortIdx]
+            self.peakMaxPoints   = self.peakMaxPoints[sortIdx]
+            self.peakMaxPPM      = self.peakMaxPPM[sortIdx]
+            self.peakInt         = self.peakInt[sortIdx]
+
+
+
+        # end addPeak
+
+    def setPeak(self, startPeak, endPeak, peakLabel):
+        self.startPeak       = np.array([], dtype='float64')
+        self.endPeak         = np.array([], dtype='float64')
+        self.peakLabel       = np.array([], dtype='str')
+        self.startPeakPoints = np.array([], dtype='int')
+        self.endPeakPoints   = np.array([], dtype='int')
+        self.peakMax         = np.array([], dtype='float64')
+        self.peakMaxPPM      = np.array([], dtype='float64')
+        self.peakMaxPoints   = np.array([], dtype='int')
+        self.peakInt         = np.array([], dtype='float64')
+        for k in range(len(startPeak)):
+            self.addPeak([startPeak[k], endPeak[k]], peakLabel[k])
+
+        # end setPeak
+
+    def clearPeak(self):
+        self.startPeak       = np.array([], dtype='float64')
+        self.endPeak         = np.array([], dtype='float64')
+        self.startPeakPoints = np.array([], dtype='int')
+        self.endPeakPoints   = np.array([], dtype='int')
+        self.peakLabel       = np.array([], dtype='str')
+
+        # end addPeak
 
     def apodise(self, fid, dim, lb, gb, ssb, groupDelay, sw_h):
         fid = np.copy(fid)
@@ -545,7 +611,7 @@ class NmrData:
         return mat
         # end phase3
 
-    def points2Hz(self, points, dim):
+    def points2Hz(self, points, dim=0):
         sw = self.acq.sw_h[dim]
         if (dim == 0):
             npts = int(len(self.spc[0]))
@@ -557,7 +623,7 @@ class NmrData:
         return hz
         # end points2Hz
 
-    def points2ppm(self, points, dim):
+    def points2ppm(self, points, dim=0):
         sw = self.acq.sw_h[dim]
         if (dim == 0):
             sfo = self.acq.sfo1
@@ -578,7 +644,7 @@ class NmrData:
         return ppm
         # end points2ppm
 
-    def ppm2points(self, ppm, dim):
+    def ppm2points(self, ppm, dim=0):
         sw = self.acq.sw_h[dim]
         if (dim == 0):
             sfo = self.acq.sfo1
