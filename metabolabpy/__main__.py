@@ -1,20 +1,21 @@
 #!/usr/bin/env python
 import sys   # pragma: no cover
 import matplotlib   # pragma: no cover
+import matplotlib.pyplot as pl  # pragma: no cover
 matplotlib.use("Agg")
 if "linux" in sys.platform:  # pragma: no cover
     gui_env = ['TkAgg', 'GTKAgg', 'Qt5Agg', 'WXAgg']  # pragma: no cover
 elif sys.platform == "darwin":  # pragma: no cover
     try:  # pragma: no cover
         gui_env = ['Qt5Agg']  # pragma: no cover
-        import PySide2  # pragma: no cover
     except ImportError:  # pragma: no cover
         gui_env = ['TkAgg', 'GTKAgg', 'Qt5Agg', 'WXAgg']  # pragma: no cover
 
-    matplotlib.use("Qt5Agg")
+    #matplotlib.use("Qt5Agg")
 else:  # pragma: no cover
     gui_env = ['TkAgg', 'GTKAgg', 'Qt5Agg', 'WXAgg']  # pragma: no cover
 
+import PySide2  # pragma: no cover
 if sys.platform != "win32":  # pragma: no cover
     for gui in gui_env:  # pragma: no cover
         try:  # pragma: no cover
@@ -31,10 +32,10 @@ except:
     pass
 
 from matplotlib.figure import Figure  # pragma: no cover
-import matplotlib.pyplot as pl  # pragma: no cover
 import argparse  # pragma: no cover
 from PySide2.QtUiTools import QUiLoader  # pragma: no cover
 from PySide2.QtCore import QFile  # pragma: no cover
+from PySide2.QtCore import QCoreApplication  # pragma: no cover
 from PySide2.QtWidgets import *  # pragma: no cover
 from PySide2 import QtWidgets  # pragma: no cover
 from PySide2.QtGui import *  # pragma: no cover
@@ -145,7 +146,7 @@ class QWebEngineView2(QWebEngineView):
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exitedPeakPicking = False
-        self.__version__ = '0.6.25'
+        self.__version__ = '0.6.26'
         self.zoomWasOn = True
         self.panWasOn = False
         self.stdPosCol1 = (0.0, 0.0, 1.0)
@@ -289,6 +290,7 @@ class main_w(object):  # pragma: no cover
         self.w.actionSelect_All.triggered.connect(self.selectPlotAll)
         self.w.actionClear_All.triggered.connect(self.selectPlotClear)
         self.w.actionConsole.triggered.connect(self.showConsole)
+        self.w.actionShow_SplashScreen.triggered.connect(self.splash)
         self.w.actionHelp.triggered.connect(self.showHelp)
         self.w.actionToggle_FullScreen.triggered.connect(self.showMainWindow)
         self.w.setBox.valueChanged.connect(self.changeDataSetExp)
@@ -1837,9 +1839,9 @@ class main_w(object):  # pragma: no cover
             self.xdata = []
             self.ydata = []
             self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0], 0)
-            self.nd.nmrdat[self.nd.s][self.nd.e].refShift[0] = refShift[0]
+            self.nd.nmrdat[self.nd.s][self.nd.e].refShift[0] = self.tempRefShift[0]
             self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[1] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][1], 1)
-            self.nd.nmrdat[self.nd.s][self.nd.e].refShift[1] = refShift[1]
+            self.nd.nmrdat[self.nd.s][self.nd.e].refShift[1] = self.tempRefShift[1]
             self.nd.nmrdat[self.nd.s][self.nd.e].proc.refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0]*self.nd.nmrdat[self.nd.s][self.nd.e].proc.nPoints[0]/(len(self.nd.nmrdat[self.nd.s][self.nd.e].fid[0])*self.nd.nmrdat[self.nd.s][self.nd.e].proc.multFactor[0])
             self.nd.nmrdat[self.nd.s][self.nd.e].proc.refPoint[1] = self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[1]*self.nd.nmrdat[self.nd.s][self.nd.e].proc.nPoints[1]/(len(self.nd.nmrdat[self.nd.s][self.nd.e].fid)*self.nd.nmrdat[self.nd.s][self.nd.e].proc.multFactor[1])
             self.nd.nmrdat[self.nd.s][self.nd.e].calcPPM()
@@ -3115,6 +3117,7 @@ class main_w(object):  # pragma: no cover
         # end reference1d
 
     def reference2d(self, refShift=[0.0, 0.0]):
+        self.tempRefShift = refShift
         self.w.MplWidget.canvas.setFocus()
         self.showNMRSpectrum()
         self.ginputRef2d(1)
@@ -4576,6 +4579,30 @@ class main_w(object):  # pragma: no cover
         self.showNMRSpectrum()
         # end showVersion
 
+    def splash(self):
+        pName = os.path.join(os.path.dirname(__file__), "png")
+        cf = nmrConfig.NmrConfig()
+        cf.readConfig()
+        if cf.mode == 'dark':
+            splash_pix = QPixmap(os.path.join(pName, "metabolabpy_dark.png"))
+        else:
+            splash_pix = QPixmap(os.path.join(pName, "metabolabpy.png"))
+
+        splash = QSplashScreen(splash_pix)
+        splash.setMask(splash_pix.mask())
+        # adding progress bar
+        splash.show()
+        QCoreApplication.processEvents()
+        maxTime = 5
+        maxRange = 100
+        timeInc = maxRange
+        for i in range(maxRange):
+            # Simulate something that takes time
+            time.sleep(maxTime / float(maxRange))
+
+        splash.close()
+        # end splash
+
     def startNotebook(self):
         try:
             self.p.terminate()
@@ -5024,22 +5051,24 @@ def main():  # pragma: no cover
         ##
         # Create and display the splash screen
         pName = os.path.join(os.path.dirname(__file__), "png")
-        splash_pix = QPixmap(os.path.join(pName, "metabolabpy.png"))
+        cf = nmrConfig.NmrConfig()
+        cf.readConfig()
+        if cf.mode == 'dark':
+            splash_pix = QPixmap(os.path.join(pName, "metabolabpy_dark.png"))
+        else:
+            splash_pix = QPixmap(os.path.join(pName, "metabolabpy.png"))
+
         splash = QSplashScreen(splash_pix)
         splash.setMask(splash_pix.mask())
         # adding progress bar
-        progressBar = QProgressBar(splash)
         splash.show()
-        progressBar.show()
         app.processEvents()
-        maxTime = 0.5
+        maxTime = 2
         maxRange = 30
         timeInc = maxRange
         for i in range(maxRange):
-            progressBar.setValue(1.0 * float(i + 1) / float(maxRange))
             # Simulate something that takes time
             time.sleep(maxTime / float(maxRange))
-            progressBar.repaint()
 
         splash.close()
         ## End of splash screen
@@ -5059,8 +5088,6 @@ def main():  # pragma: no cover
             w.scriptEditor()
             w.execScript()
 
-    cf = nmrConfig.NmrConfig()
-    cf.readConfig()
     if cf.mode == 'light':
         qtmodern.styles.light(app)
     else:

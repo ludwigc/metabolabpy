@@ -5346,6 +5346,8 @@
     <addaction name="actionreInitialise_pre_processing_plot_colours"/>
     <addaction name="separator"/>
     <addaction name="actionToggle_FullScreen"/>
+    <addaction name="separator"/>
+    <addaction name="actionShow_SplashScreen"/>
    </widget>
    <widget class="QMenu" name="menuCommand_Line">
     <property name="title">
@@ -5902,6 +5904,11 @@
   <action name="actionreInitialise_pre_processing_plot_colours">
    <property name="text">
     <string>reInitialise preProcessing plot colours</string>
+   </property>
+  </action>
+  <action name="actionShow_SplashScreen">
+   <property name="text">
+    <string>Show SplashScreen</string>
    </property>
   </action>
  </widget>
