@@ -146,7 +146,7 @@ class QWebEngineView2(QWebEngineView):
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exitedPeakPicking = False
-        self.__version__ = '0.6.26'
+        self.__version__ = '0.6.27'
         self.zoomWasOn = True
         self.panWasOn = False
         self.stdPosCol1 = (0.0, 0.0, 1.0)
