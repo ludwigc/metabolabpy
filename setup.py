@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import setuptools
 import sys
-#import metabolabpy
+import metabolabpy
 #from setuptools.command.install import install
 #import os
 #import shutil
@@ -90,8 +90,7 @@ def main():
          'console_scripts': [
              'metabolabpy = metabolabpy.__main__:main'
          ]
-        },
-        cmdclass={'install': CustomInstall}
+        }
     )
 
 
