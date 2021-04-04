@@ -1,8 +1,8 @@
-#numpy
-#scipy
-#matplotlib
+numpy
+scipy
+matplotlib
 openpyxl
-#pyside2
+pyside2
 pyautogui
 qtmodern
 jupyter
