@@ -435,13 +435,11 @@ class main_w(object):  # pragma: no cover
         if sys.platform == 'darwin':
             self.w.actionCreate.setText('Create Launchpad Icon')
             self.w.actionCreate.triggered.connect(self.createIconMac)
-        elif sys.platform == 'win':
-            print('2')
+        elif sys.platform == 'win' or sys.platform == 'win32' or sys.platform == 'win64':
             self.w.actionCreate.setText('Create Desktop Icon')
-            print('doing stuffs....')
-            self.w.actionCreate.setVisible(False)
+            self.w.actionCreate.triggered.connect(self.createIconWin)
         else:
-            print('3')
+            print(sys.platform)
             self.w.actionCreate.setText('Create Desktop Starter')
             print('doing stuffs3....')
 
@@ -998,8 +996,10 @@ class main_w(object):  # pragma: no cover
 
     def createIconWin(self):
         baseDir = os.path.dirname(__file__)
+        iconFile = os.path.join(baseDir, 'icon', 'icon.ico')
         userDir = os.environ.get('USERPROFILE')
         desktopDir = os.path.join(userDir, 'Desktop')
+        linkFile = os.path.join(desktopDir, 'MetaboLabPy.lnk')
         mlBat = os.path.join(baseDir, 'ml.bat')
         ml_execBat = os.path.join(baseDir, 'ml_exec.bat')
         f = open(mlBat, 'w')
@@ -1008,7 +1008,9 @@ class main_w(object):  # pragma: no cover
         f = open(ml_execBat, 'w')
         f.write('conda activate metabolabpy && metabolabpy && exit')
         f.close()
-
+        subprocess.os.system('pip install pylnk3')
+        subprocess.os.system('pylnk3 create ' + mlBat + ' ' + linkFile + ' -m Minimized --icon ' + iconFile)
+        subprocess.os.system('pip uninstall pylnk3 --yes')
         # end createIconWin
 
     def dataPreProcessing(self):
