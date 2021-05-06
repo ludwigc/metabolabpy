@@ -71,7 +71,7 @@ import contextlib
 import zipfile
 #from notebook import notebookapp
 #import multiprocess
-##import subprocess
+import subprocess
 #import jupyterthemes
 import itertools
 import xlsxwriter
@@ -987,7 +987,7 @@ class main_w(object):  # pragma: no cover
         f.write("cp " + icon + " " + appDir + "/Icon$'\\r'\n")
         f.close()
         os.chmod(starter, 0o777)
-        os.system(starter)
+        subprocess.os.system(starter)
         os.remove(appify)
         os.remove(starter)
         # end createIconMac
@@ -997,7 +997,18 @@ class main_w(object):  # pragma: no cover
         # end createIconLinux
 
     def createIconWin(self):
-        print("Windows!")
+        baseDir = os.path.dirname(__file__)
+        userDir = os.environ.get('USERPROFILE')
+        desktopDir = os.path.join(userDir, 'Desktop')
+        mlBat = os.path.join(baseDir, 'ml.bat')
+        ml_execBat = os.path.join(baseDir, 'ml_exec.bat')
+        f = open(mlBat, 'w')
+        f.write('start /min ' + mlBat)
+        f.close()
+        f = open(ml_execBat, 'w')
+        f.write('conda activate metabolabpy && metabolabpy && exit')
+        f.close()
+
         # end createIconWin
 
     def dataPreProcessing(self):
