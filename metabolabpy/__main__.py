@@ -145,7 +145,7 @@ class QWebEngineView2(QWebEngineView):
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exitedPeakPicking = False
-        self.__version__ = '0.6.28'
+        self.__version__ = '0.6.29'
         self.zoomWasOn = True
         self.panWasOn = False
         self.stdPosCol1 = (0.0, 0.0, 1.0)
@@ -433,12 +433,8 @@ class main_w(object):  # pragma: no cover
         self.w.actionreInitialise_plot_colours.triggered.connect(self.setStandardPlotColours)
         print(sys.platform)
         if sys.platform == 'darwin':
-            print("Hello1!")
             self.w.actionCreate.setText('Create Launchpad Icon')
-            print('connecting')
             self.w.actionCreate.triggered.connect(self.createIconMac)
-            print('--------------------------------------')
-            #self.w.actionCreate.triggered.connect(self.createIconMac)
         elif sys.platform == 'win':
             print('2')
             self.w.actionCreate.setText('Create Desktop Icon')
@@ -960,7 +956,40 @@ class main_w(object):  # pragma: no cover
         # end clear
 
     def createIconMac(self):
-        print("Mac")
+        homeDir = os.path.expanduser('~')
+        appDir2 = os.path.join(homeDir, 'Applications')
+        appDir  = os.path.join(appDir2, 'MetaboLabPy.app')
+        appDir1 = 'MetaboLabPy'
+        try:
+            shutil.rmtree(appDir)
+        except:
+            pass
+
+        appify = os.path.join(appDir2, 'appify')
+        f = open(appify, 'w')
+        f.write('#!/usr/bin/env bash\n\n')
+        f.write('APPNAME=${2:-$(basename "$1" ".sh")}\n')
+        f.write('DIR="$APPNAME/$3.app/Contents/MacOS"\n\n')
+        f.write('mkdir -p "$DIR"\n')
+        f.write('cp "$1" "$DIR/$3"\n')
+        f.write('chmod +x "$DIR/$3"\n')
+        f.close()
+        os.chmod(appify, 0o777)
+        baseDir = os.path.dirname(__file__)
+        mlStarter = os.path.join(baseDir, 'mlStarter')
+        contents = os.path.join(mlStarter, 'Contents')
+        icon = os.path.join(mlStarter, 'Icon')
+        starter = os.path.join(appDir2, 'createStarter')
+        f = open(starter, 'w')
+        f.write('#!/usr/bin/env bash\n\n')
+        f.write(appify + ' $(which metabolabpy) ' + appDir2 + ' ' + appDir1 + '\n')
+        f.write('cp -r ' + contents + ' ' + appDir + '\n')
+        f.write("cp " + icon + " " + appDir + "/Icon$'\\r'\n")
+        f.close()
+        os.chmod(starter, 0o777)
+        os.system(starter)
+        os.remove(appify)
+        os.remove(starter)
         # end createIconMac
 
     def createIconLinux(self):

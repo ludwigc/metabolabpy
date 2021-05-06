@@ -56,6 +56,8 @@ class NmrConfig:
             config.write(configfile)
 
     def readConfig(self):
+        self.homeDir = os.path.expanduser('~')
+        self.configFile = os.path.join(self.homeDir, self.fName)
         config = configparser.ConfigParser()
         config.read(self.configFile)
         if len(config.sections()) == 0:
