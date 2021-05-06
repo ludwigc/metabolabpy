@@ -58,26 +58,25 @@ import io  # pragma: no cover
 from metabolabpy.nmr import nmrDataSet  # pragma: no cover
 from metabolabpy.GUI import phCorr  # pragma: no cover
 import time  # pragma: no cover
-#import platform  # pragma: no cover
+##import platform  # pragma: no cover
 import math  # pragma: no cover
 from metabolabpy.nmr import nmrConfig  # pragma: no cover
 import os  # pragma: no cover
 import traceback  # pragma: no cover
 import shutil  # pragma: no cover
 import scipy.io  # pragma: no cover
-#import inspect
+##import inspect
 from io import StringIO
 import contextlib
 import zipfile
-from notebook import notebookapp
-import multiprocess
-#import subprocess
-import jupyterthemes
+#from notebook import notebookapp
+#import multiprocess
+##import subprocess
+#import jupyterthemes
 import itertools
 import xlsxwriter
 from string import ascii_uppercase
-
-# import pandas as pd                       # pragma: no cover
+## import pandas as pd                       # pragma: no cover
 
 # ------------------ MplWidget ------------------
 class MplWidget(QWidget):  # pragma: no cover
@@ -146,7 +145,7 @@ class QWebEngineView2(QWebEngineView):
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exitedPeakPicking = False
-        self.__version__ = '0.6.27'
+        self.__version__ = '0.6.28'
         self.zoomWasOn = True
         self.panWasOn = False
         self.stdPosCol1 = (0.0, 0.0, 1.0)
@@ -432,6 +431,26 @@ class main_w(object):  # pragma: no cover
         self.w.setStyleSheet("font-size: " + str(self.cf.fontSize) + "pt")
         self.w.actionreInitialise_pre_processing_plot_colours.triggered.connect(self.nd.pp.initPlotColours)
         self.w.actionreInitialise_plot_colours.triggered.connect(self.setStandardPlotColours)
+        print(sys.platform)
+        if sys.platform == 'darwin':
+            print("Hello1!")
+            self.w.actionCreate.setText('Create Launchpad Icon')
+            print('connecting')
+            self.w.actionCreate.triggered.connect(self.createIconMac)
+            print('--------------------------------------')
+            #self.w.actionCreate.triggered.connect(self.createIconMac)
+        elif sys.platform == 'win':
+            print('2')
+            self.w.actionCreate.setText('Create Desktop Icon')
+            print('doing stuffs....')
+            self.w.actionCreate.setVisible(False)
+        else:
+            print('3')
+            self.w.actionCreate.setText('Create Desktop Starter')
+            print('doing stuffs3....')
+
+            self.w.actionCreate.setVisible(False)
+
         self.empRefShift = 0.0
         self.p = []
         if self.cf.mode == 'dark':
@@ -939,6 +958,18 @@ class main_w(object):  # pragma: no cover
         self.w.expBox.valueChanged.connect(lambda: self.changeDataSetExp())
         return "Workspace cleared"
         # end clear
+
+    def createIconMac(self):
+        print("Mac")
+        # end createIconMac
+
+    def createIconLinux(self):
+        print("Linux!")
+        # end createIconLinux
+
+    def createIconWin(self):
+        print("Windows!")
+        # end createIconWin
 
     def dataPreProcessing(self):
         self.resetDataPreProcessing()
@@ -4603,32 +4634,32 @@ class main_w(object):  # pragma: no cover
         splash.close()
         # end splash
 
-    def startNotebook(self):
-        try:
-            self.p.terminate()
-            sleep(2)
-        except:
-            pass
-    
-        if self.cf.mode == 'dark':
-            jupyterthemes.install_theme('chesterish')
-            #subprocess.run(["jt", "-tchesterish"])
-        else:
-            jupyterthemes.install_theme('grade3')
-            #subprocess.run(["jt", "-r"])
-
-        jobs = []
-        self.p = multiprocess.Process(target=notebookapp.main, args=(['/Users/ludwigc/jupyter', '--no-browser', '--ip=127.0.0.1', '--port=9997'],))
-        jobs.append(self.p)
-        self.p.start()
-        sleep(2)
-        if self.cf.mode == 'dark':
-            self.w.helpView.setUrl("http://127.0.0.1:9997/notebooks/test2d_dark.ipynb")
-        else:
-            self.w.helpView.setUrl("http://127.0.0.1:9997/notebooks/test2d_light.ipynb")
-
-        self.w.nmrSpectrum.setCurrentIndex(12)
-        # end startNotebook
+    #def startNotebook(self):
+    #    try:
+    #        self.p.terminate()
+    #        sleep(2)
+    #    except:
+    #        pass
+    #
+    #    if self.cf.mode == 'dark':
+    #        jupyterthemes.install_theme('chesterish')
+    #        #subprocess.run(["jt", "-tchesterish"])
+    #    else:
+    #        jupyterthemes.install_theme('grade3')
+    #        #subprocess.run(["jt", "-r"])
+    #
+    #    jobs = []
+    #    self.p = multiprocess.Process(target=notebookapp.main, args=(['/Users/ludwigc/jupyter', '--no-browser', '--ip=127.0.0.1', '--port=9997'],))
+    #    jobs.append(self.p)
+    #    self.p.start()
+    #    sleep(2)
+    #    if self.cf.mode == 'dark':
+    #        self.w.helpView.setUrl("http://127.0.0.1:9997/notebooks/test2d_dark.ipynb")
+    #    else:
+    #        self.w.helpView.setUrl("http://127.0.0.1:9997/notebooks/test2d_light.ipynb")
+    #
+    #   self.w.nmrSpectrum.setCurrentIndex(12)
+    #    # end startNotebook
 
     def startStopPhCorr(self):
         s = self.nd.s
@@ -5033,7 +5064,7 @@ def main():  # pragma: no cover
 
     args = vars(ap.parse_args())
     QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
-    app = QApplication(['pyMetaboLab'])  # sys.argv)
+    app = QApplication(['MetaboLabPy'])  # sys.argv)
     icon = QIcon()
     pName = os.path.join(os.path.dirname(__file__), "icon")
     icon.addFile(os.path.join(pName, "icon-16.png"), QtCore.QSize(16, 16))

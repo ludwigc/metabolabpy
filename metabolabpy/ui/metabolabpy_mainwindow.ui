@@ -5264,6 +5264,8 @@
     <addaction name="actionLoad"/>
     <addaction name="actionRead_NMR_Spectrum"/>
     <addaction name="actionOpen_NMRPipe"/>
+    <addaction name="actionCreate"/>
+    <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuPlot">
@@ -5909,6 +5911,11 @@
   <action name="actionShow_SplashScreen">
    <property name="text">
     <string>Show SplashScreen</string>
+   </property>
+  </action>
+  <action name="actionCreate">
+   <property name="text">
+    <string>Create...</string>
    </property>
   </action>
  </widget>
