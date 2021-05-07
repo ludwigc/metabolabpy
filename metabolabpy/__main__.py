@@ -145,7 +145,7 @@ class QWebEngineView2(QWebEngineView):
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exitedPeakPicking = False
-        self.__version__ = '0.6.34'
+        self.__version__ = '0.6.35'
         self.zoomWasOn = True
         self.panWasOn = False
         self.stdPosCol1 = (0.0, 0.0, 1.0)
@@ -1013,7 +1013,7 @@ class main_w(object):  # pragma: no cover
         else:
             idx = sys.prefix.rfind('\\') + 1
             env = sys.prefix[idx:]
-            f.write(cnda + ' activate ' + env + ' && metabolabpy && exit')
+            f.write(cnda[:-2] + ' activate ' + env + ' && metabolabpy && exit')
 
         f.close()
         subprocess.os.system('pip install pylnk3')
