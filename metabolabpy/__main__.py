@@ -145,7 +145,7 @@ class QWebEngineView2(QWebEngineView):
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exitedPeakPicking = False
-        self.__version__ = '0.6.30'
+        self.__version__ = '0.6.31'
         self.zoomWasOn = True
         self.panWasOn = False
         self.stdPosCol1 = (0.0, 0.0, 1.0)
@@ -1010,7 +1010,7 @@ class main_w(object):  # pragma: no cover
         if venv == -1:
             f.write('metabolabpy && exit')
         else:
-            idx = sys.prefix.rfind('\\') + 2
+            idx = sys.prefix.rfind('\\') + 1
             env = sys.prefix[idx:]
             f.write('conda activate ' + env + ' && metabolabpy && exit')
 
