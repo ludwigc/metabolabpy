@@ -145,7 +145,7 @@ class QWebEngineView2(QWebEngineView):
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exitedPeakPicking = False
-        self.__version__ = '0.6.29'
+        self.__version__ = '0.6.30'
         self.zoomWasOn = True
         self.panWasOn = False
         self.stdPosCol1 = (0.0, 0.0, 1.0)
@@ -1006,7 +1006,14 @@ class main_w(object):  # pragma: no cover
         f.write('start /min ' + ml_execBat)
         f.close()
         f = open(ml_execBat, 'w')
-        f.write('conda activate metabolabpy && metabolabpy && exit')
+        venv = sys.prefix.find('env')
+        if venv == -1:
+            f.write('metabolabpy && exit')
+        else:
+            idx = sys.prefix.rfind('\\') + 2
+            env = sys.prefix[idx:]
+            f.write('conda activate ' + env + ' && metabolabpy && exit')
+
         f.close()
         subprocess.os.system('pip install pylnk3')
         subprocess.os.system('pylnk3 create ' + mlBat + ' ' + linkFile + ' -m Minimized --icon ' + iconFile)
