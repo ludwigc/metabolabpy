@@ -5,10 +5,8 @@
 numpy
 scipy
 matplotlib
-openpyxl
 pyside2
+openpyxl
 pyautogui
 qtmodern
-jupyter
-multiprocess
-jupyterthemes
+xlsxwriter

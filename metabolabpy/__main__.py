@@ -1,8 +1,23 @@
 #!/usr/bin/env python
 import sys   # pragma: no cover
 import matplotlib   # pragma: no cover
-import matplotlib.pyplot as pl  # pragma: no cover
 matplotlib.use("Agg")
+
+try:
+    from PySide2.QtUiTools import QUiLoader  # pragma: no cover
+    from PySide2.QtCore import QFile  # pragma: no cover
+    from PySide2.QtCore import QCoreApplication  # pragma: no cover
+    from PySide2.QtWidgets import *  # pragma: no cover
+    from PySide2 import QtWidgets  # pragma: no cover
+    from PySide2.QtGui import *  # pragma: no cover
+    from PySide2 import QtGui  # pragma: no cover
+    from PySide2 import QtCore  # pragma: no cover
+    from PySide2.QtWidgets import QFileDialog # pragma: no cover
+    from PySide2.QtCore import SIGNAL  # pragma: no cover
+except:
+    pass
+
+import matplotlib.pyplot as pl  # pragma: no cover
 if "linux" in sys.platform:  # pragma: no cover
     gui_env = ['TkAgg', 'GTKAgg', 'Qt5Agg', 'WXAgg']  # pragma: no cover
 elif sys.platform == "darwin":  # pragma: no cover
@@ -33,16 +48,16 @@ except:
 
 from matplotlib.figure import Figure  # pragma: no cover
 import argparse  # pragma: no cover
-from PySide2.QtUiTools import QUiLoader  # pragma: no cover
-from PySide2.QtCore import QFile  # pragma: no cover
-from PySide2.QtCore import QCoreApplication  # pragma: no cover
-from PySide2.QtWidgets import *  # pragma: no cover
-from PySide2 import QtWidgets  # pragma: no cover
-from PySide2.QtGui import *  # pragma: no cover
-from PySide2 import QtGui  # pragma: no cover
-from PySide2 import QtCore  # pragma: no cover
-from PySide2.QtWidgets import QFileDialog # pragma: no cover
-from PySide2.QtCore import SIGNAL  # pragma: no cover
+#from PySide2.QtUiTools import QUiLoader  # pragma: no cover
+#from PySide2.QtCore import QFile  # pragma: no cover
+#from PySide2.QtCore import QCoreApplication  # pragma: no cover
+#from PySide2.QtWidgets import *  # pragma: no cover
+#from PySide2 import QtWidgets  # pragma: no cover
+#from PySide2.QtGui import *  # pragma: no cover
+#from PySide2 import QtGui  # pragma: no cover
+#from PySide2 import QtCore  # pragma: no cover
+#from PySide2.QtWidgets import QFileDialog # pragma: no cover
+#from PySide2.QtCore import SIGNAL  # pragma: no cover
 from time import sleep
 from PySide2.QtCore import QUrl, Qt
 from PySide2.QtWebEngineCore import QWebEngineUrlSchemeHandler
@@ -145,7 +160,7 @@ class QWebEngineView2(QWebEngineView):
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exitedPeakPicking = False
-        self.__version__ = '0.6.35'
+        self.__version__ = '0.6.37'
         self.zoomWasOn = True
         self.panWasOn = False
         self.stdPosCol1 = (0.0, 0.0, 1.0)
@@ -3702,6 +3717,8 @@ class main_w(object):  # pragma: no cover
         self.cf.readConfig()
         self.cf.mode = 'dark'
         self.cf.saveConfig()
+        # restart program
+        #os.execv(sys.executable, ['python'] + sys.argv)
         # end saveConfig
 
     def setDispPars(self):

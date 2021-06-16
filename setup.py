@@ -56,8 +56,8 @@ import metabolabpy
 
 def main():
 
-    if not ((sys.version_info[0] != 3) or (sys.version_info[1] >= 7)):
-        sys.exit("Python >=3.7 is required ")
+    if not ((sys.version_info[0] != 3) or (sys.version_info[1] >= 6)):
+        sys.exit("Python >=3.6 is required ")
 
     # read the contents of your README file
     with open('README.rst', encoding='utf-8') as f:
@@ -79,7 +79,7 @@ def main():
         include_package_data=True,
         classifiers=[
           "Programming Language :: Python :: 3",
-          "Programming Language :: Python :: 3.8",
+          "Programming Language :: Python :: 3.9",
           "Topic :: Scientific/Engineering :: Bio-Informatics",
           "Topic :: Scientific/Engineering :: Chemistry",
           "Topic :: Utilities",
