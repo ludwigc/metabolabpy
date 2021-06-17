@@ -1,5 +1,5 @@
 {% set name = "metabolabpy" %}
-{% set version = "0.6.36" %}
+{% set version = "0.6.41" %}
 
 package:
   name: "{{ name|lower }}"
@@ -7,7 +7,7 @@ package:
 
 source:
   url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
-  sha256: "75f87ec0236843ead12dfc25926d2a308a9641ecc09cba953d4d7055b6825f6b"
+  sha256: "2f3747617c1c38876ea3606639321083eb63957a64c8bba1b1a191c67f18208c"
 
 build:
   noarch: python

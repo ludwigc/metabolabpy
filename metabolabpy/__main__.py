@@ -14,6 +14,11 @@ try:
     from PySide2 import QtCore  # pragma: no cover
     from PySide2.QtWidgets import QFileDialog # pragma: no cover
     from PySide2.QtCore import SIGNAL  # pragma: no cover
+    from PySide2.QtWebEngineWidgets import QWebEngineView, QWebEngineProfile, QWebEnginePage, QWebEngineSettings
+    from PySide2.QtCore import QUrl, Qt
+    from PySide2.QtWebEngineCore import QWebEngineUrlSchemeHandler
+    import PySide2  # pragma: no cover
+    import qtmodern.styles
 except:
     pass
 
@@ -30,7 +35,6 @@ elif sys.platform == "darwin":  # pragma: no cover
 else:  # pragma: no cover
     gui_env = ['TkAgg', 'GTKAgg', 'Qt5Agg', 'WXAgg']  # pragma: no cover
 
-import PySide2  # pragma: no cover
 if sys.platform != "win32":  # pragma: no cover
     for gui in gui_env:  # pragma: no cover
         try:  # pragma: no cover
@@ -59,15 +63,11 @@ import argparse  # pragma: no cover
 #from PySide2.QtWidgets import QFileDialog # pragma: no cover
 #from PySide2.QtCore import SIGNAL  # pragma: no cover
 from time import sleep
-from PySide2.QtCore import QUrl, Qt
-from PySide2.QtWebEngineCore import QWebEngineUrlSchemeHandler
-from PySide2.QtWebEngineWidgets import QWebEngineView, QWebEngineProfile, QWebEnginePage, QWebEngineSettings
 try:  # pragma: no cover
     import pyautogui  # pragma: no cover
 except:  # pragma: no cover
     pass  # pragma: no cover
 
-import qtmodern.styles
 import numpy as np  # pragma: no cover
 import io  # pragma: no cover
 from metabolabpy.nmr import nmrDataSet  # pragma: no cover
@@ -93,74 +93,77 @@ import xlsxwriter
 from string import ascii_uppercase
 ## import pandas as pd                       # pragma: no cover
 
-# ------------------ MplWidget ------------------
-class MplWidget(QWidget):  # pragma: no cover
+try:
+    # ------------------ MplWidget ------------------
+    class MplWidget(QWidget):  # pragma: no cover
 
-    def __init__(self, parent=None):
-        QWidget.__init__(self, parent)
+        def __init__(self, parent=None):
+            QWidget.__init__(self, parent)
 
-        fig = Figure()
-        self.canvas = FigureCanvas(fig)
+            fig = Figure()
+            self.canvas = FigureCanvas(fig)
 
-        vertical_layout = QVBoxLayout()
-        vertical_layout.addWidget(self.canvas)
-        self.toolbar = NavigationToolbar(self.canvas, self)
-        vertical_layout.addWidget(self.toolbar)
+            vertical_layout = QVBoxLayout()
+            vertical_layout.addWidget(self.canvas)
+            self.toolbar = NavigationToolbar(self.canvas, self)
+            vertical_layout.addWidget(self.toolbar)
 
-        self.canvas.axes = self.canvas.figure.add_subplot(111)
-        self.setLayout(vertical_layout)
-        home = NavigationToolbar.home
+            self.canvas.axes = self.canvas.figure.add_subplot(111)
+            self.setLayout(vertical_layout)
+            home = NavigationToolbar.home
 
-        def new_home(self, *args, **kwargs):
-            self.canvas.axes.autoscale()
-            self.canvas.draw()
-            self.canvas.toolbar.update()
-            home(self, *args, **kwargs)
+            def new_home(self, *args, **kwargs):
+                self.canvas.axes.autoscale()
+                self.canvas.draw()
+                self.canvas.toolbar.update()
+                home(self, *args, **kwargs)
 
-        NavigationToolbar.home = new_home
-        self.phCorr = phCorr.PhCorr()
-        # end __init__
+            NavigationToolbar.home = new_home
+            self.phCorr = phCorr.PhCorr()
+            # end __init__
 
 
-# ------------------ MplWidget ------------------
+    # ------------------ MplWidget ------------------
 
-# ------------------ MplWidget ------------------
-class MplWidget2(QWidget):  # pragma: no cover
+    # ------------------ MplWidget ------------------
+    class MplWidget2(QWidget):  # pragma: no cover
 
-    def __init__(self, parent=None):
-        QWidget.__init__(self, parent)
+        def __init__(self, parent=None):
+            QWidget.__init__(self, parent)
 
-        self.canvas = FigureCanvas(Figure())
+            self.canvas = FigureCanvas(Figure())
 
-        vertical_layout = QVBoxLayout()
-        vertical_layout.addWidget(self.canvas)
-        self.toolbar = NavigationToolbar(self.canvas, self)
-        vertical_layout.addWidget(self.toolbar)
+            vertical_layout = QVBoxLayout()
+            vertical_layout.addWidget(self.canvas)
+            self.toolbar = NavigationToolbar(self.canvas, self)
+            vertical_layout.addWidget(self.toolbar)
 
-        self.canvas.axes = self.canvas.figure.add_subplot(111)
-        self.setLayout(vertical_layout)
-        home = NavigationToolbar.home
+            self.canvas.axes = self.canvas.figure.add_subplot(111)
+            self.setLayout(vertical_layout)
+            home = NavigationToolbar.home
 
-        def new_home(self, *args, **kwargs):
-            self.canvas.axes.autoscale()
-            self.canvas.draw()
-            self.canvas.toolbar.update()
-            home(self, *args, **kwargs)
+            def new_home(self, *args, **kwargs):
+                self.canvas.axes.autoscale()
+                self.canvas.draw()
+                self.canvas.toolbar.update()
+                home(self, *args, **kwargs)
 
-        NavigationToolbar.home = new_home
-        self.phCorr = phCorr.PhCorr()
-        # end __init__
+            NavigationToolbar.home = new_home
+            self.phCorr = phCorr.PhCorr()
+            # end __init__
 
-class QWebEngineView2(QWebEngineView):
-    def printCmd(self):
-        print("QWebEngineView2")
+    class QWebEngineView2(QWebEngineView):
+        def printCmd(self):
+            print("QWebEngineView2")
 
-# ------------------ MplWidget2 ------------------
+    # ------------------ MplWidget2 ------------------
+except:
+    pass
 
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exitedPeakPicking = False
-        self.__version__ = '0.6.37'
+        self.__version__ = '0.6.41'
         self.zoomWasOn = True
         self.panWasOn = False
         self.stdPosCol1 = (0.0, 0.0, 1.0)
