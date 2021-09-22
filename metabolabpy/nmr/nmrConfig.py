@@ -73,7 +73,6 @@ class NmrConfig:
                 local_var = local_var.replace("phasereferencecolour", "phase_reference_colour")
                 local_var = local_var.replace("poscol", "pos_col")
                 local_var = local_var.replace("negcol", "neg_col")
-                print("{} / {}".format(local_var, config[k][l]))
                 self.set_values(local_var, config[k][l])
 
     def set_auto_plot(self, value):
