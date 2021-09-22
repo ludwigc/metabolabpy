@@ -1,12 +1,12 @@
-'''
+"""
 Auomatic phase and baseline correction for 1D NMR spectra
 
 Using the histogram method
-'''
+"""
 
 from metabolabpy.nmr import nmrData
 import numpy as np
-#import matplotlib.pyplot as pl
+# import matplotlib.pyplot as pl
 from scipy.optimize import fmin
 import math
 from scipy.fftpack import fft, ifft, fftshift
@@ -15,21 +15,21 @@ from scipy.fftpack import fft, ifft, fftshift
 class Apcbc:
 
     def __init__(self):
-        self.correctBaseline = 0
+        self.correct_baseline = 0
         self.npts = 0
-        self.nMax = 10.00
-        self.nOrder = 1
+        self.n_max = 10.00
+        self.n_order = 1
         self.nbins = 5001
-        self.mFact0 = 20 * 10 ** (self.nOrder + 1)
-        self.mFact1 = 5 * 10 ** (self.nOrder + 1)
-        self.startPts = 3500
-        self.endPts = 4000
+        self.m_fact0 = 20 * 10 ** (self.n_order + 1)
+        self.m_fact1 = 5 * 10 ** (self.n_order + 1)
+        self.start_pts = 3500
+        self.end_pts = 4000
         self.pars = np.array([])
-        self.rSpc = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
-        self.iSpc = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        self.r_spc = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        self.i_spc = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
-    def baselineFitFunc(self, par, spc, xaxis):
-        l = self.calcLine(spc, xaxis)
+    def baseline_fit_func(self, par, spc, xaxis):
+        l = self.calc_line(spc, xaxis)
         spc = spc - l
         nc = int((len(par)) / 2)
         cr = par[:nc]
@@ -43,10 +43,10 @@ class Apcbc:
         n2 = self.qi(hi)
         # print("%4.2f & %4.2f" % (n1, n2))
         return 1.0 * n1 + 100.0 * n2
-        # end baselineFitFunc
+        # end baseline_fit_func
 
-    def baselineFitFuncEval(self, par, spc, xaxis):  # , plot):
-        l = self.calcLine(spc, xaxis)
+    def baseline_fit_func_eval(self, par, spc, xaxis):  # , plot):
+        l = self.calc_line(spc, xaxis)
         spc = spc - l
         nc = int((len(par)) / 2)
         cr = par[:nc]
@@ -66,70 +66,70 @@ class Apcbc:
         #    pl.show()
 
         return spc
-        # end baselineFitFuncEval
+        # end baseline_fit_func_eval
 
-    def calcLine(self, spc, xaxis):
-        x1 = np.mean(xaxis[self.startPts:self.endPts])
-        x2 = np.mean(xaxis[-self.endPts:-self.startPts])
-        y1r = np.mean(spc.real[self.startPts:self.endPts])
-        y2r = np.mean(spc.real[-self.endPts:-self.startPts])
-        y1i = np.mean(spc.imag[self.startPts:self.endPts])
-        y2i = np.mean(spc.imag[-self.endPts:-self.startPts])
-        slopeR = (y2r - y1r) / (x2 - x1)
-        slopeI = (y2i - y1i) / (x2 - x1)
-        lineR = slopeR * (xaxis - x1) + y1r
-        lineI = slopeI * (xaxis - x1) + y1i
-        line = lineR + 1j * lineI
+    def calc_line(self, spc, xaxis):
+        x1 = np.mean(xaxis[self.start_pts:self.end_pts])
+        x2 = np.mean(xaxis[-self.end_pts:-self.start_pts])
+        y1r = np.mean(spc.real[self.start_pts:self.end_pts])
+        y2r = np.mean(spc.real[-self.end_pts:-self.start_pts])
+        y1i = np.mean(spc.imag[self.start_pts:self.end_pts])
+        y2i = np.mean(spc.imag[-self.end_pts:-self.start_pts])
+        slope_r = (y2r - y1r) / (x2 - x1)
+        slope_i = (y2i - y1i) / (x2 - x1)
+        line_r = slope_r * (xaxis - x1) + y1r
+        line_i = slope_i * (xaxis - x1) + y1i
+        line = line_r + 1j * line_i
         return line
-        # end calcLine
+        # end calc_line
 
-    def fitBaseline(self, spc, xaxis):
+    def fit_baseline(self, spc, xaxis):
         npts = len(spc)
-        l = self.calcLine(spc, xaxis)
-        nCoeffReal = np.polynomial.chebyshev.chebfit(xaxis, spc.real - l.real, self.nOrder)
-        nCoeffImag = np.polynomial.chebyshev.chebfit(xaxis, spc.imag - l.imag, self.nOrder)
+        l = self.calc_line(spc, xaxis)
+        n_coeff_real = np.polynomial.chebyshev.chebfit(xaxis, spc.real - l.real, self.n_order)
+        n_coeff_imag = np.polynomial.chebyshev.chebfit(xaxis, spc.imag - l.imag, self.n_order)
         pars = np.array([])
-        pars = np.append(pars, nCoeffReal)
-        pars = np.append(pars, nCoeffImag)
+        pars = np.append(pars, n_coeff_real)
+        pars = np.append(pars, n_coeff_imag)
         print("...Fitting phase and baseline...")
-        plsq = fmin(self.baselineFitFunc, pars, args=(spc, xaxis), ftol=1e-3, xtol=1e-3, maxfun=1000)
+        plsq = fmin(self.baseline_fit_func, pars, args=(spc, xaxis), ftol=1e-3, xtol=1e-3, maxfun=1000)
         print("...finished")
-        rSpcPar = plsq[:int(len(plsq) / 2)]
-        iSpcPar = plsq[int(len(plsq) / 2):]
-        self.rSpc[:len(rSpcPar)] = rSpcPar
-        self.iSpc[:len(iSpcPar)] = iSpcPar
+        r_spc_par = plsq[:int(len(plsq) / 2)]
+        i_spc_par = plsq[int(len(plsq) / 2):]
+        self.r_spc[:len(r_spc_par)] = r_spc_par
+        self.i_spc[:len(i_spc_par)] = i_spc_par
         return plsq
-        # end fitBaseline
+        # end fit_baseline
 
-    def fitPhase(self, spc, xaxis):
+    def fit_phase(self, spc, xaxis):
         npts = len(spc)
         ph0 = 0.0
         ph1 = 0.0
-        l = self.calcLine(spc, xaxis)
-        nCoeffReal = np.polynomial.chebyshev.chebfit(xaxis, spc.real - l.real, self.nOrder)
-        nCoeffImag = np.polynomial.chebyshev.chebfit(xaxis, spc.imag - l.imag, self.nOrder)
+        l = self.calc_line(spc, xaxis)
+        n_coeff_real = np.polynomial.chebyshev.chebfit(xaxis, spc.real - l.real, self.n_order)
+        n_coeff_imag = np.polynomial.chebyshev.chebfit(xaxis, spc.imag - l.imag, self.n_order)
         pars = np.array([])
         pars = np.append(pars, ph0)
         pars = np.append(pars, ph1)
-        pars = np.append(pars, nCoeffReal)
-        pars = np.append(pars, nCoeffImag)
+        pars = np.append(pars, n_coeff_real)
+        pars = np.append(pars, n_coeff_imag)
         print("...Fitting phase and baseline...")
-        plsq = fmin(self.phaseFitFunc, pars, args=(spc, xaxis), ftol=1e-3, xtol=1e-3, maxfun=1000)
+        plsq = fmin(self.phase_fit_func, pars, args=(spc, xaxis), ftol=1e-3, xtol=1e-3, maxfun=1000)
         print("...finished")
-        rSpcPar = plsq[2:int(len(plsq) / 2 + 2)]
-        iSpcPar = plsq[int(len(plsq) / 2 + 2):]
-        self.rSpc[:len(rSpcPar)] = rSpcPar
-        self.iSpc[:len(iSpcPar)] = iSpcPar
+        r_spc_par = plsq[2:int(len(plsq) / 2 + 2)]
+        i_spc_par = plsq[int(len(plsq) / 2 + 2):]
+        self.r_spc[:len(r_spc_par)] = r_spc_par
+        self.i_spc[:len(i_spc_par)] = i_spc_par
         return plsq
-        # end fitPhase
+        # end fit_phase
 
-    #def getHist(self, spc, xaxis, plot=True, ph0=0.0, ph1=0.0):
-    def getHist(self, spc, xaxis, ph0=0.0, ph1=0.0):
+    #def get_hist(self, spc, xaxis, plot=True, ph0=0.0, ph1=0.0):
+    def get_hist(self, spc, xaxis, ph0=0.0, ph1=0.0):
         hr = self.hist(spc.real)
         hi = self.hist(spc.imag)
         xr = hr[1][1:self.nbins + 1]
         xi = hi[1][1:self.nbins + 1]
-        w = self.histRWeight(xr)
+        w = self.hist_r_weight(xr)
         hr2 = hr[0] * w
         hi2 = hi[0]
         pp = False
@@ -137,16 +137,16 @@ class Apcbc:
             pp = True
 
         if pp == True:
-            spc2a = phase2(spc, ph0, ph1)
+            spc2a = self.phase2(spc, ph0, ph1)
             hra = self.hist(spc2a.real)
             hia = self.hist(spc2a.imag)
             xra = hra[1][1:self.nbins + 1]
             xia = hia[1][1:self.nbins + 1]
-            wa = self.histRWeight(xra)
+            wa = self.hist_r_weight(xra)
             hr2a = hra[0] * wa
             hi2a = hia[0]
-            maxPos = np.where(hi2a == np.max(hi2a))
-            if (np.abs(maxPos[0][0] - len(hi2a) / 2) > 2):
+            max_pos = np.where(hi2a == np.max(hi2a))
+            if (np.abs(max_pos[0][0] - len(hi2a) / 2) > 2):
                 hi2a = hi2a * np.sign(xia)
 
         #if (plot == True):
@@ -165,9 +165,9 @@ class Apcbc:
         #    pl.show()
 
         return hr2 + 1j * hi2
-        # end getHist
+        # end get_hist
 
-    def histRWeight(self, x):
+    def hist_r_weight(self, x):
         n1 = x[np.where(x < 0.0)]
         n2 = x[np.where(x < 0.05)]
         n2 = n2[np.where(n2 >= 0.0)]
@@ -182,18 +182,18 @@ class Apcbc:
         weight = np.append(weight, y3)
         weight = np.append(weight, y4)
         return weight
-        # end histRWeight
+        # end hist_r_weight
 
-    def histIWeight(self, x):
+    def hist_i_weight(self, x):
         weight = -x * x
         return weight
-        # end histIWeight
+        # end hist_i_weight
 
     def hist(self, spc):
         h = np.histogram(spc, bins=self.nbins, range=(-1.0, 1.0))
         return h
 
-    def phase2(elf, mat, ph0, ph1):
+    def phase2(self, mat, ph0, ph1):
         npts = len(mat)
         ph0 = -ph0 * math.pi / 180.0
         ph1 = -ph1 * math.pi / 180.0
@@ -204,11 +204,11 @@ class Apcbc:
         return mat
         # end phase2
 
-    def phaseFitFunc(self, par, spc, xaxis):
-        ph0 = self.mFact0 * par[0]
-        ph1 = self.mFact1 * par[1]
+    def phase_fit_func(self, par, spc, xaxis):
+        ph0 = self.m_fact0 * par[0]
+        ph1 = self.m_fact1 * par[1]
         spc = self.phase2(spc, ph0, ph1)
-        l = self.calcLine(spc, xaxis)
+        l = self.calc_line(spc, xaxis)
         spc = spc - l
         nc = int((len(par) - 2) / 2)
         cr = par[2:2 + nc]
@@ -222,13 +222,13 @@ class Apcbc:
         n2 = self.qi(hi)
         # print("%4.2f & %4.2f | %4.8f & %4.8f" % (n1, n2, ph0, ph1))
         return 1.0 * n1 + 100.0 * n2
-        # end phaseFitFunc
+        # end phase_fit_func
 
-    def phaseFitFuncEval(self, par, spc, xaxis): #, plot):
-        ph0 = self.mFact0 * par[0]
-        ph1 = self.mFact1 * par[1]
+    def phase_fit_func_eval(self, par, spc, xaxis): #, plot):
+        ph0 = self.m_fact0 * par[0]
+        ph1 = self.m_fact1 * par[1]
         spc = self.phase2(spc, ph0, ph1)
-        l = self.calcLine(spc, xaxis)
+        l = self.calc_line(spc, xaxis)
         spc = spc - l
         nc = int((len(par) - 2) / 2)
         cr = par[2:2 + nc]
@@ -248,22 +248,22 @@ class Apcbc:
         #    pl.show()
 
         return spc
-        # end phaseFitFuncEval
+        # end phase_fit_func_eval
 
-    def qr(self, histReal):
-        x = histReal[1][1:self.nbins + 1]
-        w = self.histRWeight(x)
-        h = histReal[0] * w
+    def qr(self, hist_real):
+        x = hist_real[1][1:self.nbins + 1]
+        w = self.hist_r_weight(x)
+        h = hist_real[0] * w
         return np.sum(h)
         # end qr
 
-    def qi(self, histImag):
-        x = histImag[1][1:self.nbins + 1]
-        w = self.histIWeight(x)
-        h = histImag[0] * w
+    def qi(self, hist_imag):
+        x = hist_imag[1][1:self.nbins + 1]
+        w = self.hist_i_weight(x)
+        h = hist_imag[0] * w
         return np.sum(h)
         # end qi
 
-    def setVars(self, spc):
+    def set_vars(self, spc):
         self.npts = len(spc)
-        # end setVars
+        # end set_vars

@@ -20,64 +20,64 @@ import configparser
 
 class nmrConfigTestCase(unittest.TestCase):
 
-    def test_makeConfig(self):
+    def test_make_config(self):
         cf = nmrConfig.NmrConfig()
-        c = cf.makeConfig()
-        self.assertEqual(c['GUI']['autoplot'], 'yes')
+        c = cf.make_config()
+        self.assertEqual(c['GUI']['auto_plot'], 'yes')
 
-    def test_saveConfig(self):
+    def test_save_config(self):
         cf = nmrConfig.NmrConfig()
-        pName = os.path.join(os.path.dirname(__file__), "data")  # directory of test data
-        cf.homeDir = pName
-        cf.configFile = os.path.join(cf.homeDir, cf.fName)
-        cf.saveConfig()
-        self.assertEqual(os.path.isfile(cf.configFile), True)
-        os.remove(cf.configFile)
+        p_name = os.path.join(os.path.dirname(__file__), "data")  # directory of test data
+        cf.home_dir = p_name
+        cf.config_file = os.path.join(cf.home_dir, cf.f_name)
+        cf.save_config()
+        self.assertEqual(os.path.isfile(cf.config_file), True)
+        os.remove(cf.config_file)
 
-    def test_readConfig(self):
+    def test_read_config(self):
         cf = nmrConfig.NmrConfig()
-        pName = os.path.join(os.path.dirname(__file__), "data")  # directory of test data
-        cf.homeDir = pName
-        cf.configFile = os.path.join(cf.homeDir, cf.fName)
-        cf.saveConfig()
-        cf.readConfig()
-        os.remove(cf.configFile)
-        self.assertEqual(cf.keepZoom, True)
+        p_name = os.path.join(os.path.dirname(__file__), "data")  # directory of test data
+        cf.home_dir = p_name
+        cf.config_file = os.path.join(cf.home_dir, cf.f_name)
+        cf.save_config()
+        cf.read_config()
+        os.remove(cf.config_file)
+        self.assertEqual(cf.keep_zoom, True)
 
-    def test_set_autoplot(self):
+    def test_set_auto_plot(self):
         cf = nmrConfig.NmrConfig()
-        cf.set_autoplot("no")
-        self.assertEqual(cf.autoPlot, False)
-        cf.set_autoplot("yes")
-        self.assertEqual(cf.autoPlot, True)
+        cf.set_auto_plot("no")
+        self.assertEqual(cf.auto_plot, False)
+        cf.set_auto_plot("yes")
+        self.assertEqual(cf.auto_plot, True)
 
-    def test_set_keepzoom(self):
+    def test_set_keep_zoom(self):
         cf = nmrConfig.NmrConfig()
-        cf.set_keepzoom("no")
-        self.assertEqual(cf.keepZoom, False)
-        cf.set_keepzoom("yes")
-        self.assertEqual(cf.keepZoom, True)
+        cf.set_keep_zoom("no")
+        self.assertEqual(cf.keep_zoom, False)
+        cf.set_keep_zoom("yes")
+        self.assertEqual(cf.keep_zoom, True)
 
-    def test_set_fontsize(self):
+    def test_set_font_size(self):
         cf = nmrConfig.NmrConfig()
-        cf.set_fontsize("18")
-        self.assertEqual(cf.fontSize, 18.0)
-        cf.set_fontsize("21")
-        self.assertEqual(cf.fontSize, 21.0)
+        cf.set_font_size("18")
+        self.assertEqual(cf.font_size, 18.0)
+        cf.set_font_size("21")
+        self.assertEqual(cf.font_size, 21.0)
 
-    def test_set_phasereferencecolour(self):
+    def test_set_phase_reference_colour(self):
         cf = nmrConfig.NmrConfig()
-        cf.set_phasereferencecolour("Black")
-        self.assertEqual(cf.phaseReferenceColour, "Black")
-        cf.set_phasereferencecolour("Red")
-        self.assertEqual(cf.phaseReferenceColour, "Red")
+        cf.set_phase_reference_colour("Black")
+        self.assertEqual(cf.phase_reference_colour, "Black")
+        cf.set_phase_reference_colour("Red")
+        self.assertEqual(cf.phase_reference_colour, "Red")
 
-    def test_setValues(self):
+    def test_set_values(self):
         cf = nmrConfig.NmrConfig()
-        cf.setValues("autoplot", "no")
-        self.assertEqual(cf.autoPlot, False)
-        cf.setValues("autoplot", "yes")
-        self.assertEqual(cf.autoPlot, True)
+        cf.set_values("auto_plot", "no")
+        self.assertEqual(cf.auto_plot, False)
+        cf.set_values("auto_plot", "yes")
+        self.assertEqual(cf.auto_plot, True)
 
 
 if __name__ == "__main__":

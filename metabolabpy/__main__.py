@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-import sys   # pragma: no cover
-import matplotlib   # pragma: no cover
+import sys  # pragma: no cover
+import matplotlib  # pragma: no cover
+
 matplotlib.use("Agg")
 
 try:
@@ -12,17 +13,19 @@ try:
     from PySide2.QtGui import *  # pragma: no cover
     from PySide2 import QtGui  # pragma: no cover
     from PySide2 import QtCore  # pragma: no cover
-    from PySide2.QtWidgets import QFileDialog # pragma: no cover
+    from PySide2.QtWidgets import QFileDialog  # pragma: no cover
     from PySide2.QtCore import SIGNAL  # pragma: no cover
-    from PySide2.QtWebEngineWidgets import QWebEngineView, QWebEngineProfile, QWebEnginePage, QWebEngineSettings
-    from PySide2.QtCore import QUrl, Qt
-    from PySide2.QtWebEngineCore import QWebEngineUrlSchemeHandler
+    from PySide2.QtWebEngineWidgets import QWebEngineView, QWebEngineProfile, QWebEnginePage, \
+        QWebEngineSettings  # pragma: no cover
+    from PySide2.QtCore import QUrl, Qt  # pragma: no cover
+    from PySide2.QtWebEngineCore import QWebEngineUrlSchemeHandler  # pragma: no cover
     import PySide2  # pragma: no cover
-    import qtmodern.styles
+    import qtmodern.styles  # pragma: no cover
 except:
     pass
 
 import matplotlib.pyplot as pl  # pragma: no cover
+
 if "linux" in sys.platform:  # pragma: no cover
     gui_env = ['TkAgg', 'GTKAgg', 'Qt5Agg', 'WXAgg']  # pragma: no cover
 elif sys.platform == "darwin":  # pragma: no cover
@@ -31,7 +34,7 @@ elif sys.platform == "darwin":  # pragma: no cover
     except ImportError:  # pragma: no cover
         gui_env = ['TkAgg', 'GTKAgg', 'Qt5Agg', 'WXAgg']  # pragma: no cover
 
-    #matplotlib.use("Qt5Agg")
+    # matplotlib.use("Qt5Agg")
 else:  # pragma: no cover
     gui_env = ['TkAgg', 'GTKAgg', 'Qt5Agg', 'WXAgg']  # pragma: no cover
 
@@ -43,7 +46,6 @@ if sys.platform != "win32":  # pragma: no cover
         except:  # pragma: no cover
             continue  # pragma: no cover
 
-
 try:
     from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as FigureCanvas,
                                                     NavigationToolbar2QT as NavigationToolbar)  # pragma: no cover
@@ -52,17 +54,18 @@ except:
 
 from matplotlib.figure import Figure  # pragma: no cover
 import argparse  # pragma: no cover
-#from PySide2.QtUiTools import QUiLoader  # pragma: no cover
-#from PySide2.QtCore import QFile  # pragma: no cover
-#from PySide2.QtCore import QCoreApplication  # pragma: no cover
-#from PySide2.QtWidgets import *  # pragma: no cover
-#from PySide2 import QtWidgets  # pragma: no cover
-#from PySide2.QtGui import *  # pragma: no cover
-#from PySide2 import QtGui  # pragma: no cover
-#from PySide2 import QtCore  # pragma: no cover
-#from PySide2.QtWidgets import QFileDialog # pragma: no cover
-#from PySide2.QtCore import SIGNAL  # pragma: no cover
-from time import sleep
+# from PySide2.QtUiTools import QUiLoader  # pragma: no cover
+# from PySide2.QtCore import QFile  # pragma: no cover
+# from PySide2.QtCore import QCoreApplication  # pragma: no cover
+# from PySide2.QtWidgets import *  # pragma: no cover
+# from PySide2 import QtWidgets  # pragma: no cover
+# from PySide2.QtGui import *  # pragma: no cover
+# from PySide2 import QtGui  # pragma: no cover
+# from PySide2 import QtCore  # pragma: no cover
+# from PySide2.QtWidgets import QFileDialog # pragma: no cover
+# from PySide2.QtCore import SIGNAL  # pragma: no cover
+from time import sleep  # pragma: no cover
+
 try:  # pragma: no cover
     import pyautogui  # pragma: no cover
 except:  # pragma: no cover
@@ -84,13 +87,14 @@ import scipy.io  # pragma: no cover
 from io import StringIO
 import contextlib
 import zipfile
-#from notebook import notebookapp
-#import multiprocess
+# from notebook import notebookapp
+# import multiprocess
 import subprocess
-#import jupyterthemes
+# import jupyterthemes
 import itertools
 import xlsxwriter
 from string import ascii_uppercase
+
 ## import pandas as pd                       # pragma: no cover
 
 try:
@@ -119,7 +123,7 @@ try:
                 home(self, *args, **kwargs)
 
             NavigationToolbar.home = new_home
-            self.phCorr = phCorr.PhCorr()
+            self.ph_corr = phCorr.PhCorr()
             # end __init__
 
 
@@ -149,47 +153,49 @@ try:
                 home(self, *args, **kwargs)
 
             NavigationToolbar.home = new_home
-            self.phCorr = phCorr.PhCorr()
+            self.ph_corr = phCorr.PhCorr()
             # end __init__
 
+
     class QWebEngineView2(QWebEngineView):
-        def printCmd(self):
+        def print_cmd(self):
             print("QWebEngineView2")
 
     # ------------------ MplWidget2 ------------------
 except:
     pass
 
+
 class main_w(object):  # pragma: no cover
     def __init__(self):
-        self.exitedPeakPicking = False
-        self.__version__ = '0.6.41'
-        self.zoomWasOn = True
-        self.panWasOn = False
-        self.stdPosCol1 = (0.0, 0.0, 1.0)
-        self.stdNegCol1 = (1.0, 0.0, 0.0)
-        self.stdPosCol2 = (0.8, 0.8, 1.0)
-        self.stdNegCol2 = (1.0, 0.8, 0.8)
-        self.nClicks = 1
-        self.curClicks = 0
+        self.exited_peak_picking = False
+        self.__version__ = '0.6.42'
+        self.zoom_was_on = True
+        self.pan_was_on = False
+        self.std_pos_col1 = (0.0, 0.0, 1.0)
+        self.std_neg_col1 = (1.0, 0.0, 0.0)
+        self.std_pos_col2 = (0.8, 0.8, 1.0)
+        self.std_neg_col2 = (1.0, 0.8, 0.8)
+        self.n_clicks = 1
+        self.cur_clicks = 0
         self.xy = [[]]
         self.xdata = []
         self.ydata = []
         self.nd = nmrDataSet.NmrDataSet()
-        self.phCorr = phCorr.PhCorr()
+        self.ph_corr = phCorr.PhCorr()
         # load ui; create w
-        fName = os.path.join(os.path.dirname(__file__), "ui", "metabolabpy_mainwindow.ui")
-        self.file = QFile(fName)
+        f_name = os.path.join(os.path.dirname(__file__), "ui", "metabolabpy_mainwindow.ui")
+        self.file = QFile(f_name)
         self.file.open(QFile.ReadOnly)
         self.loader = QUiLoader()
         self.loader.registerCustomWidget(QWebEngineView2)
         self.loader.registerCustomWidget(MplWidget)
-        #self.loader.registerCustomWidget(MplWidget2)
+        # self.loader.registerCustomWidget(MplWidget2)
         self.w = self.loader.load(self.file)
         self.zoom = False
 
-        self.hidePreProcessing()
-        self.hidePeakPicking()
+        self.hide_pre_processing()
+        self.hide_peak_picking()
         self.w.preprocessing.setVisible(False)
         self.w.peakPicking.setVisible(False)
         self.w.preProcPeak.setVisible(False)
@@ -200,236 +206,237 @@ class main_w(object):  # pragma: no cover
         self.w.nmrSpectrum.setTabEnabled(2, False)
         self.w.nmrSpectrum.setTabEnabled(3, False)
         self.w.nmrSpectrum.setTabEnabled(4, False)
-        self.w.nmrSpectrum.setStyleSheet("QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
+        self.w.nmrSpectrum.setStyleSheet(
+            "QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
         # connections
         # self.w.rDolphinExport.clicked.connect(self.setrDolphinExport)
-        self.w.exportPath.textChanged.connect(self.setExportPath)
-        self.w.invertMatrix_1.stateChanged.connect(self.setInvert)
-        self.w.invertMatrix_2.stateChanged.connect(self.setInvert)
-        self.w.exportFileName.textChanged.connect(self.setExportFileName)
-        self.w.exportDelimiterTab.toggled.connect(self.setExportDelimiterTab)
-        self.w.exportCharacter.returnPressed.connect(self.setExportCharacter)
-        self.w.samplesInComboBox.currentIndexChanged.connect(self.setSamplesInComboBox)
-        self.w.runPreProcessingButton.clicked.connect(self.dataPreProcessing)
-        self.w.resetPreProcessingButton.clicked.connect(self.resetDataPreProcessing)
-        self.w.avoidNegValues.stateChanged.connect(self.setAvoidNegValues)
-        self.w.excludeRegion.stateChanged.connect(self.setExcludeRegion)
-        self.w.segmentalAlignment.stateChanged.connect(self.setSegmentalAlignment)
-        self.w.compressBuckets.stateChanged.connect(self.setCompressBuckets)
-        self.w.noiseFiltering.stateChanged.connect(self.setNoiseFiltering)
-        self.w.bucketSpectra.stateChanged.connect(self.setBucketSpectra)
-        self.w.scaleSpectraRefSpc.valueChanged.connect(self.changeScaleSpectraRefSpc)
-        self.w.segAlignRefSpc.valueChanged.connect(self.changeSegAlignRefSpc)
-        self.w.scaleSpectra.stateChanged.connect(self.setScaleSpectra)
-        self.w.pqnButton.clicked.connect(self.setPqnTsaScaling)
-        self.w.tsaButton.clicked.connect(self.setPqnTsaScaling)
-        self.w.autoScaling.clicked.connect(self.setVarianceStabilisationOptions)
-        self.w.paretoScaling.clicked.connect(self.setVarianceStabilisationOptions)
-        self.w.gLogTransform.clicked.connect(self.setVarianceStabilisationOptions)
-        self.w.varianceStabilisation.stateChanged.connect(self.setVarianceStabilisation)
-        self.w.exportDataSet.stateChanged.connect(self.setExportDataSet)
-        self.w.excludeRegionTW.cellChanged.connect(self.setExcludePreProc)
-        self.w.segAlignTW.cellChanged.connect(self.setSegAlignPreProc)
-        self.w.selectClassTW.itemSelectionChanged.connect(self.setPlotPreProc)
-        self.w.selectClassTW.cellChanged.connect(self.setChangePreProc)
-        self.w.excludeClearButton.clicked.connect(self.selectClearExcludePreProc)
-        self.w.segAlignClearButton.clicked.connect(self.selectClearSegAlignPreProc)
-        self.w.compressClearButton.clicked.connect(self.selectClearCompressPreProc)
-        self.w.excludeAddButton.clicked.connect(self.selectAddExcludePreProc)
-        self.w.segAlignAddButton.clicked.connect(self.selectAddSegAlignPreProc)
-        self.w.compressAddButton.clicked.connect(self.selectAddCompressPreProc)
-        self.w.selectAllButton.clicked.connect(self.selectAllPreProc)
-        self.w.selectEvenButton.clicked.connect(self.selectEvenPreProc)
-        self.w.selectOddButton.clicked.connect(self.selectOddPreProc)
-        self.w.selectClassButton.clicked.connect(self.selectClassPreProc)
-        self.w.selectClassLE.returnPressed.connect(self.selectClassPreProc)
-        self.w.cmdLine.returnPressed.connect(self.execCmd)
-        self.w.noiseThresholdLE.returnPressed.connect(self.setnoiseRegPreProc)
-        self.w.noiseRegionStartLE.returnPressed.connect(self.setnoiseRegPreProc)
-        self.w.noiseRegionEndLE.returnPressed.connect(self.setnoiseRegPreProc)
-        self.w.thLineWidthLE.returnPressed.connect(self.setnoiseRegPreProc)
-        self.w.bucketPpmLE.returnPressed.connect(self.setBucketPPMPreProc)
-        self.w.bucketDataPointsLE.returnPressed.connect(self.setBucketPointsPreProc)
-        self.w.actionVertical_AutoScale.triggered.connect(self.verticalAutoScale)
-        self.w.actionZoom.triggered.connect(self.setZoom)
-        self.w.actionPan.triggered.connect(self.setPan)
-        self.w.actionShow_Next_Tab.triggered.connect(self.nextTab)
-        self.w.actionShow_Previous_Tab.triggered.connect(self.previousTab)
-        self.w.actionPlot_spc.triggered.connect(self.plotSpc)
-        self.w.actionSave.triggered.connect(self.saveButton)
-        self.w.actionLoad.triggered.connect(self.loadButton)
-        self.w.actionOpen_NMRPipe.triggered.connect(self.readNMRPipeSpc)
-        self.w.actionActivate_Command_Line.triggered.connect(self.activateCommandLine)
-        self.w.actionPrevious_command.triggered.connect(self.previousCommand)
-        self.w.actionNext_command.triggered.connect(self.nextCommand)
-        self.w.actionCorrect_Phase.triggered.connect(self.startStopPhCorr)
-        #self.w.actionZoomCorrect_Phase.triggered.connect(self.zoomPhCorr)
-        self.w.zoomPhCorr1d.clicked.connect(self.zoomPhCorr)
-        self.w.exitZoomPhCorr1d.clicked.connect(self.zoomPhCorr)
-        self.w.exitPhCorr1d.clicked.connect(self.startStopPhCorr)
+        self.w.exportPath.textChanged.connect(self.set_export_path)
+        self.w.invertMatrix_1.stateChanged.connect(self.set_invert)
+        self.w.invertMatrix_2.stateChanged.connect(self.set_invert)
+        self.w.exportFileName.textChanged.connect(self.set_export_file_name)
+        self.w.exportDelimiterTab.toggled.connect(self.set_export_delimiter_tab)
+        self.w.exportCharacter.returnPressed.connect(self.set_export_character)
+        self.w.samplesInComboBox.currentIndexChanged.connect(self.set_samples_in_combo_box)
+        self.w.runPreProcessingButton.clicked.connect(self.data_pre_processing)
+        self.w.resetPreProcessingButton.clicked.connect(self.reset_data_pre_processing)
+        self.w.avoidNegValues.stateChanged.connect(self.set_avoid_neg_values)
+        self.w.excludeRegion.stateChanged.connect(self.set_exclude_region)
+        self.w.segmentalAlignment.stateChanged.connect(self.set_segmental_alignment)
+        self.w.compressBuckets.stateChanged.connect(self.set_compress_buckets)
+        self.w.noiseFiltering.stateChanged.connect(self.set_noise_filtering)
+        self.w.bucketSpectra.stateChanged.connect(self.set_bucket_spectra)
+        self.w.scaleSpectraRefSpc.valueChanged.connect(self.change_scale_spectra_ref_spc)
+        self.w.segAlignRefSpc.valueChanged.connect(self.change_seg_align_ref_spc)
+        self.w.scaleSpectra.stateChanged.connect(self.set_scale_spectra)
+        self.w.pqnButton.clicked.connect(self.set_pqn_tsa_scaling)
+        self.w.tsaButton.clicked.connect(self.set_pqn_tsa_scaling)
+        self.w.autoScaling.clicked.connect(self.set_variance_stabilisation_options)
+        self.w.paretoScaling.clicked.connect(self.set_variance_stabilisation_options)
+        self.w.gLogTransform.clicked.connect(self.set_variance_stabilisation_options)
+        self.w.varianceStabilisation.stateChanged.connect(self.set_variance_stabilisation)
+        self.w.exportDataSet.stateChanged.connect(self.set_export_data_set)
+        self.w.excludeRegionTW.cellChanged.connect(self.set_exclude_pre_proc)
+        self.w.segAlignTW.cellChanged.connect(self.set_seg_align_pre_proc)
+        self.w.selectClassTW.itemSelectionChanged.connect(self.set_plot_pre_proc)
+        self.w.selectClassTW.cellChanged.connect(self.set_change_pre_proc)
+        self.w.excludeClearButton.clicked.connect(self.select_clear_exclude_pre_proc)
+        self.w.segAlignClearButton.clicked.connect(self.select_clear_seg_align_pre_proc)
+        self.w.compressClearButton.clicked.connect(self.select_clear_compress_pre_proc)
+        self.w.excludeAddButton.clicked.connect(self.select_add_exclude_pre_proc)
+        self.w.segAlignAddButton.clicked.connect(self.select_add_seg_align_pre_proc)
+        self.w.compressAddButton.clicked.connect(self.select_add_compress_pre_proc)
+        self.w.selectAllButton.clicked.connect(self.select_all_pre_proc)
+        self.w.selectEvenButton.clicked.connect(self.select_even_pre_proc)
+        self.w.selectOddButton.clicked.connect(self.select_odd_pre_proc)
+        self.w.selectClassButton.clicked.connect(self.select_class_pre_proc)
+        self.w.selectClassLE.returnPressed.connect(self.select_class_pre_proc)
+        self.w.cmdLine.returnPressed.connect(self.exec_cmd)
+        self.w.noiseThresholdLE.returnPressed.connect(self.set_noise_reg_pre_proc)
+        self.w.noiseRegionStartLE.returnPressed.connect(self.set_noise_reg_pre_proc)
+        self.w.noiseRegionEndLE.returnPressed.connect(self.set_noise_reg_pre_proc)
+        self.w.thLineWidthLE.returnPressed.connect(self.set_noise_reg_pre_proc)
+        self.w.bucketPpmLE.returnPressed.connect(self.set_bucket_ppm_pre_proc)
+        self.w.bucketDataPointsLE.returnPressed.connect(self.set_bucket_points_pre_proc)
+        self.w.actionVertical_AutoScale.triggered.connect(self.vertical_auto_scale)
+        self.w.actionZoom.triggered.connect(self.set_zoom)
+        self.w.actionPan.triggered.connect(self.set_pan)
+        self.w.actionShow_Next_Tab.triggered.connect(self.next_tab)
+        self.w.actionShow_Previous_Tab.triggered.connect(self.previous_tab)
+        self.w.actionPlot_spc.triggered.connect(self.plot_spc)
+        self.w.actionSave.triggered.connect(self.save_button)
+        self.w.actionLoad.triggered.connect(self.load_button)
+        self.w.actionOpen_NMRPipe.triggered.connect(self.read_nmrpipe_spc)
+        self.w.actionActivate_Command_Line.triggered.connect(self.activate_command_line)
+        self.w.actionPrevious_command.triggered.connect(self.previous_command)
+        self.w.actionNext_command.triggered.connect(self.next_command)
+        self.w.actionCorrect_Phase.triggered.connect(self.start_stop_ph_corr)
+        # self.w.actionZoomCorrect_Phase.triggered.connect(self.zoom_ph_corr)
+        self.w.zoomPhCorr1d.clicked.connect(self.zoom_ph_corr)
+        self.w.exitZoomPhCorr1d.clicked.connect(self.zoom_ph_corr)
+        self.w.exitPhCorr1d.clicked.connect(self.start_stop_ph_corr)
         self.w.actionClear.triggered.connect(self.clear)
-        self.w.lambdaLE.textChanged.connect(self.setVarLambda)
-        self.w.y0LE.textChanged.connect(self.setVary0)
-        self.w.actionRead_NMR_Spectrum.triggered.connect(self.readNMRSpc)
-        self.w.preprocessing.stateChanged.connect(self.setPreProcessing)
-        self.w.peakPicking.stateChanged.connect(self.setPeakPicking)
-        self.w.peakAddButton.clicked.connect(self.addPeak)
-        self.w.peakClearButton.clicked.connect(self.clearPeak)
-        self.w.peakWidget.cellChanged.connect(self.setAddPeak)
-        self.w.peakExportButton.clicked.connect(self.exportPeak)
-        self.w.intAllDS.stateChanged.connect(self.setDatasetsExps)
-        self.w.intAllExps.stateChanged.connect(self.setDatasetsExps)
-        self.w.exportFormatCB.currentIndexChanged.connect(self.setDatasetsExps)
-        self.w.hsqcAnalysis.stateChanged.connect(self.setHsqcAnalysis)
-        self.w.multipletAnalysis.stateChanged.connect(self.setMultipletAnalysis)
-        self.w.isotopomerAnalysis.stateChanged.connect(self.setIsotopomerAnalysis)
-        self.w.preserveOverallScale.stateChanged.connect(self.setPreserveOverallScale)
-        self.w.actionReset.triggered.connect(self.resetPlot)
-        self.w.actionShow_NMR_Spectrum.triggered.connect(self.showNMRSpectrum)
-        self.w.actionSetup_Processing_Parameters.triggered.connect(self.setupProcessingParameters)
-        self.w.actionShow_Display_Parameters.triggered.connect(self.showDisplayParameters)
-        self.w.actionShow_Acquisition_Parameters.triggered.connect(self.showAcquisitionParameters)
-        self.w.actionShow_Title_File_Information.triggered.connect(self.showTitleFileInformation)
-        self.w.actionShow_pulseProgram.triggered.connect(self.showPulseProgram)
+        self.w.lambdaLE.textChanged.connect(self.set_var_lambda)
+        self.w.y0LE.textChanged.connect(self.set_var_y0)
+        self.w.actionRead_NMR_Spectrum.triggered.connect(self.read_nmr_spc)
+        self.w.preprocessing.stateChanged.connect(self.set_pre_processing)
+        self.w.peakPicking.stateChanged.connect(self.set_peak_picking)
+        self.w.peakAddButton.clicked.connect(self.add_peak)
+        self.w.peakClearButton.clicked.connect(self.clear_peak)
+        self.w.peakWidget.cellChanged.connect(self.set_add_peak)
+        self.w.peakExportButton.clicked.connect(self.export_peak)
+        self.w.intAllDS.stateChanged.connect(self.set_datasets_exps)
+        self.w.intAllExps.stateChanged.connect(self.set_datasets_exps)
+        self.w.exportFormatCB.currentIndexChanged.connect(self.set_datasets_exps)
+        self.w.hsqcAnalysis.stateChanged.connect(self.set_hsqc_analysis)
+        self.w.multipletAnalysis.stateChanged.connect(self.set_multiplet_analysis)
+        self.w.isotopomerAnalysis.stateChanged.connect(self.set_isotopomer_analysis)
+        self.w.preserveOverallScale.stateChanged.connect(self.set_preserve_overall_scale)
+        self.w.actionReset.triggered.connect(self.reset_plot)
+        self.w.actionShow_NMR_Spectrum.triggered.connect(self.show_nmr_spectrum)
+        self.w.actionSetup_Processing_Parameters.triggered.connect(self.setup_processing_parameters)
+        self.w.actionShow_Display_Parameters.triggered.connect(self.show_display_parameters)
+        self.w.actionShow_Acquisition_Parameters.triggered.connect(self.show_acquisition_parameters)
+        self.w.actionShow_Title_File_Information.triggered.connect(self.show_title_file_information)
+        self.w.actionShow_pulseProgram.triggered.connect(self.show_pulse_program)
         self.w.actionFourier_Transform.triggered.connect(self.ft)
-        self.w.actionScript_Editor.triggered.connect(self.scriptEditor)
-        self.w.actionChange_to_next_Exp.triggered.connect(self.changeToNextExp)
-        self.w.actionChange_to_previous_Exp.triggered.connect(self.changeToPreviousExp)
-        self.w.actionChange_to_next_DS.triggered.connect(self.changeToNextDS)
-        self.w.actionChange_to_previous_DS.triggered.connect(self.changeToPreviousDS)
-        self.w.exampleScripts.view().pressed.connect(self.loadExampleScript)
+        self.w.actionScript_Editor.triggered.connect(self.script_editor)
+        self.w.actionChange_to_next_Exp.triggered.connect(self.change_to_next_exp)
+        self.w.actionChange_to_previous_Exp.triggered.connect(self.change_to_previous_exp)
+        self.w.actionChange_to_next_DS.triggered.connect(self.change_to_next_ds)
+        self.w.actionChange_to_previous_DS.triggered.connect(self.change_to_previous_ds)
+        self.w.exampleScripts.view().pressed.connect(self.load_example_script)
         self.w.actionAutomatic_Phase_Correction.triggered.connect(self.autophase1d)
         self.w.actionAutomatic_Baseline_Correction.triggered.connect(self.autobaseline1d)
-        self.w.actionScale_2D_Spectrum_Up.triggered.connect(self.scale2DSpectrumUp)
-        self.w.actionScale_2D_Spectrum_Down.triggered.connect(self.scale2DSpectrumDown)
-        self.w.actionScale_all_2D_Spectra_Up.triggered.connect(self.scaleAll2DSpectraUp)
-        self.w.actionScale_all_2D_Spectra_Down.triggered.connect(self.scaleAll2DSpectraDown)
-        self.w.actionSelect_All.triggered.connect(self.selectPlotAll)
-        self.w.actionClear_All.triggered.connect(self.selectPlotClear)
-        self.w.actionConsole.triggered.connect(self.showConsole)
+        self.w.actionScale_2D_Spectrum_Up.triggered.connect(self.scale_2d_spectrum_up)
+        self.w.actionScale_2D_Spectrum_Down.triggered.connect(self.scale_2d_spectrum_down)
+        self.w.actionScale_all_2D_Spectra_Up.triggered.connect(self.scale_all_2d_spectra_up)
+        self.w.actionScale_all_2D_Spectra_Down.triggered.connect(self.scale_all_2d_spectra_down)
+        self.w.actionSelect_All.triggered.connect(self.select_plot_all)
+        self.w.actionClear_All.triggered.connect(self.select_plot_clear)
+        self.w.actionConsole.triggered.connect(self.show_console)
         self.w.actionShow_SplashScreen.triggered.connect(self.splash)
-        self.w.actionHelp.triggered.connect(self.showHelp)
-        self.w.actionToggle_FullScreen.triggered.connect(self.showMainWindow)
-        self.w.setBox.valueChanged.connect(self.changeDataSetExp)
-        self.w.expBox.valueChanged.connect(self.changeDataSetExp)
-        self.w.posCol.currentIndexChanged.connect(self.getDispPars1)
-        self.w.negCol.currentIndexChanged.connect(self.getDispPars2)
-        self.w.posColR.returnPressed.connect(self.getDispPars3)
-        self.w.posColG.returnPressed.connect(self.getDispPars3)
-        self.w.posColB.returnPressed.connect(self.getDispPars3)
-        self.w.negColR.returnPressed.connect(self.getDispPars3)
-        self.w.negColG.returnPressed.connect(self.getDispPars3)
-        self.w.negColB.returnPressed.connect(self.getDispPars3)
-        self.w.nLevels.returnPressed.connect(self.getDispPars4)
-        self.w.minLevel.returnPressed.connect(self.getDispPars5)
-        self.w.maxLevel.returnPressed.connect(self.getDispPars6)
-        self.w.axisType1.currentIndexChanged.connect(self.getDispPars7)
-        self.w.axisType2.currentIndexChanged.connect(self.getDispPars8)
-        self.w.displaySpc.currentIndexChanged.connect(self.getDispPars9)
-        self.w.baselineCorrection.currentIndexChanged.connect(self.checkBaselineCorrection)
-        self.w.baselineOrder.currentIndexChanged.connect(self.checkBaselineOrder)
-        self.w.spcOffset.returnPressed.connect(self.getDispPars10)
-        self.w.spcScale.returnPressed.connect(self.getDispPars11)
-        self.w.fontSize.valueChanged.connect(self.setFontSize)
-        self.w.xLabel.returnPressed.connect(self.getDispPars12)
-        self.w.yLabel.returnPressed.connect(self.getDispPars13)
-        self.w.spcLabel.returnPressed.connect(self.getDispPars14)
-        self.w.preProcessingSelect.currentIndexChanged.connect(self.setPreProcessingOptions)
-        self.w.exportMethod.currentIndexChanged.connect(self.setExportMethodOptions)
-        self.w.tilt.currentIndexChanged.connect(self.setTilt)
-        self.w.symJ.currentIndexChanged.connect(self.setSymJ)
-        self.w.windowFunction.currentIndexChanged.connect(self.getProcPars1)
-        self.w.windowFunction_2.currentIndexChanged.connect(self.getProcPars2)
-        self.w.phaseCorrection.currentIndexChanged.connect(self.getProcPars3)
-        self.w.phaseCorrection_2.currentIndexChanged.connect(self.getProcPars4)
-        self.w.waterSuppression.currentIndexChanged.connect(self.getProcPars5)
-        self.w.winType.currentIndexChanged.connect(self.getProcPars6)
-        self.w.gibbs.currentIndexChanged.connect(self.getProcPars7)
-        self.w.gibbs_2.currentIndexChanged.connect(self.getProcPars8)
-        self.w.zeroFilling.returnPressed.connect(self.getProcPars9)
-        self.w.zeroFilling_2.returnPressed.connect(self.getProcPars10)
-        self.w.lb.returnPressed.connect(self.getProcPars11)
-        self.w.gb.returnPressed.connect(self.getProcPars12)
-        self.w.ssb.returnPressed.connect(self.getProcPars13)
-        self.w.lb_2.returnPressed.connect(self.getProcPars14)
-        self.w.gb_2.returnPressed.connect(self.getProcPars15)
-        self.w.ssb_2.returnPressed.connect(self.getProcPars16)
-        self.w.ph0.returnPressed.connect(self.getProcPars17)
-        self.w.ph1.returnPressed.connect(self.getProcPars18)
-        self.w.ph0_2.returnPressed.connect(self.getProcPars19)
-        self.w.ph1_2.returnPressed.connect(self.getProcPars20)
-        self.w.polyOrder.returnPressed.connect(self.getProcPars21)
-        self.w.extrapolationSize.returnPressed.connect(self.getProcPars22)
-        self.w.windowSize.returnPressed.connect(self.getProcPars23)
-        self.w.fidOffsetCorrection.returnPressed.connect(self.getProcPars24)
-        self.w.stripTransformStart.returnPressed.connect(self.getProcPars25)
-        self.w.stripTransformEnd.returnPressed.connect(self.getProcPars26)
-        self.w.phRefDS.valueChanged.connect(self.changeDataSetExpPhRef)
-        self.w.phRefExp.valueChanged.connect(self.changeDataSetExpPhRef)
-        self.w.phRefColour.currentIndexChanged.connect(self.getDispPars15)
+        self.w.actionHelp.triggered.connect(self.show_help)
+        self.w.actionToggle_FullScreen.triggered.connect(self.show_main_window)
+        self.w.setBox.valueChanged.connect(self.change_data_set_exp)
+        self.w.expBox.valueChanged.connect(self.change_data_set_exp)
+        self.w.posCol.currentIndexChanged.connect(self.get_disp_pars1)
+        self.w.negCol.currentIndexChanged.connect(self.get_disp_pars2)
+        self.w.posColR.returnPressed.connect(self.get_disp_pars3)
+        self.w.posColG.returnPressed.connect(self.get_disp_pars3)
+        self.w.posColB.returnPressed.connect(self.get_disp_pars3)
+        self.w.negColR.returnPressed.connect(self.get_disp_pars3)
+        self.w.negColG.returnPressed.connect(self.get_disp_pars3)
+        self.w.negColB.returnPressed.connect(self.get_disp_pars3)
+        self.w.nLevels.returnPressed.connect(self.get_disp_pars4)
+        self.w.minLevel.returnPressed.connect(self.get_disp_pars5)
+        self.w.maxLevel.returnPressed.connect(self.get_disp_pars6)
+        self.w.axisType1.currentIndexChanged.connect(self.get_disp_pars7)
+        self.w.axisType2.currentIndexChanged.connect(self.get_disp_pars8)
+        self.w.displaySpc.currentIndexChanged.connect(self.get_disp_pars9)
+        self.w.baselineCorrection.currentIndexChanged.connect(self.check_baseline_correction)
+        self.w.baselineOrder.currentIndexChanged.connect(self.check_baseline_order)
+        self.w.spcOffset.returnPressed.connect(self.get_disp_pars10)
+        self.w.spcScale.returnPressed.connect(self.get_disp_pars11)
+        self.w.fontSize.valueChanged.connect(self.set_font_size)
+        self.w.xLabel.returnPressed.connect(self.get_disp_pars12)
+        self.w.yLabel.returnPressed.connect(self.get_disp_pars13)
+        self.w.spcLabel.returnPressed.connect(self.get_disp_pars14)
+        self.w.preProcessingSelect.currentIndexChanged.connect(self.set_pre_processing_options)
+        self.w.exportMethod.currentIndexChanged.connect(self.set_export_method_options)
+        self.w.tilt.currentIndexChanged.connect(self.set_tilt)
+        self.w.symJ.currentIndexChanged.connect(self.set_sym_j)
+        self.w.windowFunction.currentIndexChanged.connect(self.get_proc_pars1)
+        self.w.windowFunction_2.currentIndexChanged.connect(self.get_proc_pars2)
+        self.w.phaseCorrection.currentIndexChanged.connect(self.get_proc_pars3)
+        self.w.phaseCorrection_2.currentIndexChanged.connect(self.get_proc_pars4)
+        self.w.waterSuppression.currentIndexChanged.connect(self.get_proc_pars5)
+        self.w.winType.currentIndexChanged.connect(self.get_proc_pars6)
+        self.w.gibbs.currentIndexChanged.connect(self.get_proc_pars7)
+        self.w.gibbs_2.currentIndexChanged.connect(self.get_proc_pars8)
+        self.w.zeroFilling.returnPressed.connect(self.get_proc_pars9)
+        self.w.zeroFilling_2.returnPressed.connect(self.get_proc_pars10)
+        self.w.lb.returnPressed.connect(self.get_proc_pars11)
+        self.w.gb.returnPressed.connect(self.get_proc_pars12)
+        self.w.ssb.returnPressed.connect(self.get_proc_pars13)
+        self.w.lb_2.returnPressed.connect(self.get_proc_pars14)
+        self.w.gb_2.returnPressed.connect(self.get_proc_pars15)
+        self.w.ssb_2.returnPressed.connect(self.get_proc_pars16)
+        self.w.ph0.returnPressed.connect(self.get_proc_pars17)
+        self.w.ph1.returnPressed.connect(self.get_proc_pars18)
+        self.w.ph0_2.returnPressed.connect(self.get_proc_pars19)
+        self.w.ph1_2.returnPressed.connect(self.get_proc_pars20)
+        self.w.polyOrder.returnPressed.connect(self.get_proc_pars21)
+        self.w.extrapolationSize.returnPressed.connect(self.get_proc_pars22)
+        self.w.windowSize.returnPressed.connect(self.get_proc_pars23)
+        self.w.fidOffsetCorrection.returnPressed.connect(self.get_proc_pars24)
+        self.w.stripTransformStart.returnPressed.connect(self.get_proc_pars25)
+        self.w.stripTransformEnd.returnPressed.connect(self.get_proc_pars26)
+        self.w.phRefDS.valueChanged.connect(self.change_data_set_exp_ph_ref)
+        self.w.phRefExp.valueChanged.connect(self.change_data_set_exp_ph_ref)
+        self.w.phRefColour.currentIndexChanged.connect(self.get_disp_pars15)
         self.w.fourierTransformButton.clicked.connect(self.ft)
-        self.w.executeScript.clicked.connect(self.execScript)
-        self.w.openScript.clicked.connect(self.openScript)
-        self.w.saveScript.clicked.connect(self.saveScript)
-        self.w.actionOpen_Script.triggered.connect(self.openScript)
-        self.w.actionSave_Script.triggered.connect(self.saveScript)
-        self.w.actionExecute_Script.triggered.connect(self.execScript)
-        #self.w.helpComboBox.currentIndexChanged.connect(self.setHelp)
-        self.w.helpComboBox.activated.connect(self.setHelp)
+        self.w.executeScript.clicked.connect(self.exec_script)
+        self.w.openScript.clicked.connect(self.open_script)
+        self.w.saveScript.clicked.connect(self.save_script)
+        self.w.actionOpen_Script.triggered.connect(self.open_script)
+        self.w.actionSave_Script.triggered.connect(self.save_script)
+        self.w.actionExecute_Script.triggered.connect(self.exec_script)
+        # self.w.helpComboBox.currentIndexChanged.connect(self.set_help)
+        self.w.helpComboBox.activated.connect(self.set_help)
         # Quit Button
         self.w.quitButton.clicked.connect(self.quit_app)
-        self.w.saveButton.clicked.connect(self.saveButton)
-        self.w.loadButton.clicked.connect(self.loadButton)
-        self.w.exportPathSelectButton.clicked.connect(self.setExportTable)
+        self.w.saveButton.clicked.connect(self.save_button)
+        self.w.loadButton.clicked.connect(self.load_button)
+        self.w.exportPathSelectButton.clicked.connect(self.set_export_table)
         self.w.actionQuit.triggered.connect(self.quit_app)
-        self.w.dispPlotButton.clicked.connect(self.plotSpcDisp)
-        self.showVersion()
-        self.keepZoom = False
-        self.keepXZoom = False
-        self.phCorrActive = False
-        self.setFontSize()
+        self.w.dispPlotButton.clicked.connect(self.plot_spc_disp)
+        self.show_version()
+        self.keep_zoom = False
+        self.keep_x_zoom = False
+        self.ph_corr_active = False
+        self.set_font_size()
         self.cf = nmrConfig.NmrConfig()
-        self.cf.readConfig()
-        self.w.autoPlot.setChecked(self.cf.autoPlot)
-        self.w.keepZoom.setChecked(self.cf.keepZoom)
-        self.w.fontSize.setValue(self.cf.fontSize)
-        self.stdPosCol1 = (self.cf.posCol10,self.cf.posCol11,self.cf.posCol12)
-        self.stdNegCol1 = (self.cf.negCol10,self.cf.negCol11,self.cf.negCol12)
-        self.stdPosCol2 = (self.cf.posCol20,self.cf.posCol21,self.cf.posCol22)
-        self.stdNegCol2 = (self.cf.negCol20,self.cf.negCol21,self.cf.negCol22)
-        self.w.actionSave_as_Default.triggered.connect(self.saveConfig)
-        self.w.actionLoad_Default.triggered.connect(self.loadConfig)
-        self.w.actionReset_Config.triggered.connect(self.resetConfig)
-        self.w.rSpc_p0.returnPressed.connect(self.get_rSpc_p0)
-        self.w.rSpc_p1.returnPressed.connect(self.get_rSpc_p1)
-        self.w.rSpc_p2.returnPressed.connect(self.get_rSpc_p2)
-        self.w.rSpc_p3.returnPressed.connect(self.get_rSpc_p3)
-        self.w.rSpc_p4.returnPressed.connect(self.get_rSpc_p4)
-        self.w.rSpc_p5.returnPressed.connect(self.get_rSpc_p5)
-        self.w.rSpc_p6.returnPressed.connect(self.get_rSpc_p6)
-        self.w.iSpc_p0.returnPressed.connect(self.get_iSpc_p0)
-        self.w.iSpc_p1.returnPressed.connect(self.get_iSpc_p1)
-        self.w.iSpc_p2.returnPressed.connect(self.get_iSpc_p2)
-        self.w.iSpc_p3.returnPressed.connect(self.get_iSpc_p3)
-        self.w.iSpc_p4.returnPressed.connect(self.get_iSpc_p4)
-        self.w.iSpc_p5.returnPressed.connect(self.get_iSpc_p5)
-        self.w.iSpc_p6.returnPressed.connect(self.get_iSpc_p6)
-        self.setFontSize()
+        self.cf.read_config()
+        self.w.autoPlot.setChecked(self.cf.auto_plot)
+        self.w.keepZoom.setChecked(self.cf.keep_zoom)
+        self.w.fontSize.setValue(self.cf.font_size)
+        self.std_pos_col1 = (self.cf.pos_col10, self.cf.pos_col11, self.cf.pos_col12)
+        self.std_neg_col1 = (self.cf.neg_col10, self.cf.neg_col11, self.cf.neg_col12)
+        self.std_pos_col2 = (self.cf.pos_col20, self.cf.pos_col21, self.cf.pos_col22)
+        self.std_neg_col2 = (self.cf.neg_col20, self.cf.neg_col21, self.cf.neg_col22)
+        self.w.actionSave_as_Default.triggered.connect(self.save_config)
+        self.w.actionLoad_Default.triggered.connect(self.load_config)
+        self.w.actionReset_Config.triggered.connect(self.reset_config)
+        self.w.rSpc_p0.returnPressed.connect(self.get_r_spc_p0)
+        self.w.rSpc_p1.returnPressed.connect(self.get_r_spc_p1)
+        self.w.rSpc_p2.returnPressed.connect(self.get_r_spc_p2)
+        self.w.rSpc_p3.returnPressed.connect(self.get_r_spc_p3)
+        self.w.rSpc_p4.returnPressed.connect(self.get_r_spc_p4)
+        self.w.rSpc_p5.returnPressed.connect(self.get_r_spc_p5)
+        self.w.rSpc_p6.returnPressed.connect(self.get_r_spc_p6)
+        self.w.iSpc_p0.returnPressed.connect(self.get_i_spc_p0)
+        self.w.iSpc_p1.returnPressed.connect(self.get_i_spc_p1)
+        self.w.iSpc_p2.returnPressed.connect(self.get_i_spc_p2)
+        self.w.iSpc_p3.returnPressed.connect(self.get_i_spc_p3)
+        self.w.iSpc_p4.returnPressed.connect(self.get_i_spc_p4)
+        self.w.iSpc_p5.returnPressed.connect(self.get_i_spc_p5)
+        self.w.iSpc_p6.returnPressed.connect(self.get_i_spc_p6)
+        self.set_font_size()
         self.w.MplWidget.toolbar.setVisible(False)
         self.w.MplWidget2.toolbar.setVisible(False)
         self.w.MplWidget3.toolbar.setVisible(False)
         self.w.MplWidget.setFocus()
-        self.setZoom()
-        self.w.pickRowColPhCorr2d.clicked.connect(self.pickColRow)
-        self.w.emptyRowColPhCorr2d.clicked.connect(self.emptyColRow)
-        self.w.removeRowColPhCorr2d.clicked.connect(self.removeLastColRow)
-        self.w.horzPhCorr2d.clicked.connect(self.horzPhCorr2d)
-        self.w.vertPhCorr2d.clicked.connect(self.vertPhCorr2d)
-        self.w.exitPhCorr2d.clicked.connect(self.startStopPhCorr)
-        self.w.applyPhCorr2d.clicked.connect(self.apply2dPhCorr)
-        self.w.cancelPhCorr2d.clicked.connect(self.cancel2dPhCorr)
-        self.w.zoomPhCorr2d.clicked.connect(self.zoomPhCorr)
-        self.w.exitZoomPhCorr2d.clicked.connect(self.zoomPhCorr)
+        self.set_zoom()
+        self.w.pickRowColPhCorr2d.clicked.connect(self.pick_col_row)
+        self.w.emptyRowColPhCorr2d.clicked.connect(self.empty_col_row)
+        self.w.removeRowColPhCorr2d.clicked.connect(self.remove_last_col_row)
+        self.w.horzPhCorr2d.clicked.connect(self.horz_ph_corr_2d)
+        self.w.vertPhCorr2d.clicked.connect(self.vert_ph_corr_2d)
+        self.w.exitPhCorr2d.clicked.connect(self.start_stop_ph_corr)
+        self.w.applyPhCorr2d.clicked.connect(self.apply_2d_ph_corr)
+        self.w.cancelPhCorr2d.clicked.connect(self.cancel_2d_ph_corr)
+        self.w.zoomPhCorr2d.clicked.connect(self.zoom_ph_corr)
+        self.w.exitZoomPhCorr2d.clicked.connect(self.zoom_ph_corr)
         self.w.exitPhCorr1d.setVisible(False)
         self.w.zoomPhCorr1d.setVisible(False)
         self.w.exitZoomPhCorr1d.setVisible(False)
@@ -443,310 +450,310 @@ class main_w(object):  # pragma: no cover
         self.w.cancelPhCorr2d.setVisible(False)
         self.w.exitPhCorr2d.setVisible(False)
         self.w.exitZoomPhCorr2d.setVisible(False)
-        self.w.actionSet_light_mode_requires_restart.triggered.connect(self.setLightMode)
-        self.w.actionSet_dark_mode_requires_restart.triggered.connect(self.setDarkMode)
+        self.w.actionSet_light_mode_requires_restart.triggered.connect(self.set_light_mode)
+        self.w.actionSet_dark_mode_requires_restart.triggered.connect(self.set_dark_mode)
         self.w.MplWidget.canvas.draw()
-        self.w.setStyleSheet("font-size: " + str(self.cf.fontSize) + "pt")
-        self.w.actionreInitialise_pre_processing_plot_colours.triggered.connect(self.nd.pp.initPlotColours)
-        self.w.actionreInitialise_plot_colours.triggered.connect(self.setStandardPlotColours)
-        print(sys.platform)
+        self.w.setStyleSheet("font-size: " + str(self.cf.font_size) + "pt")
+        self.w.actionreInitialise_pre_processing_plot_colours.triggered.connect(self.nd.pp.init_plot_colours)
+        self.w.actionreInitialise_plot_colours.triggered.connect(self.set_standard_plot_colours)
+        # print(sys.platform)
         if sys.platform == 'darwin':
             self.w.actionCreate.setText('Create Launchpad Icon')
-            self.w.actionCreate.triggered.connect(self.createIconMac)
+            self.w.actionCreate.triggered.connect(self.create_icon_mac)
         elif sys.platform == 'win' or sys.platform == 'win32' or sys.platform == 'win64':
             self.w.actionCreate.setText('Create Desktop Icon')
-            self.w.actionCreate.triggered.connect(self.createIconWin)
+            self.w.actionCreate.triggered.connect(self.create_icon_win)
         else:
-            print(sys.platform)
+            # print(sys.platform)
             self.w.actionCreate.setText('Create Desktop Starter')
-            print('doing stuffs3....')
+            # print('doing stuffs3....')
 
             self.w.actionCreate.setVisible(False)
 
-        self.empRefShift = 0.0
+        self.emp_ref_shift = 0.0
         self.p = []
         if self.cf.mode == 'dark':
-            self.loadDarkMode()
+            self.load_dark_mode()
         else:
-            self.loadLightMode()
+            self.load_light_mode()
         #
         self.w.helpView.page().profile().downloadRequested.connect(self._download_requested)
-        self.w.peakWidget.setColumnWidth(2,182)
+        self.w.peakWidget.setColumnWidth(2, 182)
         # end __init__
 
-    def activateCommandLine(self):
+    def activate_command_line(self):
         if (self.w.cmdLine.hasFocus() == True):
             self.w.cmdLine.clearFocus()
         else:
             self.w.cmdLine.setFocus()
 
-        # end activateCommandLine
+        # end activate_command_line
 
-    def addPeak(self):
-        self.ginputAddPeak(2)
-        # end addPeak
+    def add_peak(self):
+        self.ginput_add_peak(2)
+        # end add_peak
 
-    def clearPeak(self):
-        self.nd.clearPeak()
+    def clear_peak(self):
+        self.nd.clear_peak()
         self.w.peakWidget.setRowCount(0)
-        self.plotSpc()
-        # end addPeak
+        self.plot_spc()
+        # end add_peak
 
-    def apply2dPhCorr(self):
+    def apply_2d_ph_corr(self):
         s = self.nd.s
         e = self.nd.e
-        if self.nd.nmrdat[s][e].proc.phaseInversion:
-            self.phCorr.ph0_2d[self.phCorr.dim] *= -1
-            self.phCorr.ph1_2d[self.phCorr.dim] *= -1
+        if self.nd.nmrdat[s][e].proc.phase_inversion:
+            self.ph_corr.ph0_2d[self.ph_corr.dim] *= -1
+            self.ph_corr.ph1_2d[self.ph_corr.dim] *= -1
 
-        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick2d)
-        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease2d)
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_ph_corr_click_2d)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_ph_corr_release_2d)
         cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
-        #self.w.actionApplyPhCorr.triggered.disconnect()
-        #self.w.actionCancelPhCorr.triggered.disconnect()
+        # self.w.actionApplyPhCorr.triggered.disconnect()
+        # self.w.actionCancelPhCorr.triggered.disconnect()
         self.w.pickRowColPhCorr2d.setVisible(True)
         self.w.emptyRowColPhCorr2d.setVisible(True)
         self.w.removeRowColPhCorr2d.setVisible(True)
         self.w.horzPhCorr2d.setVisible(True)
-        self.w.vertPhCorr2d.setVisible(True)
-        self.w.zoomPhCorr2d.setVisible(False)
+        self.w.vert_ph_corr_2d.setVisible(True)
+        self.w.zoom_ph_corr2d.setVisible(False)
         self.w.applyPhCorr2d.setVisible(False)
         self.w.cancelPhCorr2d.setVisible(False)
         self.w.exitPhCorr2d.setVisible(True)
-        self.w.exitZoomPhCorr2d.setVisible(False)
-        ph0 = ((self.phCorr.ph0_2d[self.phCorr.dim] + 180.0) % 360.0) - 180.0
-        ph1 = self.phCorr.ph1_2d[self.phCorr.dim]
-        if self.nd.nmrdat[s][e].proc.phaseInversion is False:
-            self.nd.nmrdat[s][e].phase2a(ph0, ph1, self.phCorr.dim)
+        self.w.exitzoom_ph_corr2d.setVisible(False)
+        ph0 = ((self.ph_corr.ph0_2d[self.ph_corr.dim] + 180.0) % 360.0) - 180.0
+        ph1 = self.ph_corr.ph1_2d[self.ph_corr.dim]
+        if self.nd.nmrdat[s][e].proc.phase_inversion is False:
+            self.nd.nmrdat[s][e].phase2a(ph0, ph1, self.ph_corr.dim)
         else:
-            self.nd.nmrdat[s][e].phase2a(-ph0, -ph1, self.phCorr.dim)
+            self.nd.nmrdat[s][e].phase2a(-ph0, -ph1, self.ph_corr.dim)
 
-        ph0 = ((ph0 + self.nd.nmrdat[s][e].proc.ph0[self.phCorr.dim] + 180.0) % 360.0) - 180.0
-        ph1 = ph1 + self.nd.nmrdat[s][e].proc.ph1[self.phCorr.dim]
+        ph0 = ((ph0 + self.nd.nmrdat[s][e].proc.ph0[self.ph_corr.dim] + 180.0) % 360.0) - 180.0
+        ph1 = ph1 + self.nd.nmrdat[s][e].proc.ph1[self.ph_corr.dim]
 
-        self.nd.nmrdat[s][e].proc.ph0[self.phCorr.dim] = ph0
-        self.nd.nmrdat[s][e].proc.ph1[self.phCorr.dim] = ph1
-        self.phCorr.ph0_2d[self.phCorr.dim] = 0
-        self.phCorr.ph1_2d[self.phCorr.dim] = 0
-        self.phCorr.spc = np.array([[]], dtype='complex')
-        self.phCorr.spc2 = np.array([[]], dtype='complex')
-        zoomStatus = self.w.keepZoom.isChecked()
+        self.nd.nmrdat[s][e].proc.ph0[self.ph_corr.dim] = ph0
+        self.nd.nmrdat[s][e].proc.ph1[self.ph_corr.dim] = ph1
+        self.ph_corr.ph0_2d[self.ph_corr.dim] = 0
+        self.ph_corr.ph1_2d[self.ph_corr.dim] = 0
+        self.ph_corr.spc = np.array([[]], dtype='complex')
+        self.ph_corr.spc2 = np.array([[]], dtype='complex')
+        zoom_status = self.w.keepZoom.isChecked()
         self.w.keepZoom.setChecked(False)
-        self.plotSpc()
-        self.w.keepZoom.setChecked(zoomStatus)
-        self.plot2dColRow()
-        if (self.zoomWasOn == True):
-            self.setZoomOff()
-            self.setZoom()
+        self.plot_spc()
+        self.w.keepZoom.setChecked(zoom_status)
+        self.plot_2d_col_row()
+        if (self.zoom_was_on == True):
+            self.set_zoom_off()
+            self.set_zoom()
 
-        if (self.panWasOn == True):
-            self.setPan()
+        if (self.pan_was_on == True):
+            self.set_pan()
 
-        self.showPhCorr2d()
-        self.setProcPars()
-        self.showAcquisitionParameters()
-        self.showNMRSpectrum()
-        # end apply2dPhCorr
+        self.show_ph_corr_2d()
+        self.set_proc_pars()
+        self.show_acquisition_parameters()
+        self.show_nmr_spectrum()
+        # end apply_2d_ph_corr
 
     def autobaseline1d(self):
-        codeOut = io.StringIO()
-        codeErr = io.StringIO()
-        sys.stdout = codeOut
-        sys.stderr = codeErr
-        self.showAutoBaseline()
+        code_out = io.StringIO()
+        code_err = io.StringIO()
+        sys.stdout = code_out
+        sys.stderr = code_err
+        self.show_auto_baseline()
         self.nd.ft()
-        self.nd.autoref()
+        self.nd.auto_ref()
         self.nd.autobaseline1d()
         self.w.baselineCorrection.setCurrentIndex(1)
         self.nd.ft()
         self.nd.baseline1d()
         # self.w.baselineCorrection.setCurrentIndex(1)
-        self.setProcPars()
-        self.showVersion()
+        self.set_proc_pars()
+        self.show_version()
         self.w.nmrSpectrum.setCurrentIndex(0)
-        self.changeDataSetExp()
-        self.plotSpc()
+        self.change_data_set_exp()
+        self.plot_spc()
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
         if self.cf.mode == 'dark':
-            txtCol = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
-            errCol = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
+            txt_col = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
         else:
-            txtCol = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
-            errCol = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
+            txt_col = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
 
-        self.w.console.setTextColor(txtCol)
-        self.w.console.append(codeOut.getvalue())
-        self.w.console.setTextColor(errCol)
-        self.w.console.append(codeErr.getvalue())
-        codeOut.close()
-        codeErr.close()
+        self.w.console.setTextColor(txt_col)
+        self.w.console.append(code_out.getvalue())
+        self.w.console.setTextColor(err_col)
+        self.w.console.append(code_err.getvalue())
+        code_out.close()
+        code_err.close()
         # end autobaseline1d
 
-    def autobaseline1dAll(self):
-        codeOut = io.StringIO()
-        codeErr = io.StringIO()
-        sys.stdout = codeOut
-        sys.stderr = codeErr
-        self.showAutoBaseline()
+    def autobaseline1d_all(self):
+        code_out = io.StringIO()
+        code_err = io.StringIO()
+        sys.stdout = code_out
+        sys.stderr = code_err
+        self.show_auto_baseline()
         self.nd.ft()
-        self.nd.autoref()
-        self.nd.autobaseline1dAll()
+        self.nd.auto_ref()
+        self.nd.autobaseline1d_all()
         self.w.baselineCorrection.setCurrentIndex(1)
         self.nd.ft()
         self.nd.baseline1d()
         # self.w.baselineCorrection.setCurrentIndex(1)
-        self.setProcPars()
-        self.showVersion()
+        self.set_proc_pars()
+        self.show_version()
         self.w.nmrSpectrum.setCurrentIndex(0)
-        self.changeDataSetExp()
-        self.plotSpc()
+        self.change_data_set_exp()
+        self.plot_spc()
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
         if self.cf.mode == 'dark':
-            txtCol = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
-            errCol = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
+            txt_col = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
         else:
-            txtCol = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
-            errCol = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
+            txt_col = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
 
-        self.w.console.setTextColor(txtCol)
-        self.w.console.append(codeOut.getvalue())
-        self.w.console.setTextColor(errCol)
-        self.w.console.append(codeErr.getvalue())
-        codeOut.close()
-        codeErr.close()
-        # end autobaseline1dAll
+        self.w.console.setTextColor(txt_col)
+        self.w.console.append(code_out.getvalue())
+        self.w.console.setTextColor(err_col)
+        self.w.console.append(code_err.getvalue())
+        code_out.close()
+        code_err.close()
+        # end autobaseline1d_all
 
     def autophase1d(self):
-        codeOut = io.StringIO()
-        codeErr = io.StringIO()
-        sys.stdout = codeOut
-        sys.stderr = codeErr
-        self.showAutoPhase()
+        code_out = io.StringIO()
+        code_err = io.StringIO()
+        sys.stdout = code_out
+        sys.stderr = code_err
+        self.show_auto_phase()
         self.nd.ft()
-        self.nd.autoref()
+        self.nd.auto_ref()
         self.nd.autophase1d()
         self.w.baselineCorrection.setCurrentIndex(1)
         self.nd.ft()
         self.nd.baseline1d()
-        self.plotSpc()
-        self.setProcPars()
-        self.showVersion()
+        self.plot_spc()
+        self.set_proc_pars()
+        self.show_version()
         self.w.nmrSpectrum.setCurrentIndex(0)
-        self.changeDataSetExp()
-        self.plotSpc()
+        self.change_data_set_exp()
+        self.plot_spc()
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
         if self.cf.mode == 'dark':
-            txtCol = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
-            errCol = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
+            txt_col = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
         else:
-            txtCol = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
-            errCol = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
+            txt_col = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
 
-        self.w.console.setTextColor(txtCol)
-        self.w.console.append(codeOut.getvalue())
-        self.w.console.setTextColor(errCol)
-        self.w.console.append(codeErr.getvalue())
-        codeOut.close()
-        codeErr.close()
+        self.w.console.setTextColor(txt_col)
+        self.w.console.append(code_out.getvalue())
+        self.w.console.setTextColor(err_col)
+        self.w.console.append(code_err.getvalue())
+        code_out.close()
+        code_err.close()
         # end autophase1d
 
-    def autophase1dAll(self):
-        codeOut = io.StringIO()
-        codeErr = io.StringIO()
-        sys.stdout = codeOut
-        sys.stderr = codeErr
-        self.showAutoPhase()
+    def autophase1d_all(self):
+        code_out = io.StringIO()
+        code_err = io.StringIO()
+        sys.stdout = code_out
+        sys.stderr = code_err
+        self.show_auto_phase()
         self.nd.ft()
-        self.nd.autoref()
-        self.nd.autophase1dAll()
+        self.nd.auto_ref()
+        self.nd.autophase1d_all()
         self.w.baselineCorrection.setCurrentIndex(1)
         self.nd.ft()
         self.nd.baseline1d()
-        self.plotSpc()
-        self.setProcPars()
-        self.showVersion()
+        self.plot_spc()
+        self.set_proc_pars()
+        self.show_version()
         self.w.nmrSpectrum.setCurrentIndex(0)
-        self.changeDataSetExp()
-        self.plotSpc()
+        self.change_data_set_exp()
+        self.plot_spc()
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
         if self.cf.mode == 'dark':
-            txtCol = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
-            errCol = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
+            txt_col = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
         else:
-            txtCol = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
-            errCol = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
+            txt_col = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
 
-        self.w.console.setTextColor(txtCol)
-        self.w.console.append(codeOut.getvalue())
-        self.w.console.setTextColor(errCol)
-        self.w.console.append(codeErr.getvalue())
-        codeOut.close()
-        codeErr.close()
-        # end autophase1dAll
+        self.w.console.setTextColor(txt_col)
+        self.w.console.append(code_out.getvalue())
+        self.w.console.setTextColor(err_col)
+        self.w.console.append(code_err.getvalue())
+        code_out.close()
+        code_err.close()
+        # end autophase1d_all
 
     def autoref(self, tmsp=True):
-        self.nd.autoref(tmsp)
+        self.nd.auto_ref(tmsp)
         self.w.nmrSpectrum.setCurrentIndex(0)
-        self.changeDataSetExp()
-        self.plotSpc()
-        return "Autoref"
+        self.change_data_set_exp()
+        self.plot_spc()
+        return "autoref"
         # end autoref
 
     def baseline1d(self):
         self.nd.baseline1d()
         self.w.nmrSpectrum.setCurrentIndex(0)
-        self.changeDataSetExp()
-        self.plotSpc()
+        self.change_data_set_exp()
+        self.plot_spc()
         # end baseline1d
 
-    def cancel2dPhCorr(self):
-        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick2d)
-        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease2d)
+    def cancel_2d_ph_corr(self):
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_ph_corr_click_2d)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_ph_corr_release_2d)
         cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
-        #self.w.actionApplyPhCorr.triggered.disconnect()
-        #self.w.actionCancelPhCorr.triggered.disconnect()
+        # self.w.actionApplyPhCorr.triggered.disconnect()
+        # self.w.actionCancelPhCorr.triggered.disconnect()
         self.w.pickRowColPhCorr2d.setVisible(True)
         self.w.emptyRowColPhCorr2d.setVisible(True)
         self.w.removeRowColPhCorr2d.setVisible(True)
         self.w.horzPhCorr2d.setVisible(True)
-        self.w.vertPhCorr2d.setVisible(True)
-        self.w.zoomPhCorr2d.setVisible(False)
+        self.w.vert_ph_corr_2d.setVisible(True)
+        self.w.zoom_ph_corr2d.setVisible(False)
         self.w.applyPhCorr2d.setVisible(False)
         self.w.cancelPhCorr2d.setVisible(False)
         self.w.exitPhCorr2d.setVisible(True)
-        self.w.exitZoomPhCorr2d.setVisible(False)
-        self.phCorr.ph0_2d[self.phCorr.dim] = 0
-        self.phCorr.ph1_2d[self.phCorr.dim] = 0
+        self.w.exitzoom_ph_corr2d.setVisible(False)
+        self.ph_corr.ph0_2d[self.ph_corr.dim] = 0
+        self.ph_corr.ph1_2d[self.ph_corr.dim] = 0
         zoomStatus = self.w.keepZoom.isChecked()
         self.w.keepZoom.setChecked(False)
-        self.plotSpc()
+        self.plot_spc()
         self.w.keepZoom.setChecked(zoomStatus)
-        self.plot2dColRow()
-        if (self.zoomWasOn == True):
-            self.setZoomOff()
-            self.setZoom()
+        self.plot_2d_col_row()
+        if (self.zoom_was_on == True):
+            self.set_zoom_off()
+            self.set_zoom()
 
-        if (self.panWasOn == True):
-            self.setPan()
+        if (self.pan_was_on == True):
+            self.set_pan()
 
-        self.showPhCorr2d()
-        self.showAcquisitionParameters()
-        self.showNMRSpectrum()
+        self.show_ph_corr_2d()
+        self.show_acquisition_parameters()
+        self.show_nmr_spectrum()
         # end cancel2dPhCorr
 
-    def changeDataSetExp(self):
+    def change_data_set_exp(self):
         cidx = self.w.nmrSpectrum.currentIndex()
         if (len(self.nd.nmrdat) > 0):
             if (len(self.nd.nmrdat[self.nd.s]) > 0):
-                self.keepZoom = self.w.keepZoom.isChecked()
-                oldSet = self.nd.s
-                oldExp = self.nd.e
+                self.keep_zoom = self.w.keepZoom.isChecked()
+                old_set = self.nd.s
+                old_exp = self.nd.e
                 if (self.w.setBox.value() < 1):
                     self.w.setBox.setValue(1)
 
@@ -761,70 +768,70 @@ class main_w(object):  # pragma: no cover
                     self.w.expBox.setValue(len(self.nd.nmrdat[self.nd.s]))
 
                 self.nd.e = self.w.expBox.value() - 1
-                keepZoom = self.w.keepZoom.isChecked()
-                if not ((oldSet == self.nd.s) and (oldExp == self.nd.e)):
-                    if (self.nd.nmrdat[oldSet][oldExp].dim != self.nd.nmrdat[self.nd.s][self.nd.e].dim):
-                        self.keepXZoom = True
-                        self.keepZoom = False
+                keep_zoom = self.w.keepZoom.isChecked()
+                if not ((old_set == self.nd.s) and (old_exp == self.nd.e)):
+                    if (self.nd.nmrdat[old_set][old_exp].dim != self.nd.nmrdat[self.nd.s][self.nd.e].dim):
+                        self.keep_x_zoom = True
+                        self.keep_zoom = False
                         self.w.keepZoom.setChecked(False)
 
-                    self.setDispPars()
-                    self.setProcPars()
-                    self.setAcqPars()
-                    self.setTitleFile()
-                    self.setPulseProgram()
-                    if (self.phCorrActive == False):
+                    self.set_disp_pars()
+                    self.set_proc_pars()
+                    self.set_acq_pars()
+                    self.set_title_file()
+                    self.set_pulse_program()
+                    if (self.ph_corr_active == False):
                         if (self.w.autoPlot.isChecked()):
-                            self.plotSpc()
+                            self.plot_spc()
                         elif (self.w.nmrSpectrum.currentIndex() == 0):
-                            self.plotSpc()
+                            self.plot_spc()
 
                     else:
                         if self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1:
-                            self.phCorr.spc = self.nd.nmrdat[self.nd.s][self.nd.e].spc
-                            self.phCorrPlotSpc()
+                            self.ph_corr.spc = self.nd.nmrdat[self.nd.s][self.nd.e].spc
+                            self.ph_corr_plot_spc()
                         else:
-                            self.plotSpc()
-                            self.plot2dColRow()
+                            self.plot_spc()
+                            self.plot_2d_col_row()
 
-                    self.keepZoom = keepZoom
-                    self.w.keepZoom.setChecked(keepZoom)
+                    self.keep_zoom = keep_zoom
+                    self.w.keepZoom.setChecked(keep_zoom)
                 # else:
-                #    if (self.phCorrActive == False):
+                #    if (self.ph_corr_active == False):
                 #        if (self.w.autoPlot.isChecked()):
-                #            self.plotSpc()
+                #            self.plot_spc()
                 #        elif (self.w.nmrSpectrum.currentIndex() == 0):
-                #            self.plotSpc()
+                #            self.plot_spc()
                 #
                 #    else:
-                #        self.phCorr.spc = self.nd.nmrdat[self.nd.s][self.nd.e].spc
-                #        self.phCorrPlotSpc()
+                #        self.ph_corr.spc = self.nd.nmrdat[self.nd.s][self.nd.e].spc
+                #        self.ph_corr_plot_spc()
 
-                self.keepZoom = False
+                self.keep_zoom = False
 
             else:
                 self.w.setBox.valueChanged.disconnect()
                 self.w.expBox.valueChanged.disconnect()
                 self.w.expBox.setValue(0)
                 self.w.setBox.setValue(0)
-                self.w.setBox.valueChanged.connect(lambda: self.changeDataSetExp())
-                self.w.expBox.valueChanged.connect(lambda: self.changeDataSetExp())
+                self.w.setBox.valueChanged.connect(lambda: self.change_data_set_exp())
+                self.w.expBox.valueChanged.connect(lambda: self.change_data_set_exp())
 
-            self.updateGUI()
+            self.update_gui()
         else:
             self.w.setBox.valueChanged.disconnect()
             self.w.expBox.valueChanged.disconnect()
             self.w.expBox.setValue(0)
             self.w.setBox.setValue(0)
-            self.w.setBox.valueChanged.connect(lambda: self.changeDataSetExp())
-            self.w.expBox.valueChanged.connect(lambda: self.changeDataSetExp())
+            self.w.setBox.valueChanged.connect(lambda: self.change_data_set_exp())
+            self.w.expBox.valueChanged.connect(lambda: self.change_data_set_exp())
 
         if (self.w.autoPlot.isChecked() is False):
             self.w.nmrSpectrum.setCurrentIndex(cidx)
 
-        # end changeDataSetExp
+        # end change_data_set_exp
 
-    def changeDataSetExpPhRef(self):
+    def change_data_set_exp_ph_ref(self):
         if (len(self.nd.nmrdat) > 0):
             s = self.nd.s
             e = self.nd.e
@@ -843,70 +850,70 @@ class main_w(object):  # pragma: no cover
 
                 for k in range(len(self.nd.nmrdat)):
                     for l in range(len(self.nd.nmrdat[k])):
-                        self.nd.nmrdat[k][l].display.phRefDS = self.w.phRefDS.value()
-                        self.nd.nmrdat[k][l].display.phRefExp = self.w.phRefExp.value()
+                        self.nd.nmrdat[k][l].display.ph_ref_ds = self.w.phRefDS.value()
+                        self.nd.nmrdat[k][l].display.ph_ref_exp = self.w.phRefExp.value()
 
-        # end changeDataSetExpPhRef
+        # end change_data_set_exp_ph_ref
 
-    def changeScaleSpectraRefSpc(self):
-        self.nd.pp.scaleSpectraRefSpc = self.w.scaleSpectraRefSpc.value()
-        # end changeScaleSpectraRefSpc
+    def change_scale_spectra_ref_spc(self):
+        self.nd.pp.scale_spectra_ref_spc = self.w.scaleSpectraRefSpc.value()
+        # end change_scale_spectra_ref_spc
 
-    def changeSegAlignRefSpc(self):
-        self.nd.pp.segAlignRefSpc = self.w.segAlignRefSpc.value()
-        # end changeSegAlignRefSpc
+    def change_seg_align_ref_spc(self):
+        self.nd.pp.seg_align_ref_spc = self.w.segAlignRefSpc.value()
+        # end change_seg_align_ref_spc
 
-    def changeStandardColours(self, posCol1 = (), negCol1 = (), posCol2 = (), negCol2 = ()):
-        if len(posCol1) != 3:
-            posCol1 = self.stdPosCol1
+    def change_standard_colours(self, pos_col1=(), neg_col1=(), pos_col2=(), neg_col2=()):
+        if len(pos_col1) != 3:
+            pos_col1 = self.std_pos_col1
 
-        if len(negCol1) != 3:
-            negCol1 = self.stdNegCol1
+        if len(neg_col1) != 3:
+            neg_col1 = self.std_neg_col1
 
-        if len(posCol2) != 3:
-            posCol2 = self.stdPosCol2
+        if len(pos_col2) != 3:
+            pos_col2 = self.std_pos_col2
 
-        if len(negCol2) != 3:
-            negCol2 = self.stdNegCol2
+        if len(neg_col2) != 3:
+            neg_col2 = self.std_neg_col2
 
-        self.stdPosCol1 = posCol1
-        self.stdNegCol1 = negCol1
-        self.stdPosCol2 = posCol2
-        self.stdNegCol2 = negCol2
-        self.setStandardColours()
-    # end changeStandardColours
+        self.std_pos_col1 = pos_col1
+        self.std_neg_col1 = neg_col1
+        self.std_pos_col2 = pos_col2
+        self.std_neg_col2 = neg_col2
+        self.set_standard_colours()
 
-    def changeToNextDS(self):
+    # end change_standard_colours
+
+    def change_to_next_ds(self):
         self.w.setBox.setValue(self.w.setBox.value() + 1)
-        # end changeToNextDS
+        # end change_to_next_ds
 
-    def changeToNextExp(self):
+    def change_to_next_exp(self):
         self.w.expBox.setValue(self.w.expBox.value() + 1)
-        # end changeToNextExp
+        # end change_to_next_exp
 
-    def changeToPreviousDS(self):
+    def change_to_previous_ds(self):
         self.w.setBox.setValue(self.w.setBox.value() - 1)
-        # end changeToPreviousDS
+        # end change_to_previous_ds
 
-    def changeToPreviousExp(self):
+    def change_to_previous_exp(self):
         self.w.expBox.setValue(self.w.expBox.value() - 1)
-        # end changeToPreviousExp
+        # end change_to_previous_exp
 
-    def checkBaselineCorrection(self):
+    def check_baseline_correction(self):
         cbl = self.w.baselineCorrection.currentIndex()
-        self.nd.nmrdat[self.nd.s][self.nd.e].apc.correctBaseline = cbl
+        self.nd.nmrdat[self.nd.s][self.nd.e].apc.correct_baseline = cbl
         if (cbl == 1):
             self.w.baselineOrder.setEnabled(True)
         else:
             self.w.baselineOrder.setEnabled(False)
 
-        self.checkBaselineOrder()
+        self.check_baseline_order()
+        # end check_baseline_correction
 
-        # end checkBaselineCorrection
-
-    def checkBaselineOrder(self):
+    def check_baseline_order(self):
         blo = self.w.baselineOrder.currentIndex()
-        self.nd.nmrdat[self.nd.s][self.nd.e].apc.nOrder = blo
+        self.nd.nmrdat[self.nd.s][self.nd.e].apc.n_order = blo
         self.w.rSpc_p0.setEnabled(False)
         self.w.rSpc_p1.setEnabled(False)
         self.w.rSpc_p2.setEnabled(False)
@@ -948,17 +955,17 @@ class main_w(object):  # pragma: no cover
                 self.w.rSpc_p6.setEnabled(True)
                 self.w.iSpc_p6.setEnabled(True)
 
-        # end checkBaselineOrder
+        # end check_baseline_order
 
     def clear(self):
         self.w.MplWidget.canvas.axes.clear()
         self.w.MplWidget.canvas.draw()
-        self.zeroDispPars()
-        self.zeroProcPars()
-        self.zeroAcqPars()
-        self.zeroConsole()
-        self.zeroTitleFile()
-        self.zeroPulseProgram()
+        self.zero_disp_pars()
+        self.zero_proc_pars()
+        self.zero_acq_pars()
+        self.zero_console()
+        self.zero_title_file()
+        self.zero_pulse_program()
         self.nd.nmrdat = [[]]
         self.nd.s = 0
         self.nd.e = -1
@@ -966,64 +973,64 @@ class main_w(object):  # pragma: no cover
         self.w.expBox.valueChanged.disconnect()
         self.w.expBox.setValue(0)
         self.w.setBox.setValue(0)
-        self.w.setBox.valueChanged.connect(lambda: self.changeDataSetExp())
-        self.w.expBox.valueChanged.connect(lambda: self.changeDataSetExp())
+        self.w.setBox.valueChanged.connect(lambda: self.change_data_set_exp())
+        self.w.expBox.valueChanged.connect(lambda: self.change_data_set_exp())
         return "Workspace cleared"
         # end clear
 
-    def createIconMac(self):
-        homeDir = os.path.expanduser('~')
-        appDir2 = os.path.join(homeDir, 'Applications')
-        appDir  = os.path.join(appDir2, 'MetaboLabPy.app')
-        appDir1 = 'MetaboLabPy'
+    def create_icon_mac(self):
+        home_dir = os.path.expanduser('~')
+        app_dir2 = os.path.join(home_dir, 'Applications')
+        app_dir = os.path.join(app_dir2, 'MetaboLabPy.app')
+        app_dir1 = 'MetaboLabPy'
         try:
-            shutil.rmtree(appDir)
+            shutil.rmtree(app_dir)
         except:
             pass
 
-        appify = os.path.join(appDir2, 'appify')
+        appify = os.path.join(app_dir2, 'appify')
         f = open(appify, 'w')
         f.write('#!/usr/bin/env bash\n\n')
-        f.write('APPNAME=${2:-$(basename "$1" ".sh")}\n')
-        f.write('DIR="$APPNAME/$3.app/Contents/MacOS"\n\n')
+        f.write('APp_name=${2:-$(basename "$1" ".sh")}\n')
+        f.write('DIR="$APp_name/$3.app/Contents/MacOS"\n\n')
         f.write('mkdir -p "$DIR"\n')
         f.write('cp "$1" "$DIR/$3"\n')
         f.write('chmod +x "$DIR/$3"\n')
         f.close()
         os.chmod(appify, 0o777)
-        baseDir = os.path.dirname(__file__)
-        mlStarter = os.path.join(baseDir, 'mlStarter')
-        contents = os.path.join(mlStarter, 'Contents')
-        icon = os.path.join(mlStarter, 'Icon')
-        starter = os.path.join(appDir2, 'createStarter')
+        base_dir = os.path.dirname(__file__)
+        ml_starter = os.path.join(base_dir, 'mlStarter')
+        contents = os.path.join(ml_starter, 'Contents')
+        icon = os.path.join(ml_starter, 'Icon')
+        starter = os.path.join(app_dir2, 'createStarter')
         f = open(starter, 'w')
         f.write('#!/usr/bin/env bash\n\n')
-        f.write(appify + ' $(which metabolabpy) ' + appDir2 + ' ' + appDir1 + '\n')
-        f.write('cp -r ' + contents + ' ' + appDir + '\n')
-        f.write("cp " + icon + " " + appDir + "/Icon$'\\r'\n")
+        f.write(appify + ' $(which metabolabpy) ' + app_dir2 + ' ' + app_dir1 + '\n')
+        f.write('cp -r ' + contents + ' ' + app_dir + '\n')
+        f.write("cp " + icon + " " + app_dir + "/Icon$'\\r'\n")
         f.close()
         os.chmod(starter, 0o777)
         subprocess.os.system(starter)
         os.remove(appify)
         os.remove(starter)
-        # end createIconMac
+        # end create_icon_mac
 
-    def createIconLinux(self):
+    def create_icon_linux(self):
         print("Linux!")
-        # end createIconLinux
+        # end create_icon_linux
 
-    def createIconWin(self):
-        baseDir = os.path.dirname(__file__)
-        iconFile = os.path.join(baseDir, 'icon', 'icon.ico')
-        userDir = os.environ.get('USERPROFILE')
-        desktopDir = os.path.join(userDir, 'Desktop')
-        linkFile = os.path.join(desktopDir, 'MetaboLabPy.lnk')
-        mlBat = os.path.join(baseDir, 'ml.bat')
-        ml_execBat = os.path.join(baseDir, 'ml_exec.bat')
-        f = open(mlBat, 'w')
-        f.write('start /min ' + ml_execBat)
+    def create_icon_win(self):
+        base_dir = os.path.dirname(__file__)
+        icon_file = os.path.join(base_dir, 'icon', 'icon.ico')
+        user_dir = os.environ.get('USERPROFILE')
+        desktop_dir = os.path.join(user_dir, 'Desktop')
+        link_file = os.path.join(desktop_dir, 'MetaboLabPy.lnk')
+        ml_bat = os.path.join(base_dir, 'ml.bat')
+        ml_exec_bat = os.path.join(base_dir, 'ml_exec.bat')
+        f = open(ml_bat, 'w')
+        f.write('start /min ' + ml_exec_bat)
         f.close()
-        f = open(ml_execBat, 'w')
+        f = open(ml_exec_bat, 'w')
         venv = sys.prefix.find('env')
         cnda = subprocess.check_output('where conda').decode()
         if venv == -1:
@@ -1035,106 +1042,106 @@ class main_w(object):  # pragma: no cover
 
         f.close()
         subprocess.os.system('pip install pylnk3')
-        subprocess.os.system('pylnk3 create ' + mlBat + ' ' + linkFile + ' -m Minimized --icon ' + iconFile)
+        subprocess.os.system('pylnk3 create ' + ml_bat + ' ' + link_file + ' -m Minimized --icon ' + icon_file)
         subprocess.os.system('pip uninstall pylnk3 --yes')
-        # end createIconWin
+        # end create_icon_win
 
-    def dataPreProcessing(self):
-        self.resetDataPreProcessing()
-        self.nd.dataPreProcessing()
-        self.plotSpcPreProc()
-        self.verticalAutoScale()
+    def data_pre_processing(self):
+        self.reset_data_pre_processing()
+        self.nd.data_pre_processing()
+        self.plot_spc_pre_proc()
+        self.vertical_auto_scale()
         self.w.MplWidget.canvas.flush_events()
         self.w.MplWidget.canvas.draw()
-        # end dataPreProcessing
+        # end data_pre_processing
 
-    def emptyColRow(self):
+    def empty_col_row(self):
         while len(self.w.MplWidget.canvas.axes.lines) > 0:
             self.w.MplWidget.canvas.axes.lines[0].remove()
 
         self.w.MplWidget.canvas.draw()
-        self.phCorr.spcRow = []
-        self.phCorr.spcCol = []
-        self.phCorr.spcRowPts = []
-        self.phCorr.spcColPts = []
-        self.showAcquisitionParameters()
-        self.showNMRSpectrum()
-        # end emptyColRow
+        self.ph_corr.spc_row = []
+        self.ph_corr.spc_col = []
+        self.ph_corr.spc_row_pts = []
+        self.ph_corr.spc_col_pts = []
+        self.show_acquisition_parameters()
+        self.show_nmr_spectrum()
+        # end empty_col_row
 
-    def enableBaseline(self):
+    def enable_baseline(self):
         for k in range(len(self.nd.nmrdat[self.nd.s])):
-            self.nd.nmrdat[self.nd.s][k].apc.correctBaseline = 1
+            self.nd.nmrdat[self.nd.s][k].apc.correct_baseline = 1
 
-        self.w.baselineOrder.setCurrentIndex(self.nd.nmrdat[self.nd.s][0].apc.nOrder)
+        self.w.baselineOrder.setCurrentIndex(self.nd.nmrdat[self.nd.s][0].apc.n_order)
         self.w.baselineCorrection.setCurrentIndex(1)
         return "baselineCorrection enabled"
         # end enableBaseline
 
-    def execCmd(self):
+    def exec_cmd(self):
         if self.cf.mode == 'dark':
-            txtCol = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
-            errCol = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
+            txt_col = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
         else:
-            txtCol = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
-            errCol = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
+            txt_col = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
 
-        cmdText = self.w.cmdLine.text()
-        if (len(cmdText) > 0):
+        cmd_text = self.w.cmdLine.text()
+        if (len(cmd_text) > 0):
             self.w.nmrSpectrum.setCurrentIndex(11)
             self.w.cmdLine.setText("")
-            self.nd.cmdBuffer = np.append(self.nd.cmdBuffer, cmdText)
-            self.nd.cmdIdx = len(self.nd.cmdBuffer)
-            codeOut = io.StringIO()
-            codeErr = io.StringIO()
-            sys.stdout = codeOut
-            sys.stderr = codeErr
-            print(">>> " + cmdText)
+            self.nd.cmd_buffer = np.append(self.nd.cmd_buffer, cmd_text)
+            self.nd.cmd_idx = len(self.nd.cmd_buffer)
+            code_out = io.StringIO()
+            code_err = io.StringIO()
+            sys.stdout = code_out
+            sys.stderr = code_err
+            print(">>> " + cmd_text)
             try:
-                output = eval(cmdText)
+                output = eval(cmd_text)
                 print(output)
-                self.w.console.setTextColor(txtCol)
-                self.w.console.append(codeOut.getvalue())
+                self.w.console.setTextColor(txt_col)
+                self.w.console.append(code_out.getvalue())
             except:  # (SyntaxError, NameError, TypeError, ZeroDivisionError, AttributeError, ArithmeticError, BufferError, LookupError):
-                cmdText2 = "self." + cmdText
+                cmd_text2 = "self." + cmd_text
                 try:
-                    output = eval(cmdText2)
+                    output = eval(cmd_text2)
                     print(output)
-                    self.w.console.setTextColor(txtCol)
-                    self.w.console.append(codeOut.getvalue())
+                    self.w.console.setTextColor(txt_col)
+                    self.w.console.append(code_out.getvalue())
                 except:
                     traceback.print_exc()
-                    self.w.console.setTextColor(errCol)
-                    self.w.console.append(codeOut.getvalue())
-                    self.w.console.append(codeErr.getvalue())
+                    self.w.console.setTextColor(err_col)
+                    self.w.console.append(code_out.getvalue())
+                    self.w.console.append(code_err.getvalue())
 
             sys.stdout = sys.__stdout__
             sys.stderr = sys.__stderr__
-            codeOut.close()
-            codeErr.close()
+            code_out.close()
+            code_err.close()
             self.w.console.verticalScrollBar().setValue(self.w.console.verticalScrollBar().maximum())
 
         # end execCmd
 
-    def execScript(self):
+    def exec_script(self):
         if self.cf.mode == 'dark':
-            txtCol = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
-            errCol = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
-            scrCol = QColor.fromRgbF(0.5, 0.5, 1.0, 1.0)
-            scrCol2 = QColor.fromRgbF(0.4, 0.4, 1.0, 1.0)
-            admCol = QColor.fromRgbF(1.0, 1.0, 0.5, 1.0)
+            txt_col = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
+            scr_col = QColor.fromRgbF(0.5, 0.5, 1.0, 1.0)
+            scr_col2 = QColor.fromRgbF(0.4, 0.4, 1.0, 1.0)
+            adm_col = QColor.fromRgbF(1.0, 1.0, 0.5, 1.0)
         else:
-            txtCol = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
-            errCol = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
-            scrCol = QColor.fromRgbF(0.0, 0.0, 1.0, 1.0)
-            scrCol2 = QColor.fromRgbF(0.0, 0.0, 0.6, 1.0)
-            admCol = QColor.fromRgbF(0.4, 0.4, 0.4, 1.0)
+            txt_col = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
+            scr_col = QColor.fromRgbF(0.0, 0.0, 1.0, 1.0)
+            scr_col2 = QColor.fromRgbF(0.0, 0.0, 0.6, 1.0)
+            adm_col = QColor.fromRgbF(0.4, 0.4, 0.4, 1.0)
 
-        zoomChecked = self.w.keepZoom.isChecked()
+        zoom_checked = self.w.keepZoom.isChecked()
         self.w.keepZoom.setChecked(False)
-        codeOut = io.StringIO()
-        codeErr = io.StringIO()
-        sys.stdout = codeOut
-        sys.stderr = codeErr
+        code_out = io.StringIO()
+        code_err = io.StringIO()
+        sys.stdout = code_out
+        sys.stderr = code_err
         code = self.w.script.toPlainText()
         code = code.replace('\\', '\\' * 2)
         try:
@@ -1146,218 +1153,217 @@ class main_w(object):  # pragma: no cover
 
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
-        self.w.console.setTextColor(admCol)
-        self.w.console.append('--- ScriptStart -------------------------\n')
-        self.w.console.setTextColor(scrCol2)
+        self.w.console.setTextColor(adm_col)
+        self.w.console.append('--- Script_start -------------------------\n')
+        self.w.console.setTextColor(scr_col2)
         self.w.console.append('Executing script...\n')
-        self.w.console.setTextColor(scrCol)
+        self.w.console.setTextColor(scr_col)
         codeSplit = code.split('\n')
         for k in range(len(codeSplit)):
-            self.w.console.append(str(k+1) + ': ' + str(codeSplit[k]))
+            self.w.console.append(str(k + 1) + ': ' + str(codeSplit[k]))
 
-        self.w.console.setTextColor(admCol)
+        self.w.console.setTextColor(adm_col)
         self.w.console.append('\n--- ScriptOutput ------------------------\n')
-        self.w.console.setTextColor(txtCol)
-        self.w.console.append(codeOut.getvalue())
-        self.w.console.setTextColor(errCol)
-        self.w.console.append(codeErr.getvalue())
-        self.w.console.setTextColor(admCol)
-        self.w.console.append('--- ScriptEnd ---------------------------\n')
-        self.w.console.setTextColor(txtCol)
-        codeOut.close()
-        codeErr.close()
+        self.w.console.setTextColor(txt_col)
+        self.w.console.append(code_out.getvalue())
+        self.w.console.setTextColor(err_col)
+        self.w.console.append(code_err.getvalue())
+        self.w.console.setTextColor(adm_col)
+        self.w.console.append('--- Script_end ---------------------------\n')
+        self.w.console.setTextColor(txt_col)
+        code_out.close()
+        code_err.close()
         if (len(self.nd.nmrdat[0]) > 0):
-            self.updateGUI()
+            self.update_gui()
 
         self.w.setBox.valueChanged.disconnect()
         self.w.expBox.valueChanged.disconnect()
         self.w.expBox.setValue(self.nd.e + 1)
         self.w.setBox.setValue(self.nd.s + 1)
-        self.w.setBox.valueChanged.connect(lambda: self.changeDataSetExp())
-        self.w.expBox.valueChanged.connect(lambda: self.changeDataSetExp())
-        if (zoomChecked == True):
+        self.w.setBox.valueChanged.connect(lambda: self.change_data_set_exp())
+        self.w.expBox.valueChanged.connect(lambda: self.change_data_set_exp())
+        if (zoom_checked == True):
             self.w.keepZoom.setChecked(True)
 
-        # end execScript
+        # end exec_script
 
-    def exportPeak(self):
-        fName = QFileDialog.getSaveFileName(None, "Save Excel file", "", "*.xlsx", "*.xlsx")
-        fName = fName[0]
-        if len(fName) == 0:
+    def export_peak(self):
+        f_name = QFileDialog.getSaveFileName(None, "Save Excel file", "", "*.xlsx", "*.xlsx")
+        f_name = f_name[0]
+        if len(f_name) == 0:
             return
 
-        workbook = xlsxwriter.Workbook(fName)
-        if self.nd.intAllDatasets == True:
+        workbook = xlsxwriter.Workbook(f_name)
+        if self.nd.int_all_data_sets == True:
             ds = range(len(self.nd.nmrdat))
         else:
             ds = [self.nd.s]
 
         for k in range(len(ds)):
             worksheet = workbook.add_worksheet('Dataset ' + str(ds[k] + 1))
-            worksheet.set_column(1,   4, 15)
+            worksheet.set_column(1, 4, 15)
             worksheet.set_column(5, 255, 30)
             worksheet.set_row(2, 30)
-            #worksheet.set_default_row(64)
-            #my_format = workbook.add_format()
-            #my_format.set_align('vtop')
-            #my_format.set_align('hleft')
-            #worksheet.set_column('A:XFD', None, my_format)
-            if self.nd.intAllExps == True:
+            # worksheet.set_default_row(64)
+            # my_format = workbook.add_format()
+            # my_format.set_align('vtop')
+            # my_format.set_align('hleft')
+            # worksheet.set_column('A:XFD', None, my_format)
+            if self.nd.int_all_exps == True:
                 exps = range(len(self.nd.nmrdat[ds[k]]))
             else:
                 exps = [self.nd.e]
 
-            abcString = []
+            abc_string = []
             for s in itertools.islice(self.iter_all_strings(), 5 + len(exps)):
-                abcString.append(s)
+                abc_string.append(s)
 
-            worksheet.write('B1','peakLabel')
-            worksheet.write('C1', 'peakMaxPPM')
-            worksheet.write('D1', 'startPeakPPM')
+            worksheet.write('B1', 'peak_label')
+            worksheet.write('C1', 'peak_max_ppm')
+            worksheet.write('D1', 'start_peakPPM')
             worksheet.write('E1', 'stopPeakPPM')
-            worksheet.write('A2','Sample #')
+            worksheet.write('A2', 'Sample #')
             worksheet.write('A3', 'Sample ID')
             for m in range(len(exps)):
-                worksheet.write(abcString[m+5] + '1', 'peakInt(exp ' + str(exps[m] + 1) +')')
-                worksheet.write(abcString[m+5] + '2', str(exps[m] + 1))
-                worksheet.write(abcString[m+5] + '3', self.nd.nmrdat[k][exps[m]].title)
+                worksheet.write(abc_string[m + 5] + '1', 'peak_int(exp ' + str(exps[m] + 1) + ')')
+                worksheet.write(abc_string[m + 5] + '2', str(exps[m] + 1))
+                worksheet.write(abc_string[m + 5] + '3', self.nd.nmrdat[k][exps[m]].title)
 
-            for l in range(len(self.nd.nmrdat[self.nd.s][self.nd.e].startPeak)):
-                worksheet.write('B' + str(l + 4), self.nd.nmrdat[self.nd.s][self.nd.e].peakLabel[l])
-                worksheet.write('C' + str(l + 4), self.nd.nmrdat[self.nd.s][self.nd.e].peakMaxPPM[l])
-                worksheet.write('D' + str(l + 4), self.nd.nmrdat[self.nd.s][self.nd.e].startPeak[l])
-                worksheet.write('E' + str(l + 4), self.nd.nmrdat[self.nd.s][self.nd.e].endPeak[l])
+            for l in range(len(self.nd.nmrdat[self.nd.s][self.nd.e].start_peak)):
+                worksheet.write('B' + str(l + 4), self.nd.nmrdat[self.nd.s][self.nd.e].peak_label[l])
+                worksheet.write('C' + str(l + 4), self.nd.nmrdat[self.nd.s][self.nd.e].peak_max_ppm[l])
+                worksheet.write('D' + str(l + 4), self.nd.nmrdat[self.nd.s][self.nd.e].start_peak[l])
+                worksheet.write('E' + str(l + 4), self.nd.nmrdat[self.nd.s][self.nd.e].end_peak[l])
                 for m in range(len(exps)):
-                    worksheet.write(abcString[m+5] + str(l + 4), self.nd.nmrdat[k][exps[m]].peakInt[l])
+                    worksheet.write(abc_string[m + 5] + str(l + 4), self.nd.nmrdat[k][exps[m]].peak_int[l])
 
         workbook.close()
-        # end exportPeak
+        # end export_peak
 
-    def fillPeakNumbers(self):
-        self.nd.peakFill = True
+    def fill_peak_numbers(self):
+        self.nd.peak_fill = True
         s = self.nd.s
         e = self.nd.e
-        nPeaks = len(self.nd.nmrdat[s][e].startPeak)
-        startPeak = self.nd.nmrdat[s][e].startPeak
-        endPeak   = self.nd.nmrdat[s][e].endPeak
-        peakLabel = self.nd.nmrdat[s][e].peakLabel
-        self.w.peakWidget.setRowCount(nPeaks)
-        for k in range(nPeaks):
-            #peakNumber = QTableWidgetItem(str(k))
-            #peakNumber.setTextAlignment(QtCore.Qt.AlignHCenter)
-            #self.w.peakWidget.setItem(k, 0, peakNumber)
-            #print('start: {}. end: {}, label: {}'.format(startPeak[k], endPeak[k], peakLabel[k]))
-            startPeakTW = QTableWidgetItem(str(startPeak[k]))
-            endPeakTW   = QTableWidgetItem(str(endPeak[k]))
-            peakLabelTW = QTableWidgetItem(str(peakLabel[k]))
-            startPeakTW.setTextAlignment(QtCore.Qt.AlignHCenter)
-            endPeakTW.setTextAlignment(QtCore.Qt.AlignHCenter)
-            peakLabelTW.setTextAlignment(QtCore.Qt.AlignHCenter)
-            self.w.peakWidget.setItem(k, 0, startPeakTW)
-            self.w.peakWidget.setItem(k, 1, endPeakTW)
-            self.w.peakWidget.setItem(k, 2, peakLabelTW)
+        n_peaks = len(self.nd.nmrdat[s][e].start_peak)
+        start_peak = self.nd.nmrdat[s][e].start_peak
+        end_peak = self.nd.nmrdat[s][e].end_peak
+        peak_label = self.nd.nmrdat[s][e].peak_label
+        self.w.peakWidget.setRowCount(n_peaks)
+        for k in range(n_peaks):
+            # peakNumber = QTableWidgetItem(str(k))
+            # peakNumber.setTextAlignment(QtCore.Qt.AlignHCenter)
+            # self.w.peakWidget.setItem(k, 0, peakNumber)
+            # print('start: {}. end: {}, label: {}'.format(start_peak[k], end_peak[k], peak_label[k]))
+            start_peak_tw = QTableWidgetItem(str(start_peak[k]))
+            end_peak_tw = QTableWidgetItem(str(end_peak[k]))
+            peak_label_tw = QTableWidgetItem(str(peak_label[k]))
+            start_peak_tw.setTextAlignment(QtCore.Qt.AlignHCenter)
+            end_peak_tw.setTextAlignment(QtCore.Qt.AlignHCenter)
+            peak_label_tw.setTextAlignment(QtCore.Qt.AlignHCenter)
+            self.w.peakWidget.setItem(k, 0, start_peak_tw)
+            self.w.peakWidget.setItem(k, 1, end_peak_tw)
+            self.w.peakWidget.setItem(k, 2, peak_label_tw)
 
+        self.nd.peak_fill = False
+        # end fill_pre_processing_numbers
 
-        self.nd.peakFill = False
-        # end fillPreProcessingNumbers
-
-    def fillPreProcessingNumbers(self):
-        self.nd.pp.preProcFill = True
-        nSpc = len(self.nd.pp.classSelect)
-        self.w.selectClassTW.setRowCount(nSpc)
-        for k in range(nSpc):
-            spcNumber = QTableWidgetItem(str(k))
-            spcNumber.setTextAlignment(QtCore.Qt.AlignHCenter)
-            self.w.selectClassTW.setItem(k, 0, spcNumber)
-            # self.w.selectClassTW.setItemSelected(spcNumber, False)
-            classNumber = QTableWidgetItem(self.nd.pp.classSelect[k])
-            classNumber.setTextAlignment(QtCore.Qt.AlignHCenter)
-            self.w.selectClassTW.setItem(k, 1, classNumber)
+    def fill_pre_processing_numbers(self):
+        self.nd.pp.pre_proc_fill = True
+        n_spc = len(self.nd.pp.class_select)
+        self.w.selectClassTW.setRowCount(n_spc)
+        for k in range(n_spc):
+            spc_number = QTableWidgetItem(str(k))
+            spc_number.setTextAlignment(QtCore.Qt.AlignHCenter)
+            self.w.selectClassTW.setItem(k, 0, spc_number)
+            # self.w.selectClassTW.setItemSelected(spc_number, False)
+            class_number = QTableWidgetItem(self.nd.pp.class_select[k])
+            class_number.setTextAlignment(QtCore.Qt.AlignHCenter)
+            self.w.selectClassTW.setItem(k, 1, class_number)
 
         self.w.selectClassTW.selectAll()
-        selIt = self.w.selectClassTW.selectedItems()
-        for k in np.arange(len(selIt) - 1, -1, -1):
+        sel_it = self.w.selectClassTW.selectedItems()
+        for k in np.arange(len(sel_it) - 1, -1, -1):
             if (self.w.selectClassTW.selectedItems()[k].column() == 1):
                 self.w.selectClassTW.selectedItems()[k].setSelected(False)
 
-        selIt = self.w.selectClassTW.selectedItems()
-        for k in np.arange(len(selIt) - 1, -1, -1):
-            if (np.isin(self.w.selectClassTW.selectedItems()[k].row(), self.nd.pp.plotSelect)):
+        sel_it = self.w.selectClassTW.selectedItems()
+        for k in np.arange(len(sel_it) - 1, -1, -1):
+            if (np.isin(self.w.selectClassTW.selectedItems()[k].row(), self.nd.pp.plot_select)):
                 self.w.selectClassTW.selectedItems()[k].setSelected(True)
             else:
                 self.w.selectClassTW.selectedItems()[k].setSelected(False)
 
-        for k in range(len(self.nd.pp.excludeStart)):
-            exclNumber1 = QTableWidgetItem(str(2 * k))
-            exclNumber1.setTextAlignment(QtCore.Qt.AlignHCenter)
-            exclNumber2 = QTableWidgetItem(str(2 * k + 1))
-            exclNumber2.setTextAlignment(QtCore.Qt.AlignHCenter)
-            self.w.excludeRegionTW.setItem(k, 0, exclNumber1)
-            self.w.excludeRegionTW.setItem(k, 1, exclNumber2)
-            self.w.excludeRegionTW.item(k, 0).setText(str(self.nd.pp.excludeStart[k]))
-            self.w.excludeRegionTW.item(k, 1).setText(str(self.nd.pp.excludeEnd[k]))
+        for k in range(len(self.nd.pp.exclude_start)):
+            excl_number1 = QTableWidgetItem(str(2 * k))
+            excl_number1.setTextAlignment(QtCore.Qt.AlignHCenter)
+            excl_number2 = QTableWidgetItem(str(2 * k + 1))
+            excl_number2.setTextAlignment(QtCore.Qt.AlignHCenter)
+            self.w.excludeRegionTW.setItem(k, 0, excl_number1)
+            self.w.excludeRegionTW.setItem(k, 1, excl_number2)
+            self.w.excludeRegionTW.item(k, 0).setText(str(self.nd.pp.exclude_start[k]))
+            self.w.excludeRegionTW.item(k, 1).setText(str(self.nd.pp.exclude_end[k]))
 
-        for k in range(len(self.nd.pp.segStart)):
-            segNumber1 = QTableWidgetItem(str(2 * k))
-            segNumber1.setTextAlignment(QtCore.Qt.AlignHCenter)
-            segNumber2 = QTableWidgetItem(str(2 * k + 1))
-            segNumber2.setTextAlignment(QtCore.Qt.AlignHCenter)
-            self.w.segAlignTW.setItem(k, 0, segNumber1)
-            self.w.segAlignTW.setItem(k, 1, segNumber2)
-            self.w.segAlignTW.item(k, 0).setText(str(self.nd.pp.segStart[k]))
-            self.w.segAlignTW.item(k, 1).setText(str(self.nd.pp.segEnd[k]))
+        for k in range(len(self.nd.pp.seg_start)):
+            seg_number1 = QTableWidgetItem(str(2 * k))
+            seg_number1.setTextAlignment(QtCore.Qt.AlignHCenter)
+            seg_number2 = QTableWidgetItem(str(2 * k + 1))
+            seg_number2.setTextAlignment(QtCore.Qt.AlignHCenter)
+            self.w.segAlignTW.setItem(k, 0, seg_number1)
+            self.w.segAlignTW.setItem(k, 1, seg_number2)
+            self.w.segAlignTW.item(k, 0).setText(str(self.nd.pp.seg_start[k]))
+            self.w.segAlignTW.item(k, 1).setText(str(self.nd.pp.seg_end[k]))
 
-        for k in range(len(self.nd.pp.compressStart)):
-            compNumber1 = QTableWidgetItem(str(2 * k))
-            compNumber1.setTextAlignment(QtCore.Qt.AlignHCenter)
-            compNumber2 = QTableWidgetItem(str(2 * k + 1))
-            compNumber2.setTextAlignment(QtCore.Qt.AlignHCenter)
-            self.w.compressBucketsTW.setItem(k, 0, compNumber1)
-            self.w.compressBucketsTW.setItem(k, 1, compNumber2)
-            self.w.compressBucketsTW.item(k, 0).setText(str(self.nd.pp.compressStart[k]))
-            self.w.compressBucketsTW.item(k, 1).setText(str(self.nd.pp.compressEnd[k]))
+        for k in range(len(self.nd.pp.compress_start)):
+            comp_number1 = QTableWidgetItem(str(2 * k))
+            comp_number1.setTextAlignment(QtCore.Qt.AlignHCenter)
+            comp_number2 = QTableWidgetItem(str(2 * k + 1))
+            comp_number2.setTextAlignment(QtCore.Qt.AlignHCenter)
+            self.w.compressBucketsTW.setItem(k, 0, comp_number1)
+            self.w.compressBucketsTW.setItem(k, 1, comp_number2)
+            self.w.compressBucketsTW.item(k, 0).setText(str(self.nd.pp.compress_start[k]))
+            self.w.compressBucketsTW.item(k, 1).setText(str(self.nd.pp.compress_end[k]))
 
-        self.w.noiseThresholdLE.setText(str(self.nd.pp.noiseThreshold))
-        self.w.noiseRegionStartLE.setText(str(self.nd.pp.noiseStart))
-        self.w.noiseRegionEndLE.setText(str(self.nd.pp.noiseEnd))
-        self.w.thLineWidthLE.setText(str(self.nd.pp.thLineWidth))
-        self.w.bucketPpmLE.setText(str(self.nd.pp.bucketPPM))
-        self.setBucketPPMPreProc()
-        self.w.excludeRegion.setChecked(self.nd.pp.flagExcludeRegion)
-        self.w.segmentalAlignment.setChecked(self.nd.pp.flagSegmentalAlignment)
-        self.w.noiseFiltering.setChecked(self.nd.pp.flagNoiseFiltering)
-        self.w.bucketSpectra.setChecked(self.nd.pp.flagBucketSpectra)
-        self.w.compressBuckets.setChecked(self.nd.pp.flagCompressBuckets)
-        self.w.scaleSpectra.setChecked(self.nd.pp.flagScaleSpectra)
-        if self.nd.pp.scalePQN is True:
+        self.w.noiseThresholdLE.setText(str(self.nd.pp.noise_threshold))
+        self.w.noiseRegionStartLE.setText(str(self.nd.pp.noise_start))
+        self.w.noiseRegionEndLE.setText(str(self.nd.pp.noise_end))
+        self.w.thLineWidthLE.setText(str(self.nd.pp.th_line_width))
+        self.w.bucketPpmLE.setText(str(self.nd.pp.bucket_ppm))
+        self.set_bucket_ppm_pre_proc()
+        self.w.excludeRegion.setChecked(self.nd.pp.flag_exclude_region)
+        self.w.segmentalAlignment.setChecked(self.nd.pp.flag_segmental_alignment)
+        self.w.noiseFiltering.setChecked(self.nd.pp.flag_noise_filtering)
+        self.w.bucketSpectra.setChecked(self.nd.pp.flag_bucket_spectra)
+        self.w.compressBuckets.setChecked(self.nd.pp.flag_compress_buckets)
+        self.w.scaleSpectra.setChecked(self.nd.pp.flag_scale_spectra)
+        if self.nd.pp.scale_pqn is True:
             self.w.pqnButton.setChecked(True)
         else:
             self.w.tsaButton.setChecked(True)
 
-        self.w.varianceStabilisation.setChecked(self.nd.pp.flagVarianceStabilisation)
-        self.w.exportDataSet.setChecked(self.nd.pp.flagExportDataSet)
-        self.w.exportDelimiterTab.setChecked(self.nd.pp.exportDelimiterTab)
-        self.w.exportDelimiterCharacter.setChecked(not self.nd.pp.exportDelimiterTab)
-        self.w.exportCharacter.setText(self.nd.pp.exportCharacter)
-        self.w.exportMethod.setCurrentIndex(self.nd.pp.exportMethod)
-        self.w.samplesInComboBox.setCurrentIndex(self.nd.pp.exportSamplesInRowsCols)
+        self.w.varianceStabilisation.setChecked(self.nd.pp.flag_variance_stabilisation)
+        self.w.exportDataSet.setChecked(self.nd.pp.flag_export_data_set)
+        self.w.exportDelimiterTab.setChecked(self.nd.pp.export_delimiter_tab)
+        self.w.exportDelimiterCharacter.setChecked(not self.nd.pp.export_delimiter_tab)
+        self.w.exportCharacter.setText(self.nd.pp.export_character)
+        self.w.exportMethod.setCurrentIndex(self.nd.pp.export_method)
+        self.w.samplesInComboBox.setCurrentIndex(self.nd.pp.export_samples_in_rows_cols)
         self.w.segAlignRefSpc.setMaximum(len(self.nd.nmrdat[self.nd.s]))
         self.w.scaleSpectraRefSpc.setMaximum(len(self.nd.nmrdat[self.nd.s]))
-        self.w.segAlignRefSpc.setValue(self.nd.pp.segAlignRefSpc)
-        self.w.scaleSpectraRefSpc.setValue(self.nd.pp.scaleSpectraRefSpc)
-        self.w.preserveOverallScale.setChecked(self.nd.pp.preserveOverallScale)
-        self.w.preserveOverallScale.setDisabled(self.nd.pp.scalePQN)
-        self.w.autoScaling.setChecked(self.nd.pp.autoScaling)
-        self.w.paretoScaling.setChecked(self.nd.pp.paretoScaling)
-        self.w.gLogTransform.setChecked(self.nd.pp.gLogTransform)
-        self.w.lambdaText.setEnabled(self.nd.pp.gLogTransform)
-        self.w.y0Text.setEnabled(self.nd.pp.gLogTransform)
-        self.w.lambdaLE.setEnabled(self.nd.pp.gLogTransform)
-        self.w.y0LE.setEnabled(self.nd.pp.gLogTransform)
-        self.w.lambdaLE.setText(str(self.nd.pp.varLambda))
-        self.w.y0LE.setText(str(self.nd.pp.varY0))
-        self.nd.pp.preProcFill = False
-        # end fillPreProcessingNumbers
+        self.w.segAlignRefSpc.setValue(self.nd.pp.seg_align_ref_spc)
+        self.w.scaleSpectraRefSpc.setValue(self.nd.pp.scale_spectra_ref_spc)
+        self.w.preserveOverallScale.setChecked(self.nd.pp.preserve_overall_scale)
+        self.w.preserveOverallScale.setDisabled(self.nd.pp.scale_pqn)
+        self.w.autoScaling.setChecked(self.nd.pp.auto_scaling)
+        self.w.paretoScaling.setChecked(self.nd.pp.pareto_scaling)
+        self.w.gLogTransform.setChecked(self.nd.pp.g_log_transform)
+        self.w.lambdaText.setEnabled(self.nd.pp.g_log_transform)
+        self.w.y0Text.setEnabled(self.nd.pp.g_log_transform)
+        self.w.lambdaLE.setEnabled(self.nd.pp.g_log_transform)
+        self.w.y0LE.setEnabled(self.nd.pp.g_log_transform)
+        self.w.lambdaLE.setText(str(self.nd.pp.var_lambda))
+        self.w.y0LE.setText(str(self.nd.pp.var_y0))
+        self.nd.pp.pre_proc_fill = False
+        # end fill_pre_processing_numbers
 
     def ft(self):
         self.nd.ft()
@@ -1365,278 +1371,278 @@ class main_w(object):  # pragma: no cover
             self.baseline1d()
 
         self.w.nmrSpectrum.setCurrentIndex(0)
-        self.changeDataSetExp()
-        self.plotSpc()
+        self.change_data_set_exp()
+        self.plot_spc()
         # end ft
 
-    def ftAll(self):
-        self.nd.ftAll()
+    def ft_all(self):
+        self.nd.ft_all()
         if (self.w.baselineCorrection.currentIndex() > 0):
-            self.baseline1dAll()
+            self.baseline1d_all()
 
         self.w.nmrSpectrum.setCurrentIndex(0)
-        self.changeDataSetExp()
-        self.plotSpc()
-        # end ftAll
+        self.change_data_set_exp()
+        self.plot_spc()
+        # end ft_all
 
-    def getDispPars1(self):
+    def get_disp_pars1(self):
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        d.posCol = d.colours.get(self.w.posCol.currentIndex())
+        d.pos_col = d.colours.get(self.w.posCol.currentIndex())
         self.nd.nmrdat[self.nd.s][self.nd.e].display = d
-        # end getDispPars1
+        # end get_disp_pars1
 
-    def getDispPars2(self):
+    def get_disp_pars2(self):
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        d.negCol = d.colours.get(self.w.negCol.currentIndex())
+        d.neg_col = d.colours.get(self.w.negCol.currentIndex())
         self.nd.nmrdat[self.nd.s][self.nd.e].display = d
-        # end getDispPars2
+        # end get_disp_pars2
 
-    def getDispPars3(self):
+    def get_disp_pars3(self):
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        posR = float(self.w.posColR.text())
-        posG = float(self.w.posColG.text())
-        posB = float(self.w.posColB.text())
-        negR = float(self.w.negColR.text())
-        negG = float(self.w.negColG.text())
-        negB = float(self.w.negColB.text())
-        d.posColRGB = (posR, posG, posB)
-        d.negColRGB = (negR, negG, negB)
+        pos_r = float(self.w.posColR.text())
+        pos_g = float(self.w.posColG.text())
+        pos_b = float(self.w.posColB.text())
+        neg_r = float(self.w.negColR.text())
+        neg_g = float(self.w.negColG.text())
+        neg_b = float(self.w.negColB.text())
+        d.pos_col_rgb = (pos_r, pos_g, pos_b)
+        d.neg_col_rgb = (neg_r, neg_g, neg_b)
         self.nd.nmrdat[self.nd.s][self.nd.e].display = d
-        # end getDispPars3
+        # end get_disp_pars3
 
-    def getDispPars4(self):
+    def get_disp_pars4(self):
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        d.nLevels = round(float(self.w.nLevels.text()))
-        # end getDispPars4
+        d.n_levels = round(float(self.w.nLevels.text()))
+        # end get_disp_pars4
 
         self.nd.nmrdat[self.nd.s][self.nd.e].display = d
 
-    def getDispPars5(self):
+    def get_disp_pars5(self):
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        d.minLevel = float(self.w.minLevel.text())
+        d.min_level = float(self.w.minLevel.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].display = d
-        # end getDispPars5
+        # end get_disp_pars5
 
-    def getDispPars6(self):
+    def get_disp_pars6(self):
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        d.maxLevel = float(self.w.maxLevel.text())
+        d.max_level = float(self.w.maxLevel.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].display = d
-        # end getDispPars6
+        # end get_disp_pars6
 
-    def getDispPars7(self):
+    def get_disp_pars7(self):
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        d.axisType1 = d.axes.get(self.w.axisType1.currentIndex())
+        d.axis_type1 = d.axes.get(self.w.axisType1.currentIndex())
         self.nd.nmrdat[self.nd.s][self.nd.e].display = d
-        self.nd.nmrdat[self.nd.s][self.nd.e].calcPPM()
-        # end getDispPars7
+        self.nd.nmrdat[self.nd.s][self.nd.e].calc_ppm()
+        # end get_disp_pars7
 
-    def getDispPars8(self):
+    def get_disp_pars8(self):
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        d.axisType2 = d.axes.get(self.w.axisType2.currentIndex())
+        d.axis_type2 = d.axes.get(self.w.axisType2.currentIndex())
         self.nd.nmrdat[self.nd.s][self.nd.e].display = d
-        self.nd.nmrdat[self.nd.s][self.nd.e].calcPPM()
-        # end getDispPars8
+        self.nd.nmrdat[self.nd.s][self.nd.e].calc_ppm()
+        # end get_disp_pars8
 
-    def getDispPars9(self):
+    def get_disp_pars9(self):
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        d.displaySpc = d.falseTrue.get(self.w.displaySpc.currentIndex())
+        d.display_spc = d.false_true.get(self.w.displaySpc.currentIndex())
         self.nd.nmrdat[self.nd.s][self.nd.e].display = d
-        # end getDispPars9
+        # end get_disp_pars9
 
-    def getDispPars10(self):
+    def get_disp_pars10(self):
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        d.spcOffset = float(self.w.spcOffset.text())
+        d.spc_offset = float(self.w.spcOffset.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].display = d
-        # end getDispPars10
+        # end get_disp_pars10
 
-    def getDispPars11(self):
+    def get_disp_pars11(self):
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        d.spcScale = float(self.w.spcScale.text())
+        d.spc_scale = float(self.w.spcScale.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].display = d
-        # end getDispPars11
+        # end get_disp_pars11
 
-    def getDispPars12(self):
+    def get_disp_pars12(self):
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        d.xLabel = self.w.xLabel.text()
+        d.x_label = self.w.xLabel.text()
         self.nd.nmrdat[self.nd.s][self.nd.e].display = d
-        # end getDispPars12
+        # end get_disp_pars12
 
-    def getDispPars13(self):
+    def get_disp_pars13(self):
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        d.yLabel = self.w.yLabel.text()
+        d.y_label = self.w.yLabel.text()
         self.nd.nmrdat[self.nd.s][self.nd.e].display = d
-        # end getDispPars13
+        # end get_disp_pars13
 
-    def getDispPars14(self):
+    def get_disp_pars14(self):
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        d.spcLabel = self.w.spcLabel.text()
+        d.spc_label = self.w.spcLabel.text()
         self.nd.nmrdat[self.nd.s][self.nd.e].display = d
-        # end getDispPars14
+        # end get_disp_pars14
 
-    def getDispPars15(self):
+    def get_disp_pars15(self):
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        d.phRefCol = d.colours2.get(self.w.phRefColour.currentIndex())
+        d.ph_ref_col = d.colours2.get(self.w.phRefColour.currentIndex())
         for k in range(len(self.nd.nmrdat)):
             for l in range(len(self.nd.nmrdat[k])):
-                self.nd.nmrdat[k][l].display.phRefCol = d.phRefCol
+                self.nd.nmrdat[k][l].display.ph_ref_col = d.ph_ref_col
 
-        # end getDispPars15
+        # end get_disp_pars15
 
-    def getProcPars1(self):
+    def get_proc_pars1(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
-        p.windowType[0] = self.w.windowFunction.currentIndex()
+        p.window_type[0] = self.w.windowFunction.currentIndex()
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars1
+        # end get_proc_pars1
 
-    def getProcPars2(self):
+    def get_proc_pars2(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
-        p.windowType[1] = self.w.windowFunction_2.currentIndex()
+        p.window_type[1] = self.w.windowFunction_2.currentIndex()
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars2
+        # end get_proc_pars2
 
-    def getProcPars3(self):
+    def get_proc_pars3(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
-        p.phCorr[0] = self.w.phaseCorrection.currentIndex()
+        p.ph_corr[0] = self.w.phaseCorrection.currentIndex()
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars3
+        # end get_proc_pars3
 
-    def getProcPars4(self):
+    def get_proc_pars4(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
-        p.phCorr[1] = self.w.phaseCorrection_2.currentIndex()
+        p.ph_corr[1] = self.w.phaseCorrection_2.currentIndex()
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars4
+        # end get_proc_pars4
 
-    def getProcPars5(self):
+    def get_proc_pars5(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
-        p.waterSuppression = self.w.waterSuppression.currentIndex()
+        p.water_suppression = self.w.waterSuppression.currentIndex()
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars5
+        # end get_proc_pars5
 
-    def getProcPars6(self):
+    def get_proc_pars6(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
-        p.convWindowType[0] = self.w.winType.currentIndex()
+        p.conv_window_type[0] = self.w.winType.currentIndex()
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars6
+        # end get_proc_pars6
 
-    def getProcPars7(self):
+    def get_proc_pars7(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
-        p.gibbs[0] = p.gibbsP.get(self.w.gibbs.currentIndex())
+        p.gibbs[0] = p.gibbs_p.get(self.w.gibbs.currentIndex())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars7
+        # end get_proc_pars7
 
-    def getProcPars8(self):
+    def get_proc_pars8(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
-        p.gibbs[1] = p.gibbsP.get(self.w.gibbs_2.currentIndex())
+        p.gibbs[1] = p.gibbs_p.get(self.w.gibbs_2.currentIndex())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars8
+        # end get_proc_pars8
 
-    def getProcPars9(self):
+    def get_proc_pars9(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
-        p.nPoints[0] = int(self.w.zeroFilling.text())
+        p.n_points[0] = int(self.w.zeroFilling.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars9
+        # end get_proc_pars9
 
-    def getProcPars10(self):
+    def get_proc_pars10(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
-        p.nPoints[1] = int(self.w.zeroFilling_2.text())
+        p.n_points[1] = int(self.w.zeroFilling_2.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars10
+        # end get_proc_pars10
 
-    def getProcPars11(self):
+    def get_proc_pars11(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
         p.lb[0] = float(self.w.lb.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars11
+        # end get_proc_pars11
 
-    def getProcPars12(self):
+    def get_proc_pars12(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
         p.gb[0] = float(self.w.gb.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars12
+        # end get_proc_pars12
 
-    def getProcPars13(self):
+    def get_proc_pars13(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
         p.ssb[0] = float(self.w.ssb.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars13
+        # end get_proc_pars13
 
-    def getProcPars14(self):
+    def get_proc_pars14(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
         p.lb[1] = float(self.w.lb_2.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars14
+        # end get_proc_pars14
 
-    def getProcPars15(self):
+    def get_proc_pars15(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
         p.gb[1] = float(self.w.gb_2.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars15
+        # end get_proc_pars15
 
-    def getProcPars16(self):
+    def get_proc_pars16(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
         p.ssb[1] = float(self.w.ssb_2.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars16
+        # end get_proc_pars16
 
-    def getProcPars17(self):
+    def get_proc_pars17(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
         p.ph0[0] = float(self.w.ph0.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars17
+        # end get_proc_pars17
 
-    def getProcPars18(self):
+    def get_proc_pars18(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
         p.ph1[0] = float(self.w.ph1.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars18
+        # end get_proc_pars18
 
-    def getProcPars19(self):
+    def get_proc_pars19(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
         p.ph0[1] = float(self.w.ph0_2.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars19
+        # end get_proc_pars19
 
-    def getProcPars20(self):
+    def get_proc_pars20(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
         p.ph1[1] = float(self.w.ph1_2.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars20
+        # end get_proc_pars20
 
-    def getProcPars21(self):
+    def get_proc_pars21(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
-        p.polyOrder = int(self.w.polyOrder.text())
+        p.poly_order = int(self.w.polyOrder.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars21
+        # end get_proc_pars21
 
-    def getProcPars22(self):
+    def get_proc_pars22(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
-        p.convExtrapolationSize[0] = int(self.w.extrapolationSize.text())
+        p.conv_extrapolation_size[0] = int(self.w.extrapolationSize.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars22
+        # end get_proc_pars22
 
-    def getProcPars23(self):
+    def get_proc_pars23(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
-        p.convWindowSize[0] = int(self.w.windowSize.text())
+        p.conv_window_size[0] = int(self.w.windowSize.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars23
+        # end get_proc_pars23
 
-    def getProcPars24(self):
+    def get_proc_pars24(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
-        p.fidOffsetCorrection = int(self.w.fidOffsetCorrection.text())
+        p.fid_offset_correction = int(self.w.fidOffsetCorrection.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars24
+        # end get_proc_pars24
 
-    def getProcPars25(self):
+    def get_proc_pars25(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
-        p.stripStart = int(self.w.stripTransformStart.text())
+        p.strip_start = int(self.w.stripTransformStart.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars25
+        # end get_proc_pars25
 
-    def getProcPars26(self):
+    def get_proc_pars26(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
-        p.stripEnd = int(self.w.stripTransformEnd.text())
+        p.strip_end = int(self.w.stripTransformEnd.text())
         self.nd.nmrdat[self.nd.s][self.nd.e].proc = p
-        # end getProcPars25
+        # end get_proc_pars25
 
     def get_bottom_top(self, line):
         margin = 0.1
@@ -1649,111 +1655,112 @@ class main_w(object):  # pragma: no cover
         top = np.max(y_displayed) + margin * h
         return bot, top
 
-    def get_rSpc_p0(self):
-        r = self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc
+    def get_r_spc_p0(self):
+        r = self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc
         r[0] = float(self.w.rSpc_p0.text())
-        self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc = r
-        # end get_rSpc_p0
+        self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc = r
+        # end get_r_spc_p0
 
-    def get_rSpc_p1(self):
-        r = self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc
+    def get_r_spc_p1(self):
+        r = self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc
         r[1] = float(self.w.rSpc_p1.text())
-        self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc = r
-        # end get_rSpc_p1
+        self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc = r
+        # end get_r_spc_p1
 
-    def get_rSpc_p2(self):
-        r = self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc
+    def get_r_spc_p2(self):
+        r = self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc
         r[2] = float(self.w.rSpc_p2.text())
-        self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc = r
-        # end get_rSpc_p2
+        self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc = r
+        # end get_r_spc_p2
 
-    def get_rSpc_p3(self):
-        r = self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc
+    def get_r_spc_p3(self):
+        r = self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc
         r[3] = float(self.w.rSpc_p3.text())
-        self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc = r
-        # end get_rSpc_p3
+        self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc = r
+        # end get_r_spc_p3
 
-    def get_rSpc_p4(self):
-        r = self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc
+    def get_r_spc_p4(self):
+        r = self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc
         r[4] = float(self.w.rSpc_p4.text())
-        self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc = r
-        # end get_rSpc_p4
+        self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc = r
+        # end get_r_spc_p4
 
-    def get_rSpc_p5(self):
-        r = self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc
+    def get_r_spc_p5(self):
+        r = self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc
         r[5] = float(self.w.rSpc_p5.text())
-        self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc = r
-        # end get_rSpc_p5
+        self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc = r
+        # end get_r_spc_p5
 
-    def get_rSpc_p6(self):
-        r = self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc
+    def get_r_spc_p6(self):
+        r = self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc
         r[6] = float(self.w.rSpc_p6.text())
-        self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc = r
-        # end get_rSpc_p6
+        self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc = r
+        # end get_r_spc_p6
 
-    def get_iSpc_p0(self):
-        i = self.nd.nmrdat[self.nd.s][self.nd.e].apc.iSpc
+    def get_i_spc_p0(self):
+        i = self.nd.nmrdat[self.nd.s][self.nd.e].apc.i_spc
         i[0] = float(self.w.iSpc_p0.text())
-        self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc = i
-        # end get_iSpc_p0
+        self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc = i
+        # end get_i_spc_p0
 
-    def get_iSpc_p1(self):
-        i = self.nd.nmrdat[self.nd.s][self.nd.e].apc.iSpc
+    def get_i_spc_p1(self):
+        i = self.nd.nmrdat[self.nd.s][self.nd.e].apc.i_spc
         i[1] = float(self.w.iSpc_p1.text())
-        self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc = i
-        # end get_iSpc_p1
+        self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc = i
+        # end get_i_spc_p1
 
-    def get_iSpc_p2(self):
-        i = self.nd.nmrdat[self.nd.s][self.nd.e].apc.iSpc
+    def get_i_spc_p2(self):
+        i = self.nd.nmrdat[self.nd.s][self.nd.e].apc.i_spc
         i[2] = float(self.w.iSpc_p2.text())
-        self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc = i
-        # end get_iSpc_p2
+        self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc = i
+        # end get_i_spc_p2
 
-    def get_iSpc_p3(self):
-        i = self.nd.nmrdat[self.nd.s][self.nd.e].apc.iSpc
+    def get_i_spc_p3(self):
+        i = self.nd.nmrdat[self.nd.s][self.nd.e].apc.i_spc
         i[3] = float(self.w.iSpc_p3.text())
-        self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc = i
-        # end get_iSpc_p3
+        self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc = i
+        # end get_i_spc_p3
 
-    def get_iSpc_p4(self):
-        i = self.nd.nmrdat[self.nd.s][self.nd.e].apc.iSpc
+    def get_i_spc_p4(self):
+        i = self.nd.nmrdat[self.nd.s][self.nd.e].apc.i_spc
         i[4] = float(self.w.iSpc_p4.text())
-        self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc = i
-        # end get_iSpc_p4
+        self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc = i
+        # end get_i_spc_p4
 
-    def get_iSpc_p5(self):
-        i = self.nd.nmrdat[self.nd.s][self.nd.e].apc.iSpc
+    def get_i_spc_p5(self):
+        i = self.nd.nmrdat[self.nd.s][self.nd.e].apc.i_spc
         i[5] = float(self.w.iSpc_p5.text())
-        self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc = i
-        # end get_iSpc_p5
+        self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc = i
+        # end get_i_spc_p5
 
-    def get_iSpc_p6(self):
-        i = self.nd.nmrdat[self.nd.s][self.nd.e].apc.iSpc
+    def get_i_spc_p6(self):
+        i = self.nd.nmrdat[self.nd.s][self.nd.e].apc.i_spc
         i[6] = float(self.w.iSpc_p6.text())
-        self.nd.nmrdat[self.nd.s][self.nd.e].apc.rSpc = i
-        # end get_iSpc_p6
+        self.nd.nmrdat[self.nd.s][self.nd.e].apc.r_spc = i
+        # end get_i_spc_p6
 
-    def onGinputClick(self, event):
-        self.curClicks += 1
-        if self.curClicks < self.nClicks:
+    def on_g_input_click(self, event):
+        self.cur_clicks += 1
+        if self.cur_clicks < self.n_clicks:
             self.xdata.append(event.xdata)
             self.ydata.append(event.ydata)
         else:
             self.xdata.append(event.xdata)
             self.ydata.append(event.ydata)
-            self.nClicks = 1
-            self.curClicks = 0
-            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClick)
+            self.n_clicks = 1
+            self.cur_clicks = 0
+            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_g_input_click)
             cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
-            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClick)
+            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_g_input_click)
             cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
-            codeOut = io.StringIO()
-            codeErr = io.StringIO()
-            sys.stdout = codeOut
-            sys.stderr = codeErr
+            code_out = io.StringIO()
+            code_err = io.StringIO()
+            sys.stdout = code_out
+            sys.stderr = code_err
             print("x-values: {} / xDiff [ppm]: {} / xDiff [Hz]: {}".format(self.xdata, np.abs(np.diff(self.xdata)),
                                                                            np.abs(np.diff(self.xdata)) *
-                                                                           self.nd.nmrdat[self.nd.s][self.nd.e].acq.sfo1))
+                                                                           self.nd.nmrdat[self.nd.s][
+                                                                               self.nd.e].acq.sfo1))
             if self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1:
                 print("y-values: {} / yDiff: {}".format(self.ydata, -np.diff(self.ydata)))
             else:
@@ -1761,28 +1768,28 @@ class main_w(object):  # pragma: no cover
                                                                          np.abs(np.diff(self.ydata)) *
                                                                          self.nd.nmrdat[self.nd.s][self.nd.e].acq.sfo2))
 
-            self.w.console.append(codeOut.getvalue())
+            self.w.console.append(code_out.getvalue())
             sys.stdout = sys.__stdout__
             sys.stderr = sys.__stderr__
-            codeOut.close()
-            codeErr.close()
+            code_out.close()
+            code_err.close()
             self.xdata = []
             self.ydata = []
-            self.showConsole()
+            self.show_console()
 
-    def onGinputClickAddPeak(self, event):
-        self.curClicks += 1
-        if self.curClicks < self.nClicks:
+    def on_g_input_click_add_peak(self, event):
+        self.cur_clicks += 1
+        if self.cur_clicks < self.n_clicks:
             self.xdata.append(event.xdata)
             self.ydata.append(event.ydata)
         else:
             self.xdata.append(event.xdata)
             self.ydata.append(event.ydata)
-            self.nClicks = 1
-            self.curClicks = 0
-            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickAddPeak)
+            self.n_clicks = 1
+            self.cur_clicks = 0
+            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_g_input_click_add_peak)
             cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
-            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickAddPeak)
+            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_g_input_click_add_peak)
             cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
             xy = []
             for k in range(len(self.xdata)):
@@ -1791,29 +1798,29 @@ class main_w(object):  # pragma: no cover
             self.xdata = []
             self.ydata = []
             t = np.round(1e4 * np.array([xy[0][0], xy[1][0]])) / 1e4
-            self.nd.addPeak(t, '')
-            #self.nd.pp.excludeStart = np.append(self.nd.pp.excludeStart, min(t))
-            #self.nd.pp.excludeEnd = np.append(self.nd.pp.excludeEnd, max(t))
-            self.fillPeakNumbers()
-            #self.w.excludeRegionTW.setFocus()
-            #self.setPlotPreProc()
-            #self.w.excludeRegionTW.setFocus()
-            self.plotSpc()
-            #self.setExcludePreProc()
+            self.nd.add_peak(t, '')
+            # self.nd.pp.exclude_start = np.append(self.nd.pp.exclude_start, min(t))
+            # self.nd.pp.exclude_end = np.append(self.nd.pp.exclude_end, max(t))
+            self.fill_peak_numbers()
+            # self.w.excludeRegionTW.setFocus()
+            # self.set_plot_pre_proc()
+            # self.w.excludeRegionTW.setFocus()
+            self.plot_spc()
+            # self.set_exclude_pre_proc()
 
-    def onGinputClickRef1d(self, event):
-        self.curClicks += 1
-        if self.curClicks < self.nClicks:
+    def on_g_input_click_ref_1d(self, event):
+        self.cur_clicks += 1
+        if self.cur_clicks < self.n_clicks:
             self.xdata.append(event.xdata)
             self.ydata.append(event.ydata)
         else:
             self.xdata.append(event.xdata)
             self.ydata.append(event.ydata)
-            self.nClicks = 1
-            self.curClicks = 0
-            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickRef1d)
+            self.n_clicks = 1
+            self.cur_clicks = 0
+            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_g_input_click_ref_1d)
             cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
-            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickRef1d)
+            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_g_input_click_ref_1d)
             cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
             xy = []
             for k in range(len(self.xdata)):
@@ -1821,24 +1828,25 @@ class main_w(object):  # pragma: no cover
 
             self.xdata = []
             self.ydata = []
-            self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0], 0)
-            self.nd.nmrdat[self.nd.s][self.nd.e].refShift[0] = self.tempRefShift
-            self.nd.nmrdat[self.nd.s][self.nd.e].calcPPM()
-            self.resetPlot()
+            self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0],
+                                                                                                               0)
+            self.nd.nmrdat[self.nd.s][self.nd.e].refShift[0] = self.temp_ref_shift
+            self.nd.nmrdat[self.nd.s][self.nd.e].calc_ppm()
+            self.reset_plot()
 
-    def onGinputClickCompress(self, event):
-        self.curClicks += 1
-        if self.curClicks < self.nClicks:
+    def on_g_input_click_compress(self, event):
+        self.cur_clicks += 1
+        if self.cur_clicks < self.n_clicks:
             self.xdata.append(event.xdata)
             self.ydata.append(event.ydata)
         else:
             self.xdata.append(event.xdata)
             self.ydata.append(event.ydata)
-            self.nClicks = 1
-            self.curClicks = 0
-            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickCompress)
+            self.n_clicks = 1
+            self.cur_clicks = 0
+            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_g_input_click_compress)
             cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
-            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickCompress)
+            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_g_input_click_compress)
             cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
             xy = []
             for k in range(len(self.xdata)):
@@ -1847,28 +1855,28 @@ class main_w(object):  # pragma: no cover
             self.xdata = []
             self.ydata = []
             t = np.round(1e4 * np.array([xy[0][0], xy[1][0]])) / 1e4
-            self.nd.pp.compressStart = np.append(self.nd.pp.compressStart, min(t))
-            self.nd.pp.compressEnd = np.append(self.nd.pp.compressEnd, max(t))
-            self.fillPreProcessingNumbers()
+            self.nd.pp.compress_start = np.append(self.nd.pp.compress_start, min(t))
+            self.nd.pp.compress_end = np.append(self.nd.pp.compress_end, max(t))
+            self.fill_pre_processing_numbers()
             self.w.compressBucketsTW.setFocus()
-            self.setPlotPreProc()
+            self.set_plot_pre_proc()
             self.w.compressBucketsTW.setFocus()
-            self.plotSpcPreProc()
-            self.setCompressPreProc()
+            self.plot_spc_pre_proc()
+            self.set_compress_pre_proc()
 
-    def onGinputClickExclude(self, event):
-        self.curClicks += 1
-        if self.curClicks < self.nClicks:
+    def on_g_input_click_exclude(self, event):
+        self.cur_clicks += 1
+        if self.cur_clicks < self.n_clicks:
             self.xdata.append(event.xdata)
             self.ydata.append(event.ydata)
         else:
             self.xdata.append(event.xdata)
             self.ydata.append(event.ydata)
-            self.nClicks = 1
-            self.curClicks = 0
-            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickExclude)
+            self.n_clicks = 1
+            self.cur_clicks = 0
+            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_g_input_click_exclude)
             cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
-            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickExclude)
+            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_g_input_click_exclude)
             cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
             xy = []
             for k in range(len(self.xdata)):
@@ -1877,28 +1885,28 @@ class main_w(object):  # pragma: no cover
             self.xdata = []
             self.ydata = []
             t = np.round(1e4 * np.array([xy[0][0], xy[1][0]])) / 1e4
-            self.nd.pp.excludeStart = np.append(self.nd.pp.excludeStart, min(t))
-            self.nd.pp.excludeEnd = np.append(self.nd.pp.excludeEnd, max(t))
-            self.fillPreProcessingNumbers()
+            self.nd.pp.exclude_start = np.append(self.nd.pp.exclude_start, min(t))
+            self.nd.pp.exclude_end = np.append(self.nd.pp.exclude_end, max(t))
+            self.fill_pre_processing_numbers()
             self.w.excludeRegionTW.setFocus()
-            self.setPlotPreProc()
+            self.set_plot_pre_proc()
             self.w.excludeRegionTW.setFocus()
-            self.plotSpcPreProc()
-            self.setExcludePreProc()
+            self.plot_spc_pre_proc()
+            self.set_exclude_pre_proc()
 
-    def onGinputClickSegAlign(self, event):
-        self.curClicks += 1
-        if self.curClicks < self.nClicks:
+    def on_g_input_click_seg_align(self, event):
+        self.cur_clicks += 1
+        if self.cur_clicks < self.n_clicks:
             self.xdata.append(event.xdata)
             self.ydata.append(event.ydata)
         else:
             self.xdata.append(event.xdata)
             self.ydata.append(event.ydata)
-            self.nClicks = 1
-            self.curClicks = 0
-            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickSegAlign)
+            self.n_clicks = 1
+            self.cur_clicks = 0
+            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_g_input_click_seg_align)
             cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
-            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickSegAlign)
+            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_g_input_click_seg_align)
             cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
             xy = []
             for k in range(len(self.xdata)):
@@ -1907,29 +1915,28 @@ class main_w(object):  # pragma: no cover
             self.xdata = []
             self.ydata = []
             t = np.round(1e4 * np.array([xy[0][0], xy[1][0]])) / 1e4
-            self.nd.pp.segStart = np.append(self.nd.pp.segStart, min(t))
-            self.nd.pp.segEnd = np.append(self.nd.pp.segEnd, max(t))
-            self.fillPreProcessingNumbers()
+            self.nd.pp.seg_start = np.append(self.nd.pp.seg_start, min(t))
+            self.nd.pp.seg_end = np.append(self.nd.pp.seg_end, max(t))
+            self.fill_pre_processing_numbers()
             self.w.segAlignTW.setFocus()
-            self.setPlotPreProc()
+            self.set_plot_pre_proc()
             self.w.segAlignTW.setFocus()
-            self.plotSpcPreProc()
-            self.setSegAlignPreProc()
+            self.plot_spc_pre_proc()
+            self.set_seg_align_pre_proc()
 
-
-    def onGinputClickRef2d(self, event):
-        self.curClicks += 1
-        if self.curClicks < self.nClicks:
+    def on_g_input_click_ref_2d(self, event):
+        self.cur_clicks += 1
+        if self.cur_clicks < self.n_clicks:
             self.xdata.append(event.xdata)
             self.ydata.append(event.ydata)
         else:
             self.xdata.append(event.xdata)
             self.ydata.append(event.ydata)
-            self.nClicks = 1
-            self.curClicks = 0
-            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickRef2d)
+            self.n_clicks = 1
+            self.cur_clicks = 0
+            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_g_input_click_ref_2d)
             cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
-            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickRef2d)
+            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_g_input_click_ref_2d)
             cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
             xy = []
             for k in range(len(self.xdata)):
@@ -1937,132 +1944,140 @@ class main_w(object):  # pragma: no cover
 
             self.xdata = []
             self.ydata = []
-            self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0], 0)
-            self.nd.nmrdat[self.nd.s][self.nd.e].refShift[0] = self.tempRefShift[0]
-            self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[1] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][1], 1)
-            self.nd.nmrdat[self.nd.s][self.nd.e].refShift[1] = self.tempRefShift[1]
-            self.nd.nmrdat[self.nd.s][self.nd.e].proc.refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0]*self.nd.nmrdat[self.nd.s][self.nd.e].proc.nPoints[0]/(len(self.nd.nmrdat[self.nd.s][self.nd.e].fid[0])*self.nd.nmrdat[self.nd.s][self.nd.e].proc.multFactor[0])
-            self.nd.nmrdat[self.nd.s][self.nd.e].proc.refPoint[1] = self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[1]*self.nd.nmrdat[self.nd.s][self.nd.e].proc.nPoints[1]/(len(self.nd.nmrdat[self.nd.s][self.nd.e].fid)*self.nd.nmrdat[self.nd.s][self.nd.e].proc.multFactor[1])
-            self.nd.nmrdat[self.nd.s][self.nd.e].calcPPM()
-            self.resetPlot()
+            self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0],
+                                                                                                               0)
+            self.nd.nmrdat[self.nd.s][self.nd.e].refShift[0] = self.temp_ref_shift[0]
+            self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[1] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][1],
+                                                                                                               1)
+            self.nd.nmrdat[self.nd.s][self.nd.e].refShift[1] = self.temp_ref_shift[1]
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0] * \
+                                                                    self.nd.nmrdat[self.nd.s][self.nd.e].proc.nPoints[
+                                                                        0] / (len(
+                self.nd.nmrdat[self.nd.s][self.nd.e].fid[0]) * self.nd.nmrdat[self.nd.s][self.nd.e].proc.multFactor[0])
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.refPoint[1] = self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[1] * \
+                                                                    self.nd.nmrdat[self.nd.s][self.nd.e].proc.nPoints[
+                                                                        1] / (len(
+                self.nd.nmrdat[self.nd.s][self.nd.e].fid) * self.nd.nmrdat[self.nd.s][self.nd.e].proc.multFactor[1])
+            self.nd.nmrdat[self.nd.s][self.nd.e].calc_ppm()
+            self.reset_plot()
 
-    def onGinput2dClick(self, event):
-        self.curClicks += 1
-        if self.curClicks < self.nClicks:
+    def on_g_input_2d_click(self, event):
+        self.cur_clicks += 1
+        if self.cur_clicks < self.n_clicks:
             self.xdata.append(event.xdata)
             self.ydata.append(event.ydata)
         else:
             self.xdata.append(event.xdata)
             self.ydata.append(event.ydata)
-            self.nClicks = 1
-            self.curClicks = 0
-            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinput2dClick)
+            self.n_clicks = 1
+            self.cur_clicks = 0
+            cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_g_input_2d_click)
             cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
-            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinput2dClick)
+            cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_g_input_2d_click)
             cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
             self.xy = []
-            self.xy = np.resize(self.xy,(1,2))
+            self.xy = np.resize(self.xy, (1, 2))
             self.xy[0][0] = self.xdata[0]
             self.xy[0][1] = self.ydata[0]
             self.xdata = []
             self.ydata = []
             xy = self.xy
-            self.showPhCorr2d()
+            self.show_ph_corr_2d()
             xyPts = []
             xy2 = []
             xyPts.append(self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0], 0))
             xyPts.append(self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][1], 1))
-            self.phCorr.spcRowPts.append(xyPts[1])
-            self.phCorr.spcColPts.append(xyPts[0])
+            self.ph_corr.spc_row_pts.append(xyPts[1])
+            self.ph_corr.spc_col_pts.append(xyPts[0])
             xy2.append(self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(xyPts[0], 0))
             xy2.append(self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(xyPts[1], 1))
-            self.phCorr.spcRow.append(xy2[1])
-            self.phCorr.spcCol.append(xy2[0])
-            self.plot2dColRow()
+            self.ph_corr.spc_row.append(xy2[1])
+            self.ph_corr.spc_col.append(xy2[0])
+            self.plot_2d_col_row()
 
-    def ginput(self, nClicks=1):
+    def ginput(self, n_clicks=1):
         self.w.MplWidget.canvas.setFocus()
-        self.showNMRSpectrum()
-        self.nClicks = nClicks
-        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClick)
-        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClick)
+        self.show_nmr_spectrum()
+        self.n_clicks = n_clicks
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_g_input_click)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_g_input_click)
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
         # end ginput
 
-    def ginputAddPeak(self, nClicks=2):
+    def ginput_add_peak(self, n_clicks=2):
         self.w.MplWidget.canvas.setFocus()
-        self.showNMRSpectrum()
-        self.nClicks = nClicks
-        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickAddPeak)
-        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickAddPeak)
+        self.show_nmr_spectrum()
+        self.n_clicks = n_clicks
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_g_input_click_add_peak)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_g_input_click_add_peak)
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
         # end ginput
 
-    def ginputRef1d(self, nClicks=1):
+    def ginput_ref_1d(self, n_clicks=1):
         self.w.MplWidget.canvas.setFocus()
-        self.showNMRSpectrum()
-        self.nClicks = nClicks
-        #print("ginputRef1d")
-        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickRef1d)
-        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickRef1d)
+        self.show_nmr_spectrum()
+        self.n_clicks = n_clicks
+        # print("ginput_ref_1d")
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_g_input_click_ref_1d)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_g_input_click_ref_1d)
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
         # end ginput
 
-    def ginputRef2d(self, nClicks=1):
+    def ginput_ref_2d(self, n_clicks=1):
         self.w.MplWidget.canvas.setFocus()
-        self.showNMRSpectrum()
-        self.nClicks = nClicks
-        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickRef2d)
-        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickRef2d)
+        self.show_nmr_spectrum()
+        self.n_clicks = n_clicks
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_g_input_click_ref_2d)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_g_input_click_ref_2d)
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
         # end ginput
 
-    def ginputCompress(self, nClicks=1):
+    def ginput_compress(self, n_clicks=1):
         self.w.MplWidget.canvas.setFocus()
-        self.showNMRSpectrum()
-        self.nClicks = nClicks
-        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickCompress)
-        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickCompress)
+        self.show_nmr_spectrum()
+        self.n_clicks = n_clicks
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_g_input_click_compress)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_g_input_click_compress)
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
         # end ginput
 
-    def ginputExclude(self, nClicks=2):
+    def ginput_exclude(self, n_clicks=2):
         self.w.MplWidget.canvas.setFocus()
-        self.showNMRSpectrum()
-        self.nClicks = nClicks
-        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickExclude)
-        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickExclude)
+        self.show_nmr_spectrum()
+        self.n_clicks = n_clicks
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_g_input_click_exclude)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_g_input_click_exclude)
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
         # end ginput
 
-    def ginputSegAlign(self, nClicks=1):
+    def ginput_seg_align(self, n_clicks=1):
         self.w.MplWidget.canvas.setFocus()
-        self.showNMRSpectrum()
-        self.nClicks = nClicks
-        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinputClickSegAlign)
-        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinputClickSegAlign)
+        self.show_nmr_spectrum()
+        self.n_clicks = n_clicks
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_g_input_click_seg_align)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_g_input_click_seg_align)
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
         # end ginput
 
     def ginput2d(self):
         self.w.MplWidget.canvas.setFocus()
-        self.showNMRSpectrum()
-        self.nClicks = 1
-        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onGinput2dClick)
-        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onGinput2dClick)
+        self.show_nmr_spectrum()
+        self.n_clicks = 1
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_g_input_2d_click)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_g_input_2d_click)
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
         # end ginput2d
 
     def h(self):
         print("Command history: ")
         print(">>><<<")
-        for k in range(len(self.nd.cmdBuffer)):
-            print(self.nd.cmdBuffer[k])
+        for k in range(len(self.nd.cmd_buffer)):
+            print(self.nd.cmd_buffer[k])
 
         return (">>><<<")
         # end h
 
-    def hidePreProcessing(self):
+    def hide_pre_processing(self):
         self.w.preProcessingTab.setHidden(True)
         self.w.preProcPeak.setTabEnabled(0, False)
         self.w.preProcessingGroupBox.setHidden(True)
@@ -2071,10 +2086,10 @@ class main_w(object):  # pragma: no cover
         self.w.runPreProcessingButton.setHidden(True)
         self.w.resetPreProcessingButton.setHidden(True)
         self.w.writeScriptButton.setHidden(True)
-        self.plotSpc(True)
-        # end hidePreProcessing
+        self.plot_spc(True)
+        # end hide_pre_processing
 
-    def hidePeakPicking(self):
+    def hide_peak_picking(self):
         self.w.peakPickingTab.setHidden(True)
         self.w.preProcPeak.setTabEnabled(1, False)
         self.w.peakWidget.setHidden(True)
@@ -2085,7 +2100,7 @@ class main_w(object):  # pragma: no cover
         self.w.intAllDS.setHidden(True)
         self.w.exportFormatCB.setHidden(True)
 
-    def showPeakPicking(self):
+    def show_peak_picking(self):
         self.w.preProcPeak.setHidden(False)
         self.w.peakPickingTab.setHidden(False)
         self.w.preProcPeak.setTabEnabled(0, False)
@@ -2104,133 +2119,132 @@ class main_w(object):  # pragma: no cover
         v1 = np.ones(npts1)
         mat1 = np.array([[]], dtype='complex')
         mat1 = np.resize(mat1, (npts1, npts))
-        bMat = np.zeros(int(2 * npts), dtype='complex')
-        bMat[:(npts + 1)] = np.ones(npts + 1)
-        bMat[1:npts] += bMat[1:npts]
-        zMat = np.zeros(int(2 * npts), dtype='complex')
-        bMat = np.outer(v1, bMat)
-        zMat = np.outer(v1, zMat)
-        zMat[:, :npts] = mat
-        zMat = np.fft.ifft(bMat * np.fft.fft(zMat))
-        mat = zMat[:, :npts]
+        b_mat = np.zeros(int(2 * npts), dtype='complex')
+        b_mat[:(npts + 1)] = np.ones(npts + 1)
+        b_mat[1:npts] += b_mat[1:npts]
+        z_mat = np.zeros(int(2 * npts), dtype='complex')
+        b_mat = np.outer(v1, b_mat)
+        z_mat = np.outer(v1, z_mat)
+        z_mat[:, :npts] = mat
+        z_mat = np.fft.ifft(b_mat * np.fft.fft(z_mat))
+        mat = z_mat[:, :npts]
         return mat
         # end hilbert
 
-    def horzPhCorr2d(self):
+    def horz_ph_corr_2d(self):
         s = self.nd.s
         e = self.nd.e
-        self.phCorr.nDims = 2
-        self.phCorr.dim = 0
-        nLines = len(self.phCorr.spcRowPts)
-        if nLines > 0:
+        self.ph_corr.n_dims = 2
+        self.ph_corr.dim = 0
+        n_lines = len(self.ph_corr.spc_row_pts)
+        if n_lines > 0:
             npts0 = len(self.nd.nmrdat[s][e].spc)
             npts = len(self.nd.nmrdat[s][e].spc[0])
-            self.phCorr.spc = np.zeros((nLines, npts), dtype='complex')
+            self.ph_corr.spc = np.zeros((n_lines, npts), dtype='complex')
             spc1 = np.copy(self.nd.nmrdat[s][e].spc)
-            for k in range(nLines):
-                spc = np.array([spc1[npts0 - self.phCorr.spcRowPts[k]]])
+            for k in range(n_lines):
+                spc = np.array([spc1[npts0 - self.ph_corr.spc_row_pts[k]]])
                 spc = self.hilbert(spc)
-                self.phCorr.spc[k] = spc[0]
+                self.ph_corr.spc[k] = spc[0]
 
-            self.phCorr.ppm = self.nd.nmrdat[s][e].ppm1
-            if self.phCorr.pivotPoints2d[0] < 0:
-                self.phCorr.pivotPoints2d[0] = int(len(self.phCorr.ppm) / 2)
-                self.phCorr.pivot2d[0] = self.nd.nmrdat[s][e].points2ppm(self.phCorr.pivotPoints2d[0], 0)
+            self.ph_corr.ppm = self.nd.nmrdat[s][e].ppm1
+            if self.ph_corr.pivot_points_2d[0] < 0:
+                self.ph_corr.pivot_points_2d[0] = int(len(self.ph_corr.ppm) / 2)
+                self.ph_corr.pivot2d[0] = self.nd.nmrdat[s][e].points2ppm(self.ph_corr.pivot_points_2d[0], 0)
 
-        self.showPhCorr2d_1d(self.phCorr.dim)
-        self.phCorr.spcMax = np.max(np.max(np.abs(self.phCorr.spc)))
+        self.show_ph_corr_2d_1d(self.ph_corr.dim)
+        self.ph_corr.spc_max = np.max(np.max(np.abs(self.ph_corr.spc)))
         try:
             zwo = True
             self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
         except:
             pass
 
-        self.setZoomOff()
-        self.phCorr.maxPh0 = 90.0
-        self.phCorr.maxPh1 = 90.0
-        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick2d)
-        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease2d)
-        #self.w.actionApplyPhCorr.triggered.connect(self.apply2dPhCorr)
-        #self.w.actionCancelPhCorr.triggered.connect(self.cancel2dPhCorr)
+        self.set_zoom_off()
+        self.ph_corr.max_ph0 = 90.0
+        self.ph_corr.max_ph1 = 90.0
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_ph_corr_click_2d)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_ph_corr_release_2d)
+        # self.w.actionApplyPhCorr.triggered.connect(self.apply_2d_ph_corr)
+        # self.w.actionCancelPhCorr.triggered.connect(self.cancel2dPhCorr)
         self.w.pickRowColPhCorr2d.setVisible(False)
         self.w.emptyRowColPhCorr2d.setVisible(False)
         self.w.removeRowColPhCorr2d.setVisible(False)
         self.w.horzPhCorr2d.setVisible(False)
-        self.w.vertPhCorr2d.setVisible(False)
-        self.w.zoomPhCorr2d.setVisible(True)
+        self.w.vert_ph_corr_2d.setVisible(False)
+        self.w.zoom_ph_corr2d.setVisible(True)
         self.w.applyPhCorr2d.setVisible(True)
         self.w.cancelPhCorr2d.setVisible(True)
         self.w.exitPhCorr2d.setVisible(False)
-        self.w.exitZoomPhCorr2d.setVisible(False)
-        self.phCorrPlotSpc2d(False)
-        self.showAcquisitionParameters()
-        self.showNMRSpectrum()
-        # end horzPhCorr2d
+        self.w.exitzoom_ph_corr2d.setVisible(False)
+        self.ph_corr_plot_spc_2d(False)
+        self.show_acquisition_parameters()
+        self.show_nmr_spectrum()
+        # end horz_ph_corr_2d
 
     def iter_all_strings(self):
         for size in itertools.count(1):
             for s in itertools.product(ascii_uppercase, repeat=size):
                 yield "".join(s)
 
-
         # end iter_all_strings+
 
-    def loadButton(self):
+    def load_button(self):
         selectedDirectory = QFileDialog.getExistingDirectory()
         if (len(selectedDirectory) > 0):
             self.clear()
-            self.zeroScript()
+            self.zero_script()
         else:
             return
 
-        self.loadFile(selectedDirectory)
-        # end saveButton
+        self.load_file(selectedDirectory)
+        # end save_button
 
-    def loadConfig(self):
-        self.cf.readConfig()
-        self.w.phRefColour.setCurrentIndex(self.nd.nmrdat[0][0].display.colours2.get(self.cf.phaseReferenceColour))
-        self.w.autoPlot.setChecked(self.cf.autoPlot)
-        self.w.keepZoom.setChecked(self.cf.keepZoom)
-        self.w.fontSize.setValue(self.cf.fontSize)
-        self.stdPosCol1 = (self.cf.posCol10,self.cf.posCol11,self.cf.posCol12)
-        self.stdNegCol1 = (self.cf.negCol10,self.cf.negCol11,self.cf.negCol12)
-        self.stdPosCol2 = (self.cf.posCol20,self.cf.posCol21,self.cf.posCol22)
-        self.stdNegCol2 = (self.cf.negCol20,self.cf.negCol21,self.cf.negCol22)
-        self.setStandardColours()
-        # end loadConfig
+    def load_config(self):
+        self.cf.read_config()
+        self.w.phRefColour.setCurrentIndex(self.nd.nmrdat[0][0].display.colours2.get(self.cf.phase_reference_colour))
+        self.w.autoPlot.setChecked(self.cf.auto_plot)
+        self.w.keepZoom.setChecked(self.cf.keep_zoom)
+        self.w.font_size.setValue(self.cf.font_size)
+        self.std_pos_col1 = (self.cf.pos_col10, self.cf.pos_col11, self.cf.pos_col12)
+        self.std_neg_col1 = (self.cf.neg_col10, self.cf.neg_col11, self.cf.neg_col12)
+        self.std_pos_col2 = (self.cf.pos_col20, self.cf.pos_col21, self.cf.pos_col22)
+        self.std_neg_col2 = (self.cf.neg_col20, self.cf.neg_col21, self.cf.neg_col22)
+        self.set_standard_colours()
+        # end load_config
 
-    def loadExampleScript(self):
+    def load_example_script(self):
         idx = self.w.exampleScripts.view().selectedIndexes()[0].row()
         self.w.exampleScripts.setCurrentIndex(idx)
         if (idx == 0):
-            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "example1DScript.py")
+            f_name = os.path.join(os.path.dirname(__file__), "exampleScripts", "example1DScript.py")
 
         if (idx == 1):
-            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "exampleAutoPhaseScript.py")
+            f_name = os.path.join(os.path.dirname(__file__), "exampleScripts", "exampleAutoPhaseScript.py")
 
         if (idx == 2):
-            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "example2DJresScript.py")
+            f_name = os.path.join(os.path.dirname(__file__), "exampleScripts", "example2DJresScript.py")
 
         if (idx == 3):
-            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "examplePreprocessingScript.py")
+            f_name = os.path.join(os.path.dirname(__file__), "exampleScripts", "examplePreprocessingScript.py")
 
         if (idx == 4):
-            fName = os.path.join(os.path.dirname(__file__), "exampleScripts", "example2DNMRPipeScript.py")
+            f_name = os.path.join(os.path.dirname(__file__), "exampleScripts", "example2DNMRPipeScript.py")
 
-        f = open(fName, 'r')
-        scriptText = f.read()
-        self.w.script.setText(scriptText)
-        # end loadExampleScript
+        f = open(f_name, 'r')
+        script_text = f.read()
+        self.w.script.setText(script_text)
+        # end load_example_script
 
-    def loadDarkMode(self):
+    def load_dark_mode(self):
         for k in range(len(self.nd.nmrdat[self.nd.s])):
-            self.nd.nmrdat[self.nd.s][k].display.posColRGB = self.stdPosCol2
-            self.nd.nmrdat[self.nd.s][k].display.negColRGB = self.stdNegCol2
+            self.nd.nmrdat[self.nd.s][k].display.pos_col_rgb = self.std_pos_col2
+            self.nd.nmrdat[self.nd.s][k].display.neg_col_rgb = self.std_neg_col2
 
         idx = self.w.helpComboBox.currentIndex()
         url = []
-        fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "introductionDark", "index.html")
-        url.append("file:///" + fName.replace('\\', '/'))
+        f_name = os.path.join(os.path.dirname(__file__), "nmr", "web", "introductionDark", "index.html")
+        url.append("file:///" + f_name.replace('\\', '/'))
         url.append("https://www.hmdb.ca")
         url.append("https://www.smpdb.ca")
         url.append("https://bmrb.io/metabolomics/")
@@ -2239,14 +2253,14 @@ class main_w(object):  # pragma: no cover
         url.append("https://sdbs.db.aist.go.jp/sdbs/cgi-bin/cre_index.cgi")
         url.append("http://dmar.riken.jp/spincouple/")
         self.w.helpView.setUrl(url[idx])
-        bg     = ( 42/255,  42/255,  42/255)
-        fg     = (255/255, 255/255, 255/255)
+        bg = (42 / 255, 42 / 255, 42 / 255)
+        fg = (255 / 255, 255 / 255, 255 / 255)
         self.w.MplWidget.canvas.figure.set_facecolor(bg)
         self.w.MplWidget.canvas.axes.set_facecolor(bg)
         self.w.MplWidget.canvas.axes.xaxis.label.set_color(fg)
         self.w.MplWidget.canvas.axes.yaxis.label.set_color(fg)
-        self.w.MplWidget.canvas.axes.tick_params(axis = 'x', colors = fg)
-        self.w.MplWidget.canvas.axes.tick_params(axis = 'y', colors = fg)
+        self.w.MplWidget.canvas.axes.tick_params(axis='x', colors=fg)
+        self.w.MplWidget.canvas.axes.tick_params(axis='y', colors=fg)
         self.w.MplWidget.canvas.axes.spines['bottom'].set_color(fg)
         self.w.MplWidget.canvas.axes.spines['top'].set_color(fg)
         self.w.MplWidget.canvas.axes.spines['left'].set_color(fg)
@@ -2255,8 +2269,8 @@ class main_w(object):  # pragma: no cover
         self.w.MplWidget2.canvas.axes.set_facecolor(bg)
         self.w.MplWidget2.canvas.axes.xaxis.label.set_color(fg)
         self.w.MplWidget2.canvas.axes.yaxis.label.set_color(fg)
-        self.w.MplWidget2.canvas.axes.tick_params(axis = 'x', colors = fg)
-        self.w.MplWidget2.canvas.axes.tick_params(axis = 'y', colors = fg)
+        self.w.MplWidget2.canvas.axes.tick_params(axis='x', colors=fg)
+        self.w.MplWidget2.canvas.axes.tick_params(axis='y', colors=fg)
         self.w.MplWidget2.canvas.axes.spines['bottom'].set_color(fg)
         self.w.MplWidget2.canvas.axes.spines['top'].set_color(fg)
         self.w.MplWidget2.canvas.axes.spines['left'].set_color(fg)
@@ -2265,43 +2279,43 @@ class main_w(object):  # pragma: no cover
         self.w.MplWidget3.canvas.axes.set_facecolor(bg)
         self.w.MplWidget3.canvas.axes.xaxis.label.set_color(fg)
         self.w.MplWidget3.canvas.axes.yaxis.label.set_color(fg)
-        self.w.MplWidget3.canvas.axes.tick_params(axis = 'x', colors = fg)
-        self.w.MplWidget3.canvas.axes.tick_params(axis = 'y', colors = fg)
+        self.w.MplWidget3.canvas.axes.tick_params(axis='x', colors=fg)
+        self.w.MplWidget3.canvas.axes.tick_params(axis='y', colors=fg)
         self.w.MplWidget3.canvas.axes.spines['bottom'].set_color(fg)
         self.w.MplWidget3.canvas.axes.spines['top'].set_color(fg)
         self.w.MplWidget3.canvas.axes.spines['left'].set_color(fg)
         self.w.MplWidget3.canvas.axes.spines['right'].set_color(fg)
-        # end loadDarkMode
+        # end load_dark_mode
 
-    def setStandardPlotColours(self):
-        self.cf.readConfig()
-        self.stdPosCol1 = (self.cf.posCol10,self.cf.posCol11,self.cf.posCol12)
-        self.stdNegCol1 = (self.cf.negCol10,self.cf.negCol11,self.cf.negCol12)
-        self.stdPosCol2 = (self.cf.posCol20,self.cf.posCol21,self.cf.posCol22)
-        self.stdNegCol2 = (self.cf.negCol20,self.cf.negCol21,self.cf.negCol22)
-        self.setStandardColours()
+    def set_standard_plot_colours(self):
+        self.cf.read_config()
+        self.std_pos_col1 = (self.cf.pos_col10, self.cf.pos_col11, self.cf.pos_col12)
+        self.std_neg_col1 = (self.cf.neg_col10, self.cf.neg_col11, self.cf.neg_col12)
+        self.std_pos_col2 = (self.cf.pos_col20, self.cf.pos_col21, self.cf.pos_col22)
+        self.std_neg_col2 = (self.cf.neg_col20, self.cf.neg_col21, self.cf.neg_col22)
+        self.set_standard_colours()
 
-    def loadFile(self, fileName):
+    def load_file(self, fileName):
         self.nd.load(fileName)
         self.w.script.insertHtml(self.nd.script)
         self.w.console.insertHtml(self.nd.console)
-        self.resetPlot()
-        self.updateGUI()
+        self.reset_plot()
+        self.update_gui()
         self.w.console.verticalScrollBar().setValue(self.w.console.verticalScrollBar().maximum())
-        self.showTitleFileInformation()
-        self.showAcquisitionParameters()
-        self.showNMRSpectrum()
-        # end loadFile
+        self.show_title_file_information()
+        self.show_acquisition_parameters()
+        self.show_nmr_spectrum()
+        # end load_file
 
-    def loadLightMode(self):
+    def load_light_mode(self):
         for k in range(len(self.nd.nmrdat[self.nd.s])):
-            self.nd.nmrdat[self.nd.s][k].display.posColRGB = self.stdPosCol1
-            self.nd.nmrdat[self.nd.s][k].display.negColRGB = self.stdNegCol1
+            self.nd.nmrdat[self.nd.s][k].display.pos_col_rgb = self.std_pos_col1
+            self.nd.nmrdat[self.nd.s][k].display.neg_col_rgb = self.std_neg_col1
 
         idx = self.w.helpComboBox.currentIndex()
         url = []
-        fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "introduction", "index.html")
-        url.append("file:///" + fName.replace('\\', '/'))
+        f_name = os.path.join(os.path.dirname(__file__), "nmr", "web", "introduction", "index.html")
+        url.append("file:///" + f_name.replace('\\', '/'))
         url.append("https://www.hmdb.ca")
         url.append("https://www.smpdb.ca")
         url.append("https://bmrb.io/metabolomics/")
@@ -2310,14 +2324,14 @@ class main_w(object):  # pragma: no cover
         url.append("https://sdbs.db.aist.go.jp/sdbs/cgi-bin/cre_index.cgi")
         url.append("http://dmar.riken.jp/spincouple/")
         self.w.helpView.setUrl(url[idx])
-        bg     = (255/255, 255/255, 255/255)
-        fg     = (  0/255,   0/255,   0/255)
+        bg = (255 / 255, 255 / 255, 255 / 255)
+        fg = (0 / 255, 0 / 255, 0 / 255)
         self.w.MplWidget.canvas.figure.set_facecolor(bg)
         self.w.MplWidget.canvas.axes.set_facecolor(bg)
         self.w.MplWidget.canvas.axes.xaxis.label.set_color(fg)
         self.w.MplWidget.canvas.axes.yaxis.label.set_color(fg)
-        self.w.MplWidget.canvas.axes.tick_params(axis = 'x', colors = fg)
-        self.w.MplWidget.canvas.axes.tick_params(axis = 'y', colors = fg)
+        self.w.MplWidget.canvas.axes.tick_params(axis='x', colors=fg)
+        self.w.MplWidget.canvas.axes.tick_params(axis='y', colors=fg)
         self.w.MplWidget.canvas.axes.spines['bottom'].set_color(fg)
         self.w.MplWidget.canvas.axes.spines['top'].set_color(fg)
         self.w.MplWidget.canvas.axes.spines['left'].set_color(fg)
@@ -2326,8 +2340,8 @@ class main_w(object):  # pragma: no cover
         self.w.MplWidget2.canvas.axes.set_facecolor(bg)
         self.w.MplWidget2.canvas.axes.xaxis.label.set_color(fg)
         self.w.MplWidget2.canvas.axes.yaxis.label.set_color(fg)
-        self.w.MplWidget2.canvas.axes.tick_params(axis = 'x', colors = fg)
-        self.w.MplWidget2.canvas.axes.tick_params(axis = 'y', colors = fg)
+        self.w.MplWidget2.canvas.axes.tick_params(axis='x', colors=fg)
+        self.w.MplWidget2.canvas.axes.tick_params(axis='y', colors=fg)
         self.w.MplWidget2.canvas.axes.spines['bottom'].set_color(fg)
         self.w.MplWidget2.canvas.axes.spines['top'].set_color(fg)
         self.w.MplWidget2.canvas.axes.spines['left'].set_color(fg)
@@ -2336,26 +2350,26 @@ class main_w(object):  # pragma: no cover
         self.w.MplWidget3.canvas.axes.set_facecolor(bg)
         self.w.MplWidget3.canvas.axes.xaxis.label.set_color(fg)
         self.w.MplWidget3.canvas.axes.yaxis.label.set_color(fg)
-        self.w.MplWidget3.canvas.axes.tick_params(axis = 'x', colors = fg)
-        self.w.MplWidget3.canvas.axes.tick_params(axis = 'y', colors = fg)
+        self.w.MplWidget3.canvas.axes.tick_params(axis='x', colors=fg)
+        self.w.MplWidget3.canvas.axes.tick_params(axis='y', colors=fg)
         self.w.MplWidget3.canvas.axes.spines['bottom'].set_color(fg)
         self.w.MplWidget3.canvas.axes.spines['top'].set_color(fg)
         self.w.MplWidget3.canvas.axes.spines['left'].set_color(fg)
         self.w.MplWidget3.canvas.axes.spines['right'].set_color(fg)
-        # end loadLightMode
+        # end load_light_mode
 
-    def nextCommand(self):
+    def next_command(self):
         if (self.w.cmdLine.hasFocus() == True):
-            if (self.nd.cmdIdx < len(self.nd.cmdBuffer)):
-                self.nd.cmdIdx += 1
-                if (self.nd.cmdIdx == len(self.nd.cmdBuffer)):
+            if (self.nd.cmd_idx < len(self.nd.cmd_buffer)):
+                self.nd.cmd_idx += 1
+                if (self.nd.cmd_idx == len(self.nd.cmd_buffer)):
                     self.w.cmdLine.setText("")
                 else:
-                    self.w.cmdLine.setText(self.nd.cmdBuffer[self.nd.cmdIdx])
+                    self.w.cmdLine.setText(self.nd.cmd_buffer[self.nd.cmd_idx])
 
-        # end nextCommand
+        # end next_command
 
-    def nextTab(self):
+    def next_tab(self):
         cidx = self.w.nmrSpectrum.currentIndex()
         while self.w.nmrSpectrum.isTabEnabled(cidx + 1) is False and cidx < 11:
             cidx += 1
@@ -2365,10 +2379,9 @@ class main_w(object):  # pragma: no cover
         else:
             self.w.nmrSpectrum.setCurrentIndex(0)
 
+        # end next_tab
 
-        #end nextTab
-
-    def previousTab(self):
+    def previous_tab(self):
         cidx = self.w.nmrSpectrum.currentIndex()
         while self.w.nmrSpectrum.isTabEnabled(cidx - 1) is False and cidx > 1:
             cidx -= 1
@@ -2379,30 +2392,30 @@ class main_w(object):  # pragma: no cover
         else:
             self.w.nmrSpectrum.setCurrentIndex(12)
 
-        # end previousTab
+        # end previous_tab
 
-    def onPhCorrClick(self, event):
+    def on_ph_corr_click(self, event):
         s = self.nd.s
         e = self.nd.e
         if (self.zoom == False):
-            self.phCorr.spc = self.nd.nmrdat[s][e].spc
-            self.phCorr.spcMax = max(max(abs(self.phCorr.spc)))
-            #self.w.MplWidget.canvas.toolbar._zoom_mode.__init__()
+            self.ph_corr.spc = self.nd.nmrdat[s][e].spc
+            self.ph_corr.spc_max = max(max(abs(self.ph_corr.spc)))
+            # self.w.MplWidget.canvas.toolbar._zoom_mode.__init__()
             if (event.button == 1):
                 mods = QApplication.queryKeyboardModifiers()
                 if (mods == QtCore.Qt.ControlModifier):
                     # set pivot for phase correction
-                    self.phCorr.start = event.xdata
-                    self.phCorr.pivot = event.xdata
-                    self.phCorr.pivPoints = self.nd.nmrdat[s][e].ppm2points(self.phCorr.pivot, 0)
+                    self.ph_corr.start = event.xdata
+                    self.ph_corr.pivot = event.xdata
+                    self.ph_corr.piv_points = self.nd.nmrdat[s][e].ppm2points(self.ph_corr.pivot, 0)
 
                 if (mods == QtCore.Qt.ShiftModifier):
                     # first order phase correction
-                    self.phCorr.start = event.ydata
+                    self.ph_corr.start = event.ydata
 
                 if (mods == QtCore.Qt.NoModifier):
                     # zero order phase correction
-                    self.phCorr.start = event.ydata
+                    self.ph_corr.start = event.ydata
 
                 if (mods == QtCore.Qt.AltModifier):
                     self.w.MplWidget.canvas.manager.toolbar.zoom()
@@ -2410,40 +2423,40 @@ class main_w(object):  # pragma: no cover
             else:
                 if (event.button == 2):
                     # set pivot for phase correction
-                    self.phCorr.start = event.xdata
-                    self.phCorr.pivot = event.xdata
-                    self.phCorr.pivPoints = self.nd.nmrdat[s][e].ppm2points(self.phCorr.pivot, 0)
+                    self.ph_corr.start = event.xdata
+                    self.ph_corr.pivot = event.xdata
+                    self.ph_corr.piv_points = self.nd.nmrdat[s][e].ppm2points(self.ph_corr.pivot, 0)
                 else:
                     # first order phase correction
-                    self.phCorr.start = event.ydata
+                    self.ph_corr.start = event.ydata
 
-            cid3 = self.w.MplWidget.canvas.mpl_connect('motion_notify_event', self.onPhCorrDraw)
+            cid3 = self.w.MplWidget.canvas.mpl_connect('motion_notify_event', self.on_ph_corr_draw)
 
-        # end onPhCorrClick
+        # end on_ph_corr_click
 
-    def onPhCorrClick2d(self, event):
+    def on_ph_corr_click2d(self, event):
         s = self.nd.s
         e = self.nd.e
         if (self.zoom == False):
-            self.phCorr.spc2 = np.copy(self.phCorr.spc)
-            # self.phCorr.spc = self.nd.nmrdat[s][e].spc
-            # self.phCorr.spcMax = max(max(abs(self.phCorr.spc)))
+            self.ph_corr.spc2 = np.copy(self.ph_corr.spc)
+            # self.ph_corr.spc = self.nd.nmrdat[s][e].spc
+            # self.ph_corr.spc_max = max(max(abs(self.ph_corr.spc)))
             if (event.button == 1):
                 mods = QApplication.queryKeyboardModifiers()
                 if (mods == QtCore.Qt.ControlModifier):
                     # set pivot for phase correction
-                    self.phCorr.start = event.xdata
-                    self.phCorr.pivot = event.xdata
-                    self.phCorr.pivotPoints2d[self.phCorr.dim] = self.nd.nmrdat[s][e].ppm2points(
-                        self.phCorr.pivot2d[self.phCorr.dim], self.phCorr.dim)
+                    self.ph_corr.start = event.xdata
+                    self.ph_corr.pivot = event.xdata
+                    self.ph_corr.pivot_points_2d[self.ph_corr.dim] = self.nd.nmrdat[s][e].ppm2points(
+                        self.ph_corr.pivot2d[self.ph_corr.dim], self.ph_corr.dim)
 
                 if (mods == QtCore.Qt.ShiftModifier):
                     # first order phase correction
-                    self.phCorr.start = event.ydata
+                    self.ph_corr.start = event.ydata
 
                 if (mods == QtCore.Qt.NoModifier):
                     # zero order phase correction
-                    self.phCorr.start = event.ydata
+                    self.ph_corr.start = event.ydata
 
                 if (mods == QtCore.Qt.AltModifier):
                     self.w.MplWidget.canvas.manager.toolbar.zoom()
@@ -2451,132 +2464,135 @@ class main_w(object):  # pragma: no cover
             else:
                 if (event.button == 2):
                     # set pivot for phase correction
-                    self.phCorr.start = event.xdata
-                    self.phCorr.pivot2d[self.phCorr.dim] = event.xdata
-                    self.phCorr.pivotPoints2d[self.phCorr.dim] = self.nd.nmrdat[s][e].ppm2points(
-                        self.phCorr.pivot2d[self.phCorr.dim], self.phCorr.dim)
+                    self.ph_corr.start = event.xdata
+                    self.ph_corr.pivot2d[self.ph_corr.dim] = event.xdata
+                    self.ph_corr.pivot_points_2d[self.ph_corr.dim] = self.nd.nmrdat[s][e].ppm2points(
+                        self.ph_corr.pivot2d[self.ph_corr.dim], self.ph_corr.dim)
                 else:
                     # first order phase correction
-                    self.phCorr.start = event.ydata
+                    self.ph_corr.start = event.ydata
 
-            cid3 = self.w.MplWidget.canvas.mpl_connect('motion_notify_event', self.onPhCorrDraw2d)
+            cid3 = self.w.MplWidget.canvas.mpl_connect('motion_notify_event', self.on_ph_corr_draw2d)
 
-        # end onPhCorrClick2d
+        # end on_ph_corr_click2d
 
-    def onPhCorrDraw(self, event):
+    def on_ph_corr_draw(self, event):
         if (self.zoom == False):
             s = self.nd.s
             e = self.nd.e
             if ((event.xdata != None) & (event.ydata != None)):
-                self.phCorr.xData = event.xdata
-                self.phCorr.yData = event.ydata
+                self.ph_corr.x_data = event.xdata
+                self.ph_corr.y_data = event.ydata
                 if (event.button == 1):
                     mods = QApplication.queryKeyboardModifiers()
                     if (mods == QtCore.Qt.ControlModifier):
                         # set pivot for phase correction
-                        self.phCorr.pivot = event.xdata
-                        self.phCorr.pivPoints = self.nd.nmrdat[s][e].ppm2points(self.phCorr.pivot, 0)
+                        self.ph_corr.pivot = event.xdata
+                        self.ph_corr.piv_points = self.nd.nmrdat[s][e].ppm2points(self.ph_corr.pivot, 0)
 
                     if (mods == QtCore.Qt.ShiftModifier):
                         # first order phase correction
                         ph0 = 0
-                        ph1 = self.phCorr.maxPh1 * (event.ydata - self.phCorr.start) / self.phCorr.spcMax
-                        self.phCorr.spc = self.phase1d(self.nd.nmrdat[s][e].spc, ph0, ph1, self.phCorr.pivPoints)
+                        ph1 = self.ph_corr.max_ph1 * (event.ydata - self.ph_corr.start) / self.ph_corr.spc_max
+                        self.ph_corr.spc = self.phase1d(self.nd.nmrdat[s][e].spc, ph0, ph1, self.ph_corr.piv_points)
 
                     if (mods == QtCore.Qt.NoModifier):
                         # zero order phase correction
-                        ph0 = self.phCorr.maxPh0 * (event.ydata - self.phCorr.start) / self.phCorr.spcMax
+                        ph0 = self.ph_corr.max_ph0 * (event.ydata - self.ph_corr.start) / self.ph_corr.spc_max
                         ph1 = 0
-                        self.phCorr.spc = self.phase1d(self.nd.nmrdat[s][e].spc, ph0, ph1, self.phCorr.pivPoints)
+                        self.ph_corr.spc = self.phase1d(self.nd.nmrdat[s][e].spc, ph0, ph1, self.ph_corr.piv_points)
 
                 else:
                     if (event.button == 2):
                         # set pivot for phase correction
-                        self.phCorr.xData = event.xdata
-                        self.phCorr.yData = event.ydata
-                        self.phCorr.pivot = event.xdata
-                        self.phCorr.pivPoints = self.nd.nmrdat[s][e].ppm2points(self.phCorr.pivot, 0)
+                        self.ph_corr.x_data = event.xdata
+                        self.ph_corr.y_data = event.ydata
+                        self.ph_corr.pivot = event.xdata
+                        self.ph_corr.piv_points = self.nd.nmrdat[s][e].ppm2points(self.ph_corr.pivot, 0)
                     else:
                         # first order phase correction
-                        self.phCorr.xData = event.xdata
-                        self.phCorr.yData = event.ydata
+                        self.ph_corr.x_data = event.xdata
+                        self.ph_corr.y_data = event.ydata
                         ph0 = 0
-                        ph1 = self.phCorr.maxPh1 * (event.ydata - self.phCorr.start) / self.phCorr.spcMax
-                        self.phCorr.spc = self.phase1d(self.nd.nmrdat[s][e].spc, ph0, ph1, self.phCorr.pivPoints)
+                        ph1 = self.ph_corr.max_ph1 * (event.ydata - self.ph_corr.start) / self.ph_corr.spc_max
+                        self.ph_corr.spc = self.phase1d(self.nd.nmrdat[s][e].spc, ph0, ph1, self.ph_corr.piv_points)
 
-            self.phCorrPlotSpc()
+            self.ph_corr_plot_spc()
 
-        # end onPhCorrDraw
+        # end on_ph_corr_draw
 
-    def onPhCorrDraw2d(self, event):
+    def on_ph_corr_draw2d(self, event):
         if (self.zoom == False):
             s = self.nd.s
             e = self.nd.e
             if ((event.xdata != None) & (event.ydata != None)):
-                self.phCorr.xData = event.xdata
-                self.phCorr.yData = event.ydata
+                self.ph_corr.x_data = event.xdata
+                self.ph_corr.y_data = event.ydata
                 if (event.button == 1):
                     mods = QApplication.queryKeyboardModifiers()
                     if (mods == QtCore.Qt.ControlModifier):
                         # set pivot for phase correction
-                        self.phCorr.pivot2d[self.phCorr.dim] = event.xdata
-                        self.phCorr.pivotPoints2d[self.phCorr.dim] = self.nd.nmrdat[s][e].ppm2points(self.phCorr.pivot2d[self.phCorr.dim], self.phCorr.dim)
+                        self.ph_corr.pivot2d[self.ph_corr.dim] = event.xdata
+                        self.ph_corr.pivot_points_2d[self.ph_corr.dim] = self.nd.nmrdat[s][e].ppm2points(
+                            self.ph_corr.pivot2d[self.ph_corr.dim], self.ph_corr.dim)
 
                     if (mods == QtCore.Qt.ShiftModifier):
                         # first order phase correction
                         ph0 = 0
-                        ph1 = self.phCorr.maxPh1 * (event.ydata - self.phCorr.start) / self.phCorr.spcMax
-                        self.phCorr.spc = self.phase1d(self.phCorr.spc2, ph0, ph1, self.phCorr.pivotPoints2d[self.phCorr.dim])
+                        ph1 = self.ph_corr.max_ph1 * (event.ydata - self.ph_corr.start) / self.ph_corr.spc_max
+                        self.ph_corr.spc = self.phase1d(self.ph_corr.spc2, ph0, ph1,
+                                                        self.ph_corr.pivot_points_2d[self.ph_corr.dim])
 
                     if (mods == QtCore.Qt.NoModifier):
                         # zero order phase correction
-                        ph0 = self.phCorr.maxPh0 * (event.ydata - self.phCorr.start) / self.phCorr.spcMax
+                        ph0 = self.ph_corr.max_ph0 * (event.ydata - self.ph_corr.start) / self.ph_corr.spc_max
                         ph1 = 0
-                        self.phCorr.spc = self.phase1d(self.phCorr.spc2, ph0, ph1, self.phCorr.pivotPoints2d[self.phCorr.dim])
+                        self.ph_corr.spc = self.phase1d(self.ph_corr.spc2, ph0, ph1,
+                                                        self.ph_corr.pivot_points_2d[self.ph_corr.dim])
 
                 else:
                     if (event.button == 2):
                         # set pivot for phase correction
-                        self.phCorr.xData = event.xdata
-                        self.phCorr.yData = event.ydata
-                        self.phCorr.pivot2d[self.phCorr.dim] = event.xdata
-                        self.phCorr.pivotPoints2d[self.phCorr.dim] = self.nd.nmrdat[s][e].ppm2points(
-                            self.phCorr.pivot2d[self.phCorr.dim], self.phCorr.dim)
+                        self.ph_corr.x_data = event.xdata
+                        self.ph_corr.y_data = event.ydata
+                        self.ph_corr.pivot2d[self.ph_corr.dim] = event.xdata
+                        self.ph_corr.pivot_points_2d[self.ph_corr.dim] = self.nd.nmrdat[s][e].ppm2points(
+                            self.ph_corr.pivot2d[self.ph_corr.dim], self.ph_corr.dim)
                     else:
                         # first order phase correction
-                        self.phCorr.xData = event.xdata
-                        self.phCorr.yData = event.ydata
+                        self.ph_corr.x_data = event.xdata
+                        self.ph_corr.y_data = event.ydata
                         ph0 = 0
-                        ph1 = self.phCorr.maxPh1 * (event.ydata - self.phCorr.start) / self.phCorr.spcMax
-                        self.phCorr.spc = self.phase1d(self.phCorr.spc2, ph0, ph1,
-                                                       self.phCorr.pivotPoints2d[self.phCorr.dim])
+                        ph1 = self.ph_corr.max_ph1 * (event.ydata - self.ph_corr.start) / self.ph_corr.spc_max
+                        self.ph_corr.spc = self.phase1d(self.ph_corr.spc2, ph0, ph1,
+                                                        self.ph_corr.pivot_points_2d[self.ph_corr.dim])
 
-            self.phCorrPlotSpc2d()
+            self.ph_corr_plot_spc_2d()
 
-        # end onPhCorrDrawd
+        # end on_ph_corr_drawd
 
-    def onPhCorrRelease(self, event):
+    def on_ph_corr_release(self, event):
         s = self.nd.s
         e = self.nd.e
         if ((event.xdata != None) & (event.ydata != None)):
             xdata = event.xdata
             ydata = event.ydata
         else:
-            xdata = self.phCorr.xData
-            ydata = self.phCorr.yData
+            xdata = self.ph_corr.x_data
+            ydata = self.ph_corr.y_data
 
         if (self.zoom == False):
             if (event.button == 1):
                 mods = QApplication.queryKeyboardModifiers()
                 if (mods == QtCore.Qt.ControlModifier):
                     # set pivot for phase correction
-                    self.phCorr.pivot = xdata
-                    self.phCorr.pivPoints = self.nd.nmrdat[s][e].ppm2points(self.phCorr.pivot, 0)
+                    self.ph_corr.pivot = xdata
+                    self.ph_corr.piv_points = self.nd.nmrdat[s][e].ppm2points(self.ph_corr.pivot, 0)
 
                 if (mods == QtCore.Qt.ShiftModifier):
                     # first order phase correction
-                    ph1 = (self.phCorr.maxPh1 * (ydata - self.phCorr.start) / self.phCorr.spcMax)
-                    ph = self.phasesRemovePivot(0.0, ph1, self.phCorr.pivPoints, len(self.phCorr.spc[0]))
+                    ph1 = (self.ph_corr.max_ph1 * (ydata - self.ph_corr.start) / self.ph_corr.spc_max)
+                    ph = self.phases_remove_pivot(0.0, ph1, self.ph_corr.piv_points, len(self.ph_corr.spc[0]))
                     ph0 = ((self.nd.nmrdat[s][e].proc.ph0[0] + ph[0] + 180.0) % 360.0) - 180.0
                     ph1 = self.nd.nmrdat[s][e].proc.ph1[0] + ph[1]
                     self.nd.nmrdat[s][e].proc.ph0[0] = ph0
@@ -2584,9 +2600,9 @@ class main_w(object):  # pragma: no cover
 
                 if (mods == QtCore.Qt.NoModifier):
                     # zero order phase correction
-                    ph0a = (self.phCorr.maxPh0 * (ydata - self.phCorr.start) / self.phCorr.spcMax) % 360.0
+                    ph0a = (self.ph_corr.max_ph0 * (ydata - self.ph_corr.start) / self.ph_corr.spc_max) % 360.0
                     ph1a = 0.0
-                    ph = self.phasesRemovePivot(ph0a, ph1a, self.phCorr.pivPoints, len(self.phCorr.spc[0]))
+                    ph = self.phases_remove_pivot(ph0a, ph1a, self.ph_corr.piv_points, len(self.ph_corr.spc[0]))
                     ph0 = ((self.nd.nmrdat[s][e].proc.ph0[0] + ph[0] + 180.0) % 360.0) - 180.0
                     ph1 = self.nd.nmrdat[s][e].proc.ph1[0] + ph[1]
                     self.nd.nmrdat[s][e].proc.ph0[0] = ph0
@@ -2595,23 +2611,23 @@ class main_w(object):  # pragma: no cover
             else:
                 if (event.button == 2):
                     # set pivot for phase correction
-                    self.phCorr.pivot = xdata
-                    self.phCorr.pivPoints = self.nd.nmrdat[s][e].ppm2points(self.phCorr.pivot, 0)
+                    self.ph_corr.pivot = xdata
+                    self.ph_corr.piv_points = self.nd.nmrdat[s][e].ppm2points(self.ph_corr.pivot, 0)
                 else:
                     # first order phase correction
-                    ph1 = (self.phCorr.maxPh1 * (ydata - self.phCorr.start) / self.phCorr.spcMax)
-                    ph = self.phasesRemovePivot(0.0, ph1, self.phCorr.pivPoints, len(self.phCorr.spc[0]))
+                    ph1 = (self.ph_corr.max_ph1 * (ydata - self.ph_corr.start) / self.ph_corr.spc_max)
+                    ph = self.phases_remove_pivot(0.0, ph1, self.ph_corr.piv_points, len(self.ph_corr.spc[0]))
                     ph0 = ((self.nd.nmrdat[s][e].proc.ph0[0] + ph[0] + 180.0) % 360.0) - 180.0
                     ph1 = self.nd.nmrdat[s][e].proc.ph1[0] + ph[1]
                     self.nd.nmrdat[s][e].proc.ph0[0] = ph0
                     self.nd.nmrdat[s][e].proc.ph1[0] = ph1
 
-            cid3 = self.w.MplWidget.canvas.mpl_connect('motion_notify_event', self.onPhCorrDraw)
+            cid3 = self.w.MplWidget.canvas.mpl_connect('motion_notify_event', self.on_ph_corr_draw)
             cid3 = self.w.MplWidget.canvas.mpl_disconnect(cid3)
-            self.nd.nmrdat[s][e].spc = self.phCorr.spc
-            self.setProcPars()
+            self.nd.nmrdat[s][e].spc = self.ph_corr.spc
+            self.set_proc_pars()
             self.nd.ft()
-            self.phCorrPlotSpc()
+            self.ph_corr_plot_spc()
         else:
             # zoom mode activated
             if (event.button > 1):
@@ -2621,64 +2637,69 @@ class main_w(object):  # pragma: no cover
                 except:
                     pass
 
-        # end onPhCorrRelease
+        # end on_ph_corr_release
 
-    def onPhCorrRelease2d(self, event):
+    def on_ph_corr_release_2d(self, event):
         s = self.nd.s
         e = self.nd.e
         if ((event.xdata != None) & (event.ydata != None)):
             xdata = event.xdata
             ydata = event.ydata
         else:
-            xdata = self.phCorr.xData
-            ydata = self.phCorr.yData
+            xdata = self.ph_corr.x_data
+            ydata = self.ph_corr.y_data
 
         if (self.zoom == False):
             if event.button == 1:
                 mods = QApplication.queryKeyboardModifiers()
                 if mods == QtCore.Qt.ControlModifier:
                     # set pivot for phase correction
-                    self.phCorr.pivot2d[self.phCorr.dim] = xdata
-                    self.phCorr.pivotPoints2d[self.phCorr.dim] = self.nd.nmrdat[s][e].ppm2points(self.phCorr.pivot2d[self.phCorr.dim], self.phCorr.dim)
+                    self.ph_corr.pivot2d[self.ph_corr.dim] = xdata
+                    self.ph_corr.pivot_points_2d[self.ph_corr.dim] = self.nd.nmrdat[s][e].ppm2points(
+                        self.ph_corr.pivot2d[self.ph_corr.dim], self.ph_corr.dim)
 
                 if mods == QtCore.Qt.ShiftModifier:
                     # first order phase correction
-                    ph1 = (self.phCorr.maxPh1 * (ydata - self.phCorr.start) / self.phCorr.spcMax)
-                    ph = self.phasesRemovePivot(0.0, ph1, self.phCorr.pivotPoints2d[self.phCorr.dim], len(self.phCorr.spc[0]))
-                    ph0 = ((self.phCorr.ph0_2d[self.phCorr.dim] + ph[0] + 180.0) % 360.0) - 180.0
-                    ph1 = self.phCorr.ph1_2d[self.phCorr.dim] + ph[1]
-                    self.phCorr.ph0_2d[self.phCorr.dim] = ph0
-                    self.phCorr.ph1_2d[self.phCorr.dim] = ph1
+                    ph1 = (self.ph_corr.max_ph1 * (ydata - self.ph_corr.start) / self.ph_corr.spc_max)
+                    ph = self.phases_remove_pivot(0.0, ph1, self.ph_corr.pivot_points_2d[self.ph_corr.dim],
+                                                  len(self.ph_corr.spc[0]))
+                    ph0 = ((self.ph_corr.ph0_2d[self.ph_corr.dim] + ph[0] + 180.0) % 360.0) - 180.0
+                    ph1 = self.ph_corr.ph1_2d[self.ph_corr.dim] + ph[1]
+                    self.ph_corr.ph0_2d[self.ph_corr.dim] = ph0
+                    self.ph_corr.ph1_2d[self.ph_corr.dim] = ph1
 
                 if mods == QtCore.Qt.NoModifier:
                     # zero order phase correction
-                    ph0a = (self.phCorr.maxPh0 * (ydata - self.phCorr.start) / self.phCorr.spcMax) % 360.0
+                    ph0a = (self.ph_corr.max_ph0 * (ydata - self.ph_corr.start) / self.ph_corr.spc_max) % 360.0
                     ph1a = 0.0
-                    ph = self.phasesRemovePivot(ph0a, ph1a, self.phCorr.pivotPoints2d[self.phCorr.dim], len(self.phCorr.spc[0]))
-                    ph0 = ((self.phCorr.ph0_2d[self.phCorr.dim] + ph[0] + 180.0) % 360.0) - 180.0
-                    ph1 = self.phCorr.ph1_2d[self.phCorr.dim] + ph[1]
-                    self.phCorr.ph0_2d[self.phCorr.dim] = ph0
-                    self.phCorr.ph1_2d[self.phCorr.dim] = ph1
+                    ph = self.phases_remove_pivot(ph0a, ph1a, self.ph_corr.pivot_points_2d[self.ph_corr.dim],
+                                                  len(self.ph_corr.spc[0]))
+                    ph0 = ((self.ph_corr.ph0_2d[self.ph_corr.dim] + ph[0] + 180.0) % 360.0) - 180.0
+                    ph1 = self.ph_corr.ph1_2d[self.ph_corr.dim] + ph[1]
+                    self.ph_corr.ph0_2d[self.ph_corr.dim] = ph0
+                    self.ph_corr.ph1_2d[self.ph_corr.dim] = ph1
 
             else:
                 if event.button == 2:
                     # set pivot for phase correction
-                    self.phCorr.pivot2d[self.phCorr.dim] = xdata
-                    self.phCorr.pivotPoints2d[self.phCorr.dim] = self.nd.nmrdat[s][e].ppm2points(self.phCorr.pivot2d[self.phCorr.dim], self.phCorr.dim)
+                    self.ph_corr.pivot2d[self.ph_corr.dim] = xdata
+                    self.ph_corr.pivot_points_2d[self.ph_corr.dim] = self.nd.nmrdat[s][e].ppm2points(
+                        self.ph_corr.pivot2d[self.ph_corr.dim], self.ph_corr.dim)
 
                 else:
                     # first order phase correction
-                    ph1 = (self.phCorr.maxPh1 * (ydata - self.phCorr.start) / self.phCorr.spcMax)
-                    ph = self.phasesRemovePivot(0.0, ph1, self.phCorr.pivotPoints2d[self.phCorr.dim],len(self.phCorr.spc[0]))
-                    ph0 = ((self.phCorr.ph0_2d[self.phCorr.dim] + ph[0] + 180.0) % 360.0) - 180.0
-                    ph1 = self.phCorr.ph1_2d[self.phCorr.dim] + ph[1]
-                    self.phCorr.ph0_2d[self.phCorr.dim] = ph0
-                    self.phCorr.ph1_2d[self.phCorr.dim] = ph1
+                    ph1 = (self.ph_corr.max_ph1 * (ydata - self.ph_corr.start) / self.ph_corr.spc_max)
+                    ph = self.phases_remove_pivot(0.0, ph1, self.ph_corr.pivot_points_2d[self.ph_corr.dim],
+                                                  len(self.ph_corr.spc[0]))
+                    ph0 = ((self.ph_corr.ph0_2d[self.ph_corr.dim] + ph[0] + 180.0) % 360.0) - 180.0
+                    ph1 = self.ph_corr.ph1_2d[self.ph_corr.dim] + ph[1]
+                    self.ph_corr.ph0_2d[self.ph_corr.dim] = ph0
+                    self.ph_corr.ph1_2d[self.ph_corr.dim] = ph1
 
-            cid3 = self.w.MplWidget.canvas.mpl_connect('motion_notify_event', self.onPhCorrDraw2d)
+            cid3 = self.w.MplWidget.canvas.mpl_connect('motion_notify_event', self.on_ph_corr_draw2d)
             cid3 = self.w.MplWidget.canvas.mpl_disconnect(cid3)
-            self.phCorr.spc2 = np.copy(self.phCorr.spc)
-            self.phCorrPlotSpc2d()
+            self.ph_corr.spc2 = np.copy(self.ph_corr.spc)
+            self.ph_corr_plot_spc_2d()
         else:
             # zoom mode activated
             if (event.button > 1):
@@ -2688,100 +2709,101 @@ class main_w(object):  # pragma: no cover
                 except:
                     pass
 
-        # end onPhCorrRelease2d
+        # end on_ph_corr_release_2d
 
-    def openScript(self, fName=""):
-        if (fName == False):
-            fName = ""
+    def open_script(self, f_name=""):
+        if (f_name == False):
+            f_name = ""
 
-        if (len(fName) == 0):
-            fName = QFileDialog.getOpenFileName(None, 'Open Script File', '', 'Python files (*.py)')
-            fName = fName[0]
+        if (len(f_name) == 0):
+            f_name = QFileDialog.getOpenFileName(None, 'Open Script File', '', 'Python files (*.py)')
+            f_name = f_name[0]
 
-        if (len(fName) > 0):
-            f = open(fName, 'r')
+        if (len(f_name) > 0):
+            f = open(f_name, 'r')
             scriptText = f.read()
             self.w.script.setText(scriptText)
 
         self.w.nmrSpectrum.setCurrentIndex(10)
-        # end openScript
+        # end open_script
 
-    def phCorrPlotSpc(self):
+    def ph_corr_plot_spc(self):
         xlim = self.w.MplWidget.canvas.axes.get_xlim()
         ylim = self.w.MplWidget.canvas.axes.get_ylim()
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        if (d.posCol == "RGB"):
-            posCol = d.posColRGB
+        if (d.pos_col == "RGB"):
+            pos_col = d.pos_col_rgb
         else:
-            posCol = d.posCol
+            pos_col = d.pos_col
 
-        if (d.negCol == "RGB"):
-            negCol = d.negColRGB
+        if (d.neg_col == "RGB"):
+            neg_col = d.neg_col_rgb
         else:
-            negCol = d.negCol
+            neg_col = d.neg_col
 
-        refCol = d.phRefCol
-        posCol = matplotlib.colors.to_hex(posCol)
-        negCol = matplotlib.colors.to_hex(negCol)
-        refCol = matplotlib.colors.to_hex(refCol)
-        xlabel = d.xLabel + " [" + d.axisType1 + "]"
-        ylabel = d.yLabel + " [" + d.axisType2 + "]"
+        ref_col = d.ph_ref_col
+        pos_col = matplotlib.colors.to_hex(pos_col)
+        neg_col = matplotlib.colors.to_hex(neg_col)
+        ref_col = matplotlib.colors.to_hex(ref_col)
+        xlabel = d.x_label + " [" + d.axis_type1 + "]"
+        ylabel = d.y_label + " [" + d.axis_type2 + "]"
         if (self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1):
             self.w.MplWidget.canvas.axes.clear()
-            if ((d.phRefDS > 0) & (d.phRefExp > 0) & (
-                    ((d.phRefDS - 1 == self.nd.s) & (d.phRefExp - 1 == self.nd.e)) is False)):
-                self.w.MplWidget.canvas.axes.plot(self.nd.nmrdat[d.phRefDS - 1][d.phRefExp - 1].ppm1,
-                                                  self.nd.nmrdat[d.phRefDS - 1][d.phRefExp - 1].spc[0].real,
-                                                  color=refCol)
+            if ((d.ph_ref_ds > 0) & (d.ph_ref_exp > 0) & (
+                    ((d.ph_ref_ds - 1 == self.nd.s) & (d.ph_ref_exp - 1 == self.nd.e)) is False)):
+                self.w.MplWidget.canvas.axes.plot(self.nd.nmrdat[d.ph_ref_ds - 1][d.ph_ref_exp - 1].ppm1,
+                                                  self.nd.nmrdat[d.ph_ref_ds - 1][d.ph_ref_exp - 1].spc[0].real,
+                                                  color=ref_col)
 
-            self.w.MplWidget.canvas.axes.plot(self.nd.nmrdat[self.nd.s][self.nd.e].ppm1, self.phCorr.spc[0].real,
-                                              color=posCol)
-            self.w.MplWidget.canvas.axes.plot([self.phCorr.pivot, self.phCorr.pivot],
-                                              [2.0 * self.phCorr.spcMax, -2.0 * self.phCorr.spcMax], color='r')
+            self.w.MplWidget.canvas.axes.plot(self.nd.nmrdat[self.nd.s][self.nd.e].ppm1, self.ph_corr.spc[0].real,
+                                              color=pos_col)
+            self.w.MplWidget.canvas.axes.plot([self.ph_corr.pivot, self.ph_corr.pivot],
+                                              [2.0 * self.ph_corr.spc_max, -2.0 * self.ph_corr.spc_max], color='r')
             self.w.MplWidget.canvas.axes.set_xlabel(xlabel)
             self.w.MplWidget.canvas.axes.invert_xaxis()
             self.w.MplWidget.canvas.axes.set_xlim(xlim)
             self.w.MplWidget.canvas.axes.set_ylim(ylim)
 
-        self.setProcPars()
+        self.set_proc_pars()
         self.w.MplWidget.canvas.draw()
         # This is a messy solution to force the matplotlib widget to update the plot by introducing an error (calling
         # a figure object and redirecting the error output
-        codeErr = io.StringIO()
-        sys.stderr = codeErr
+        code_err = io.StringIO()
+        sys.stderr = code_err
         try:
             self.w.MplWidget.canvas.figure()
         except:
             pass
 
         sys.stderr = sys.__stderr__
-        # end phCorrPlotSpc
+        # end ph_corr_plot_spc
 
-    def phCorrPlotSpc2d(self, keepZoom = True):
-        if keepZoom:
+    def ph_corr_plot_spc_2d(self, keep_zoom=True):
+        if keep_zoom:
             xlim = self.w.MplWidget.canvas.axes.get_xlim()
             ylim = self.w.MplWidget.canvas.axes.get_ylim()
 
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
         self.w.MplWidget.canvas.axes.set_prop_cycle(None)
-        if self.phCorr.dim == 0:
-            xlabel = d.xLabel + " [" + d.axisType1 + "]"
+        if self.ph_corr.dim == 0:
+            xlabel = d.x_label + " [" + d.axis_type1 + "]"
         else:
-            xlabel = d.yLabel + " [" + d.axisType2 + "]"
+            xlabel = d.y_label + " [" + d.axis_type2 + "]"
 
         self.w.MplWidget.canvas.axes.clear()
-        self.phCorr.spcMax = 0.0
-        for k in range(len(self.phCorr.spc)):
-            self.w.MplWidget.canvas.axes.plot(self.phCorr.ppm, self.phCorr.spc[k].real)
-            self.phCorr.spcMax = max(self.phCorr.spcMax, np.max(np.max(np.abs(self.phCorr.spc[k].real))))
+        self.ph_corr.spc_max = 0.0
+        for k in range(len(self.ph_corr.spc)):
+            self.w.MplWidget.canvas.axes.plot(self.ph_corr.ppm, self.ph_corr.spc[k].real)
+            self.ph_corr.spc_max = max(self.ph_corr.spc_max, np.max(np.max(np.abs(self.ph_corr.spc[k].real))))
 
         self.w.MplWidget.canvas.axes.invert_xaxis()
-        if not keepZoom:
+        if not keep_zoom:
             xlim = self.w.MplWidget.canvas.axes.get_xlim()
             ylim = self.w.MplWidget.canvas.axes.get_ylim()
 
-        self.w.MplWidget.canvas.axes.plot([self.phCorr.pivot2d[self.phCorr.dim], self.phCorr.pivot2d[self.phCorr.dim]],
-                                          [2.0 * self.phCorr.spcMax, -2.0 * self.phCorr.spcMax], color='r')
+        self.w.MplWidget.canvas.axes.plot(
+            [self.ph_corr.pivot2d[self.ph_corr.dim], self.ph_corr.pivot2d[self.ph_corr.dim]],
+            [2.0 * self.ph_corr.spc_max, -2.0 * self.ph_corr.spc_max], color='r')
         self.w.MplWidget.canvas.axes.set_xlabel(xlabel)
         self.w.MplWidget.canvas.axes.invert_xaxis()
         self.w.MplWidget.canvas.axes.set_xlim(xlim)
@@ -2789,15 +2811,15 @@ class main_w(object):  # pragma: no cover
         self.w.MplWidget.canvas.draw()
         # This is a messy solution to force the matplotlib widget to update the plot by introducing an error (calling
         # a figure object and redirecting the error output
-        codeErr = io.StringIO()
-        sys.stderr = codeErr
+        code_err = io.StringIO()
+        sys.stderr = code_err
         try:
             self.w.MplWidget.canvas.figure()
         except:
             pass
 
         sys.stderr = sys.__stderr__
-        # end phCorrPlotSpc2d
+        # end ph_corr_plot_spc_2d
 
     def phase1d(self, mat, ph0, ph1, piv):
         npts = len(mat[0])
@@ -2809,40 +2831,41 @@ class main_w(object):  # pragma: no cover
         return mat
         # end phase1d
 
-    def phasesRemovePivot(self, phc0, phc1, piv, npts):
+    def phases_remove_pivot(self, phc0, phc1, piv, npts):
         phases = np.array([0.0, 0.0])
         frac = np.linspace(0, 1, npts) - float(npts - piv) / float(npts)
         ph = -phc0 - frac * phc1
         phases[0] = -ph[0]
         phases[1] = ph[0] - ph[len(ph) - 1]
         return phases
-        # end phasesRemovePivot
+        # end phases_remove_pivot
 
-    def pickColRow(self):
+    def pick_col_row(self):
         self.w.statusBar().clearMessage()
         self.w.statusBar().showMessage("Click to add row/col")
-        self.showAcquisitionParameters()
-        self.showNMRSpectrum()
+        self.show_acquisition_parameters()
+        self.show_nmr_spectrum()
         self.ginput2d()
-        # end pickColRow
+        # end pick_col_row
 
-    def plot2dColRow(self):
+    def plot_2d_col_row(self):
         while len(self.w.MplWidget.canvas.axes.lines) > 0:
             self.w.MplWidget.canvas.axes.lines[0].remove()
 
         self.w.MplWidget.canvas.axes.set_prop_cycle(None)
         ppm1 = self.nd.nmrdat[self.nd.s][self.nd.e].ppm1
         ppm2 = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2
-        for k in range(len(self.phCorr.spcRow)):
-            pid = self.w.MplWidget.canvas.axes.plot([self.phCorr.spcCol[k], self.phCorr.spcCol[k]],
+        for k in range(len(self.ph_corr.spc_row)):
+            pid = self.w.MplWidget.canvas.axes.plot([self.ph_corr.spc_col[k], self.ph_corr.spc_col[k]],
                                                     [np.min(ppm2), np.max(ppm2)])
             self.w.MplWidget.canvas.axes.plot([np.min(ppm1), np.max(ppm1)],
-                                              [self.phCorr.spcRow[k], self.phCorr.spcRow[k]], color=pid[0].get_color())
+                                              [self.ph_corr.spc_row[k], self.ph_corr.spc_row[k]],
+                                              color=pid[0].get_color())
 
         self.w.MplWidget.canvas.draw()
 
-    def plotSpc(self, hidePreProcessing = False):
-        self.keepZoom = self.w.keepZoom.isChecked()
+    def plot_spc(self, hide_pre_processing=False):
+        self.keep_zoom = self.w.keepZoom.isChecked()
         xlim = self.w.MplWidget.canvas.axes.get_xlim()
         ylim = self.w.MplWidget.canvas.axes.get_ylim()
         self.w.nmrSpectrum.setCurrentIndex(0)
@@ -2853,204 +2876,203 @@ class main_w(object):  # pragma: no cover
             return
 
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        if (d.posCol == "RGB"):
-            posCol = d.posColRGB
+        if d.pos_col == "RGB":
+            pos_col = d.pos_col_rgb
         else:
-            posCol = d.posCol
+            pos_col = d.pos_col
 
-        if (d.negCol == "RGB"):
-            negCol = d.negColRGB
+        if d.neg_col == "RGB":
+            neg_col = d.neg_col_rgb
         else:
-            negCol = d.negCol
+            neg_col = d.neg_col
 
-        posCol = matplotlib.colors.to_hex(posCol)
-        negCol = matplotlib.colors.to_hex(negCol)
-        xlabel = d.xLabel + " [" + d.axisType1 + "]"
-        ylabel = d.yLabel + " [" + d.axisType2 + "]"
-        #print(self.nd.nmrdat[self.nd.s][self.nd.e].dim)
+        pos_col = matplotlib.colors.to_hex(pos_col)
+        neg_col = matplotlib.colors.to_hex(neg_col)
+        xlabel = d.x_label + " [" + d.axis_type1 + "]"
+        ylabel = d.y_label + " [" + d.axis_type2 + "]"
+        # print(self.nd.nmrdat[self.nd.s][self.nd.e].dim)
         if (self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1):
             self.w.MplWidget.canvas.axes.clear()
             for k in range(len(self.nd.nmrdat[self.nd.s])):
-                if ((k != self.nd.e) and (self.nd.nmrdat[self.nd.s][k].display.displaySpc == True)):
+                if ((k != self.nd.e) and (self.nd.nmrdat[self.nd.s][k].display.display_spc == True)):
                     d = self.nd.nmrdat[self.nd.s][k].display
-                    if (d.posCol == "RGB"):
-                        posCol = d.posColRGB
+                    if (d.pos_col == "RGB"):
+                        pos_col = d.pos_col_rgb
                     else:
-                        posCol = d.posCol
+                        pos_col = d.pos_col
 
-                    if (d.negCol == "RGB"):
-                        negCol = d.negColRGB
+                    if (d.neg_col == "RGB"):
+                        neg_col = d.neg_col_rgb
                     else:
-                        negCol = d.negCol
+                        neg_col = d.neg_col
 
-                    posCol = matplotlib.colors.to_hex(posCol)
-                    negCol = matplotlib.colors.to_hex(negCol)
+                    pos_col = matplotlib.colors.to_hex(pos_col)
+                    neg_col = matplotlib.colors.to_hex(neg_col)
                     self.w.MplWidget.canvas.axes.plot(self.nd.nmrdat[self.nd.s][k].ppm1,
-                                                      self.nd.nmrdat[self.nd.s][k].spc[0].real, color=posCol)
+                                                      self.nd.nmrdat[self.nd.s][k].spc[0].real, color=pos_col)
 
             d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-            if (d.posCol == "RGB"):
-                posCol = d.posColRGB
+            if (d.pos_col == "RGB"):
+                pos_col = d.pos_col_rgb
             else:
-                posCol = d.posCol
+                pos_col = d.pos_col
 
-            if (d.negCol == "RGB"):
-                negCol = d.negColRGB
+            if (d.neg_col == "RGB"):
+                neg_col = d.neg_col_rgb
             else:
-                negCol = d.negCol
+                neg_col = d.neg_col
 
-            posCol = matplotlib.colors.to_hex(posCol)
-            negCol = matplotlib.colors.to_hex(negCol)
-            xlabel = d.xLabel + " [" + d.axisType1 + "]"
-            ylabel = d.yLabel + " [" + d.axisType2 + "]"
-            if len(self.nd.nmrdat[self.nd.s][self.nd.e].startPeak) > 0:
+            pos_col = matplotlib.colors.to_hex(pos_col)
+            neg_col = matplotlib.colors.to_hex(neg_col)
+            xlabel = d.x_label + " [" + d.axis_type1 + "]"
+            ylabel = d.y_label + " [" + d.axis_type2 + "]"
+            if len(self.nd.nmrdat[self.nd.s][self.nd.e].start_peak) > 0:
                 if self.w.peakPicking.isChecked() == True:
                     s = self.nd.s
                     e = self.nd.e
-                    for k in range(len(self.nd.nmrdat[s][e].startPeak)):
-                        self.w.MplWidget.canvas.axes.axvspan(self.nd.nmrdat[s][e].startPeak[k],
-                                                             self.nd.nmrdat[s][e].endPeak[k],
+                    for k in range(len(self.nd.nmrdat[s][e].start_peak)):
+                        self.w.MplWidget.canvas.axes.axvspan(self.nd.nmrdat[s][e].start_peak[k],
+                                                             self.nd.nmrdat[s][e].end_peak[k],
                                                              alpha=self.nd.pp.alpha, color=self.nd.pp.colour)
 
             self.w.MplWidget.canvas.axes.plot(self.nd.nmrdat[self.nd.s][self.nd.e].ppm1,
-                                              self.nd.nmrdat[self.nd.s][self.nd.e].spc[0].real, color=posCol)
+                                              self.nd.nmrdat[self.nd.s][self.nd.e].spc[0].real, color=pos_col)
             self.w.MplWidget.canvas.axes.set_xlabel(xlabel)
             self.w.MplWidget.canvas.axes.autoscale()
             self.w.MplWidget.canvas.axes.invert_xaxis()
-            if (self.keepZoom == True):
+            if (self.keep_zoom == True):
                 self.w.MplWidget.canvas.axes.set_xlim(xlim)
                 self.w.MplWidget.canvas.axes.set_ylim(ylim)
 
             # self.w.MplWidget.canvas.toolbar.update()
             self.w.MplWidget.canvas.draw()
-            if (self.keepXZoom == True):
+            if (self.keep_x_zoom == True):
                 self.w.MplWidget.canvas.axes.set_xlim(xlim)
-                self.verticalAutoScale()
-                self.keepXZoom = False
+                self.vertical_auto_scale()
+                self.keep_x_zoom = False
 
 
         else:
             mm = np.max(np.abs(self.nd.nmrdat[self.nd.s][self.nd.e].spc.real))
-            posLev = np.linspace(d.minLevel * mm, d.maxLevel * mm, d.nLevels)
-            negLev = np.linspace(-d.maxLevel * mm, -d.minLevel * mm, d.nLevels)
+            pos_lev = np.linspace(d.min_level * mm, d.max_level * mm, d.n_levels)
+            neg_lev = np.linspace(-d.max_level * mm, -d.min_level * mm, d.n_levels)
             self.w.MplWidget.canvas.axes.clear()
             self.w.MplWidget.canvas.axes.contour(self.nd.nmrdat[self.nd.s][self.nd.e].ppm1,
                                                  self.nd.nmrdat[self.nd.s][self.nd.e].ppm2,
-                                                 self.nd.nmrdat[self.nd.s][self.nd.e].spc.real, posLev, colors=posCol,
+                                                 self.nd.nmrdat[self.nd.s][self.nd.e].spc.real, pos_lev, colors=pos_col,
                                                  linestyles='solid', antialiased=True)
             self.w.MplWidget.canvas.axes.contour(self.nd.nmrdat[self.nd.s][self.nd.e].ppm1,
                                                  self.nd.nmrdat[self.nd.s][self.nd.e].ppm2,
-                                                 self.nd.nmrdat[self.nd.s][self.nd.e].spc.real, negLev, colors=negCol,
+                                                 self.nd.nmrdat[self.nd.s][self.nd.e].spc.real, neg_lev, colors=neg_col,
                                                  linestyles='solid', antialiased=True)
             self.w.MplWidget.canvas.axes.set_xlabel(xlabel)
             self.w.MplWidget.canvas.axes.set_ylabel(ylabel)
             self.w.MplWidget.canvas.axes.autoscale()
             self.w.MplWidget.canvas.axes.invert_xaxis()
             self.w.MplWidget.canvas.axes.invert_yaxis()
-            if (self.keepZoom == True):
+            if (self.keep_zoom == True):
                 self.w.MplWidget.canvas.axes.set_xlim(xlim)
                 self.w.MplWidget.canvas.axes.set_ylim(ylim)
             else:
-                if (self.keepXZoom == True):
+                if (self.keep_x_zoom == True):
                     self.w.MplWidget.canvas.axes.set_xlim(xlim)
-                    self.keepXZoom = False
+                    self.keep_x_zoom = False
 
             # self.w.MplWidget.canvas.toolbar.update()
             self.w.MplWidget.canvas.draw()
 
-        self.keepZoom = False
-        if hidePreProcessing == False and self.w.peakPicking.isChecked() == False:
-            if self.exitedPeakPicking == False:
+        self.keep_zoom = False
+        if hide_pre_processing == False and self.w.peakPicking.isChecked() == False:
+            if self.exited_peak_picking == False:
                 pyautogui.click(clicks=1)
             else:
-                self.exitedPeakPicking = True
+                self.exited_peak_picking = True
 
+        # end plot_spc
 
-        # end plotSpc
-
-    def plotSpcDisp(self):
+    def plot_spc_disp(self):
         self.w.nmrSpectrum.setCurrentIndex(0)
-        self.changeDataSetExp()
-        if (self.phCorrActive == False):
-            self.plotSpc()
+        self.change_data_set_exp()
+        if (self.ph_corr_active == False):
+            self.plot_spc()
         else:
-            self.phCorrPlotSpc()
+            self.ph_corr_plot_spc()
 
-        # end plotSpcDisp
+        # end plot_spc_disp
 
-    def plotSpcPreProc(self):
-        if (len(self.nd.pp.classSelect) == 0):
-            self.nd.preProcInit()
+    def plot_spc_pre_proc(self):
+        if (len(self.nd.pp.class_select) == 0):
+            self.nd.pre_proc_init()
 
         # self.w.rDolphinExport.setChecked(self.nd.pp.rDolphinExport)
-        self.fillPreProcessingNumbers()
+        self.fill_pre_processing_numbers()
         sel = self.w.selectClassTW.selectedIndexes()
         cls = np.array([])
         for k in range(len(self.nd.nmrdat[self.nd.s])):
             cls = np.append(cls, self.w.selectClassTW.item(k, 1).text())
 
-        self.nd.pp.classSelect = cls
+        self.nd.pp.class_select = cls
         cls2 = np.unique(cls)
         sel2 = np.array([], dtype='int')
         for k in range(len(sel)):
             if (sel[k].column() == 0):
                 sel2 = np.append(sel2, int(sel[k].row()))
 
-        self.nd.pp.plotSelect = sel2
-        self.keepZoom = self.w.keepZoom.isChecked()
+        self.nd.pp.plot_select = sel2
+        self.keep_zoom = self.w.keepZoom.isChecked()
         xlim = self.w.MplWidget.canvas.axes.get_xlim()
         ylim = self.w.MplWidget.canvas.axes.get_ylim()
         self.w.nmrSpectrum.setCurrentIndex(0)
         self.w.MplWidget.canvas.axes.clear()
         if (self.w.preProcessingWidget.currentIndex() == 1):
-            for k in range(len(self.nd.pp.excludeStart)):
-                self.w.MplWidget.canvas.axes.axvspan(self.nd.pp.excludeStart[k], self.nd.pp.excludeEnd[k],
+            for k in range(len(self.nd.pp.exclude_start)):
+                self.w.MplWidget.canvas.axes.axvspan(self.nd.pp.exclude_start[k], self.nd.pp.exclude_end[k],
                                                      alpha=self.nd.pp.alpha, color=self.nd.pp.colour)
 
         if (self.w.preProcessingWidget.currentIndex() == 2):
-            for k in range(len(self.nd.pp.segStart)):
-                self.w.MplWidget.canvas.axes.axvspan(self.nd.pp.segStart[k], self.nd.pp.segEnd[k],
+            for k in range(len(self.nd.pp.seg_start)):
+                self.w.MplWidget.canvas.axes.axvspan(self.nd.pp.seg_start[k], self.nd.pp.seg_end[k],
                                                      alpha=self.nd.pp.alpha, color=self.nd.pp.colour)
 
-        for k in range(len(self.nd.pp.plotSelect)):
-            colIdx = np.where(cls2 == cls[self.nd.pp.plotSelect[k]])[0][0]
-            plotCol = matplotlib.colors.to_hex(self.nd.pp.plotColours[colIdx])
-            self.w.MplWidget.canvas.axes.plot(self.nd.nmrdat[self.nd.s][self.nd.pp.plotSelect[k]].ppm1,
-                                              self.nd.nmrdat[self.nd.s][self.nd.pp.plotSelect[k]].spc[0].real,
+        for k in range(len(self.nd.pp.plot_select)):
+            colIdx = np.where(cls2 == cls[self.nd.pp.plot_select[k]])[0][0]
+            plotCol = matplotlib.colors.to_hex(self.nd.pp.plot_colours[colIdx])
+            self.w.MplWidget.canvas.axes.plot(self.nd.nmrdat[self.nd.s][self.nd.pp.plot_select[k]].ppm1,
+                                              self.nd.nmrdat[self.nd.s][self.nd.pp.plot_select[k]].spc[0].real,
                                               color=plotCol)
 
         if (self.w.preProcessingWidget.currentIndex() == 3):
-            self.w.MplWidget.canvas.axes.axvspan(self.nd.pp.noiseStart, self.nd.pp.noiseEnd, alpha=self.nd.pp.alpha,
+            self.w.MplWidget.canvas.axes.axvspan(self.nd.pp.noise_start, self.nd.pp.noise_end, alpha=self.nd.pp.alpha,
                                                  color=self.nd.pp.colour)
-            val = self.nd.pp.noiseThreshold * self.nd.pp.stdVal
+            val = self.nd.pp.noise_threshold * self.nd.pp.std_val
             x = [self.nd.nmrdat[self.nd.s][0].ppm1[0], self.nd.nmrdat[self.nd.s][0].ppm1[-1]]
             y = [val, val]
-            self.w.MplWidget.canvas.axes.plot(x, y, color=self.nd.pp.thColour, linewidth=self.nd.pp.thLineWidth)
+            self.w.MplWidget.canvas.axes.plot(x, y, color=self.nd.pp.th_colour, linewidth=self.nd.pp.th_line_width)
 
         if (self.w.preProcessingWidget.currentIndex() == 5):
-            for k in range(len(self.nd.pp.compressStart)):
-                self.w.MplWidget.canvas.axes.axvspan(self.nd.pp.compressStart[k], self.nd.pp.compressEnd[k],
+            for k in range(len(self.nd.pp.compress_start)):
+                self.w.MplWidget.canvas.axes.axvspan(self.nd.pp.compress_start[k], self.nd.pp.compress_end[k],
                                                      alpha=self.nd.pp.alpha, color=self.nd.pp.colour)
 
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        xlabel = d.xLabel + " [" + d.axisType1 + "]"
+        xlabel = d.x_label + " [" + d.axis_type1 + "]"
         self.w.MplWidget.canvas.axes.set_xlabel(xlabel)
         self.w.MplWidget.canvas.axes.autoscale()
         self.w.MplWidget.canvas.axes.invert_xaxis()
-        if (self.keepZoom == True):
+        if (self.keep_zoom == True):
             self.w.MplWidget.canvas.axes.set_xlim(xlim)
             self.w.MplWidget.canvas.axes.set_ylim(ylim)
 
         # self.w.MplWidget.canvas.toolbar.update()
         self.w.MplWidget.canvas.draw()
 
-    def previousCommand(self):
+    def previous_command(self):
         if (self.w.cmdLine.hasFocus() == True):
-            if (self.nd.cmdIdx > 0):
-                self.nd.cmdIdx -= 1
-                self.w.cmdLine.setText(self.nd.cmdBuffer[self.nd.cmdIdx])
+            if (self.nd.cmd_idx > 0):
+                self.nd.cmd_idx -= 1
+                self.w.cmdLine.setText(self.nd.cmd_buffer[self.nd.cmd_idx])
 
-        # end previousCommand
+        # end previous_command
 
     def quit_app(self):
         # some actions to perform before actually quitting:
@@ -3063,7 +3085,7 @@ class main_w(object):  # pragma: no cover
         self.w.close()
         # end quit_app
 
-    def readNMRSpc(self):
+    def read_nmr_spc(self):
         kz = self.w.keepZoom.isChecked()
         if (len(self.nd.nmrdat[0]) == 0):
             self.w.keepZoom.setChecked(False)
@@ -3072,343 +3094,343 @@ class main_w(object):  # pragma: no cover
         if (len(selected_directory) > 0):
             # Use the selected directory...
             idx = selected_directory.rfind('/')
-            dsName = selected_directory[:idx]
-            expName = selected_directory[idx + 1:]
-            self.nd.readSpc(dsName, expName)
-            self.setJres()
+            ds_name = selected_directory[:idx]
+            exp_name = selected_directory[idx + 1:]
+            self.nd.read_spc(ds_name, exp_name)
+            self.set_j_res()
             self.nd.ft()
             if self.nd.nmrdat[self.nd.s][self.nd.e].dim == 0:
-                self.nd.autoref(True)
+                self.nd.auto_ref(True)
             else:
-                self.nd.autoref(False)
+                self.nd.auto_ref(False)
 
             self.nd.e = len(self.nd.nmrdat[self.nd.s]) - 1
-            self.plotSpc()
+            self.plot_spc()
             self.w.keepZoom.setChecked(kz)
-            self.setProcPars()
-            self.setAcqPars()
-            self.setTitleFile()
-            self.setPulseProgram()
+            self.set_proc_pars()
+            self.set_acq_pars()
+            self.set_title_file()
+            self.set_pulse_program()
             self.w.expBox.setValue(self.nd.e + 1)
-            self.setDispPars()
-            self.updateGUI()
+            self.set_disp_pars()
+            self.update_gui()
 
-        # end readNMRSpc
+        # end read_nmr_spc
 
-    def readNMRPipeSpc(self, sfile=False):
+    def read_nmrpipe_spc(self, sfile=False):
         if sfile == False:
-            selectedFile = QFileDialog.getOpenFileName()
-            if len(selectedFile[0]) == 0:
+            selected_file = QFileDialog.getOpenFileName()
+            if len(selected_file[0]) == 0:
                 return
 
         else:
-            selectedFile = (sfile, '')
+            selected_file = (sfile, '')
 
-        #print(selectedFile)
-        fName = os.path.split(selectedFile[0])[1]
-        dataPath = os.path.split(os.path.split(selectedFile[0])[0])[0]
-        expNum = os.path.split(os.path.split(selectedFile[0])[0])[1]
-        if expNum.find('.') > -1:
-            expNum = expNum[:expNum.find('.')]
+        # print(selected_file)
+        f_name = os.path.split(selected_file[0])[1]
+        data_path = os.path.split(os.path.split(selected_file[0])[0])[0]
+        exp_num = os.path.split(os.path.split(selected_file[0])[0])[1]
+        if exp_num.find('.') > -1:
+            exp_num = exp_num[:exp_num.find('.')]
 
-        self.readNMRPipeSpcs([dataPath], [expNum], fName)
-        self.setStandardColours()
-        self.updateGUI()
-        self.resetPlot()
-        # end readNMRPipeSpc
+        self.read_nmrpipe_spcs([data_path], [exp_num], f_name)
+        self.set_standard_colours()
+        self.update_gui()
+        self.reset_plot()
+        # end read_nmrpipe_spc
 
-    def readNMRPipeSpcs(self, dataPath, dataSets, procDataName='test.dat'):
-        zFill = 25
-        if (dataPath[0] == 'interactive'):
-            dataPath = [QFileDialog.getExistingDirectory()]
+    def read_nmrpipe_spcs(self, data_path, data_sets, proc_data_name='test.dat'):
+        z_fill = 25
+        if (data_path[0] == 'interactive'):
+            data_path = [QFileDialog.getExistingDirectory()]
 
-        if (len(dataPath) > 0):
-            if (str(dataSets) == 'all'):
+        if (len(data_path) > 0):
+            if (str(data_sets) == 'all'):
                 folders = []
-                for r, d, f in os.walk(dataPath):
+                for r, d, f in os.walk(data_path):
                     for folder in d:
-                        if (os.path.isfile(os.path.join(r, folder, procDataName))):
-                            folders.append(folder.zfill(zFill).rstrip('.proc'))
+                        if (os.path.isfile(os.path.join(r, folder, proc_data_name))):
+                            folders.append(folder.z_fill(z_fill).rstrip('.proc'))
 
                 folders.sort()
-                dataSets = []
+                data_sets = []
                 for k in range(len(folders)):
-                    dataSets.append(int(folders[k]))
+                    data_sets.append(int(folders[k]))
 
-            self.nd.readNMRPipeSpcs(dataPath, dataSets, procDataName)
-        # end readNMRPipeSpcs
+            self.nd.read_nmrpipe_spcs(data_path, data_sets, proc_data_name)
+        # end read_nmrpipe_spcs
 
-    def readSpcs(self, dataPath, dataSets):
-        zFill = 25
-        if (dataPath[0] == 'interactive'):
-            dataPath = [QFileDialog.getExistingDirectory()]
+    def read_spcs(self, data_path, data_sets):
+        z_fill = 25
+        if (data_path[0] == 'interactive'):
+            data_path = [QFileDialog.getExistingDirectory()]
 
-        if (len(dataPath) > 0):
-            if (str(dataSets[0]) == 'all'):
+        if (len(data_path) > 0):
+            if (str(data_sets[0]) == 'all'):
                 folders = []
-                for r, d, f in os.walk(dataPath[0]):
-                    for folder in d:
-                        if (os.path.isfile(os.path.join(r, folder, 'fid'))):
-                            if (folder != '99999'):
-                                folders.append(folder.zfill(zFill))
-
-                        if (os.path.isfile(os.path.join(r, folder, 'ser'))):
-                            folders.append(folder.zfill(zFill))
-
-                folders.sort()
-                dataSets = []
-                for k in range(len(folders)):
-                    dataSets.append(int(folders[k]))
-
-            if (str(dataSets[0]) == 'all1d'):
-                folders = []
-                for r, d, f in os.walk(dataPath[0]):
+                for r, d, f in os.walk(data_path[0]):
                     for folder in d:
                         if (os.path.isfile(os.path.join(r, folder, 'fid'))):
                             if (folder != '99999'):
-                                folders.append(folder.zfill(zFill))
+                                folders.append(folder.z_fill(z_fill))
+
+                        if (os.path.isfile(os.path.join(r, folder, 'ser'))):
+                            folders.append(folder.z_fill(z_fill))
 
                 folders.sort()
-                dataSets = []
+                data_sets = []
                 for k in range(len(folders)):
-                    dataSets.append(int(folders[k]))
+                    data_sets.append(int(folders[k]))
 
-            if (str(dataSets[0]) == 'all2d'):
+            if (str(data_sets[0]) == 'all1d'):
                 folders = []
-                for r, d, f in os.walk(dataPath[0]):
+                for r, d, f in os.walk(data_path[0]):
+                    for folder in d:
+                        if (os.path.isfile(os.path.join(r, folder, 'fid'))):
+                            if (folder != '99999'):
+                                folders.append(folder.z_fill(z_fill))
+
+                folders.sort()
+                data_sets = []
+                for k in range(len(folders)):
+                    data_sets.append(int(folders[k]))
+
+            if (str(data_sets[0]) == 'all2d'):
+                folders = []
+                for r, d, f in os.walk(data_path[0]):
                     for folder in d:
                         if (os.path.isfile(os.path.join(r, folder, 'ser'))):
-                            folders.append(folder.zfill(zFill))
+                            folders.append(folder.z_fill(z_fill))
 
                 folders.sort()
-                dataSets = []
+                data_sets = []
                 for k in range(len(folders)):
-                    dataSets.append(int(folders[k]))
+                    data_sets.append(int(folders[k]))
 
-            if len(dataPath) > 1:
+            if len(data_path) > 1:
                 dp = []
-                for d in dataPath:
-                    if os.path.isfile(os.path.join(d, dataSets[0], 'fid')) or os.path.isfile(
-                            os.path.join(d, dataSets[0], 'ser')):
+                for d in data_path:
+                    if os.path.isfile(os.path.join(d, data_sets[0], 'fid')) or os.path.isfile(
+                            os.path.join(d, data_sets[0], 'ser')):
                         dp.append(d)
 
-                dataPath = dp
+                data_path = dp
 
             else:
                 ds = []
-                for d in dataSets:
-                    if os.path.isfile(os.path.join(dataPath[0], str(d), 'fid')) or os.path.isfile(
-                            os.path.join(dataPath[0], str(d), 'ser')):
+                for d in data_sets:
+                    if os.path.isfile(os.path.join(data_path[0], str(d), 'fid')) or os.path.isfile(
+                            os.path.join(data_path[0], str(d), 'ser')):
                         ds.append(d)
 
-                dataSets = ds
+                data_sets = ds
 
-            if len(dataPath) > 0 and len(dataSets) > 0:
-                self.nd.readSpcs(dataPath, dataSets)
+            if len(data_path) > 0 and len(data_sets) > 0:
+                self.nd.read_spcs(data_path, data_sets)
 
-        # end readSpcs
+        # end read_spcs
 
     def reference1d(self, refShift=0.0):
-        self.tempRefShift = refShift
+        self.temp_ref_shift = refShift
         self.w.MplWidget.canvas.setFocus()
-        self.showNMRSpectrum()
-        self.ginputRef1d(1)
+        self.show_nmr_spectrum()
+        self.ginput_ref_1d(1)
         # end reference1d
 
     def reference2d(self, refShift=[0.0, 0.0]):
-        self.tempRefShift = refShift
+        self.temp_ref_shift = refShift
         self.w.MplWidget.canvas.setFocus()
-        self.showNMRSpectrum()
-        self.ginputRef2d(1)
+        self.show_nmr_spectrum()
+        self.ginput_ref_2d(1)
         # end reference2d
 
-    def removeLastColRow(self):
-        nLines = len(self.w.MplWidget.canvas.axes.lines)
-        if nLines > 0:
-            self.w.MplWidget.canvas.axes.lines[nLines - 1].remove()
-            self.phCorr.spcRow = self.phCorr.spcRow[:-1]
-            self.phCorr.spcCol = self.phCorr.spcCol[:-1]
-            self.phCorr.spcRowPts = self.phCorr.spcRowPts[:-1]
-            self.phCorr.spcColPts = self.phCorr.spcColPts[:-1]
-            self.plot2dColRow()
-            self.showAcquisitionParameters()
-            self.showNMRSpectrum()
+    def remove_last_col_row(self):
+        n_lines = len(self.w.MplWidget.canvas.axes.lines)
+        if n_lines > 0:
+            self.w.MplWidget.canvas.axes.lines[n_lines - 1].remove()
+            self.ph_corr.spc_row = self.ph_corr.spc_row[:-1]
+            self.ph_corr.spc_col = self.ph_corr.spc_col[:-1]
+            self.ph_corr.spc_row_pts = self.ph_corr.spc_row_pts[:-1]
+            self.ph_corr.spc_col_pts = self.ph_corr.spc_col_pts[:-1]
+            self.plot_2d_col_row()
+            self.show_acquisition_parameters()
+            self.show_nmr_spectrum()
 
-        # end removeLastColRow
+        # end remove_last_col_row
 
-    def resetConfig(self):
+    def reset_config(self):
         self.cf = nmrConfig.NmrConfig()
-        self.cf.saveConfig()
-        self.loadConfig()
-        # end resetConfig
+        self.cf.save_config()
+        self.load_config()
+        # end reset_config
 
-    def resetDataPreProcessing(self):
-        self.nd.resetDataPreProcessing()
-        self.plotSpcPreProc()
-        self.verticalAutoScale()
+    def reset_data_pre_processing(self):
+        self.nd.reset_data_pre_processing()
+        self.plot_spc_pre_proc()
+        self.vertical_auto_scale()
         self.w.MplWidget.canvas.flush_events()
         self.w.MplWidget.canvas.draw()
-        # end dataPreProcessing
+        # end data_pre_processing
 
-    def resetHelp(self):
+    def reset_help(self):
         if self.cf.mode == 'dark':
-            fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "introductionDark", "index.html")
+            f_name = os.path.join(os.path.dirname(__file__), "nmr", "web", "introductionDark", "index.html")
         else:
-            fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "introduction", "index.html")
+            f_name = os.path.join(os.path.dirname(__file__), "nmr", "web", "introduction", "index.html")
 
-        url = "file:///" + fName.replace('\\', '/')
+        url = "file:///" + f_name.replace('\\', '/')
         self.w.helpView.setUrl(url)
         self.w.nmrSpectrum.setCurrentIndex(12)
-        # end resetHelp
+        # end reset_help
 
-    def resetPlot(self):
-        zoomChecked = self.w.keepZoom.isChecked()
+    def reset_plot(self):
+        zoom_checked = self.w.keepZoom.isChecked()
         self.w.keepZoom.setChecked(False)
-        self.plotSpc()
-        if (zoomChecked == True):
+        self.plot_spc()
+        if (zoom_checked == True):
             self.w.keepZoom.setChecked(True)
 
-        # end resetPlot
+        # end reset_plot
 
-    def saveButton(self):
-        pfName = QFileDialog.getSaveFileName(None, "Save MetaboLabPy DataSet", "", "*.mlpy", "*.mlpy")
-        if (os.path.isfile(pfName[0])):
-            os.remove(pfName[0])
+    def save_button(self):
+        pf_name = QFileDialog.getSaveFileName(None, "Save MetaboLabPy DataSet", "", "*.mlpy", "*.mlpy")
+        if (os.path.isfile(pf_name[0])):
+            os.remove(pf_name[0])
 
-        if (os.path.isdir(pfName[0])):
-            shutil.rmtree(pfName[0])
+        if (os.path.isdir(pf_name[0])):
+            shutil.rmtree(pf_name[0])
 
         self.nd.script = self.w.script.toHtml()
         self.nd.console = self.w.console.toHtml()
-        self.nd.save(pfName[0])
-        # end saveButton
+        self.nd.save(pf_name[0])
+        # end save_button
 
-    def saveConfig(self):
-        self.cf.autoPlot = self.w.autoPlot.isChecked()
-        self.cf.keepZoom = self.w.keepZoom.isChecked()
-        self.cf.fontSize = self.w.fontSize.value()
-        self.cf.phaseReferenceColour = self.nd.nmrdat[0][0].display.phRefCol
-        self.cf.posCol10 = self.stdPosCol1[0]
-        self.cf.posCol11 = self.stdPosCol1[1]
-        self.cf.posCol12 = self.stdPosCol1[2]
-        self.cf.negCol10 = self.stdNegCol1[0]
-        self.cf.negCol11 = self.stdNegCol1[1]
-        self.cf.negCol12 = self.stdNegCol1[2]
-        self.cf.posCol20 = self.stdPosCol2[0]
-        self.cf.posCol21 = self.stdPosCol2[1]
-        self.cf.posCol22 = self.stdPosCol2[2]
-        self.cf.negCol20 = self.stdNegCol2[0]
-        self.cf.negCol21 = self.stdNegCol2[1]
-        self.cf.negCol22 = self.stdNegCol2[2]
-        self.cf.saveConfig()
-        # end saveConfig
+    def save_config(self):
+        self.cf.auto_plot = self.w.autoPlot.isChecked()
+        self.cf.keep_zoom = self.w.keepZoom.isChecked()
+        self.cf.font_size = self.w.fontSize.value()
+        self.cf.phase_reference_colour = self.nd.nmrdat[0][0].display.ph_ref_col
+        self.cf.pos_col10 = self.std_pos_col1[0]
+        self.cf.pos_col11 = self.std_pos_col1[1]
+        self.cf.pos_col12 = self.std_pos_col1[2]
+        self.cf.neg_col10 = self.std_neg_col1[0]
+        self.cf.neg_col11 = self.std_neg_col1[1]
+        self.cf.neg_col12 = self.std_neg_col1[2]
+        self.cf.pos_col20 = self.std_pos_col2[0]
+        self.cf.pos_col21 = self.std_pos_col2[1]
+        self.cf.pos_col22 = self.std_pos_col2[2]
+        self.cf.neg_col20 = self.std_neg_col2[0]
+        self.cf.neg_col21 = self.std_neg_col2[1]
+        self.cf.neg_col22 = self.std_neg_col2[2]
+        self.cf.save_config()
+        # end save_config
 
-    def saveMat(self):
-        scipy.io.savemat('/Users/ludwigc/metabolabpy.mat',
-                         {'spc': self.nd.nmrdat[0][0].spc, 'fid': self.nd.nmrdat[0][0].fid})
-        # end saveMat
+    def save_mat(self):
+        scipy.io.save_mat('/Users/ludwigc/metabolabpy.mat',
+                          {'spc': self.nd.nmrdat[0][0].spc, 'fid': self.nd.nmrdat[0][0].fid})
+        # end save_mat
 
-    def saveScript(self, fName=""):
-        if (fName == False):
-            fName = ""
+    def save_script(self, f_name=""):
+        if (f_name == False):
+            f_name = ""
 
-        if (len(fName) == 0):
-            fName = QFileDialog.getSaveFileName(None, 'Save Script File', '', 'Python files (*.py)')
-            fName = fName[0]
+        if (len(f_name) == 0):
+            f_name = QFileDialog.getSaveFileName(None, 'Save Script File', '', 'Python files (*.py)')
+            f_name = f_name[0]
 
-        if (len(fName) > 0):
+        if (len(f_name) > 0):
             scriptText = self.w.script.toPlainText()
-            f = open(fName, 'w')
+            f = open(f_name, 'w')
             f.write(scriptText)
 
-        # end openScript
+        # end open_script
 
-    def scale2DSpectrumUp(self):
+    def scale_2d_spectrum_up(self):
         self.nd.nmrdat[self.nd.s][self.nd.e].display.minLevel /= 1.1
         self.nd.nmrdat[self.nd.s][self.nd.e].display.maxLevel /= 1.1
-        self.setDispPars()
-        self.plotSpc()
-        # end scale2DSpectrumUp
+        self.set_disp_pars()
+        self.plot_spc()
+        # end scale_2d_spectrum_up
 
-    def scale2DSpectrumDown(self):
+    def scale_2d_spectrum_down(self):
         self.nd.nmrdat[self.nd.s][self.nd.e].display.minLevel *= 1.1
         self.nd.nmrdat[self.nd.s][self.nd.e].display.maxLevel *= 1.1
-        self.setDispPars()
-        self.plotSpc()
-        # end scale2DSpectrumDown
+        self.set_disp_pars()
+        self.plot_spc()
+        # end scale_2d_spectrum_down
 
-    def scaleAll2DSpectraUp(self):
+    def scale_all_2d_spectra_up(self):
         self.nd.nmrdat[self.nd.s][self.nd.e].display.minLevel /= 1.1
         self.nd.nmrdat[self.nd.s][self.nd.e].display.maxLevel /= 1.1
         for k in range(len(self.nd.nmrdat[self.nd.s])):
             self.nd.nmrdat[self.nd.s][k].display.minLevel = self.nd.nmrdat[self.nd.s][self.nd.e].display.minLevel
             self.nd.nmrdat[self.nd.s][k].display.maxLevel = self.nd.nmrdat[self.nd.s][self.nd.e].display.maxLevel
 
-        self.setDispPars()
-        self.plotSpc()
-        # end scaleAll2DSpectraUp
+        self.set_disp_pars()
+        self.plot_spc()
+        # end scaleAll_2d_spectra_up
 
-    def scaleAll2DSpectraDown(self):
+    def scale_all_2d_spectra_down(self):
         self.nd.nmrdat[self.nd.s][self.nd.e].display.minLevel *= 1.1
         self.nd.nmrdat[self.nd.s][self.nd.e].display.maxLevel *= 1.1
         for k in range(len(self.nd.nmrdat[self.nd.s])):
             self.nd.nmrdat[self.nd.s][k].display.minLevel = self.nd.nmrdat[self.nd.s][self.nd.e].display.minLevel
             self.nd.nmrdat[self.nd.s][k].display.maxLevel = self.nd.nmrdat[self.nd.s][self.nd.e].display.maxLevel
 
-        self.setDispPars()
-        self.plotSpc()
-        # end scaleAll2DSpectraDown
+        self.set_disp_pars()
+        self.plot_spc()
+        # end scaleAll_2d_spectra_down
 
-    def scriptEditor(self):
+    def script_editor(self):
         self.w.nmrSpectrum.setCurrentIndex(10)
-        # end scriptEditor
+        # end script_editor
 
-    def setDatasetsExps(self):
+    def set_datasets_exps(self):
         if self.w.intAllDS.isChecked() == True:
-            self.nd.intAllDatasets = True
+            self.nd.int_all_data_sets = True
         else:
-            self.nd.intAllDatasets = False
+            self.nd.int_all_data_sets = False
 
         if self.w.intAllExps.isChecked() == True:
-            self.nd.intAllExps= True
+            self.nd.int_all_exps = True
         else:
-            self.nd.intAllExps = False
+            self.nd.int_all_exps = False
 
         if self.w.exportFormatCB.currentIndex() == 0:
-            self.nd.exportPeakExcel = True
+            self.nd.export_peak_excel = True
         else:
-            self.nd.exportPeakExcel = False
+            self.nd.export_peak_excel = False
 
-        startPeak = self.nd.nmrdat[self.nd.s][self.nd.e].startPeak
-        endPeak   = self.nd.nmrdat[self.nd.s][self.nd.e].endPeak
-        peakLabel = self.nd.nmrdat[self.nd.s][self.nd.e].peakLabel
-        self.nd.setPeak(startPeak, endPeak, peakLabel)
-        # end setDatasetsExps
+        start_peak = self.nd.nmrdat[self.nd.s][self.nd.e].start_peak
+        end_peak = self.nd.nmrdat[self.nd.s][self.nd.e].end_peak
+        peak_label = self.nd.nmrdat[self.nd.s][self.nd.e].peak_label
+        self.nd.set_peak(start_peak, end_peak, peak_label)
+        # end set_datasets_exps
 
-    def selectAddCompressPreProc(self):
-        self.ginputCompress(2)
-        # end selectAddExcludePreProc
+    def select_add_compress_pre_proc(self):
+        self.ginput_compress(2)
+        # end select_add_exclude_pre_proc
 
-    def selectAddExcludePreProc(self):
-        self.ginputExclude(2)
-        # end selectAddExcludePreProc
+    def select_add_exclude_pre_proc(self):
+        self.ginput_exclude(2)
+        # end select_add_exclude_pre_proc
 
-    def selectAddSegAlignPreProc(self):
-        self.ginputSegAlign(2)
-        # end selectAddExcludePreProc
+    def select_add_seg_align_pre_proc(self):
+        self.ginput_seg_align(2)
+        # end select_add_exclude_pre_proc
 
-    def selectAllPreProc(self):
-        nSpc = len(self.nd.pp.classSelect)
-        self.nd.pp.plotSelect = np.arange(nSpc)
-        self.fillPreProcessingNumbers()
-        self.setPlotPreProc()
-        self.plotSpcPreProc()
+    def select_all_pre_proc(self):
+        n_spc = len(self.nd.pp.class_select)
+        self.nd.pp.plot_select = np.arange(n_spc)
+        self.fill_pre_processing_numbers()
+        self.set_plot_pre_proc()
+        self.plot_spc_pre_proc()
         self.w.selectClassTW.setFocus()
-        # end selectAllPreProc
+        # end select_all_pre_proc
 
-    def selectClassPreProc(self):
+    def select_class_pre_proc(self):
         cls = self.w.selectClassLE.text()
-        cls2 = self.nd.pp.classSelect
+        cls2 = self.nd.pp.class_select
         sel = np.array([])
         for k in range(len(cls2)):
             if (cls2[k] == cls):
@@ -3417,670 +3439,672 @@ class main_w(object):  # pragma: no cover
         if (len(sel) == 0):
             sel = np.arange(len(cls2))
 
-        self.nd.pp.plotSelect = sel
-        self.fillPreProcessingNumbers()
-        self.setPlotPreProc()
-        self.plotSpcPreProc()
+        self.nd.pp.plot_select = sel
+        self.fill_pre_processing_numbers()
+        self.set_plot_pre_proc()
+        self.plot_spc_pre_proc()
         self.w.selectClassTW.setFocus()
-        # end selectClassPreProc
+        # end select_class_pre_proc
 
-    def selectClearCompressPreProc(self):
-        self.nd.pp.preProcFill = True
-        for k in range(len(self.nd.pp.compressStart)):
+    def select_clear_compress_pre_proc(self):
+        self.nd.pp.pre_proc_fill = True
+        for k in range(len(self.nd.pp.compress_start)):
             self.w.compressBucketsTW.item(k, 0).setText("")
             self.w.compressBucketsTW.setFocus()
             self.w.compressBucketsTW.item(k, 1).setText("")
             self.w.compressBucketsTW.setFocus()
 
-        self.nd.pp.preProcFill = False
-        self.nd.pp.compressStart = np.array([])
-        self.nd.pp.compressEnd = np.array([])
+        self.nd.pp.pre_proc_fill = False
+        self.nd.pp.compress_start = np.array([])
+        self.nd.pp.compress_end = np.array([])
         self.w.compressBucketsTW.setFocus()
-        self.fillPreProcessingNumbers()
+        self.fill_pre_processing_numbers()
         self.w.compressBucketsTW.setFocus()
-        self.setPlotPreProc()
+        self.set_plot_pre_proc()
         self.w.compressBucketsTW.setFocus()
-        self.plotSpcPreProc()
-        self.setCompressPreProc()
+        self.plot_spc_pre_proc()
+        self.set_compress_pre_proc()
         self.w.MplWidget.canvas.flush_events()
         self.w.MplWidget.canvas.draw()
-        # end selectClearExcludePreProc
+        # end select_clear_exclude_pre_proc
 
-    def selectClearExcludePreProc(self):
-        self.nd.pp.preProcFill = True
-        for k in range(len(self.nd.pp.excludeStart)):
+    def select_clear_exclude_pre_proc(self):
+        self.nd.pp.pre_proc_fill = True
+        for k in range(len(self.nd.pp.exclude_start)):
             self.w.excludeRegionTW.item(k, 0).setText("")
             self.w.excludeRegionTW.setFocus()
             self.w.excludeRegionTW.item(k, 1).setText("")
             self.w.excludeRegionTW.setFocus()
 
-        self.nd.pp.preProcFill = False
-        self.nd.pp.excludeStart = np.array([])
-        self.nd.pp.excludeEnd = np.array([])
+        self.nd.pp.pre_proc_fill = False
+        self.nd.pp.exclude_start = np.array([])
+        self.nd.pp.exclude_end = np.array([])
         self.w.excludeRegionTW.setFocus()
-        self.fillPreProcessingNumbers()
+        self.fill_pre_processing_numbers()
         self.w.excludeRegionTW.setFocus()
-        self.setPlotPreProc()
+        self.set_plot_pre_proc()
         self.w.excludeRegionTW.setFocus()
-        self.plotSpcPreProc()
-        self.setExcludePreProc()
+        self.plot_spc_pre_proc()
+        self.set_exclude_pre_proc()
         self.w.MplWidget.canvas.flush_events()
         self.w.MplWidget.canvas.draw()
-        # end selectClearExcludePreProc
+        # end select_clear_exclude_pre_proc
 
-    def selectClearSegAlignPreProc(self):
-        self.nd.pp.preProcFill = True
-        for k in range(len(self.nd.pp.segStart)):
+    def select_clear_seg_align_pre_proc(self):
+        self.nd.pp.pre_proc_fill = True
+        for k in range(len(self.nd.pp.seg_start)):
             self.w.segAlignTW.item(k, 0).setText("")
             self.w.segAlignTW.setFocus()
             self.w.segAlignTW.item(k, 1).setText("")
             self.w.segAlignTW.setFocus()
 
-        self.nd.pp.preProcFill = False
-        self.nd.pp.segStart = np.array([])
-        self.nd.pp.segEnd = np.array([])
+        self.nd.pp.pre_proc_fill = False
+        self.nd.pp.seg_start = np.array([])
+        self.nd.pp.seg_end = np.array([])
         self.w.segAlignTW.setFocus()
-        self.fillPreProcessingNumbers()
+        self.fill_pre_processing_numbers()
         self.w.segAlignTW.setFocus()
-        self.setPlotPreProc()
+        self.set_plot_pre_proc()
         self.w.segAlignTW.setFocus()
-        self.plotSpcPreProc()
-        self.setSegAlignPreProc()
+        self.plot_spc_pre_proc()
+        self.set_seg_align_pre_proc()
         self.w.MplWidget.canvas.flush_events()
         self.w.MplWidget.canvas.draw()
-        # end selectClearExcludePreProc
+        # end select_clear_exclude_pre_proc
 
-    def selectEvenPreProc(self):
-        nSpc = len(self.nd.pp.classSelect)
-        self.nd.pp.plotSelect = np.arange(nSpc)
-        self.nd.pp.plotSelect = self.nd.pp.plotSelect[1::2]
-        self.fillPreProcessingNumbers()
-        self.setPlotPreProc()
-        self.plotSpcPreProc()
+    def select_even_pre_proc(self):
+        n_spc = len(self.nd.pp.class_select)
+        self.nd.pp.plot_select = np.arange(n_spc)
+        self.nd.pp.plot_select = self.nd.pp.plot_select[1::2]
+        self.fill_pre_processing_numbers()
+        self.set_plot_pre_proc()
+        self.plot_spc_pre_proc()
         self.w.selectClassTW.setFocus()
-        # end selectEvenPreProc
+        # end select_even_pre_proc
 
-    def selectOddPreProc(self):
-        nSpc = len(self.nd.pp.classSelect)
-        self.nd.pp.plotSelect = np.arange(nSpc)
-        self.nd.pp.plotSelect = self.nd.pp.plotSelect[0::2]
-        self.fillPreProcessingNumbers()
-        self.setPlotPreProc()
-        self.plotSpcPreProc()
+    def select_odd_pre_proc(self):
+        n_spc = len(self.nd.pp.class_select)
+        self.nd.pp.plot_select = np.arange(n_spc)
+        self.nd.pp.plot_select = self.nd.pp.plot_select[0::2]
+        self.fill_pre_processing_numbers()
+        self.set_plot_pre_proc()
+        self.plot_spc_pre_proc()
         self.w.selectClassTW.setFocus()
-        # end selectOddPreProc
+        # end select_odd_pre_proc
 
-    def selectPlotAll(self):
+    def select_plot_all(self):
         for k in range(len(self.nd.nmrdat[self.nd.s])):
-            self.nd.nmrdat[self.nd.s][k].display.displaySpc = True
+            self.nd.nmrdat[self.nd.s][k].display.display_spc = True
 
         self.w.nmrSpectrum.setCurrentIndex(0)
-        self.changeDataSetExp()
-        self.plotSpc()
-        return "selectPlotAll"
-        # end selectPlotAll
+        self.change_data_set_exp()
+        self.plot_spc()
+        return "select_plot_all"
+        # end select_plot_all
 
-    def selectPlotClear(self):
+    def select_plot_clear(self):
         for k in range(len(self.nd.nmrdat[self.nd.s])):
-            self.nd.nmrdat[self.nd.s][k].display.displaySpc = False
+            self.nd.nmrdat[self.nd.s][k].display.display_spc = False
 
-        # self.plotSpc()
+        # self.plot_spc()
         self.w.nmrSpectrum.setCurrentIndex(0)
-        self.changeDataSetExp()
-        self.plotSpc()
-        return "selectPlotClear"
-        # end selectPlotClear
+        self.change_data_set_exp()
+        self.plot_spc()
+        return "select_plot_clear"
+        # end select_plot_clear
 
-    def selectPlotList(self, plotSelect):
-        plotSelect = np.array(plotSelect)
+    def select_plot_list(self, plot_select):
+        plot_select = np.array(plot_select)
         for k in range(len(self.nd.nmrdat[self.nd.s])):
-            self.nd.nmrdat[self.nd.s][k].display.displaySpc = False
+            self.nd.nmrdat[self.nd.s][k].display.display_spc = False
 
-        plotSelect -= 1
-        for k in range(len(plotSelect)):
-            if ((plotSelect[k] > -1) and (plotSelect[k] < len(self.nd.nmrdat[self.nd.s]))):
-                self.nd.nmrdat[self.nd.s][plotSelect[k]].display.displaySpc = True
+        plot_select -= 1
+        for k in range(len(plot_select)):
+            if ((plot_select[k] > -1) and (plot_select[k] < len(self.nd.nmrdat[self.nd.s]))):
+                self.nd.nmrdat[self.nd.s][plot_select[k]].display.display_spc = True
 
-        # self.plotSpc()
+        # self.plot_spc()
         self.w.nmrSpectrum.setCurrentIndex(0)
-        self.changeDataSetExp()
-        return "selectPlotList"
-        # end selectPlotList
+        self.change_data_set_exp()
+        return "select_plot_list"
+        # end select_plot_list
 
-    def setAcqPars(self):
+    def set_acq_pars(self):
         s = self.nd.s
         e = self.nd.e
         a = self.nd.nmrdat[s][e].acq
-        acqStr = "originalDataset      " + self.nd.nmrdat[s][e].origDataSet + "\n"
-        acqStr += "___________________________________________________________________________________________________\n"
-        acqStr += "\n"
-        acqStr += "metaInfo             "
+        acq_str = "originalDataset      " + self.nd.nmrdat[s][e].orig_data_set + "\n"
+        acq_str += "___________________________________________________________________________________________________\n"
+        acq_str += "\n"
+        acq_str += "metaInfo             "
         for k in range(len(a.title)):
-            acqStr += a.title[k] + " "
+            acq_str += a.title[k] + " "
 
-        acqStr += "\n                    "
-        acqStr += " Origin\t" + a.origin + "\n                    "
-        acqStr += " Owner\t" + a.owner + "\n"
-        acqStr += "___________________________________________________________________________________________________\n"
-        acqStr += "\n"
-        acqStr += "probe                          " + a.probe + "\n"
-        pp = a.pulProgName
+        acq_str += "\n                    "
+        acq_str += " Origin\t" + a.origin + "\n                    "
+        acq_str += " Owner\t" + a.owner + "\n"
+        acq_str += "___________________________________________________________________________________________________\n"
+        acq_str += "\n"
+        acq_str += "probe                          " + a.probe + "\n"
+        pp = a.pul_prog_name
         pp = pp[1:]
         pp = pp[:len(pp) - 1]
-        acqStr += "pulseProgram                   " + pp + "\n\n"
-        acqStr += "sw                   [ppm]    " + "% 9.2f"%a.sw[0]           + "        |    % 9.2f"%a.sw[1]           + "        |    % 9.2f\n"%a.sw[2]
-        acqStr += "sw_h                 [Hz]     " + "% 9.2f"%a.sw_h[0]         + "        |    % 9.2f"%a.sw_h[1]         + "        |    % 9.2f\n"%a.sw_h[2]
-        acqStr += "bf1/2/3              [MHz]    " + "% 9.2f"%a.bf1             + "        |    % 9.2f"%a.bf2             + "        |    % 9.2f\n"%a.bf3
-        acqStr += "sfo1/2/3             [MHz]    " + "% 9.2f"%a.sfo1            + "        |    % 9.2f"%a.sfo2            + "        |    % 9.2f\n"%a.sfo3
-        acqStr += "o1/2/3               [Hz]     " + "% 9.2f"%a.o1              + "        |    % 9.2f"%a.o2              + "        |    % 9.2f\n"%a.o3
-        acqStr += "nPoints                       " + "% 6d"%a.nDataPoints[0] + "           |    % 6d"%a.nDataPoints[1] + "           |    % 6d\n"%a.nDataPoints[2]
-        acqStr += "transients                    " + "% 6d\n"%a.transients
-        acqStr += "steadyStateScans              " + "% 6d\n\n"%a.steadyStateScans
-        acqStr += "groupDelay           [us]     " + "% 9.2f\n"%a.groupDelay
-        acqStr += "decim                         " + "% 6d\n"%a.decim
-        acqStr += "dspfvs                        " + "% 6d\n"%a.dspfvs
-        acqStr += "temperature          [K]      " + "% 9.2f\n"%a.temperature
-        self.w.acqPars.setText(acqStr)
-        # end setAcqPars
+        acq_str += "pulseProgram                   " + pp + "\n\n"
+        acq_str += "sw                   [ppm]    " + "% 9.2f" % a.sw[0] + "        |    % 9.2f" % a.sw[
+            1] + "        |    % 9.2f\n" % a.sw[2]
+        acq_str += "sw_h                 [Hz]     " + "% 9.2f" % a.sw_h[0] + "        |    % 9.2f" % a.sw_h[
+            1] + "        |    % 9.2f\n" % a.sw_h[2]
+        acq_str += "bf1/2/3              [MHz]    " + "% 9.2f" % a.bf1 + "        |    % 9.2f" % a.bf2 + "        |    % 9.2f\n" % a.bf3
+        acq_str += "sfo1/2/3             [MHz]    " + "% 9.2f" % a.sfo1 + "        |    % 9.2f" % a.sfo2 + "        |    % 9.2f\n" % a.sfo3
+        acq_str += "o1/2/3               [Hz]     " + "% 9.2f" % a.o1 + "        |    % 9.2f" % a.o2 + "        |    % 9.2f\n" % a.o3
+        acq_str += "nPoints                       " + "% 6d" % a.n_data_points[0] + "           |    % 6d" % \
+                   a.n_data_points[1] + "           |    % 6d\n" % a.n_data_points[2]
+        acq_str += "transients                    " + "% 6d\n" % a.transients
+        acq_str += "steadyStateScans              " + "% 6d\n\n" % a.steady_state_scans
+        acq_str += "groupDelay           [us]     " + "% 9.2f\n" % a.group_delay
+        acq_str += "decim                         " + "% 6d\n" % a.decim
+        acq_str += "dspfvs                        " + "% 6d\n" % a.dspfvs
+        acq_str += "temperature          [K]      " + "% 9.2f\n" % a.temperature
+        self.w.acqPars.setText(acq_str)
+        # end set_acq_pars
 
-    def setAvoidNegValues(self):
-        if (self.nd.pp.preProcFill == False):
+    def set_avoid_neg_values(self):
+        if (self.nd.pp.pre_proc_fill == False):
             if (self.w.avoidNegValues.isChecked() == True):
-                self.nd.pp.avoidNegativeValues = True
+                self.nd.pp.avoid_negative_values = True
             else:
-                self.nd.pp.avoidNegativeValues = False
+                self.nd.pp.avoid_negative_values = False
 
-        # end setAvoidNegValues
+        # end set_avoid_neg_values
 
-    def setBucketPPMPreProc(self):
+    def set_bucket_ppm_pre_proc(self):
         try:
-            bucketPPM = float(self.w.bucketPpmLE.text())
+            bucket_ppm = float(self.w.bucketPpmLE.text())
         except:
-            bucketPPM = self.nd.pp.bucketPPM
+            bucket_ppm = self.nd.pp.bucket_ppm
 
-        ppmPerPoint = abs(self.nd.nmrdat[self.nd.s][0].ppm1[0] - self.nd.nmrdat[self.nd.s][0].ppm1[1])
-        bucketPoints = round(bucketPPM / ppmPerPoint)
-        bucketPPM = np.round(1e4 * bucketPoints * ppmPerPoint) / 1e4
-        self.w.bucketPpmLE.setText(str(bucketPPM))
-        self.w.bucketDataPointsLE.setText(str(int(bucketPoints)))
-        self.nd.pp.bucketPoints = bucketPoints
-        self.nd.pp.bucketPPM = bucketPPM
-        # end setBucketPPMPreProc
+        ppm_per_point = abs(self.nd.nmrdat[self.nd.s][0].ppm1[0] - self.nd.nmrdat[self.nd.s][0].ppm1[1])
+        bucket_points = round(bucket_ppm / ppm_per_point)
+        bucket_ppm = np.round(1e4 * bucket_points * ppm_per_point) / 1e4
+        self.w.bucketPpmLE.setText(str(bucket_ppm))
+        self.w.bucketDataPointsLE.setText(str(int(bucket_points)))
+        self.nd.pp.bucket_points = bucket_points
+        self.nd.pp.bucket_ppm = bucket_ppm
+        # end set_bucket_ppm_pre_proc
 
-    def setBucketPointsPreProc(self):
+    def set_bucket_points_pre_proc(self):
         try:
-            bucketPoints = float(self.w.bucketDataPointsLE.text())
+            bucket_points = float(self.w.bucketDataPointsLE.text())
         except:
-            bucketPoints = self.nd.pp.bucketPoints
+            bucket_points = self.nd.pp.bucket_points
 
-        ppmPerPoint = abs(self.nd.nmrdat[self.nd.s][0].ppm1[0] - self.nd.nmrdat[self.nd.s][0].ppm1[1])
-        bucketPoints = round(bucketPoints)
-        bucketPPM = np.round(1e4 * bucketPoints * ppmPerPoint) / 1e4
-        self.w.bucketPpmLE.setText(str(bucketPPM))
-        self.w.bucketDataPointsLE.setText(str(int(bucketPoints)))
-        self.nd.pp.bucketPoints = bucketPoints
-        self.nd.pp.bucketPPM = bucketPPM
-        # end setBucketPointsPreProc
+        ppm_per_point = abs(self.nd.nmrdat[self.nd.s][0].ppm1[0] - self.nd.nmrdat[self.nd.s][0].ppm1[1])
+        bucket_points = round(bucket_points)
+        bucket_ppm = np.round(1e4 * bucket_points * ppm_per_point) / 1e4
+        self.w.bucketPpmLE.setText(str(bucket_ppm))
+        self.w.bucketDataPointsLE.setText(str(int(bucket_points)))
+        self.nd.pp.bucket_points = bucket_points
+        self.nd.pp.bucket_ppm = bucket_ppm
+        # end set_bucket_points_pre_proc
 
-    def setBucketSpectra(self):
-        if (self.nd.pp.preProcFill == False):
+    def set_bucket_spectra(self):
+        if (self.nd.pp.pre_proc_fill == False):
             if (self.w.bucketSpectra.isChecked() == True):
-                self.nd.pp.flagBucketSpectra = True
+                self.nd.pp.flag_bucket_spectra = True
                 self.w.preProcessingSelect.setCurrentIndex(4)
             else:
-                self.nd.pp.flagBucketSpectra = False
+                self.nd.pp.flag_bucket_spectra = False
 
-        # end setBucketSpectra
+        # end set_bucket_spectra
 
-    def setChangePreProc(self):
-        if (self.nd.pp.preProcFill == False):
+    def set_change_pre_proc(self):
+        if (self.nd.pp.pre_proc_fill == False):
             cls = np.array([])
-            for k in range(len(self.nd.pp.classSelect)):
+            for k in range(len(self.nd.pp.class_select)):
                 cls = np.append(cls, self.w.selectClassTW.item(k, 1).text())
 
-            self.nd.pp.classSelect = cls
+            self.nd.pp.class_select = cls
 
-        # end setChangePreProc
+        # end set_change_pre_proc
 
-    def setCompressBuckets(self):
-        if (self.nd.pp.preProcFill == False):
+    def set_compress_buckets(self):
+        if (self.nd.pp.pre_proc_fill == False):
             if (self.w.compressBuckets.isChecked() == True):
-                self.nd.pp.flagCompressBuckets = True
+                self.nd.pp.flag_compress_buckets = True
                 self.w.preProcessingSelect.setCurrentIndex(5)
             else:
-                self.nd.pp.flagCompressBuckets = False
+                self.nd.pp.flag_compress_buckets = False
 
-        # end setCompressBuckets
+        # end set_compress_buckets
 
-    def setCompressPreProc(self):
-        if (self.nd.pp.preProcFill == False):
-            nRows = self.w.compressBucketsTW.rowCount()
-            coStart = np.array([])
-            coEnd = np.array([])
-            tStart = np.array([])
-            tEnd = np.array([])
-            for k in range(nRows):
-                # tStart = np.array([])
-                # tEnd   = np.array([])
+    def set_compress_pre_proc(self):
+        if (self.nd.pp.pre_proc_fill == False):
+            n_rows = self.w.compressBucketsTW.rowCount()
+            co_start = np.array([])
+            co_end = np.array([])
+            t_start = np.array([])
+            t_end = np.array([])
+            for k in range(n_rows):
+                # t_start = np.array([])
+                # t_end   = np.array([])
                 try:
-                    tStart = np.append(tStart, float(self.w.compressBucketsTW.item(k, 0).text()))
+                    t_start = np.append(t_start, float(self.w.compressBucketsTW.item(k, 0).text()))
                     # self.w.compressBucketsTW.item(k,0).clearContents()
                 except:
-                    tStart = np.append(tStart, -10000.0)
+                    t_start = np.append(t_start, -10000.0)
 
                 try:
-                    tEnd = np.append(tEnd, float(self.w.compressBucketsTW.item(k, 1).text()))
+                    t_end = np.append(t_end, float(self.w.compressBucketsTW.item(k, 1).text()))
                     # self.w.compressBucketsTW.item(k,1).clearContents()
                 except:
-                    tEnd = np.append(tEnd, -10000.0)
+                    t_end = np.append(t_end, -10000.0)
 
             # self.w.compressBucketsTW.clearContents()
             self.w.compressBucketsTW.setRowCount(0)
-            self.w.compressBucketsTW.setRowCount(nRows)
-            self.nd.pp.preProcFill = True
-            for k in np.arange(len(tStart) - 1, -1, -1):  # range(len(tStart)):
-                compNumber1 = QTableWidgetItem(2 * k)
-                compNumber1.setTextAlignment(QtCore.Qt.AlignHCenter)
-                self.w.compressBucketsTW.setItem(k, 0, compNumber1)
-                compNumber2 = QTableWidgetItem(2 * k + 1)
-                compNumber2.setTextAlignment(QtCore.Qt.AlignHCenter)
-                self.w.compressBucketsTW.setItem(k, 1, compNumber2)
-                if ((tStart[k] > -10000.0) & (tEnd[k] > -10000.0)):
-                    tMin = min(tStart[k], tEnd[k])
-                    tEnd[k] = max(tStart[k], tEnd[k])
-                    tStart[k] = tMin
-                    coStart = np.append(coStart, tStart[k])
-                    coEnd = np.append(coEnd, tEnd[k])
-                    tStart = np.delete(tStart, k)
-                    tEnd = np.delete(tEnd, k)
+            self.w.compressBucketsTW.setRowCount(n_rows)
+            self.nd.pp.pre_proc_fill = True
+            for k in np.arange(len(t_start) - 1, -1, -1):  # range(len(t_start)):
+                comp_number1 = QTableWidgetItem(2 * k)
+                comp_number1.setTextAlignment(QtCore.Qt.AlignHCenter)
+                self.w.compressBucketsTW.setItem(k, 0, comp_number1)
+                comp_number2 = QTableWidgetItem(2 * k + 1)
+                comp_number2.setTextAlignment(QtCore.Qt.AlignHCenter)
+                self.w.compressBucketsTW.setItem(k, 1, comp_number2)
+                if ((t_start[k] > -10000.0) & (t_end[k] > -10000.0)):
+                    t_min = min(t_start[k], t_end[k])
+                    t_end[k] = max(t_start[k], t_end[k])
+                    t_start[k] = t_min
+                    co_start = np.append(co_start, t_start[k])
+                    co_end = np.append(co_end, t_end[k])
+                    t_start = np.delete(t_start, k)
+                    t_end = np.delete(t_end, k)
 
-                if (tStart[k] > -10000.0):
-                    self.w.compressBucketsTW.item(k, 0).setText(str(tStart[k]))
+                if (t_start[k] > -10000.0):
+                    self.w.compressBucketsTW.item(k, 0).setText(str(t_start[k]))
                     self.w.compressBucketsTW.setFocus()
                 else:
                     self.w.compressBucketsTW.item(k, 0).setText("")
                     self.w.compressBucketsTW.setFocus()
 
-                if (tEnd[k] > -10000.0):
-                    self.w.compressBucketsTW.item(k, 1).setText(str(tEnd[k]))
+                if (t_end[k] > -10000.0):
+                    self.w.compressBucketsTW.item(k, 1).setText(str(t_end[k]))
                     self.w.compressBucketsTW.setFocus()
                 else:
                     self.w.compressBucketsTW.item(k, 1).setText("")
                     self.w.compressBucketsTW.setFocus()
 
-            self.nd.pp.preProcFill = False
-            sortIdx = np.argsort(coStart)
-            self.nd.pp.compressStart = coStart[sortIdx]
-            self.nd.pp.compressEnd = coEnd[sortIdx]
-            self.plotSpcPreProc()
+            self.nd.pp.pre_proc_fill = False
+            sort_idx = np.argsort(co_start)
+            self.nd.pp.compress_start = co_start[sort_idx]
+            self.nd.pp.compress_end = co_end[sort_idx]
+            self.plot_spc_pre_proc()
 
-        # end setCompressPreProc
+        # end set_compress_pre_proc
 
-    def setDarkMode(self):
-        self.cf.readConfig()
+    def set_dark_mode(self):
+        self.cf.read_config()
         self.cf.mode = 'dark'
-        self.cf.saveConfig()
+        self.cf.save_config()
         # restart program
-        #os.execv(sys.executable, ['python'] + sys.argv)
-        # end saveConfig
+        # os.execv(sys.executable, ['python'] + sys.argv)
+        # end save_config
 
-    def setDispPars(self):
-        #print("s: {}, e: {}".format(self.nd.s, self.nd.e))
+    def set_disp_pars(self):
+        # print("s: {}, e: {}".format(self.nd.s, self.nd.e))
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        self.w.posColR.setText(str(d.posColRGB[0]))
-        self.w.posColG.setText(str(d.posColRGB[1]))
-        self.w.posColB.setText(str(d.posColRGB[2]))
-        self.w.negColR.setText(str(d.negColRGB[0]))
-        self.w.negColG.setText(str(d.negColRGB[1]))
-        self.w.negColB.setText(str(d.negColRGB[2]))
-        self.w.nLevels.setText(str(d.nLevels))
-        self.w.minLevel.setText(str(d.minLevel))
-        self.w.maxLevel.setText(str(d.maxLevel))
-        self.w.spcOffset.setText(str(d.spcOffset))
-        self.w.spcScale.setText(str(d.spcScale))
-        self.w.xLabel.setText(d.xLabel)
-        self.w.yLabel.setText(d.yLabel)
-        self.w.spcLabel.setText(d.spcLabel)
-        self.w.posCol.setCurrentIndex(d.colours.get(d.posCol))
-        self.w.negCol.setCurrentIndex(d.colours.get(d.negCol))
-        self.w.axisType1.setCurrentIndex(d.axes.get(d.axisType1))
-        self.w.axisType2.setCurrentIndex(d.axes.get(d.axisType2))
-        self.w.displaySpc.setCurrentIndex(d.falseTrue.get(d.displaySpc))
-        self.w.phRefColour.setCurrentIndex(d.colours2.get(d.phRefCol))
-        self.w.phRefDS.setValue(d.phRefDS)
-        self.w.phRefExp.setValue(d.phRefExp)
-        # end setDispPars
+        self.w.posColR.setText(str(d.pos_col_rgb[0]))
+        self.w.posColG.setText(str(d.pos_col_rgb[1]))
+        self.w.posColB.setText(str(d.pos_col_rgb[2]))
+        self.w.negColR.setText(str(d.neg_col_rgb[0]))
+        self.w.negColG.setText(str(d.neg_col_rgb[1]))
+        self.w.negColB.setText(str(d.neg_col_rgb[2]))
+        self.w.nLevels.setText(str(d.n_levels))
+        self.w.minLevel.setText(str(d.min_level))
+        self.w.maxLevel.setText(str(d.max_level))
+        self.w.spcOffset.setText(str(d.spc_offset))
+        self.w.spcScale.setText(str(d.spc_scale))
+        self.w.xLabel.setText(d.x_label)
+        self.w.yLabel.setText(d.y_label)
+        self.w.spcLabel.setText(d.spc_label)
+        self.w.posCol.setCurrentIndex(d.colours.get(d.pos_col))
+        self.w.negCol.setCurrentIndex(d.colours.get(d.neg_col))
+        self.w.axisType1.setCurrentIndex(d.axes.get(d.axis_type1))
+        self.w.axisType2.setCurrentIndex(d.axes.get(d.axis_type2))
+        self.w.displaySpc.setCurrentIndex(d.false_true.get(d.display_spc))
+        self.w.phRefColour.setCurrentIndex(d.colours2.get(d.ph_ref_col))
+        self.w.phRefDS.setValue(d.ph_ref_ds)
+        self.w.phRefExp.setValue(d.ph_ref_exp)
+        # end set_disp_pars
 
-    def setAddPeak(self):
-        if (self.nd.peakFill == False):
-            nRows     = self.w.peakWidget.rowCount()
-            startPeak = np.array([])
-            endPeak   = np.array([])
-            peakLabel = np.array([])
-            sPeak     = np.array([])
-            ePeak     = np.array([])
-            pLabel    = np.array([])
-            for k in range(nRows):
+    def set_add_peak(self):
+        if (self.nd.peak_fill == False):
+            n_rows = self.w.peakWidget.rowCount()
+            start_peak = np.array([])
+            end_peak = np.array([])
+            peak_label = np.array([])
+            s_peak = np.array([])
+            e_peak = np.array([])
+            p_label = np.array([])
+            for k in range(n_rows):
                 try:
-                    sPeak = np.append(sPeak, float(self.w.peakWidget.item(k, 0).text()))
+                    s_peak = np.append(s_peak, float(self.w.peakWidget.item(k, 0).text()))
                 except:
-                    sPeak = np.append(sPeak, -10000.0)
-
-                try:
-                    ePeak = np.append(ePeak, float(self.w.peakWidget.item(k, 1).text()))
-                except:
-                    ePeak = np.append(ePeak, -10000.0)
+                    s_peak = np.append(s_peak, -10000.0)
 
                 try:
-                    pLabel = np.append(pLabel, self.w.peakWidget.item(k, 2).text())
+                    e_peak = np.append(e_peak, float(self.w.peakWidget.item(k, 1).text()))
                 except:
-                    pLabel = np.append(pLabel, '')
+                    e_peak = np.append(e_peak, -10000.0)
 
-            print("s: {}, e: {}, l: {}".format(sPeak, ePeak, pLabel))
+                try:
+                    p_label = np.append(p_label, self.w.peakWidget.item(k, 2).text())
+                except:
+                    p_label = np.append(p_label, '')
+
+            print("s: {}, e: {}, l: {}".format(s_peak, e_peak, p_label))
             self.w.peakWidget.setRowCount(0)
-            self.w.peakWidget.setRowCount(nRows)
-            self.nd.peakFill = True
-            for k in np.arange(len(sPeak) - 1, -1, -1):  # range(len(tStart)):
-                pNumber1 = QTableWidgetItem(3 * k)
-                pNumber1.setTextAlignment(QtCore.Qt.AlignHCenter)
-                self.w.peakWidget.setItem(k, 0, pNumber1)
-                pNumber2 = QTableWidgetItem(3 * k + 1)
-                pNumber2.setTextAlignment(QtCore.Qt.AlignHCenter)
-                self.w.peakWidget.setItem(k, 1, pNumber2)
-                pLabel1 = QTableWidgetItem(3 * k + 2)
-                pLabel1.setTextAlignment(QtCore.Qt.AlignHCenter)
-                self.w.peakWidget.setItem(k, 3, pLabel1)
-                print("k: {}, sPeak[k]: {}, sPeak: {}".format(k, sPeak[k], sPeak))
-                if ((sPeak[k] > -10000.0) & (ePeak[k] > -10000.0)):
-                    pMin      = min(sPeak[k], ePeak[k])
-                    ePeak[k]  = max(sPeak[k], ePeak[k])
-                    sPeak[k]  = pMin
-                    startPeak = np.append(startPeak, sPeak[k])
-                    endPeak   = np.append(endPeak, ePeak[k])
-                    peakLabel = np.append(peakLabel, pLabel[k])
-                    sPeak     = np.delete(sPeak, k)
-                    ePeak     = np.delete(ePeak, k)
+            self.w.peakWidget.setRowCount(n_rows)
+            self.nd.peak_fill = True
+            for k in np.arange(len(s_peak) - 1, -1, -1):  # range(len(t_start)):
+                p_number1 = QTableWidgetItem(3 * k)
+                p_number1.setTextAlignment(QtCore.Qt.AlignHCenter)
+                self.w.peakWidget.setItem(k, 0, p_number1)
+                p_number2 = QTableWidgetItem(3 * k + 1)
+                p_number2.setTextAlignment(QtCore.Qt.AlignHCenter)
+                self.w.peakWidget.setItem(k, 1, p_number2)
+                p_label1 = QTableWidgetItem(3 * k + 2)
+                p_label1.setTextAlignment(QtCore.Qt.AlignHCenter)
+                self.w.peakWidget.setItem(k, 3, p_label1)
+                print("k: {}, s_peak[k]: {}, s_peak: {}".format(k, s_peak[k], s_peak))
+                if ((s_peak[k] > -10000.0) & (e_peak[k] > -10000.0)):
+                    p_min = min(s_peak[k], e_peak[k])
+                    e_peak[k] = max(s_peak[k], e_peak[k])
+                    s_peak[k] = p_min
+                    start_peak = np.append(start_peak, s_peak[k])
+                    end_peak = np.append(end_peak, e_peak[k])
+                    peak_label = np.append(peak_label, p_label[k])
+                    s_peak = np.delete(s_peak, k)
+                    e_peak = np.delete(e_peak, k)
 
+            sort_idx = np.argsort(start_peak)
+            start_peak = start_peak[sort_idx]
+            end_peak = end_peak[sort_idx]
+            peak_label = peak_label[sort_idx]
+            self.nd.set_peak(start_peak, end_peak, peak_label)
+            self.set_peak_picking()
+            self.nd.peak_fill = False
+            self.plot_spc()
 
-            sortIdx = np.argsort(startPeak)
-            startPeak = startPeak[sortIdx]
-            endPeak   = endPeak[sortIdx]
-            peakLabel = peakLabel[sortIdx]
-            self.nd.setPeak(startPeak, endPeak, peakLabel)
-            self.setPeakPicking()
-            self.nd.peakFill = False
-            self.plotSpc()
+        # end set_exclude_pre_proc
 
-        # end setExcludePreProc
-
-    def setExcludePreProc(self):
-        if (self.nd.pp.preProcFill == False):
-            nRows = self.w.excludeRegionTW.rowCount()
-            exStart = np.array([])
-            exEnd = np.array([])
-            tStart = np.array([])
-            tEnd = np.array([])
-            for k in range(nRows):
-                # tStart = np.array([])
-                # tEnd   = np.array([])
+    def set_exclude_pre_proc(self):
+        if (self.nd.pp.pre_proc_fill == False):
+            n_rows = self.w.excludeRegionTW.rowCount()
+            ex_start = np.array([])
+            ex_end = np.array([])
+            t_start = np.array([])
+            t_end = np.array([])
+            for k in range(n_rows):
+                # t_start = np.array([])
+                # t_end   = np.array([])
                 try:
-                    tStart = np.append(tStart, float(self.w.excludeRegionTW.item(k, 0).text()))
+                    t_start = np.append(t_start, float(self.w.excludeRegionTW.item(k, 0).text()))
                     # self.w.excludeRegionTW.item(k,0).clearContents()
                 except:
-                    tStart = np.append(tStart, -10000.0)
+                    t_start = np.append(t_start, -10000.0)
 
                 try:
-                    tEnd = np.append(tEnd, float(self.w.excludeRegionTW.item(k, 1).text()))
+                    t_end = np.append(t_end, float(self.w.excludeRegionTW.item(k, 1).text()))
                     # self.w.excludeRegionTW.item(k,1).clearContents()
                 except:
-                    tEnd = np.append(tEnd, -10000.0)
+                    t_end = np.append(t_end, -10000.0)
 
             # self.w.excludeRegionTW.clearContents()
             self.w.excludeRegionTW.setRowCount(0)
-            self.w.excludeRegionTW.setRowCount(nRows)
-            self.nd.pp.preProcFill = True
-            for k in np.arange(len(tStart) - 1, -1, -1):  # range(len(tStart)):
-                exclNumber1 = QTableWidgetItem(2 * k)
-                exclNumber1.setTextAlignment(QtCore.Qt.AlignHCenter)
-                self.w.excludeRegionTW.setItem(k, 0, exclNumber1)
-                exclNumber2 = QTableWidgetItem(2 * k + 1)
-                exclNumber2.setTextAlignment(QtCore.Qt.AlignHCenter)
-                self.w.excludeRegionTW.setItem(k, 1, exclNumber2)
-                if ((tStart[k] > -10000.0) & (tEnd[k] > -10000.0)):
-                    tMin = min(tStart[k], tEnd[k])
-                    tEnd[k] = max(tStart[k], tEnd[k])
-                    tStart[k] = tMin
-                    exStart = np.append(exStart, tStart[k])
-                    exEnd = np.append(exEnd, tEnd[k])
-                    tStart = np.delete(tStart, k)
-                    tEnd = np.delete(tEnd, k)
+            self.w.excludeRegionTW.setRowCount(n_rows)
+            self.nd.pp.pre_proc_fill = True
+            for k in np.arange(len(t_start) - 1, -1, -1):  # range(len(t_start)):
+                excl_number1 = QTableWidgetItem(2 * k)
+                excl_number1.setTextAlignment(QtCore.Qt.AlignHCenter)
+                self.w.excludeRegionTW.setItem(k, 0, excl_number1)
+                excl_number2 = QTableWidgetItem(2 * k + 1)
+                excl_number2.setTextAlignment(QtCore.Qt.AlignHCenter)
+                self.w.excludeRegionTW.setItem(k, 1, excl_number2)
+                if ((t_start[k] > -10000.0) & (t_end[k] > -10000.0)):
+                    t_min = min(t_start[k], t_end[k])
+                    t_end[k] = max(t_start[k], t_end[k])
+                    t_start[k] = t_min
+                    ex_start = np.append(ex_start, t_start[k])
+                    ex_end = np.append(ex_end, t_end[k])
+                    t_start = np.delete(t_start, k)
+                    t_end = np.delete(t_end, k)
 
-                if (tStart[k] > -10000.0):
-                    self.w.excludeRegionTW.item(k, 0).setText(str(tStart[k]))
+                if (t_start[k] > -10000.0):
+                    self.w.excludeRegionTW.item(k, 0).setText(str(t_start[k]))
                     self.w.excludeRegionTW.setFocus()
                 else:
                     self.w.excludeRegionTW.item(k, 0).setText("")
                     self.w.excludeRegionTW.setFocus()
 
-                if (tEnd[k] > -10000.0):
-                    self.w.excludeRegionTW.item(k, 1).setText(str(tEnd[k]))
+                if (t_end[k] > -10000.0):
+                    self.w.excludeRegionTW.item(k, 1).setText(str(t_end[k]))
                     self.w.excludeRegionTW.setFocus()
                 else:
                     self.w.excludeRegionTW.item(k, 1).setText("")
                     self.w.excludeRegionTW.setFocus()
 
-            self.nd.pp.preProcFill = False
-            sortIdx = np.argsort(exStart)
-            self.nd.pp.excludeStart = exStart[sortIdx]
-            self.nd.pp.excludeEnd = exEnd[sortIdx]
-            self.plotSpcPreProc()
+            self.nd.pp.pre_proc_fill = False
+            sort_idx = np.argsort(ex_start)
+            self.nd.pp.exclude_start = ex_start[sort_idx]
+            self.nd.pp.exclude_end = ex_end[sort_idx]
+            self.plot_spc_pre_proc()
 
-        # end setExcludePreProc
+        # end set_exclude_pre_proc
 
-    def setExcludeRegion(self):
-        if (self.nd.pp.preProcFill == False):
+    def set_exclude_region(self):
+        if (self.nd.pp.pre_proc_fill == False):
             if (self.w.excludeRegion.isChecked() == True):
-                self.nd.pp.flagExcludeRegion = True
+                self.nd.pp.flag_exclude_region = True
                 self.w.preProcessingSelect.setCurrentIndex(1)
             else:
-                self.nd.pp.flagExcludeRegion = False
+                self.nd.pp.flag_exclude_region = False
 
-        # end setExcludeRegion
+        # end set_exclude_region
 
-    def setExportCharacter(self):
+    def set_export_character(self):
         tt = self.w.exportCharacter.text()
         if (len(tt) > 0):
-            self.nd.pp.exportCharacter = tt[0]
+            self.nd.pp.export_character = tt[0]
             self.w.exportCharacter.setText(tt[0])
 
-        # end setExportCharacter
+        # end set_export_character
 
-    def setExportDelimiterTab(self):
-        self.nd.pp.exportDelimiterTab = self.w.exportDelimiterTab.isChecked()
-        # end setExportDelimiterTab
+    def set_export_delimiter_tab(self):
+        self.nd.pp.export_delimiter_tab = self.w.exportDelimiterTab.isChecked()
+        # end set_export_delimiter_tab
 
-    def setExportFileName(self):
-        if self.nd.pp.exportMethod == 0:
-            self.nd.pp.exportExcel = self.w.exportFileName.text()
+    def set_export_file_name(self):
+        if self.nd.pp.export_method == 0:
+            self.nd.pp.export_excel = self.w.exportFileName.text()
 
-        if self.nd.pp.exportMethod == 1:
-            self.nd.pp.exportFileName = self.w.exportFileName.text()
+        if self.nd.pp.export_method == 1:
+            self.nd.pp.export_file_name = self.w.exportFileName.text()
 
-        if self.nd.pp.exportMethod == 2:
-            self.nd.pp.exportMetaboAnalyst = self.w.exportFileName.text()
+        if self.nd.pp.export_method == 2:
+            self.nd.pp.export_metabo_analyst = self.w.exportFileName.text()
 
-        if self.nd.pp.exportMethod == 3:
-            self.nd.pp.exportrDolphin = self.w.exportFileName.text()
+        if self.nd.pp.export_method == 3:
+            self.nd.pp.export_r_dolphin = self.w.exportFileName.text()
 
-        if self.nd.pp.exportMethod == 4:
-            self.nd.pp.exportBatman = self.w.exportFileName.text()
+        if self.nd.pp.export_method == 4:
+            self.nd.pp.export_batman = self.w.exportFileName.text()
 
-        if self.nd.pp.exportMethod == 5:
-            self.nd.pp.exportBruker = self.w.exportFileName.text()
+        if self.nd.pp.export_method == 5:
+            self.nd.pp.export_bruker = self.w.exportFileName.text()
 
-        # end setExportFileName
+        # end set_export_file_name
 
-    def setExportMethod(self):
-        if self.nd.pp.exportMethod == 0:
+    def set_export_method(self):
+        if self.nd.pp.export_method == 0:
             self.w.delimiterLabel.setHidden(True)
             self.w.exportDelimiterTab.setHidden(True)
             self.w.exportDelimiterCharacter.setHidden(True)
             self.w.exportCharacter.setHidden(True)
             self.w.samplesInRowsLabel.setHidden(False)
             self.w.samplesInComboBox.setHidden(False)
-            self.w.exportPath.setText(self.nd.pp.exportExcelPath)
-            self.w.exportFileName.setText(self.nd.pp.exportExcel)
+            self.w.exportPath.setText(self.nd.pp.export_excel_path)
+            self.w.exportFileName.setText(self.nd.pp.export_excel)
 
-        if self.nd.pp.exportMethod == 1:
+        if self.nd.pp.export_method == 1:
             self.w.delimiterLabel.setHidden(False)
             self.w.exportDelimiterTab.setHidden(False)
             self.w.exportDelimiterCharacter.setHidden(False)
             self.w.exportCharacter.setHidden(False)
             self.w.samplesInRowsLabel.setHidden(False)
             self.w.samplesInComboBox.setHidden(False)
-            self.w.exportPath.setText(self.nd.pp.exportPathName)
-            self.w.exportFileName.setText(self.nd.pp.exportFileName)
+            self.w.exportPath.setText(self.nd.pp.export_path_name)
+            self.w.exportFileName.setText(self.nd.pp.export_file_name)
 
-        if self.nd.pp.exportMethod == 2:
+        if self.nd.pp.export_method == 2:
             self.w.delimiterLabel.setHidden(True)
             self.w.exportDelimiterTab.setHidden(True)
             self.w.exportDelimiterCharacter.setHidden(True)
             self.w.exportCharacter.setHidden(True)
             self.w.samplesInRowsLabel.setHidden(True)
             self.w.samplesInComboBox.setHidden(True)
-            self.w.exportPath.setText(self.nd.pp.exportMetaboAnalystPath)
-            self.w.exportFileName.setText(self.nd.pp.exportMetaboAnalyst)
+            self.w.exportPath.setText(self.nd.pp.export_metabo_analyst_path)
+            self.w.exportFileName.setText(self.nd.pp.export_metabo_analyst)
 
-        if self.nd.pp.exportMethod == 3:
+        if self.nd.pp.export_method == 3:
             self.w.delimiterLabel.setHidden(True)
             self.w.exportDelimiterTab.setHidden(True)
             self.w.exportDelimiterCharacter.setHidden(True)
             self.w.exportCharacter.setHidden(True)
             self.w.samplesInRowsLabel.setHidden(True)
             self.w.samplesInComboBox.setHidden(True)
-            self.w.exportPath.setText(self.nd.pp.exportrDolphinPath)
-            self.w.exportFileName.setText(self.nd.pp.exportrDolphin)
+            self.w.exportPath.setText(self.nd.pp.export_r_dolphin_path)
+            self.w.exportFileName.setText(self.nd.pp.export_r_dolphin)
 
-        if self.nd.pp.exportMethod == 4:
+        if self.nd.pp.export_method == 4:
             self.w.delimiterLabel.setHidden(True)
             self.w.exportDelimiterTab.setHidden(True)
             self.w.exportDelimiterCharacter.setHidden(True)
             self.w.exportCharacter.setHidden(True)
             self.w.samplesInRowsLabel.setHidden(True)
             self.w.samplesInComboBox.setHidden(True)
-            self.w.exportPath.setText(self.nd.pp.exportBatmanPath)
-            self.w.exportFileName.setText(self.nd.pp.exportBatman)
+            self.w.exportPath.setText(self.nd.pp.export_batman_path)
+            self.w.exportFileName.setText(self.nd.pp.export_batman)
 
-        if self.nd.pp.exportMethod == 5:
+        if self.nd.pp.export_method == 5:
             self.w.delimiterLabel.setHidden(True)
             self.w.exportDelimiterTab.setHidden(True)
             self.w.exportDelimiterCharacter.setHidden(True)
             self.w.exportCharacter.setHidden(True)
             self.w.samplesInRowsLabel.setHidden(True)
             self.w.samplesInComboBox.setHidden(True)
-            self.w.exportPath.setText(self.nd.pp.exportBrukerPath)
-            self.w.exportFileName.setText(self.nd.pp.exportBruker)
+            self.w.exportPath.setText(self.nd.pp.export_bruker_path)
+            self.w.exportFileName.setText(self.nd.pp.export_bruker)
 
-        # end setExportMethod
+        # end set_export_method
 
-    def setExportMethodOptions(self):
-        self.nd.pp.exportMethod = self.w.exportMethod.currentIndex()
-        self.setExportMethod()
-        # end setExportMethodOptions
+    def set_export_method_options(self):
+        self.nd.pp.export_method = self.w.exportMethod.currentIndex()
+        self.set_export_method()
+        # end set_export_method_options
 
-    def setExportPath(self):
-        if self.nd.pp.exportMethod == 0:
-            self.nd.pp.exportExcelPath = self.w.exportPath.text()
+    def set_export_path(self):
+        if self.nd.pp.export_method == 0:
+            self.nd.pp.export_excel_path = self.w.exportPath.text()
 
-        if self.nd.pp.exportMethod == 1:
-            self.nd.pp.exportPathName = self.w.exportPath.text()
+        if self.nd.pp.export_method == 1:
+            self.nd.pp.export_path_name = self.w.exportPath.text()
 
-        if self.nd.pp.exportMethod == 2:
-            self.nd.pp.exportMetaboAnalystPath = self.w.exportPath.text()
+        if self.nd.pp.export_method == 2:
+            self.nd.pp.export_metabo_analyst_path = self.w.exportPath.text()
 
-        if self.nd.pp.exportMethod == 3:
-            self.nd.pp.exportrDolphinPath = self.w.exportPath.text()
+        if self.nd.pp.export_method == 3:
+            self.nd.pp.export_r_dolphin_path = self.w.exportPath.text()
 
-        if self.nd.pp.exportMethod == 4:
-            self.nd.pp.exportBatmanPath = self.w.exportPath.text()
+        if self.nd.pp.export_method == 4:
+            self.nd.pp.export_batman_path = self.w.exportPath.text()
 
-        if self.nd.pp.exportMethod == 5:
-            self.nd.pp.exportBrukerPath = self.w.exportPath.text()
+        if self.nd.pp.export_method == 5:
+            self.nd.pp.export_bruker_path = self.w.exportPath.text()
 
-        # end setExportPath
+        # end set_export_path
 
-    def setExportDataSet(self):
-        if (self.nd.pp.preProcFill == False):
+    def set_export_data_set(self):
+        if (self.nd.pp.pre_proc_fill == False):
             if (self.w.exportDataSet.isChecked() == True):
-                self.nd.pp.flagExportDataSet = True
+                self.nd.pp.flag_export_data_set = True
                 self.w.preProcessingSelect.setCurrentIndex(8)
             else:
-                self.nd.pp.flagExportDataSet = False
+                self.nd.pp.flag_export_data_set = False
 
-        # end setExportDataSet
+        # end set_export_data_set
 
-    def setExportTable(self):
-        pName = QFileDialog.getExistingDirectory()
-        # pName = pName[0]
-        if (len(pName) > 0):
-            if self.nd.pp.exportMethod == 0:
-                self.w.exportPath.setText(pName)
-                self.nd.pp.exportExcelPath = pName
+    def set_export_table(self):
+        p_name = QFileDialog.getExistingDirectory()
+        # p_name = p_name[0]
+        if (len(p_name) > 0):
+            if self.nd.pp.export_method == 0:
+                self.w.exportPath.setText(p_name)
+                self.nd.pp.export_excel_path = p_name
 
-            if self.nd.pp.exportMethod == 1:
-                self.w.exportPath.setText(pName)
-                self.nd.pp.exportPathName = pName
+            if self.nd.pp.export_method == 1:
+                self.w.exportPath.setText(p_name)
+                self.nd.pp.export_path_name = p_name
 
-            if self.nd.pp.exportMethod == 2:
-                self.w.exportPath.setText(pName)
-                self.nd.pp.exportMetaboAnalystPath = pName
+            if self.nd.pp.export_method == 2:
+                self.w.exportPath.setText(p_name)
+                self.nd.pp.export_metabo_analyst_path = p_name
 
-            if self.nd.pp.exportMethod == 3:
-                self.w.exportPath.setText(pName)
-                self.nd.pp.exportrDolphinPath = pName
+            if self.nd.pp.export_method == 3:
+                self.w.exportPath.setText(p_name)
+                self.nd.pp.export_r_dolphin_path = p_name
 
-            if self.nd.pp.exportMethod == 4:
-                self.w.exportPath.setText(pName)
-                self.nd.pp.exportBatmanPath = pName
+            if self.nd.pp.export_method == 4:
+                self.w.exportPath.setText(p_name)
+                self.nd.pp.export_batman_path = p_name
 
-            if self.nd.pp.exportMethod == 5:
-                self.w.exportPath.setText(pName)
-                self.nd.pp.exportBrukerPath = pName
+            if self.nd.pp.export_method == 5:
+                self.w.exportPath.setText(p_name)
+                self.nd.pp.export_bruker_path = p_name
 
-        # end setExportTable
+        # end set_export_table
 
-    def setFontSize(self):
-        fontSize = self.w.fontSize.value()
+    def set_font_size(self):
+        font_size = self.w.fontSize.value()
         f = self.w.acqPars.font()
-        f.setPointSize(fontSize)
+        f.setPointSize(font_size)
         self.w.acqPars.setFont(f)
         self.w.titleFile.setFont(f)
         cursor = self.w.script.textCursor()
         self.w.script.selectAll()
-        self.w.script.setFontPointSize(fontSize)
+        self.w.script.setFontPointSize(font_size)
         self.w.script.setTextCursor(cursor)
         self.w.script.setCurrentFont(f)
         # self.w.script.setFont(f)
         cursor = self.w.console.textCursor()
         self.w.console.selectAll()
-        self.w.console.setFontPointSize(fontSize)
+        self.w.console.setFontPointSize(font_size)
         self.w.console.setTextCursor(cursor)
         self.w.console.setCurrentFont(f)
         # self.w.console.setFont(f)
         self.w.pulseProgram.setFont(f)
         self.w.cmdLine.setFont(f)
-        self.w.setStyleSheet("font-size: " + str(fontSize) + "pt")
-        # end setFontSize
+        self.w.setStyleSheet("font-size: " + str(font_size) + "pt")
+        # end set_font_size
 
-    def setHelp(self):
+    def set_help(self):
         url = []
         idx = self.w.helpComboBox.currentIndex()
         if self.cf.mode == 'dark':
-            fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "introductionDark", "index.html")
+            f_name = os.path.join(os.path.dirname(__file__), "nmr", "web", "introductionDark", "index.html")
         else:
-            fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "introduction", "index.html")
+            f_name = os.path.join(os.path.dirname(__file__), "nmr", "web", "introduction", "index.html")
 
-        url.append("file:///" + fName.replace('\\', '/'))
+        url.append("file:///" + f_name.replace('\\', '/'))
         url.append("https://www.hmdb.ca")
         url.append("https://www.smpdb.ca")
         url.append("https://bmrb.io/metabolomics/")
@@ -4089,83 +4113,82 @@ class main_w(object):  # pragma: no cover
         url.append("https://sdbs.db.aist.go.jp/sdbs/cgi-bin/cre_index.cgi")
         url.append("http://dmar.riken.jp/spincouple/")
         self.w.helpView.setUrl(url[idx])
-        # end setHelp
+        # end set_help
 
-    def setInvert(self):
+    def set_invert(self):
         s = self.nd.s
         e = self.nd.e
-        self.nd.nmrdat[s][e].proc.invertMatrix[0] = self.w.invertMatrix_1.isChecked()
-        self.nd.nmrdat[s][e].proc.invertMatrix[1] = self.w.invertMatrix_2.isChecked()
-        # end setInvert
+        self.nd.nmrdat[s][e].proc.invert_matrix[0] = self.w.invertMatrix_1.isChecked()
+        self.nd.nmrdat[s][e].proc.invert_matrix[1] = self.w.invertMatrix_2.isChecked()
+        # end set_invert
 
-    def setJres(self):
-        if (self.nd.nmrdat[self.nd.s][self.nd.e].acq.fnMode == 1):
-            self.nd.nmrdat[self.nd.s][self.nd.e].display.yLabel = '1H'
-            self.nd.nmrdat[self.nd.s][self.nd.e].display.axisType2 = 'Hz'
-            self.nd.nmrdat[self.nd.s][self.nd.e].proc.windowType = np.array([5, 3, 0])
+    def set_j_res(self):
+        if (self.nd.nmrdat[self.nd.s][self.nd.e].acq.fn_mode == 1):
+            self.nd.nmrdat[self.nd.s][self.nd.e].display.y_label = '1H'
+            self.nd.nmrdat[self.nd.s][self.nd.e].display.axis_type2 = 'Hz'
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.window_type = np.array([5, 3, 0])
             self.nd.nmrdat[self.nd.s][self.nd.e].proc.lb[0] = 0.5
 
-        # end setJres
+        # end set_j_res
 
-
-    def setLightMode(self):
-        self.cf.readConfig()
+    def set_light_mode(self):
+        self.cf.read_config()
         self.cf.mode = 'light'
-        self.cf.saveConfig()
-        # end saveConfig
+        self.cf.save_config()
+        # end save_config
 
-    def setNoiseFiltering(self):
-        if (self.nd.pp.preProcFill == False):
+    def set_noise_filtering(self):
+        if (self.nd.pp.pre_proc_fill == False):
             if (self.w.noiseFiltering.isChecked() == True):
-                self.nd.pp.flagNoiseFiltering = True
+                self.nd.pp.flag_noise_filtering = True
                 self.w.preProcessingSelect.setCurrentIndex(3)
             else:
-                self.nd.pp.flagNoiseFiltering = False
+                self.nd.pp.flag_noise_filtering = False
 
-        # end setNoiseFiltering
+        # end set_noise_filtering
 
-    def setnoiseRegPreProc(self):
+    def set_noise_reg_pre_proc(self):
         try:
             th = float(self.w.noiseThresholdLE.text())
         except:
-            th = self.nd.pp.noiseThreshold
+            th = self.nd.pp.noise_threshold
 
         try:
             ns = float(self.w.noiseRegionStartLE.text())
         except:
-            ns = self.nd.pp.noiseStart
+            ns = self.nd.pp.noise_start
 
         try:
             ne = float(self.w.noiseRegionEndLE.text())
         except:
-            ne = self.nd.pp.noiseEnd
+            ne = self.nd.pp.noise_end
 
         try:
             lw = float(self.w.thLineWidthLE.text())
         except:
-            lw = self.nd.pp.thLineWidth
+            lw = self.nd.pp.th_line_width
 
         tm = min(ns, ne)
         ne = max(ns, ne)
         ns = tm
-        self.nd.pp.noiseThreshold = th
-        self.nd.pp.noiseStart = ns
-        self.nd.pp.noiseEnd = ne
-        self.nd.pp.thLineWidth = lw
+        self.nd.pp.noise_threshold = th
+        self.nd.pp.noise_start = ns
+        self.nd.pp.noise_end = ne
+        self.nd.pp.th_line_width = lw
         self.w.noiseThresholdLE.setText(str(th))
         self.w.noiseRegionStartLE.setText(str(ns))
         self.w.noiseRegionEndLE.setText(str(ne))
         self.w.thLineWidthLE.setText(str(lw))
-        self.plotSpcPreProc()
-        # end setnoiseRegPreProc
+        self.plot_spc_pre_proc()
+        # end set_noise_reg_pre_proc
 
-    def setPhRefExp(self, phRefExp, phRefDS=1):
+    def set_ph_ref_exp(self, phRefExp, phRefDS=1):
         self.w.phRefDS.setValue(phRefDS)
         self.w.phRefExp.setValue(phRefExp)
-        # end setPhRefExp
+        # end set_ph_ref_exp
 
-    def setPlotPreProc(self):
-        if (self.nd.pp.preProcFill == False):
+    def set_plot_pre_proc(self):
+        if (self.nd.pp.pre_proc_fill == False):
             sel = np.array([])
             sel = self.w.selectClassTW.selectedIndexes()
             sel2 = np.array([])
@@ -4173,91 +4196,91 @@ class main_w(object):  # pragma: no cover
                 if (sel[k].column() == 0):
                     sel2 = np.append(sel2, sel[k].row())
 
-            self.nd.pp.plotSelect = sel2
-            self.plotSpcPreProc()
+            self.nd.pp.plot_select = sel2
+            self.plot_spc_pre_proc()
 
-        # end setPlotPreProc
+        # end set_plot_pre_proc
 
-    def setPqnTsaScaling(self):
+    def set_pqn_tsa_scaling(self):
         if self.w.pqnButton.isChecked() is True:
-            self.nd.pp.scalePQN = True
+            self.nd.pp.scale_pqn = True
         else:
-            self.nd.pp.scalePQN = False
+            self.nd.pp.scale_pqn = False
 
-        self.w.preserveOverallScale.setDisabled(self.nd.pp.scalePQN)
+        self.w.preserveOverallScale.setDisabled(self.nd.pp.scale_pqn)
 
-        # end setPqnTsaScaling
+        # end set_pqn_tsa_scaling
 
-    def setPreProcessing(self):
+    def set_pre_processing(self):
         if (self.w.preprocessing.isChecked() == True):
             self.w.peakPicking.setChecked(False)
-            #self.w.peakPickingTab.setHidden(True)
+            # self.w.peakPickingTab.setHidden(True)
             self.w.preProcPeak.setCurrentIndex(0)
-            if len(self.nd.nmrdat[self.nd.s]) != len(self.nd.pp.classSelect):
-                self.nd.preProcInit()
+            if len(self.nd.nmrdat[self.nd.s]) != len(self.nd.pp.class_select):
+                self.nd.pre_proc_init()
 
-            self.showPreProcessing()
-            self.fillPreProcessingNumbers()
-            self.nd.noiseFilteringInit()
+            self.show_pre_processing()
+            self.fill_pre_processing_numbers()
+            self.nd.noise_filtering_init()
         else:
-            self.hidePreProcessing()
+            self.hide_pre_processing()
             self.w.preProcPeak.setHidden(True)
 
-        # end setPreProcessing
+        # end set_pre_processing
 
-    def setPeakPicking(self):
+    def set_peak_picking(self):
         if (self.w.peakPicking.isChecked() == True):
             self.w.preprocessing.setChecked(False)
-            #self.w.preProcessingTab.setHidden(True)
+            # self.w.preProcessingTab.setHidden(True)
             self.w.preProcPeak.setCurrentIndex(1)
-            if self.nd.intAllDatasets == True:
+            if self.nd.int_all_data_sets == True:
                 self.w.intAllDS.setChecked(True)
             else:
                 self.w.intAllDS.setChecked(False)
 
-            if self.nd.intAllExps == True:
+            if self.nd.int_all_exps == True:
                 self.w.intAllExps.setChecked(True)
             else:
                 self.w.intAllExps.setChecked(False)
 
-            if self.nd.exportPeakExcel == True:
+            if self.nd.export_peak_excel == True:
                 self.w.exportFormatCB.setCurrentIndex(0)
             else:
                 self.w.exportFormatCB.setCurrentIndex(1)
 
-            self.showPeakPicking()
-            self.fillPeakNumbers()
+            self.show_peak_picking()
+            self.fill_peak_numbers()
         else:
-            self.exitedPeakPicking = True
-            self.hidePeakPicking()
+            self.exited_peak_picking = True
+            self.hide_peak_picking()
             self.w.preProcPeak.setHidden(True)
             self.w.peakPicking.setChecked(False)
 
-        self.plotSpc()
-        # end setPreProcessing
+        self.plot_spc()
+        # end set_pre_processing
 
-    def setStandardColours(self):
+    def set_standard_colours(self):
         for k in range(len(self.nd.nmrdat[self.nd.s])):
             if self.cf.mode == 'dark':
-                self.nd.nmrdat[self.nd.s][k].display.posColRGB = self.stdPosCol2
-                self.nd.nmrdat[self.nd.s][k].display.negColRGB = self.stdNegCol2
+                self.nd.nmrdat[self.nd.s][k].display.pos_col_rgb = self.std_pos_col2
+                self.nd.nmrdat[self.nd.s][k].display.neg_col_rgb = self.std_neg_col2
             else:
-                self.nd.nmrdat[self.nd.s][k].display.posColRGB = self.stdPosCol1
-                self.nd.nmrdat[self.nd.s][k].display.negColRGB = self.stdNegCol1
+                self.nd.nmrdat[self.nd.s][k].display.pos_col_rgb = self.std_pos_col1
+                self.nd.nmrdat[self.nd.s][k].display.neg_col_rgb = self.std_neg_col1
 
+        self.plot_spc()
 
-        self.plotSpc()
-
-    def setHsqcAnalysis(self):
+    def set_hsqc_analysis(self):
         if (self.w.hsqcAnalysis.isChecked() == True):
             self.w.multipletAnalysis.setVisible(True)
             self.w.isotopomerAnalysis.setVisible(True)
             self.w.nmrSpectrum.setTabEnabled(1, True)
             self.w.nmrSpectrum.setTabEnabled(2, True)
-            self.w.nmrSpectrum.setStyleSheet("QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
+            self.w.nmrSpectrum.setStyleSheet(
+                "QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
             self.w.nmrSpectrum.setCurrentIndex(1)
-            self.activateCommandLine()
-            self.activateCommandLine()
+            self.activate_command_line()
+            self.activate_command_line()
         else:
             self.w.multipletAnalysis.setChecked(False)
             self.w.isotopomerAnalysis.setChecked(False)
@@ -4265,38 +4288,43 @@ class main_w(object):  # pragma: no cover
             self.w.isotopomerAnalysis.setVisible(False)
             self.w.nmrSpectrum.setTabEnabled(1, False)
             self.w.nmrSpectrum.setTabEnabled(2, False)
-            self.w.nmrSpectrum.setStyleSheet("QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
+            self.w.nmrSpectrum.setStyleSheet(
+                "QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
             self.w.nmrSpectrum.setCurrentIndex(0)
 
-        # end setHsqcAnalysis
+        # end set_hsqc_analysis
 
-    def setMultipletAnalysis(self):
+    def set_multiplet_analysis(self):
         if (self.w.multipletAnalysis.isChecked() == True):
             self.w.nmrSpectrum.setTabEnabled(3, True)
-            self.w.nmrSpectrum.setStyleSheet("QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
+            self.w.nmrSpectrum.setStyleSheet(
+                "QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
             self.w.nmrSpectrum.setCurrentIndex(3)
         else:
             self.w.nmrSpectrum.setTabEnabled(3, False)
-            self.w.nmrSpectrum.setStyleSheet("QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
+            self.w.nmrSpectrum.setStyleSheet(
+                "QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
             self.w.nmrSpectrum.setCurrentIndex(1)
 
-        # end setMultipletAnalysis
+        # end set_multiplet_analysis
 
-    def setIsotopomerAnalysis(self):
+    def set_isotopomer_analysis(self):
         if (self.w.isotopomerAnalysis.isChecked() == True):
             self.w.nmrSpectrum.setTabEnabled(4, True)
-            self.w.nmrSpectrum.setStyleSheet("QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
+            self.w.nmrSpectrum.setStyleSheet(
+                "QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
             self.w.nmrSpectrum.setCurrentIndex(4)
         else:
             self.w.nmrSpectrum.setTabEnabled(4, False)
-            self.w.nmrSpectrum.setStyleSheet("QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
+            self.w.nmrSpectrum.setStyleSheet(
+                "QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
             self.w.nmrSpectrum.setCurrentIndex(1)
 
-        # end setIsotopomerAnalysis
+        # end set_isotopomer_analysis
 
-    def setPreProcessingOptions(self):
-        curIdx = self.w.preProcessingSelect.currentIndex()
-        self.w.preProcessingWidget.setCurrentIndex(curIdx)
+    def set_pre_processing_options(self):
+        cur_idx = self.w.preProcessingSelect.currentIndex()
+        self.w.preProcessingWidget.setCurrentIndex(cur_idx)
         if self.nd.nmrdat[self.nd.s][0].acq.manufacturer == 'Bruker':
             if self.w.exportMethod.count() == 5:
                 self.w.exportMethod.addItem('Bruker Dataset')
@@ -4305,18 +4333,18 @@ class main_w(object):  # pragma: no cover
             if self.w.exportMethod.count() == 6:
                 self.w.exportMethod.removeItem(5)
 
-        self.plotSpcPreProc()
-        # end setPreProcessingOption
+        self.plot_spc_pre_proc()
+        # end set_pre_processingOption
 
-    def setPreserveOverallScale(self):
-        self.nd.pp.preserveOverallScale = self.w.preserveOverallScale.isChecked()
-        # end setPreserveOverallScale
+    def set_preserve_overall_scale(self):
+        self.nd.pp.preserve_overall_scale = self.w.preserveOverallScale.isChecked()
+        # end set_preserve_overall_scale
 
-    def setProcPars(self):
+    def set_proc_pars(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
         a = self.nd.nmrdat[self.nd.s][self.nd.e].apc
-        self.w.zeroFilling.setText(str(p.nPoints[0]))
-        self.w.zeroFilling_2.setText(str(p.nPoints[1]))
+        self.w.zeroFilling.setText(str(p.n_points[0]))
+        self.w.zeroFilling_2.setText(str(p.n_points[1]))
         self.w.lb.setText(str(p.lb[0]))
         self.w.gb.setText(str(p.gb[0]))
         self.w.ssb.setText(str(p.ssb[0]))
@@ -4327,233 +4355,233 @@ class main_w(object):  # pragma: no cover
         self.w.ph1.setText(str(p.ph1[0]))
         self.w.ph0_2.setText(str(p.ph0[1]))
         self.w.ph1_2.setText(str(p.ph1[1]))
-        self.w.polyOrder.setText(str(p.polyOrder))
-        self.w.extrapolationSize.setText(str(p.convExtrapolationSize[0]))
-        self.w.windowSize.setText(str(p.convWindowSize[0]))
-        self.w.fidOffsetCorrection.setText(str(p.fidOffsetCorrection))
-        self.w.windowFunction.setCurrentIndex(p.windowType[0])
-        self.w.windowFunction_2.setCurrentIndex(p.windowType[1])
-        self.w.phaseCorrection.setCurrentIndex(p.phCorr[0])
-        self.w.phaseCorrection_2.setCurrentIndex(p.phCorr[1])
-        self.w.waterSuppression.setCurrentIndex(p.waterSuppression)
-        self.w.stripTransformStart.setText(str(p.stripStart))
-        self.w.stripTransformEnd.setText(str(p.stripEnd))
-        self.w.winType.setCurrentIndex(p.convWindowType[0])
-        self.w.gibbs.setCurrentIndex(p.gibbsP.get(p.gibbs[0]))
-        self.w.gibbs_2.setCurrentIndex(p.gibbsP.get(p.gibbs[1]))
-        self.w.rSpc_p0.setText(str(a.rSpc[0]))
-        self.w.rSpc_p1.setText(str(a.rSpc[1]))
-        self.w.rSpc_p2.setText(str(a.rSpc[2]))
-        self.w.rSpc_p3.setText(str(a.rSpc[3]))
-        self.w.rSpc_p4.setText(str(a.rSpc[4]))
-        self.w.rSpc_p5.setText(str(a.rSpc[5]))
-        self.w.rSpc_p6.setText(str(a.rSpc[6]))
-        self.w.iSpc_p0.setText(str(a.iSpc[0]))
-        self.w.iSpc_p1.setText(str(a.iSpc[1]))
-        self.w.iSpc_p2.setText(str(a.iSpc[2]))
-        self.w.iSpc_p3.setText(str(a.iSpc[3]))
-        self.w.iSpc_p4.setText(str(a.iSpc[4]))
-        self.w.iSpc_p5.setText(str(a.iSpc[5]))
-        self.w.iSpc_p6.setText(str(a.iSpc[6]))
-        self.w.baselineOrder.setCurrentIndex(a.nOrder)
-        self.w.baselineCorrection.setCurrentIndex(a.correctBaseline)
-        # end setProcPars
+        self.w.polyOrder.setText(str(p.poly_order))
+        self.w.extrapolationSize.setText(str(p.conv_extrapolation_size[0]))
+        self.w.windowSize.setText(str(p.conv_window_size[0]))
+        self.w.fidOffsetCorrection.setText(str(p.fid_offset_correction))
+        self.w.windowFunction.setCurrentIndex(p.window_type[0])
+        self.w.windowFunction_2.setCurrentIndex(p.window_type[1])
+        self.w.phaseCorrection.setCurrentIndex(p.ph_corr[0])
+        self.w.phaseCorrection_2.setCurrentIndex(p.ph_corr[1])
+        self.w.waterSuppression.setCurrentIndex(p.water_suppression)
+        self.w.stripTransformStart.setText(str(p.strip_start))
+        self.w.stripTransformEnd.setText(str(p.strip_end))
+        self.w.winType.setCurrentIndex(p.conv_window_type[0])
+        self.w.gibbs.setCurrentIndex(p.gibbs_p.get(p.gibbs[0]))
+        self.w.gibbs_2.setCurrentIndex(p.gibbs_p.get(p.gibbs[1]))
+        self.w.rSpc_p0.setText(str(a.r_spc[0]))
+        self.w.rSpc_p1.setText(str(a.r_spc[1]))
+        self.w.rSpc_p2.setText(str(a.r_spc[2]))
+        self.w.rSpc_p3.setText(str(a.r_spc[3]))
+        self.w.rSpc_p4.setText(str(a.r_spc[4]))
+        self.w.rSpc_p5.setText(str(a.r_spc[5]))
+        self.w.rSpc_p6.setText(str(a.r_spc[6]))
+        self.w.iSpc_p0.setText(str(a.i_spc[0]))
+        self.w.iSpc_p1.setText(str(a.i_spc[1]))
+        self.w.iSpc_p2.setText(str(a.i_spc[2]))
+        self.w.iSpc_p3.setText(str(a.i_spc[3]))
+        self.w.iSpc_p4.setText(str(a.i_spc[4]))
+        self.w.iSpc_p5.setText(str(a.i_spc[5]))
+        self.w.iSpc_p6.setText(str(a.i_spc[6]))
+        self.w.baselineOrder.setCurrentIndex(a.n_order)
+        self.w.baselineCorrection.setCurrentIndex(a.correct_baseline)
+        # end set_proc_pars
 
-    def setPulseProgram(self):
-        self.w.pulseProgram.setText(self.nd.nmrdat[self.nd.s][self.nd.e].pulseProgram)
-        # end setPulseProgram
+    def set_pulse_program(self):
+        self.w.pulseProgram.setText(self.nd.nmrdat[self.nd.s][self.nd.e].pulse_program)
+        # end set_pulse_program
 
     # def setrDolphinExport(self):
     #    self.nd.pp.rDolphinExport = self.w.rDolphinExport.isChecked()
     #
-    def setSamplesInComboBox(self):
-        self.nd.pp.exportSamplesInRowsCols = self.w.samplesInComboBox.currentIndex()
-        # end setSamplesInComboBox
+    def set_samples_in_combo_box(self):
+        self.nd.pp.export_samples_in_rows_cols = self.w.samplesInComboBox.currentIndex()
+        # end set_samples_in_combo_box
 
-    def setScaleSpectra(self):
-        if (self.nd.pp.preProcFill == False):
+    def set_scale_spectra(self):
+        if (self.nd.pp.pre_proc_fill == False):
             if (self.w.scaleSpectra.isChecked() == True):
-                self.nd.pp.flagScaleSpectra = True
+                self.nd.pp.flag_scale_spectra = True
                 self.w.preProcessingSelect.setCurrentIndex(6)
             else:
-                self.nd.pp.flagScaleSpectra = False
+                self.nd.pp.flag_scale_spectra = False
 
-        # end setScaleSpectra
+        # end set_scale_spectra
 
-    def setSegAlignPreProc(self):
-        if (self.nd.pp.preProcFill == False):
-            nRows = self.w.segAlignTW.rowCount()
+    def set_seg_align_pre_proc(self):
+        if (self.nd.pp.pre_proc_fill == False):
+            n_rows = self.w.segAlignTW.rowCount()
             segStart = np.array([])
             segEnd = np.array([])
-            tStart = np.array([])
-            tEnd = np.array([])
-            for k in range(nRows):
-                # tStart = np.array([])
-                # tEnd   = np.array([])
+            t_start = np.array([])
+            t_end = np.array([])
+            for k in range(n_rows):
+                # t_start = np.array([])
+                # t_end   = np.array([])
                 try:
-                    tStart = np.append(tStart, float(self.w.segAlignTW.item(k, 0).text()))
+                    t_start = np.append(t_start, float(self.w.segAlignTW.item(k, 0).text()))
                     # self.w.segAlignTW.item(k,0).clearContents()
                 except:
-                    tStart = np.append(tStart, -10000.0)
+                    t_start = np.append(t_start, -10000.0)
 
                 try:
-                    tEnd = np.append(tEnd, float(self.w.segAlignTW.item(k, 1).text()))
+                    t_end = np.append(t_end, float(self.w.segAlignTW.item(k, 1).text()))
                     # self.w.segAlignTW.item(k,1).clearContents()
                 except:
-                    tEnd = np.append(tEnd, -10000.0)
+                    t_end = np.append(t_end, -10000.0)
 
             # self.w.segAlignTW.clearContents()
             self.w.segAlignTW.setRowCount(0)
-            self.w.segAlignTW.setRowCount(nRows)
-            self.nd.pp.preProcFill = True
-            for k in np.arange(len(tStart) - 1, -1, -1):  # range(len(tStart)):
-                segNumber1 = QTableWidgetItem(2 * k)
-                segNumber1.setTextAlignment(QtCore.Qt.AlignHCenter)
-                self.w.segAlignTW.setItem(k, 0, segNumber1)
-                segNumber2 = QTableWidgetItem(2 * k + 1)
-                segNumber2.setTextAlignment(QtCore.Qt.AlignHCenter)
-                self.w.segAlignTW.setItem(k, 1, segNumber2)
-                if ((tStart[k] > -10000.0) & (tEnd[k] > -10000.0)):
-                    tMin = min(tStart[k], tEnd[k])
-                    tEnd[k] = max(tStart[k], tEnd[k])
-                    tStart[k] = tMin
-                    segStart = np.append(segStart, tStart[k])
-                    segEnd = np.append(segEnd, tEnd[k])
-                    tStart = np.delete(tStart, k)
-                    tEnd = np.delete(tEnd, k)
+            self.w.segAlignTW.setRowCount(n_rows)
+            self.nd.pp.pre_proc_fill = True
+            for k in np.arange(len(t_start) - 1, -1, -1):  # range(len(t_start)):
+                seg_number1 = QTableWidgetItem(2 * k)
+                seg_number1.setTextAlignment(QtCore.Qt.AlignHCenter)
+                self.w.segAlignTW.setItem(k, 0, seg_number1)
+                seg_number2 = QTableWidgetItem(2 * k + 1)
+                seg_number2.setTextAlignment(QtCore.Qt.AlignHCenter)
+                self.w.segAlignTW.setItem(k, 1, seg_number2)
+                if ((t_start[k] > -10000.0) & (t_end[k] > -10000.0)):
+                    t_min = min(t_start[k], t_end[k])
+                    t_end[k] = max(t_start[k], t_end[k])
+                    t_start[k] = t_min
+                    segStart = np.append(segStart, t_start[k])
+                    segEnd = np.append(segEnd, t_end[k])
+                    t_start = np.delete(t_start, k)
+                    t_end = np.delete(t_end, k)
 
-                if (tStart[k] > -10000.0):
-                    self.w.segAlignTW.item(k, 0).setText(str(tStart[k]))
+                if (t_start[k] > -10000.0):
+                    self.w.segAlignTW.item(k, 0).setText(str(t_start[k]))
                     self.w.segAlignTW.setFocus()
                 else:
                     self.w.segAlignTW.item(k, 0).setText("")
                     self.w.segAlignTW.setFocus()
 
-                if (tEnd[k] > -10000.0):
-                    self.w.segAlignTW.item(k, 1).setText(str(tEnd[k]))
+                if (t_end[k] > -10000.0):
+                    self.w.segAlignTW.item(k, 1).setText(str(t_end[k]))
                     self.w.segAlignTW.setFocus()
                 else:
                     self.w.segAlignTW.item(k, 1).setText("")
                     self.w.segAlignTW.setFocus()
 
-            self.nd.pp.preProcFill = False
-            sortIdx = np.argsort(segStart)
-            self.nd.pp.segStart = segStart[sortIdx]
-            self.nd.pp.segEnd = segEnd[sortIdx]
-            self.plotSpcPreProc()
+            self.nd.pp.pre_proc_fill = False
+            sort_idx = np.argsort(segStart)
+            self.nd.pp.seg_start = segStart[sort_idx]
+            self.nd.pp.seg_end = segEnd[sort_idx]
+            self.plot_spc_pre_proc()
 
-        # end setSegAlignPreProc
+        # end set_seg_align_pre_proc
 
-    def setSegmentalAlignment(self):
-        if (self.nd.pp.preProcFill == False):
+    def set_segmental_alignment(self):
+        if (self.nd.pp.pre_proc_fill == False):
             if (self.w.segmentalAlignment.isChecked() == True):
-                self.nd.pp.flagSegmentalAlignment = True
+                self.nd.pp.flag_segmental_alignment = True
                 self.w.preProcessingSelect.setCurrentIndex(2)
             else:
-                self.nd.pp.flagSegmentalAlignment = False
+                self.nd.pp.flag_segmental_alignment = False
 
-        # end setSegmentalAlignment
+        # end set_segmental_alignment
 
-    def setSelectClass(self):
-        for k in range(len(self.nd.pp.classSelect)):
-            self.w.selectClassTW.item(k, 1).setText(self.nd.pp.classSelect[k])
+    def set_select_class(self):
+        for k in range(len(self.nd.pp.class_select)):
+            self.w.selectClassTW.item(k, 1).setText(self.nd.pp.class_select[k])
 
-        # end setSelectClass
+        # end set_select_class
 
-    def setSymJ(self):
-        curIdx = self.w.symJ.currentIndex()
-        if (curIdx == 0):
+    def set_sym_j(self):
+        cur_idx = self.w.symJ.currentIndex()
+        if (cur_idx == 0):
             self.nd.nmrdat[self.nd.s][self.nd.e].proc.symj = True
             self.nd.nmrdat[self.nd.s][self.nd.e].proc.tilt = True
             self.w.tilt.setCurrentIndex(0)
         else:
             self.nd.nmrdat[self.nd.s][self.nd.e].proc.symj = False
 
-        # end setTilt
+        # end set_tilt
 
-    def setTilt(self):
-        curIdx = self.w.tilt.currentIndex()
-        if (curIdx == 0):
+    def set_tilt(self):
+        cur_idx = self.w.tilt.currentIndex()
+        if (cur_idx == 0):
             self.nd.nmrdat[self.nd.s][self.nd.e].proc.tilt = True
         else:
             self.nd.nmrdat[self.nd.s][self.nd.e].proc.tilt = False
             self.nd.nmrdat[self.nd.s][self.nd.e].proc.symj = False
             self.w.symJ.setCurrentIndex(1)
 
-        # end setTilt
+        # end set_tilt
 
-    def setTitleFile(self):
+    def set_title_file(self):
         self.w.titleFile.setText(self.nd.nmrdat[self.nd.s][self.nd.e].title)
-        # end setTitleFile
+        # end set_title_file
 
-    def setupProcessingParameters(self):
+    def setup_processing_parameters(self):
         self.w.nmrSpectrum.setCurrentIndex(5)
-        # end setupProcessingParameters
+        # end setup_processing_parameters
 
-    def setVarianceStabilisation(self):
-        if (self.nd.pp.preProcFill == False):
+    def set_variance_stabilisation(self):
+        if (self.nd.pp.pre_proc_fill == False):
             if (self.w.varianceStabilisation.isChecked() == True):
-                self.nd.pp.flagVarianceStabilisation = True
+                self.nd.pp.flag_variance_stabilisation = True
                 self.w.preProcessingSelect.setCurrentIndex(7)
             else:
-                self.nd.pp.flagVarianceStabilisation = False
+                self.nd.pp.flag_variance_stabilisation = False
 
-        # end setVarianceStabilisation
+        # end set_variance_stabilisation
 
-    def setVarianceStabilisationOptions(self):
+    def set_variance_stabilisation_options(self):
         if self.w.autoScaling.isChecked():
-            self.nd.pp.autoScaling = True
-            self.nd.pp.paretoScaling = False
-            self.nd.pp.gLogTransform = False
+            self.nd.pp.auto_scaling = True
+            self.nd.pp.pareto_scaling = False
+            self.nd.pp.g_log_transform = False
         elif self.w.paretoScaling.isChecked():
-            self.nd.pp.autoScaling = False
-            self.nd.pp.paretoScaling = True
-            self.nd.pp.gLogTransform = False
+            self.nd.pp.auto_scaling = False
+            self.nd.pp.pareto_scaling = True
+            self.nd.pp.g_log_transform = False
         else:
-            self.nd.pp.autoScaling = False
-            self.nd.pp.paretoScaling = False
-            self.nd.pp.gLogTransform = True
+            self.nd.pp.auto_scaling = False
+            self.nd.pp.pareto_scaling = False
+            self.nd.pp.g_log_transform = True
 
-        self.w.lambdaText.setEnabled(self.nd.pp.gLogTransform)
-        self.w.y0Text.setEnabled(self.nd.pp.gLogTransform)
-        self.w.lambdaLE.setEnabled(self.nd.pp.gLogTransform)
-        self.w.y0LE.setEnabled(self.nd.pp.gLogTransform)
-        # end setVarianceStabilisationOptions
+        self.w.lambdaText.setEnabled(self.nd.pp.g_log_transform)
+        self.w.y0Text.setEnabled(self.nd.pp.g_log_transform)
+        self.w.lambdaLE.setEnabled(self.nd.pp.g_log_transform)
+        self.w.y0LE.setEnabled(self.nd.pp.g_log_transform)
+        # end set_variance_stabilisation_options
 
-    def setVarLambda(self):
-        self.nd.pp.varLambda = float(self.w.lambdaLE.text())
-        # end setVarLambda
+    def set_var_lambda(self):
+        self.nd.pp.var_lambda = float(self.w.lambdaLE.text())
+        # end set_var_lambda
 
-    def setVary0(self):
-        self.nd.pp.varY0 = float(self.w.y0LE.text())
-        # end setVarLambda
+    def set_var_y0(self):
+        self.nd.pp.var_y0 = float(self.w.y0LE.text())
+        # end set_var_lambda
 
-    def setPan(self):
-        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.setZoomRelease)
+    def set_pan(self):
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.set_zoom_release)
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
         try:
             self.w.MplWidget.canvas.figure.canvas.toolbar.pan()
         except:
             pass
 
-        self.zoomWasOn = False
-        self.panWasOn = True
+        self.zoom_was_on = False
+        self.pan_was_on = True
 
-    def setZoom(self):
+    def set_zoom(self):
         try:
             self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
         except:
             pass
 
-        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.setZoomRelease)
-        self.zoomWasOn = True
-        self.panWasOn = False
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.set_zoom_release)
+        self.zoom_was_on = True
+        self.pan_was_on = False
 
-    def setZoomOff(self):
-        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.setZoomRelease)
+    def set_zoom_off(self):
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.set_zoom_release)
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
 
-    def setZoomRelease(self, event):
+    def set_zoom_release(self, event):
         if (event.button > 1):
             # Right MB click will unzoom the plot
             try:
@@ -4563,92 +4591,91 @@ class main_w(object):  # pragma: no cover
 
             pyautogui.click(clicks=1)
 
-
     def show(self):
         self.w.show()
         # end show
 
-    def showAcquisitionParameters(self):
+    def show_acquisition_parameters(self):
         self.w.nmrSpectrum.setCurrentIndex(7)
-        # end showAcquisitionParameters
+        # end show_acquisition_parameters
 
-    def showAutoBaseline(self):
+    def show_auto_baseline(self):
         self.w.statusBar().clearMessage()
         self.w.statusBar().showMessage("Automatic baseline correction in progress...")
-        self.showAcquisitionParameters()
-        self.showNMRSpectrum()
-        # end showAutoBaseline
+        self.show_acquisition_parameters()
+        self.show_nmr_spectrum()
+        # end show_auto_baseline
 
-    def showAutoPhase(self):
+    def show_auto_phase(self):
         self.w.statusBar().clearMessage()
         self.w.statusBar().showMessage("Automatic phase correction in progress...")
-        self.showAcquisitionParameters()
-        self.showNMRSpectrum()
-        # end showAutoPhase
+        self.show_acquisition_parameters()
+        self.show_nmr_spectrum()
+        # end show_auto_phase
 
-    def showConsole(self):
+    def show_console(self):
         self.w.nmrSpectrum.setCurrentIndex(11)
-        # end showConsole
+        # end show_console
 
-    def showDisplayParameters(self):
+    def show_display_parameters(self):
         self.w.nmrSpectrum.setCurrentIndex(6)
-        # end showDisplayParameters
+        # end show_display_parameters
 
-    def showHelp(self):
+    def show_help(self):
         self.w.nmrSpectrum.setCurrentIndex(12)
-        # end showHelp
+        # end show_help
 
-    def showMainWindow(self):
+    def show_main_window(self):
         if (self.w.isFullScreen() == True):
             self.w.showNormal()
         else:
             self.w.showFullScreen()
 
-        # end showMainWindow
+        # end show_main_window
 
-    def showNMRSpectrum(self):
+    def show_nmr_spectrum(self):
         self.w.nmrSpectrum.setCurrentIndex(0)
         # if (self.w.preprocessing.isChecked() == False):
-        #    self.plotSpc()
-        # end showNMRSpectrum
+        #    self.plot_spc()
+        # end show_nmr_spectrum
 
-    def showPhCorr(self):
+    def show_ph_corr(self):
         self.w.statusBar().clearMessage()
         self.w.statusBar().showMessage(
             "Left Mouse Button (MB) for ph0, Right MB or Left MB + shift for ph1, Middle MB or Left MB + Cmd to set pivot")
         #    #"Left Mouse Button (MB) for ph0, Right MB or Left MB + shift for ph1, Middle MB or Left MB + Cmd to set pivot        |        Press Alt+p to exit    |   Press Alt+z to zoom")
-        self.showAcquisitionParameters()
-        self.showNMRSpectrum()
-        # end showPhCorr
+        self.show_acquisition_parameters()
+        self.show_nmr_spectrum()
+        # end show_ph_corr
 
-    def showPhCorr2d(self):
+    def show_ph_corr2d(self):
         self.w.statusBar().clearMessage()
         self.w.statusBar().showMessage(
             "2D Interactive Phase Correction")
         #    "Press: Alt+k to pick row/col | Alt+e to empty selection | Alt+r to remove last row/col | Alt+1 for horizontal phase correction | Alt+2 for vertical phase correction | Alt+x to eXit")
-        self.showAcquisitionParameters()
-        self.showNMRSpectrum()
-        # end showPhCorr2d
+        self.show_acquisition_parameters()
+        self.show_nmr_spectrum()
+        # end show_ph_corr2d
 
-    def showPhCorr2d_1d(self, dim=0):
+    def show_ph_corr2d_1d(self, dim=0):
         self.w.statusBar().clearMessage()
         self.w.statusBar().showMessage(
             "Left Mouse Button (MB) for ph0, Right MB or Left MB + shift for ph1, Middle MB or Left MB + Cmd to set pivot")
         #    "Left Mouse Button (MB) for ph0, Right MB or Left MB + shift for ph1, Middle MB or Left MB + Cmd to set pivot | Press: Alt+Shift+p to apply phCorr | Alt+Shift+x to cancel | Alt+z to zoom")
-        self.showAcquisitionParameters()
-        self.showNMRSpectrum()
-        # end showPhCorr2d
+        self.show_acquisition_parameters()
+        self.show_nmr_spectrum()
+        # end show_ph_corr2d
 
-    def showPhZoom(self):
+    def show_ph_zoom(self):
         self.w.statusBar().clearMessage()
         self.w.statusBar().showMessage(
             "Left Mouse Button (MB) for rectangular zoom, Right MB to unzoom")
         #    "Left Mouse Button (MB) for rectangular zoom, Right MB to unzoom        |        Press Alt+z to exit to phase correction")
-        self.showAcquisitionParameters()
-        self.showNMRSpectrum()
-        # end showPhZoom
+        self.show_acquisition_parameters()
+        self.show_nmr_spectrum()
+        # end show_ph_zoom
 
-    def showPreProcessing(self):
+    def show_pre_processing(self):
         self.w.preProcPeak.setHidden(False)
         self.w.preProcessingTab.setHidden(False)
         self.w.peakPickingTab.setHidden(True)
@@ -4660,51 +4687,51 @@ class main_w(object):  # pragma: no cover
         self.w.runPreProcessingButton.setHidden(False)
         self.w.resetPreProcessingButton.setHidden(False)
         self.w.writeScriptButton.setHidden(False)
-        self.setExportMethod()
-        # self.setSelectClass()
-        self.plotSpcPreProc()
-        # end showPreProcessing
+        self.set_export_method()
+        # self.set_select_class()
+        self.plot_spc_pre_proc()
+        # end show_pre_processing
 
-    def showPulseProgram(self):
+    def show_pulse_program(self):
         self.w.nmrSpectrum.setCurrentIndex(9)
-        # end showPulseProgram
+        # end show_pulse_program
 
-    def showTitleFileInformation(self):
+    def show_title_file_information(self):
         self.w.nmrSpectrum.setCurrentIndex(8)
-        # end showTitleFileInformation
+        # end show_title_file_information
 
-    def showVersion(self):
+    def show_version(self):
         self.w.statusBar().clearMessage()
         self.w.statusBar().showMessage("MetaboLabPy " + self.__version__)
-        self.showAcquisitionParameters()
-        self.showNMRSpectrum()
-        # end showVersion
+        self.show_acquisition_parameters()
+        self.show_nmr_spectrum()
+        # end show_version
 
     def splash(self):
-        pName = os.path.join(os.path.dirname(__file__), "png")
+        p_name = os.path.join(os.path.dirname(__file__), "png")
         cf = nmrConfig.NmrConfig()
-        cf.readConfig()
+        cf.read_config()
         if cf.mode == 'dark':
-            splash_pix = QPixmap(os.path.join(pName, "metabolabpy_dark.png"))
+            splash_pix = QPixmap(os.path.join(p_name, "metabolabpy_dark.png"))
         else:
-            splash_pix = QPixmap(os.path.join(pName, "metabolabpy.png"))
+            splash_pix = QPixmap(os.path.join(p_name, "metabolabpy.png"))
 
         splash = QSplashScreen(splash_pix)
         splash.setMask(splash_pix.mask())
         # adding progress bar
         splash.show()
         QCoreApplication.processEvents()
-        maxTime = 5
-        maxRange = 100
-        timeInc = maxRange
-        for i in range(maxRange):
+        max_time = 5
+        max_range = 100
+        time_inc = max_range
+        for i in range(max_range):
             # Simulate something that takes time
-            time.sleep(maxTime / float(maxRange))
+            time.sleep(max_time / float(max_range))
 
         splash.close()
         # end splash
 
-    #def startNotebook(self):
+    # def startNotebook(self):
     #    try:
     #        self.p.terminate()
     #        sleep(2)
@@ -4731,85 +4758,85 @@ class main_w(object):  # pragma: no cover
     #   self.w.nmrSpectrum.setCurrentIndex(12)
     #    # end startNotebook
 
-    def startStopPhCorr(self):
+    def start_stop_ph_corr(self):
         s = self.nd.s
         e = self.nd.e
-        #self.setZoomOff()
+        # self.set_zoom_off()
 
         if (self.nd.nmrdat[s][e].dim == 1):
             try:
-                self.zoomWasOn = True
+                self.zoom_was_on = True
                 self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
             except:
                 pass
 
-            self.setZoomOff()
-            if (self.phCorrActive == False):
-                self.phCorr.spc = self.nd.nmrdat[s][e].spc
-                self.phCorr.spcMax = max(max(abs(self.phCorr.spc)))
-                self.phCorr.pivPoints = self.nd.nmrdat[s][e].ppm2points(self.phCorr.pivot, 0)
-                cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick)
-                cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease)
-                self.phCorrActive = True
-                self.showPhCorr()
+            self.set_zoom_off()
+            if (self.ph_corr_active == False):
+                self.ph_corr.spc = self.nd.nmrdat[s][e].spc
+                self.ph_corr.spc_max = max(max(abs(self.ph_corr.spc)))
+                self.ph_corr.piv_points = self.nd.nmrdat[s][e].ppm2points(self.ph_corr.pivot, 0)
+                cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_ph_corr_click)
+                cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_ph_corr_release)
+                self.ph_corr_active = True
+                self.show_ph_corr()
                 # self.w.MplWidget.canvas.figure.canvas.toolbar.setEnabled(False)
                 self.w.exitPhCorr1d.setVisible(True)
                 self.w.zoomPhCorr1d.setVisible(True)
                 self.w.exitZoomPhCorr1d.setVisible(False)
-                self.updateGUI()
-                self.phCorrPlotSpc()
+                self.update_gui()
+                self.ph_corr_plot_spc()
             else:
-                cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick)
-                cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease)
+                cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_ph_corr_click)
+                cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_ph_corr_release)
                 cid = self.w.MplWidget.canvas.mpl_disconnect(cid)
                 cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
-                self.phCorrActive = False
+                self.ph_corr_active = False
                 # self.w.MplWidget.canvas.figure.canvas.toolbar.setEnabled(True)
-                self.showVersion()
+                self.show_version()
                 self.w.exitPhCorr1d.setVisible(False)
                 self.w.zoomPhCorr1d.setVisible(False)
                 self.w.exitZoomPhCorr1d.setVisible(False)
-                self.updateGUI()
-                self.plotSpc()
-                self.setZoomOff()
-                #self.setZoom()
-                #print("setted Zoom!")
-                cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.setZoomRelease)
+                self.update_gui()
+                self.plot_spc()
+                self.set_zoom_off()
+                # self.set_zoom()
+                # print("setted Zoom!")
+                cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.set_zoom_release)
 
         else:  # dim == 2
-            #try:
-            #    self.zoomWasOn = True
+            # try:
+            #    self.zoom_was_on = True
             #    self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
-            #except:
+            # except:
             #    pass
             #
-            #self.setZoomOff()
-            if (self.phCorrActive == False):
+            # self.set_zoom_off()
+            if (self.ph_corr_active == False):
                 self.w.pickRowColPhCorr2d.setVisible(True)
                 self.w.emptyRowColPhCorr2d.setVisible(True)
                 self.w.removeRowColPhCorr2d.setVisible(True)
                 self.w.horzPhCorr2d.setVisible(True)
-                self.w.vertPhCorr2d.setVisible(True)
+                self.w.vert_ph_corr_2d.setVisible(True)
                 self.w.exitPhCorr2d.setVisible(True)
-                self.phCorrActive = True
-                self.showPhCorr2d()
+                self.ph_corr_active = True
+                self.show_ph_corr_2d()
             else:
-                self.emptyColRow()
+                self.empty_col_row()
                 self.w.pickRowColPhCorr2d.setVisible(False)
                 self.w.emptyRowColPhCorr2d.setVisible(False)
                 self.w.removeRowColPhCorr2d.setVisible(False)
                 self.w.horzPhCorr2d.setVisible(False)
-                self.w.vertPhCorr2d.setVisible(False)
+                self.w.vert_ph_corr_2d.setVisible(False)
                 self.w.exitPhCorr2d.setVisible(False)
-                self.phCorrActive = False
-                self.showVersion()
-                #self.setZoomOff()
-                #self.setZoom()
-                cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.setZoomRelease)
+                self.ph_corr_active = False
+                self.show_version()
+                # self.set_zoom_off()
+                # self.set_zoom()
+                cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.set_zoom_release)
 
-        self.showAcquisitionParameters()
-        self.showNMRSpectrum()
-        # end startStopPhCorr
+        self.show_acquisition_parameters()
+        self.show_nmr_spectrum()
+        # end start_stop_ph_corr
 
     @contextlib.contextmanager
     def stdoutIO(self, stdout=None):
@@ -4819,33 +4846,33 @@ class main_w(object):  # pragma: no cover
         sys.stdout = stdout
         yield stdout
         sys.stdout = old
-        #end stdoutIO
+        # end stdoutIO
 
     def tutorials(self):
-        #url = "http://beregond.bham.ac.uk/~ludwigc/tutorials"
-        fName = os.path.join(os.path.dirname(__file__), "nmr", "web", "tutorials", "index.html")
-        url = "file:///" + fName.replace('\\', '/')
+        # url = "http://beregond.bham.ac.uk/~ludwigc/tutorials"
+        f_name = os.path.join(os.path.dirname(__file__), "nmr", "web", "tutorials", "index.html")
+        url = "file:///" + f_name.replace('\\', '/')
         self.w.helpView.setUrl(url)
         self.w.nmrSpectrum.setCurrentIndex(12)
         # end tutorials
 
-    def updateGUI(self):
+    def update_gui(self):
         s = self.nd.s
         e = self.nd.e
         self.w.setBox.valueChanged.disconnect()
         self.w.expBox.valueChanged.disconnect()
         self.w.expBox.setValue(e + 1)
         self.w.setBox.setValue(s + 1)
-        self.w.setBox.valueChanged.connect(lambda: self.changeDataSetExp())
-        self.w.expBox.valueChanged.connect(lambda: self.changeDataSetExp())
-        self.setDispPars()
-        self.setProcPars()
-        self.setAcqPars()
-        self.setTitleFile()
-        self.setPulseProgram()
+        self.w.setBox.valueChanged.connect(lambda: self.change_data_set_exp())
+        self.w.expBox.valueChanged.connect(lambda: self.change_data_set_exp())
+        self.set_disp_pars()
+        self.set_proc_pars()
+        self.set_acq_pars()
+        self.set_title_file()
+        self.set_pulse_program()
         self.w.expBox.setValue(e + 1)
-        self.w.invertMatrix_1.setChecked(self.nd.nmrdat[s][e].proc.invertMatrix[0])
-        self.w.invertMatrix_2.setChecked(self.nd.nmrdat[s][e].proc.invertMatrix[1])
+        self.w.invertMatrix_1.setChecked(self.nd.nmrdat[s][e].proc.invert_matrix[0])
+        self.w.invertMatrix_2.setChecked(self.nd.nmrdat[s][e].proc.invert_matrix[1])
         if (self.nd.nmrdat[s][e].dim == 1):
             self.w.preprocessing.setVisible(True)
             self.w.peakPicking.setVisible(True)
@@ -4854,8 +4881,9 @@ class main_w(object):  # pragma: no cover
             self.w.peakPicking.setVisible(False)
 
         if self.nd.nmrdat[s][e].dim > 1:
-            if self.nd.nmrdat[self.nd.s][self.nd.e].acq.pulProgName.find("hsqc") > 0 or self.nd.nmrdat[self.nd.s][self.nd.e].acq.pulProgName.find("hmqc") > 0:
-                self.w.hsqcAnalysis.setVisible(False) # develop set true
+            if self.nd.nmrdat[self.nd.s][self.nd.e].acq.pul_prog_name.find("hsqc") > 0 or self.nd.nmrdat[self.nd.s][
+                self.nd.e].acq.pul_prog_name.find("hmqc") > 0:
+                self.w.hsqcAnalysis.setVisible(False)  # develop set true
             else:
                 self.w.hsqcAnalysis.setVisible(False)
 
@@ -4865,9 +4893,9 @@ class main_w(object):  # pragma: no cover
         self.w.multipletAnalysis.setVisible(False)
         self.w.isotopomerAnalysis.setVisible(False)
         return "updated GUI"
-        # end updateGUI
+        # end update_gui
 
-    def verticalAutoScale(self):
+    def vertical_auto_scale(self):
         if (self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1):
             lines = self.w.MplWidget.canvas.axes.get_lines()
             bottom, top = np.inf, -np.inf
@@ -4881,70 +4909,70 @@ class main_w(object):  # pragma: no cover
 
             self.w.MplWidget.canvas.draw()
 
-        # end verticalAutoScale
+        # end vertical_auto_scale
 
-    def vertPhCorr2d(self):
+    def vert_ph_corr_2d(self):
         s = self.nd.s
         e = self.nd.e
-        self.phCorr.nDims = 2
-        self.phCorr.dim = 1
-        nLines = len(self.phCorr.spcColPts)
-        if nLines > 0:
+        self.ph_corr.n_dims = 2
+        self.ph_corr.dim = 1
+        n_lines = len(self.ph_corr.spc_col_pts)
+        if n_lines > 0:
             npts0 = len(self.nd.nmrdat[s][e].spc)
             npts = len(self.nd.nmrdat[s][e].spc[0])
-            self.phCorr.spc = np.zeros((nLines, npts0), dtype='complex')
+            self.ph_corr.spc = np.zeros((n_lines, npts0), dtype='complex')
             spc1 = np.copy(self.nd.nmrdat[s][e].spc)
             spc1 = np.ndarray.transpose(spc1)
-            for k in range(nLines):
-                spc = np.array([spc1[npts - self.phCorr.spcColPts[k]]])
+            for k in range(n_lines):
+                spc = np.array([spc1[npts - self.ph_corr.spc_col_pts[k]]])
                 spc = self.hilbert(spc)
-                self.phCorr.spc[k] = spc[0]
+                self.ph_corr.spc[k] = spc[0]
 
-            self.phCorr.ppm = self.nd.nmrdat[s][e].ppm2
-            if self.phCorr.pivotPoints2d[1] < 0:
-                self.phCorr.pivotPoints2d[1] = int(len(self.phCorr.ppm) / 2)
-                self.phCorr.pivot2d[1] = self.nd.nmrdat[s][e].points2ppm(self.phCorr.pivotPoints2d[1], 1)
+            self.ph_corr.ppm = self.nd.nmrdat[s][e].ppm2
+            if self.ph_corr.pivot_points_2d[1] < 0:
+                self.ph_corr.pivot_points_2d[1] = int(len(self.ph_corr.ppm) / 2)
+                self.ph_corr.pivot2d[1] = self.nd.nmrdat[s][e].points2ppm(self.ph_corr.pivot_points_2d[1], 1)
 
-        self.showPhCorr2d_1d(self.phCorr.dim)
-        self.phCorr.spcMax = np.max(np.max(np.abs(self.phCorr.spc)))
+        self.show_ph_corr_2d_1d(self.ph_corr.dim)
+        self.ph_corr.spc_max = np.max(np.max(np.abs(self.ph_corr.spc)))
         try:
             zwo = True
             self.w.MplWidget.canvas.figure.canvas.toolbar.zoom()
         except:
             pass
 
-        self.setZoomOff()
-        self.phCorr.maxPh0 = 90.0
-        self.phCorr.maxPh1 = 90.0
-        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.onPhCorrClick2d)
-        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.onPhCorrRelease2d)
-        #self.w.actionApplyPhCorr.triggered.connect(self.apply2dPhCorr)
-        #self.w.actionCancelPhCorr.triggered.connect(self.cancel2dPhCorr)
-        self.phCorrPlotSpc2d(False)
+        self.set_zoom_off()
+        self.ph_corr.max_ph0 = 90.0
+        self.ph_corr.max_ph1 = 90.0
+        cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_ph_corr_click_2d)
+        cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_ph_corr_release_2d)
+        # self.w.actionApplyPhCorr.triggered.connect(self.apply_2d_ph_corr)
+        # self.w.actionCancelPhCorr.triggered.connect(self.cancel2dPhCorr)
+        self.ph_corr_plot_spc_2d(False)
         self.w.pickRowColPhCorr2d.setVisible(False)
         self.w.emptyRowColPhCorr2d.setVisible(False)
         self.w.removeRowColPhCorr2d.setVisible(False)
         self.w.horzPhCorr2d.setVisible(False)
-        self.w.vertPhCorr2d.setVisible(False)
-        self.w.zoomPhCorr2d.setVisible(True)
+        self.w.vert_ph_corr_2d.setVisible(False)
+        self.w.zoom_ph_corr2d.setVisible(True)
         self.w.applyPhCorr2d.setVisible(True)
         self.w.cancelPhCorr2d.setVisible(True)
         self.w.exitPhCorr2d.setVisible(False)
-        self.w.exitZoomPhCorr2d.setVisible(False)
-        self.phCorrPlotSpc2d(False)
-        self.showAcquisitionParameters()
-        self.showNMRSpectrum()
-        # end vertPhCorr2d
+        self.w.exitzoom_ph_corr2d.setVisible(False)
+        self.ph_corr_plot_spc_2d(False)
+        self.show_acquisition_parameters()
+        self.show_nmr_spectrum()
+        # end vert_ph_corr_2d
 
-    def zeroAcqPars(self):
+    def zero_acq_pars(self):
         self.w.acqPars.setText("")
-        # end zeroAcqPars
+        # end zero_acq_pars
 
-    def zeroConsole(self):
+    def zero_console(self):
         self.w.console.setText("")
-        # end zeroConsole
+        # end zero_console
 
-    def zeroDispPars(self):
+    def zero_disp_pars(self):
         self.w.posColR.setText("")
         self.w.posColG.setText("")
         self.w.posColB.setText("")
@@ -4966,9 +4994,9 @@ class main_w(object):  # pragma: no cover
         self.w.displaySpc.setCurrentIndex(0)
         self.w.phRefDS.setValue(0)
         self.w.phRefExp.setValue(0)
-        # end zeroDispPars
+        # end zero_disp_pars
 
-    def zeroProcPars(self):
+    def zero_proc_pars(self):
         self.w.zeroFilling.setText("")
         self.w.zeroFilling_2.setText("")
         self.w.lb.setText("")
@@ -4993,73 +5021,70 @@ class main_w(object):  # pragma: no cover
         self.w.winType.setCurrentIndex(0)
         self.w.gibbs.setCurrentIndex(0)
         self.w.gibbs_2.setCurrentIndex(0)
-        # end zeroProcPars
+        # end zero_proc_pars
 
-    def zeroPulseProgram(self):
+    def zero_pulse_program(self):
         self.w.pulseProgram.setText("")
-        # end zeroPulseProgram
+        # end zero_pulse_program
 
-    def zeroScript(self):
+    def zero_script(self):
         self.w.script.setText("")
-        # end zeroConsole
+        # end zero_console
 
-    def zeroTitleFile(self):
+    def zero_title_file(self):
         self.w.titleFile.setText("")
-        # end zeroTitleFile
+        # end zero_title_file
 
-    def zoomPhCorr(self):
-        if (self.phCorrActive == True):
+    def zoom_ph_corr(self):
+        if (self.ph_corr_active == True):
             try:
-                self.setZoom()
+                self.set_zoom()
             except:
                 pass
 
             if (self.zoom == False):
                 # Enable zoom
                 self.zoom = True
-                self.showPhZoom()
-                if self.phCorr.nDims == 1:
+                self.show_ph_zoom()
+                if self.ph_corr.n_dims == 1:
                     self.w.exitPhCorr1d.setVisible(False)
                     self.w.zoomPhCorr1d.setVisible(False)
                     self.w.exitZoomPhCorr1d.setVisible(True)
                 else:
-                    self.w.zoomPhCorr2d.setVisible(False)
+                    self.w.zoom_ph_corr2d.setVisible(False)
                     self.w.applyPhCorr2d.setVisible(False)
                     self.w.cancelPhCorr2d.setVisible(False)
-                    self.w.exitZoomPhCorr2d.setVisible(True)
+                    self.w.exitzoom_ph_corr2d.setVisible(True)
 
             else:
                 # Disable zoom
                 self.zoom = False
-                if self.phCorr.nDims == 1:
-                    self.showPhCorr()
+                if self.ph_corr.n_dims == 1:
+                    self.show_ph_corr()
                     self.w.exitPhCorr1d.setVisible(True)
                     self.w.zoomPhCorr1d.setVisible(True)
                     self.w.exitZoomPhCorr1d.setVisible(False)
-                    self.setZoomOff()
+                    self.set_zoom_off()
                 else:
-                    self.showPhCorr2d_1d()
-                    self.w.zoomPhCorr2d.setVisible(True)
+                    self.show_ph_corr_2d_1d()
+                    self.w.zoom_ph_corr2d.setVisible(True)
                     self.w.applyPhCorr2d.setVisible(True)
                     self.w.cancelPhCorr2d.setVisible(True)
-                    self.w.exitZoomPhCorr2d.setVisible(False)
-                    self.setZoomOff()
+                    self.w.exitzoom_ph_corr2d.setVisible(False)
+                    self.set_zoom_off()
 
-
-
-        self.showAcquisitionParameters()
-        self.showNMRSpectrum()
-        # end zoomPhCorr
-
+        self.show_acquisition_parameters()
+        self.show_nmr_spectrum()
+        # end zoom_ph_corr
 
     def _download_requested(self, download_item) -> None:
-        codeOut = io.StringIO()
-        codeErr = io.StringIO()
-        sys.stdout = codeOut
-        sys.stderr = codeErr
+        code_out = io.StringIO()
+        code_err = io.StringIO()
+        sys.stdout = code_out
+        sys.stderr = code_err
         dialog = QFileDialog(self.w)
         path = dialog.getSaveFileName(dialog, "Save File", download_item.path())
-
+        print(path)
         if path[0]:
             download_item.setPath(path[0])
             print(f"downloading file to:( {download_item.path()} )")
@@ -5072,52 +5097,54 @@ class main_w(object):  # pragma: no cover
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
         if self.cf.mode == 'dark':
-            txtCol = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
-            errCol = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
+            txt_col = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
         else:
-            txtCol = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
-            errCol = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
+            txt_col = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
 
-        self.w.console.setTextColor(txtCol)
-        self.w.console.append(codeOut.getvalue())
-        self.w.console.setTextColor(errCol)
-        self.w.console.append(codeErr.getvalue())
-        codeOut.close()
-        codeErr.close()
+        self.w.console.setTextColor(txt_col)
+        self.w.console.append(code_out.getvalue())
+        self.w.console.setTextColor(err_col)
+        self.w.console.append(code_err.getvalue())
+        code_out.close()
+        code_err.close()
         self.w.nmrSpectrum.setCurrentIndex(11)
 
     def _download_finished(self) -> None:
-        codeOut = io.StringIO()
-        codeErr = io.StringIO()
-        sys.stdout = codeOut
-        sys.stderr = codeErr
+        code_out = io.StringIO()
+        code_err = io.StringIO()
+        sys.stdout = code_out
+        sys.stderr = code_err
         print("Download complete")
         if self.w.autoUnzip.isChecked() == True:
-            fName, fExt = os.path.splitext(self.download_item.downloadFileName())
+            f_name, fExt = os.path.splitext(self.download_item.downloadFileName())
             if fExt == '.zip':
                 print('Extracting .zip-file')
-                with zipfile.ZipFile(os.path.join(self.download_item.downloadDirectory(), self.download_item.downloadFileName()), 'r') as zip_ref:
-                    zip_ref.extractall(os.path.join(self.download_item.downloadDirectory(), fName))
+                with zipfile.ZipFile(
+                        os.path.join(self.download_item.downloadDirectory(), self.download_item.downloadFileName()),
+                        'r') as zip_ref:
+                    zip_ref.extractall(os.path.join(self.download_item.downloadDirectory(), f_name))
 
                 print('.zip-file extraction finished')
-
 
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
         if self.cf.mode == 'dark':
-            txtCol = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
-            errCol = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
+            txt_col = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
         else:
-            txtCol = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
-            errCol = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
+            txt_col = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
 
-        self.w.console.setTextColor(txtCol)
-        self.w.console.append(codeOut.getvalue())
-        self.w.console.setTextColor(errCol)
-        self.w.console.append(codeErr.getvalue())
-        codeOut.close()
-        codeErr.close()
+        self.w.console.setTextColor(txt_col)
+        self.w.console.append(code_out.getvalue())
+        self.w.console.setTextColor(err_col)
+        self.w.console.append(code_err.getvalue())
+        code_out.close()
+        code_err.close()
         self.w.nmrSpectrum.setCurrentIndex(11)
+
 
 def main():  # pragma: no cover
     sys.argv.append('None')
@@ -5136,12 +5163,12 @@ def main():  # pragma: no cover
     QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
     app = QApplication(['MetaboLabPy'])  # sys.argv)
     icon = QIcon()
-    pName = os.path.join(os.path.dirname(__file__), "icon")
-    icon.addFile(os.path.join(pName, "icon-16.png"), QtCore.QSize(16, 16))
-    icon.addFile(os.path.join(pName, "icon-24.png"), QtCore.QSize(24, 24))
-    icon.addFile(os.path.join(pName, "icon-32.png"), QtCore.QSize(32, 32))
-    icon.addFile(os.path.join(pName, "icon-48.png"), QtCore.QSize(48, 48))
-    icon.addFile(os.path.join(pName, "icon-256.png"), QtCore.QSize(256, 256))
+    p_name = os.path.join(os.path.dirname(__file__), "icon")
+    icon.addFile(os.path.join(p_name, "icon-16.png"), QtCore.QSize(16, 16))
+    icon.addFile(os.path.join(p_name, "icon-24.png"), QtCore.QSize(24, 24))
+    icon.addFile(os.path.join(p_name, "icon-32.png"), QtCore.QSize(32, 32))
+    icon.addFile(os.path.join(p_name, "icon-48.png"), QtCore.QSize(48, 48))
+    icon.addFile(os.path.join(p_name, "icon-256.png"), QtCore.QSize(256, 256))
     app.setWindowIcon(icon)
     app.setApplicationDisplayName("MetaboLabPy")
     w = main_w()
@@ -5151,13 +5178,13 @@ def main():  # pragma: no cover
     if (args["noSplash"] == False):
         ##
         # Create and display the splash screen
-        pName = os.path.join(os.path.dirname(__file__), "png")
+        p_name = os.path.join(os.path.dirname(__file__), "png")
         cf = nmrConfig.NmrConfig()
-        cf.readConfig()
+        cf.read_config()
         if cf.mode == 'dark':
-            splash_pix = QPixmap(os.path.join(pName, "metabolabpy_dark.png"))
+            splash_pix = QPixmap(os.path.join(p_name, "metabolabpy_dark.png"))
         else:
-            splash_pix = QPixmap(os.path.join(pName, "metabolabpy.png"))
+            splash_pix = QPixmap(os.path.join(p_name, "metabolabpy.png"))
 
         splash = QSplashScreen(splash_pix)
         splash.setMask(splash_pix.mask())
@@ -5176,18 +5203,18 @@ def main():  # pragma: no cover
 
     if (args["fileName"] != "None"):
         try:
-            w.loadFile(args["fileName"])
+            w.load_file(args["fileName"])
         except:
             if (args["script"] != None):
-                w.openScript(args["script"])
-                w.scriptEditor()
-                w.execScript()
+                w.open_script(args["script"])
+                w.script_editor()
+                w.exec_script()
 
     else:
         if (args["script"] != None):
-            w.openScript(args["script"])
-            w.scriptEditor()
-            w.execScript()
+            w.open_script(args["script"])
+            w.script_editor()
+            w.exec_script()
 
     if cf.mode == 'light':
         qtmodern.styles.light(app)

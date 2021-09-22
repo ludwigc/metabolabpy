@@ -5,122 +5,120 @@ import configparser
 class NmrConfig:
 
     def __init__(self):
-        self.autoPlot = True
-        self.keepZoom = True
-        self.fontSize = 13
-        self.phaseReferenceColour = 'Red'
-        self.fName = '.pyMetaboLab.config'
-        self.homeDir = os.path.expanduser('~')
-        self.configFile = os.path.join(self.homeDir, self.fName)
+        self.auto_plot = True
+        self.keep_zoom = True
+        self.font_size = 13
+        self.phase_reference_colour = 'Red'
+        self.f_name = '.pyMetaboLab.config'
+        self.home_dir = os.path.expanduser('~')
+        self.config_file = os.path.join(self.home_dir, self.f_name)
         self.value = ""
-        self.posCol10 = 0.0
-        self.posCol11 = 0.0
-        self.posCol12 = 1.0
-        self.negCol10 = 1.0
-        self.negCol11 = 0.0
-        self.negCol12 = 0.0
-        self.posCol20 = 0.8
-        self.posCol21 = 0.8
-        self.posCol22 = 1.0
-        self.negCol20 = 1.0
-        self.negCol21 = 0.8
-        self.negCol22 = 0.8
+        self.pos_col10 = 0.0
+        self.pos_col11 = 0.0
+        self.pos_col12 = 1.0
+        self.neg_col10 = 1.0
+        self.neg_col11 = 0.0
+        self.neg_col12 = 0.0
+        self.pos_col20 = 0.8
+        self.pos_col21 = 0.8
+        self.pos_col22 = 1.0
+        self.neg_col20 = 1.0
+        self.neg_col21 = 0.8
+        self.neg_col22 = 0.8
         self.mode = 'light'
 
-    def makeConfig(self):
+    def make_config(self):
         config = configparser.ConfigParser()
-        autoPlot = 'yes' if self.autoPlot is True else 'no'
-        keepZoom = 'yes' if self.keepZoom is True else 'no'
-        config['GUI'] = {'autoPlot': autoPlot,
-                         'keepZoom': keepZoom,
-                         'fontSize': str(self.fontSize),
+        auto_plot = 'yes' if self.auto_plot is True else 'no'
+        keep_zoom = 'yes' if self.keep_zoom is True else 'no'
+        config['GUI'] = {'auto_plot': auto_plot,
+                         'keep_zoom': keep_zoom,
+                         'font_size': str(self.font_size),
                          'mode': self.mode}
-        config['Disp'] = {'phaseReferenceColour': self.phaseReferenceColour,
-                          'posCol10': self.posCol10,
-                          'posCol11': self.posCol11,
-                          'posCol12': self.posCol12,
-                          'negCol10': self.negCol10,
-                          'negCol11': self.negCol11,
-                          'negCol12': self.negCol12,
-                          'posCol20': self.posCol20,
-                          'posCol21': self.posCol21,
-                          'posCol22': self.posCol22,
-                          'negCol20': self.negCol20,
-                          'negCol21': self.negCol21,
-                          'negCol22': self.negCol22}
+        config['Disp'] = {'phase_reference_colour': self.phase_reference_colour,
+                          'pos_col10': self.pos_col10,
+                          'pos_col11': self.pos_col11,
+                          'pos_col12': self.pos_col12,
+                          'neg_col10': self.neg_col10,
+                          'neg_col11': self.neg_col11,
+                          'neg_col12': self.neg_col12,
+                          'pos_col20': self.pos_col20,
+                          'pos_col21': self.pos_col21,
+                          'pos_col22': self.pos_col22,
+                          'neg_col20': self.neg_col20,
+                          'neg_col21': self.neg_col21,
+                          'neg_col22': self.neg_col22}
         return config
 
-    def saveConfig(self):
-        config = self.makeConfig()
-        with open(self.configFile, 'w') as configfile:
-            config.write(configfile)
+    def save_config(self):
+        config = self.make_config()
+        with open(self.config_file, 'w') as config_file:
+            config.write(config_file)
 
-    def readConfig(self):
-        self.homeDir = os.path.expanduser('~')
-        self.configFile = os.path.join(self.homeDir, self.fName)
+    def read_config(self):
+        self.home_dir = os.path.expanduser('~')
+        self.config_file = os.path.join(self.home_dir, self.f_name)
         config = configparser.ConfigParser()
-        config.read(self.configFile)
+        config.read(self.config_file)
         if len(config.sections()) == 0:
-            config = self.makeConfig()
-            self.saveConfig()
+            config = self.make_config()
+            self.save_config()
 
         for k in config.sections():
             for l in config[k]:
-                self.setValues(l, config[k][l])
+                self.set_values(l, config[k][l])
 
+    def set_auto_plot(self, value):
+        self.auto_plot = True if value == "yes" else False
 
-    def set_autoplot(self, value):
-        self.autoPlot = True if value == "yes" else False
+    def set_keep_zoom(self, value):
+        self.keep_zoom = True if value == "yes" else False
 
-    def set_keepzoom(self, value):
-        self.keepZoom = True if value == "yes" else False
+    def set_font_size(self, value):
+        self.font_size = float(value)
 
-    def set_fontsize(self, value):
-        self.fontSize = float(value)
+    def set_phase_reference_colour(self, value):
+        self.phase_reference_colour = value
 
-    def set_phasereferencecolour(self, value):
-        self.phaseReferenceColour = value
+    def set_pos_col10(self, value):
+        self.pos_col10 = float(value)
 
-    def set_poscol10(self, value):
-        self.posCol10 = float(value)
+    def set_pos_col11(self, value):
+        self.pos_col11 = float(value)
 
-    def set_poscol11(self, value):
-        self.posCol11 = float(value)
+    def set_pos_col12(self, value):
+        self.pos_col12 = float(value)
 
-    def set_poscol12(self, value):
-        self.posCol12 = float(value)
+    def set_neg_col10(self, value):
+        self.neg_col10 = float(value)
 
-    def set_negcol10(self, value):
-        self.negCol10 = float(value)
+    def set_neg_col11(self, value):
+        self.neg_col11 = float(value)
 
-    def set_negcol11(self, value):
-        self.negCol11 = float(value)
+    def set_neg_col12(self, value):
+        self.neg_col12 = float(value)
 
-    def set_negcol12(self, value):
-        self.negCol12 = float(value)
+    def set_pos_col20(self, value):
+        self.pos_col20 = float(value)
 
-    def set_poscol20(self, value):
-        self.posCol20 = float(value)
+    def set_pos_col21(self, value):
+        self.pos_col21 = float(value)
 
-    def set_poscol21(self, value):
-        self.posCol21 = float(value)
+    def set_pos_col22(self, value):
+        self.pos_col22 = float(value)
 
-    def set_poscol22(self, value):
-        self.posCol22 = float(value)
+    def set_neg_col20(self, value):
+        self.neg_col20 = float(value)
 
-    def set_negcol20(self, value):
-        self.negCol20 = float(value)
+    def set_neg_col21(self, value):
+        self.neg_col21 = float(value)
 
-    def set_negcol21(self, value):
-        self.negCol21 = float(value)
-
-    def set_negcol22(self, value):
-        self.negCol22 = float(value)
+    def set_neg_col22(self, value):
+        self.neg_col22 = float(value)
 
     def set_mode(self, value):
         self.mode = value
 
-    def setValues(self, key, value):
-        mName = "self.set_" + key
-        eval(mName)(value)
-
+    def set_values(self, key, value):
+        m_name = "self.set_" + key
+        eval(m_name)(value)
