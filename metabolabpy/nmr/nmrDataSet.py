@@ -40,6 +40,7 @@ class NmrDataSet:
         self.export_peak_file = 'concentrations.xlsx'
         self.export_peak_path = os.path.expanduser('~')
         self.peak_fill = False
+        self.file_version = 0.0
         # end __init__
 
     def add_peak(self, start_end=np.array([], dtype='float64'), peak_label=''):
@@ -715,6 +716,7 @@ class NmrDataSet:
                     vver = '0.1'
 
                 nd2 = nd.NmrData()
+                #nd2.file_version = n.nmrdat[0][0].ver
                 for kk in nd2.__dict__.keys():
                     if kk != 'acq' and kk != 'proc' and kk != 'display' and kk != 'apc':
                         kk2 = kk

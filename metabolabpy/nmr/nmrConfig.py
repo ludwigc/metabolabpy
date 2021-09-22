@@ -66,7 +66,15 @@ class NmrConfig:
 
         for k in config.sections():
             for l in config[k]:
-                self.set_values(l, config[k][l])
+                local_var = l
+                local_var = local_var.replace("autoplot", "auto_plot")
+                local_var = local_var.replace("keepzoom", "keep_zoom")
+                local_var = local_var.replace("fontsize", "font_size")
+                local_var = local_var.replace("phasereferencecolour", "phase_reference_colour")
+                local_var = local_var.replace("poscol", "pos_col")
+                local_var = local_var.replace("negcol", "neg_col")
+                print("{} / {}".format(local_var, config[k][l]))
+                self.set_values(local_var, config[k][l])
 
     def set_auto_plot(self, value):
         self.auto_plot = True if value == "yes" else False
