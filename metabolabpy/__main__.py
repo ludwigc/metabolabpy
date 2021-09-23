@@ -169,7 +169,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.6.45'
+        self.__version__ = '0.6.46'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -1828,9 +1828,9 @@ class main_w(object):  # pragma: no cover
 
             self.xdata = []
             self.ydata = []
-            self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0],
+            self.nd.nmrdat[self.nd.s][self.nd.e].ref_point[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0],
                                                                                                                0)
-            self.nd.nmrdat[self.nd.s][self.nd.e].refShift[0] = self.temp_ref_shift
+            self.nd.nmrdat[self.nd.s][self.nd.e].ref_shift[0] = self.temp_ref_shift
             self.nd.nmrdat[self.nd.s][self.nd.e].calc_ppm()
             self.reset_plot()
 
@@ -1944,20 +1944,20 @@ class main_w(object):  # pragma: no cover
 
             self.xdata = []
             self.ydata = []
-            self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0],
+            self.nd.nmrdat[self.nd.s][self.nd.e].ref_point[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0],
                                                                                                                0)
-            self.nd.nmrdat[self.nd.s][self.nd.e].refShift[0] = self.temp_ref_shift[0]
-            self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[1] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][1],
+            self.nd.nmrdat[self.nd.s][self.nd.e].ref_shift[0] = self.temp_ref_shift[0]
+            self.nd.nmrdat[self.nd.s][self.nd.e].ref_point[1] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][1],
                                                                                                                1)
-            self.nd.nmrdat[self.nd.s][self.nd.e].refShift[1] = self.temp_ref_shift[1]
-            self.nd.nmrdat[self.nd.s][self.nd.e].proc.refPoint[0] = self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[0] * \
-                                                                    self.nd.nmrdat[self.nd.s][self.nd.e].proc.nPoints[
+            self.nd.nmrdat[self.nd.s][self.nd.e].ref_shift[1] = self.temp_ref_shift[1]
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.ref_point[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ref_point[0] * \
+                                                                    self.nd.nmrdat[self.nd.s][self.nd.e].proc.n_points[
                                                                         0] / (len(
-                self.nd.nmrdat[self.nd.s][self.nd.e].fid[0]) * self.nd.nmrdat[self.nd.s][self.nd.e].proc.multFactor[0])
-            self.nd.nmrdat[self.nd.s][self.nd.e].proc.refPoint[1] = self.nd.nmrdat[self.nd.s][self.nd.e].refPoint[1] * \
-                                                                    self.nd.nmrdat[self.nd.s][self.nd.e].proc.nPoints[
+                self.nd.nmrdat[self.nd.s][self.nd.e].fid[0]) * self.nd.nmrdat[self.nd.s][self.nd.e].proc.mult_factor[0])
+            self.nd.nmrdat[self.nd.s][self.nd.e].proc.ref_point[1] = self.nd.nmrdat[self.nd.s][self.nd.e].ref_point[1] * \
+                                                                    self.nd.nmrdat[self.nd.s][self.nd.e].proc.n_points[
                                                                         1] / (len(
-                self.nd.nmrdat[self.nd.s][self.nd.e].fid) * self.nd.nmrdat[self.nd.s][self.nd.e].proc.multFactor[1])
+                self.nd.nmrdat[self.nd.s][self.nd.e].fid) * self.nd.nmrdat[self.nd.s][self.nd.e].proc.mult_factor[1])
             self.nd.nmrdat[self.nd.s][self.nd.e].calc_ppm()
             self.reset_plot()
 
@@ -3230,15 +3230,15 @@ class main_w(object):  # pragma: no cover
 
         # end read_spcs
 
-    def reference1d(self, refShift=0.0):
-        self.temp_ref_shift = refShift
+    def reference1d(self, ref_shift=0.0):
+        self.temp_ref_shift = ref_shift
         self.w.MplWidget.canvas.setFocus()
         self.show_nmr_spectrum()
         self.ginput_ref_1d(1)
         # end reference1d
 
-    def reference2d(self, refShift=[0.0, 0.0]):
-        self.temp_ref_shift = refShift
+    def reference2d(self, ref_shift=[0.0, 0.0]):
+        self.temp_ref_shift = ref_shift
         self.w.MplWidget.canvas.setFocus()
         self.show_nmr_spectrum()
         self.ginput_ref_2d(1)
