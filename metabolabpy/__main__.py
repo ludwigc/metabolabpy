@@ -169,7 +169,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.6.44'
+        self.__version__ = '0.6.45'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -516,12 +516,12 @@ class main_w(object):  # pragma: no cover
         self.w.emptyRowColPhCorr2d.setVisible(True)
         self.w.removeRowColPhCorr2d.setVisible(True)
         self.w.horzPhCorr2d.setVisible(True)
-        self.w.vert_ph_corr_2d.setVisible(True)
-        self.w.zoom_ph_corr2d.setVisible(False)
+        self.w.vertPhCorr2d.setVisible(True)
+        self.w.zoomPhCorr2d.setVisible(False)
         self.w.applyPhCorr2d.setVisible(False)
         self.w.cancelPhCorr2d.setVisible(False)
         self.w.exitPhCorr2d.setVisible(True)
-        self.w.exitzoom_ph_corr2d.setVisible(False)
+        self.w.exitZoomPhCorr2d.setVisible(False)
         ph0 = ((self.ph_corr.ph0_2d[self.ph_corr.dim] + 180.0) % 360.0) - 180.0
         ph1 = self.ph_corr.ph1_2d[self.ph_corr.dim]
         if self.nd.nmrdat[s][e].proc.phase_inversion is False:
@@ -550,7 +550,7 @@ class main_w(object):  # pragma: no cover
         if (self.pan_was_on == True):
             self.set_pan()
 
-        self.show_ph_corr_2d()
+        self.show_ph_corr2d()
         self.set_proc_pars()
         self.show_acquisition_parameters()
         self.show_nmr_spectrum()
@@ -722,12 +722,12 @@ class main_w(object):  # pragma: no cover
         self.w.emptyRowColPhCorr2d.setVisible(True)
         self.w.removeRowColPhCorr2d.setVisible(True)
         self.w.horzPhCorr2d.setVisible(True)
-        self.w.vert_ph_corr_2d.setVisible(True)
-        self.w.zoom_ph_corr2d.setVisible(False)
+        self.w.vertPhCorr2d.setVisible(True)
+        self.w.zoomPhCorr2d.setVisible(False)
         self.w.applyPhCorr2d.setVisible(False)
         self.w.cancelPhCorr2d.setVisible(False)
         self.w.exitPhCorr2d.setVisible(True)
-        self.w.exitzoom_ph_corr2d.setVisible(False)
+        self.w.exitZoomPhCorr2d.setVisible(False)
         self.ph_corr.ph0_2d[self.ph_corr.dim] = 0
         self.ph_corr.ph1_2d[self.ph_corr.dim] = 0
         zoomStatus = self.w.keepZoom.isChecked()
@@ -742,7 +742,7 @@ class main_w(object):  # pragma: no cover
         if (self.pan_was_on == True):
             self.set_pan()
 
-        self.show_ph_corr_2d()
+        self.show_ph_corr2d()
         self.show_acquisition_parameters()
         self.show_nmr_spectrum()
         # end cancel2dPhCorr
@@ -1982,7 +1982,7 @@ class main_w(object):  # pragma: no cover
             self.xdata = []
             self.ydata = []
             xy = self.xy
-            self.show_ph_corr_2d()
+            self.show_ph_corr2d()
             xyPts = []
             xy2 = []
             xyPts.append(self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0], 0))
@@ -2148,11 +2148,11 @@ class main_w(object):  # pragma: no cover
                 self.ph_corr.spc[k] = spc[0]
 
             self.ph_corr.ppm = self.nd.nmrdat[s][e].ppm1
-            if self.ph_corr.pivot_points_2d[0] < 0:
-                self.ph_corr.pivot_points_2d[0] = int(len(self.ph_corr.ppm) / 2)
-                self.ph_corr.pivot2d[0] = self.nd.nmrdat[s][e].points2ppm(self.ph_corr.pivot_points_2d[0], 0)
+            if self.ph_corr.pivot_points2d[0] < 0:
+                self.ph_corr.pivot_points2d[0] = int(len(self.ph_corr.ppm) / 2)
+                self.ph_corr.pivot2d[0] = self.nd.nmrdat[s][e].points2ppm(self.ph_corr.pivot_points2d[0], 0)
 
-        self.show_ph_corr_2d_1d(self.ph_corr.dim)
+        self.show_ph_corr2d_1d(self.ph_corr.dim)
         self.ph_corr.spc_max = np.max(np.max(np.abs(self.ph_corr.spc)))
         try:
             zwo = True
@@ -2171,12 +2171,12 @@ class main_w(object):  # pragma: no cover
         self.w.emptyRowColPhCorr2d.setVisible(False)
         self.w.removeRowColPhCorr2d.setVisible(False)
         self.w.horzPhCorr2d.setVisible(False)
-        self.w.vert_ph_corr_2d.setVisible(False)
-        self.w.zoom_ph_corr2d.setVisible(True)
+        self.w.vertPhCorr2d.setVisible(False)
+        self.w.zoomPhCorr2d.setVisible(True)
         self.w.applyPhCorr2d.setVisible(True)
         self.w.cancelPhCorr2d.setVisible(True)
         self.w.exitPhCorr2d.setVisible(False)
-        self.w.exitzoom_ph_corr2d.setVisible(False)
+        self.w.exitZoomPhCorr2d.setVisible(False)
         self.ph_corr_plot_spc_2d(False)
         self.show_acquisition_parameters()
         self.show_nmr_spectrum()
@@ -2205,7 +2205,7 @@ class main_w(object):  # pragma: no cover
         self.w.phRefColour.setCurrentIndex(self.nd.nmrdat[0][0].display.colours2.get(self.cf.phase_reference_colour))
         self.w.autoPlot.setChecked(self.cf.auto_plot)
         self.w.keepZoom.setChecked(self.cf.keep_zoom)
-        self.w.font_size.setValue(self.cf.font_size)
+        self.w.fontSize.setValue(self.cf.font_size)
         self.std_pos_col1 = (self.cf.pos_col10, self.cf.pos_col11, self.cf.pos_col12)
         self.std_neg_col1 = (self.cf.neg_col10, self.cf.neg_col11, self.cf.neg_col12)
         self.std_pos_col2 = (self.cf.pos_col20, self.cf.pos_col21, self.cf.pos_col22)
@@ -2434,7 +2434,7 @@ class main_w(object):  # pragma: no cover
 
         # end on_ph_corr_click
 
-    def on_ph_corr_click2d(self, event):
+    def on_ph_corr_click_2d(self, event):
         s = self.nd.s
         e = self.nd.e
         if (self.zoom == False):
@@ -2447,7 +2447,7 @@ class main_w(object):  # pragma: no cover
                     # set pivot for phase correction
                     self.ph_corr.start = event.xdata
                     self.ph_corr.pivot = event.xdata
-                    self.ph_corr.pivot_points_2d[self.ph_corr.dim] = self.nd.nmrdat[s][e].ppm2points(
+                    self.ph_corr.pivot_points2d[self.ph_corr.dim] = self.nd.nmrdat[s][e].ppm2points(
                         self.ph_corr.pivot2d[self.ph_corr.dim], self.ph_corr.dim)
 
                 if (mods == QtCore.Qt.ShiftModifier):
@@ -2466,7 +2466,7 @@ class main_w(object):  # pragma: no cover
                     # set pivot for phase correction
                     self.ph_corr.start = event.xdata
                     self.ph_corr.pivot2d[self.ph_corr.dim] = event.xdata
-                    self.ph_corr.pivot_points_2d[self.ph_corr.dim] = self.nd.nmrdat[s][e].ppm2points(
+                    self.ph_corr.pivot_points2d[self.ph_corr.dim] = self.nd.nmrdat[s][e].ppm2points(
                         self.ph_corr.pivot2d[self.ph_corr.dim], self.ph_corr.dim)
                 else:
                     # first order phase correction
@@ -2474,7 +2474,7 @@ class main_w(object):  # pragma: no cover
 
             cid3 = self.w.MplWidget.canvas.mpl_connect('motion_notify_event', self.on_ph_corr_draw2d)
 
-        # end on_ph_corr_click2d
+        # end on_ph_corr_click_2d
 
     def on_ph_corr_draw(self, event):
         if (self.zoom == False):
@@ -2533,7 +2533,7 @@ class main_w(object):  # pragma: no cover
                     if (mods == QtCore.Qt.ControlModifier):
                         # set pivot for phase correction
                         self.ph_corr.pivot2d[self.ph_corr.dim] = event.xdata
-                        self.ph_corr.pivot_points_2d[self.ph_corr.dim] = self.nd.nmrdat[s][e].ppm2points(
+                        self.ph_corr.pivot_points2d[self.ph_corr.dim] = self.nd.nmrdat[s][e].ppm2points(
                             self.ph_corr.pivot2d[self.ph_corr.dim], self.ph_corr.dim)
 
                     if (mods == QtCore.Qt.ShiftModifier):
@@ -2541,14 +2541,14 @@ class main_w(object):  # pragma: no cover
                         ph0 = 0
                         ph1 = self.ph_corr.max_ph1 * (event.ydata - self.ph_corr.start) / self.ph_corr.spc_max
                         self.ph_corr.spc = self.phase1d(self.ph_corr.spc2, ph0, ph1,
-                                                        self.ph_corr.pivot_points_2d[self.ph_corr.dim])
+                                                        self.ph_corr.pivot_points2d[self.ph_corr.dim])
 
                     if (mods == QtCore.Qt.NoModifier):
                         # zero order phase correction
                         ph0 = self.ph_corr.max_ph0 * (event.ydata - self.ph_corr.start) / self.ph_corr.spc_max
                         ph1 = 0
                         self.ph_corr.spc = self.phase1d(self.ph_corr.spc2, ph0, ph1,
-                                                        self.ph_corr.pivot_points_2d[self.ph_corr.dim])
+                                                        self.ph_corr.pivot_points2d[self.ph_corr.dim])
 
                 else:
                     if (event.button == 2):
@@ -2556,7 +2556,7 @@ class main_w(object):  # pragma: no cover
                         self.ph_corr.x_data = event.xdata
                         self.ph_corr.y_data = event.ydata
                         self.ph_corr.pivot2d[self.ph_corr.dim] = event.xdata
-                        self.ph_corr.pivot_points_2d[self.ph_corr.dim] = self.nd.nmrdat[s][e].ppm2points(
+                        self.ph_corr.pivot_points2d[self.ph_corr.dim] = self.nd.nmrdat[s][e].ppm2points(
                             self.ph_corr.pivot2d[self.ph_corr.dim], self.ph_corr.dim)
                     else:
                         # first order phase correction
@@ -2565,7 +2565,7 @@ class main_w(object):  # pragma: no cover
                         ph0 = 0
                         ph1 = self.ph_corr.max_ph1 * (event.ydata - self.ph_corr.start) / self.ph_corr.spc_max
                         self.ph_corr.spc = self.phase1d(self.ph_corr.spc2, ph0, ph1,
-                                                        self.ph_corr.pivot_points_2d[self.ph_corr.dim])
+                                                        self.ph_corr.pivot_points2d[self.ph_corr.dim])
 
             self.ph_corr_plot_spc_2d()
 
@@ -2655,13 +2655,13 @@ class main_w(object):  # pragma: no cover
                 if mods == QtCore.Qt.ControlModifier:
                     # set pivot for phase correction
                     self.ph_corr.pivot2d[self.ph_corr.dim] = xdata
-                    self.ph_corr.pivot_points_2d[self.ph_corr.dim] = self.nd.nmrdat[s][e].ppm2points(
+                    self.ph_corr.pivot_points2d[self.ph_corr.dim] = self.nd.nmrdat[s][e].ppm2points(
                         self.ph_corr.pivot2d[self.ph_corr.dim], self.ph_corr.dim)
 
                 if mods == QtCore.Qt.ShiftModifier:
                     # first order phase correction
                     ph1 = (self.ph_corr.max_ph1 * (ydata - self.ph_corr.start) / self.ph_corr.spc_max)
-                    ph = self.phases_remove_pivot(0.0, ph1, self.ph_corr.pivot_points_2d[self.ph_corr.dim],
+                    ph = self.phases_remove_pivot(0.0, ph1, self.ph_corr.pivot_points2d[self.ph_corr.dim],
                                                   len(self.ph_corr.spc[0]))
                     ph0 = ((self.ph_corr.ph0_2d[self.ph_corr.dim] + ph[0] + 180.0) % 360.0) - 180.0
                     ph1 = self.ph_corr.ph1_2d[self.ph_corr.dim] + ph[1]
@@ -2672,7 +2672,7 @@ class main_w(object):  # pragma: no cover
                     # zero order phase correction
                     ph0a = (self.ph_corr.max_ph0 * (ydata - self.ph_corr.start) / self.ph_corr.spc_max) % 360.0
                     ph1a = 0.0
-                    ph = self.phases_remove_pivot(ph0a, ph1a, self.ph_corr.pivot_points_2d[self.ph_corr.dim],
+                    ph = self.phases_remove_pivot(ph0a, ph1a, self.ph_corr.pivot_points2d[self.ph_corr.dim],
                                                   len(self.ph_corr.spc[0]))
                     ph0 = ((self.ph_corr.ph0_2d[self.ph_corr.dim] + ph[0] + 180.0) % 360.0) - 180.0
                     ph1 = self.ph_corr.ph1_2d[self.ph_corr.dim] + ph[1]
@@ -2683,13 +2683,13 @@ class main_w(object):  # pragma: no cover
                 if event.button == 2:
                     # set pivot for phase correction
                     self.ph_corr.pivot2d[self.ph_corr.dim] = xdata
-                    self.ph_corr.pivot_points_2d[self.ph_corr.dim] = self.nd.nmrdat[s][e].ppm2points(
+                    self.ph_corr.pivot_points2d[self.ph_corr.dim] = self.nd.nmrdat[s][e].ppm2points(
                         self.ph_corr.pivot2d[self.ph_corr.dim], self.ph_corr.dim)
 
                 else:
                     # first order phase correction
                     ph1 = (self.ph_corr.max_ph1 * (ydata - self.ph_corr.start) / self.ph_corr.spc_max)
-                    ph = self.phases_remove_pivot(0.0, ph1, self.ph_corr.pivot_points_2d[self.ph_corr.dim],
+                    ph = self.phases_remove_pivot(0.0, ph1, self.ph_corr.pivot_points2d[self.ph_corr.dim],
                                                   len(self.ph_corr.spc[0]))
                     ph0 = ((self.ph_corr.ph0_2d[self.ph_corr.dim] + ph[0] + 180.0) % 360.0) - 180.0
                     ph1 = self.ph_corr.ph1_2d[self.ph_corr.dim] + ph[1]
@@ -3346,36 +3346,36 @@ class main_w(object):  # pragma: no cover
         # end open_script
 
     def scale_2d_spectrum_up(self):
-        self.nd.nmrdat[self.nd.s][self.nd.e].display.minLevel /= 1.1
-        self.nd.nmrdat[self.nd.s][self.nd.e].display.maxLevel /= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].display.min_level /= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].display.max_level /= 1.1
         self.set_disp_pars()
         self.plot_spc()
         # end scale_2d_spectrum_up
 
     def scale_2d_spectrum_down(self):
-        self.nd.nmrdat[self.nd.s][self.nd.e].display.minLevel *= 1.1
-        self.nd.nmrdat[self.nd.s][self.nd.e].display.maxLevel *= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].display.min_level *= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].display.max_level *= 1.1
         self.set_disp_pars()
         self.plot_spc()
         # end scale_2d_spectrum_down
 
     def scale_all_2d_spectra_up(self):
-        self.nd.nmrdat[self.nd.s][self.nd.e].display.minLevel /= 1.1
-        self.nd.nmrdat[self.nd.s][self.nd.e].display.maxLevel /= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].display.min_level /= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].display.max_level /= 1.1
         for k in range(len(self.nd.nmrdat[self.nd.s])):
-            self.nd.nmrdat[self.nd.s][k].display.minLevel = self.nd.nmrdat[self.nd.s][self.nd.e].display.minLevel
-            self.nd.nmrdat[self.nd.s][k].display.maxLevel = self.nd.nmrdat[self.nd.s][self.nd.e].display.maxLevel
+            self.nd.nmrdat[self.nd.s][k].display.min_level = self.nd.nmrdat[self.nd.s][self.nd.e].display.min_level
+            self.nd.nmrdat[self.nd.s][k].display.max_level = self.nd.nmrdat[self.nd.s][self.nd.e].display.max_level
 
         self.set_disp_pars()
         self.plot_spc()
         # end scaleAll_2d_spectra_up
 
     def scale_all_2d_spectra_down(self):
-        self.nd.nmrdat[self.nd.s][self.nd.e].display.minLevel *= 1.1
-        self.nd.nmrdat[self.nd.s][self.nd.e].display.maxLevel *= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].display.min_level *= 1.1
+        self.nd.nmrdat[self.nd.s][self.nd.e].display.max_level *= 1.1
         for k in range(len(self.nd.nmrdat[self.nd.s])):
-            self.nd.nmrdat[self.nd.s][k].display.minLevel = self.nd.nmrdat[self.nd.s][self.nd.e].display.minLevel
-            self.nd.nmrdat[self.nd.s][k].display.maxLevel = self.nd.nmrdat[self.nd.s][self.nd.e].display.maxLevel
+            self.nd.nmrdat[self.nd.s][k].display.min_level = self.nd.nmrdat[self.nd.s][self.nd.e].display.min_level
+            self.nd.nmrdat[self.nd.s][k].display.max_level = self.nd.nmrdat[self.nd.s][self.nd.e].display.max_level
 
         self.set_disp_pars()
         self.plot_spc()
@@ -4816,17 +4816,17 @@ class main_w(object):  # pragma: no cover
                 self.w.emptyRowColPhCorr2d.setVisible(True)
                 self.w.removeRowColPhCorr2d.setVisible(True)
                 self.w.horzPhCorr2d.setVisible(True)
-                self.w.vert_ph_corr_2d.setVisible(True)
+                self.w.vertPhCorr2d.setVisible(True)
                 self.w.exitPhCorr2d.setVisible(True)
                 self.ph_corr_active = True
-                self.show_ph_corr_2d()
+                self.show_ph_corr2d()
             else:
                 self.empty_col_row()
                 self.w.pickRowColPhCorr2d.setVisible(False)
                 self.w.emptyRowColPhCorr2d.setVisible(False)
                 self.w.removeRowColPhCorr2d.setVisible(False)
                 self.w.horzPhCorr2d.setVisible(False)
-                self.w.vert_ph_corr_2d.setVisible(False)
+                self.w.vertPhCorr2d.setVisible(False)
                 self.w.exitPhCorr2d.setVisible(False)
                 self.ph_corr_active = False
                 self.show_version()
@@ -4929,11 +4929,11 @@ class main_w(object):  # pragma: no cover
                 self.ph_corr.spc[k] = spc[0]
 
             self.ph_corr.ppm = self.nd.nmrdat[s][e].ppm2
-            if self.ph_corr.pivot_points_2d[1] < 0:
-                self.ph_corr.pivot_points_2d[1] = int(len(self.ph_corr.ppm) / 2)
-                self.ph_corr.pivot2d[1] = self.nd.nmrdat[s][e].points2ppm(self.ph_corr.pivot_points_2d[1], 1)
+            if self.ph_corr.pivot_points2d[1] < 0:
+                self.ph_corr.pivot_points2d[1] = int(len(self.ph_corr.ppm) / 2)
+                self.ph_corr.pivot2d[1] = self.nd.nmrdat[s][e].points2ppm(self.ph_corr.pivot_points2d[1], 1)
 
-        self.show_ph_corr_2d_1d(self.ph_corr.dim)
+        self.show_ph_corr2d_1d(self.ph_corr.dim)
         self.ph_corr.spc_max = np.max(np.max(np.abs(self.ph_corr.spc)))
         try:
             zwo = True
@@ -4953,12 +4953,12 @@ class main_w(object):  # pragma: no cover
         self.w.emptyRowColPhCorr2d.setVisible(False)
         self.w.removeRowColPhCorr2d.setVisible(False)
         self.w.horzPhCorr2d.setVisible(False)
-        self.w.vert_ph_corr_2d.setVisible(False)
-        self.w.zoom_ph_corr2d.setVisible(True)
+        self.w.vertPhCorr2d.setVisible(False)
+        self.w.zoomPhCorr2d.setVisible(True)
         self.w.applyPhCorr2d.setVisible(True)
         self.w.cancelPhCorr2d.setVisible(True)
         self.w.exitPhCorr2d.setVisible(False)
-        self.w.exitzoom_ph_corr2d.setVisible(False)
+        self.w.exitZoomPhCorr2d.setVisible(False)
         self.ph_corr_plot_spc_2d(False)
         self.show_acquisition_parameters()
         self.show_nmr_spectrum()
@@ -5051,10 +5051,10 @@ class main_w(object):  # pragma: no cover
                     self.w.zoomPhCorr1d.setVisible(False)
                     self.w.exitZoomPhCorr1d.setVisible(True)
                 else:
-                    self.w.zoom_ph_corr2d.setVisible(False)
+                    self.w.zoomPhCorr2d.setVisible(False)
                     self.w.applyPhCorr2d.setVisible(False)
                     self.w.cancelPhCorr2d.setVisible(False)
-                    self.w.exitzoom_ph_corr2d.setVisible(True)
+                    self.w.exitZoomPhCorr2d.setVisible(True)
 
             else:
                 # Disable zoom
@@ -5066,11 +5066,11 @@ class main_w(object):  # pragma: no cover
                     self.w.exitZoomPhCorr1d.setVisible(False)
                     self.set_zoom_off()
                 else:
-                    self.show_ph_corr_2d_1d()
-                    self.w.zoom_ph_corr2d.setVisible(True)
+                    self.show_ph_corr2d_1d()
+                    self.w.zoomPhCorr2d.setVisible(True)
                     self.w.applyPhCorr2d.setVisible(True)
                     self.w.cancelPhCorr2d.setVisible(True)
-                    self.w.exitzoom_ph_corr2d.setVisible(False)
+                    self.w.exitZoomPhCorr2d.setVisible(False)
                     self.set_zoom_off()
 
         self.show_acquisition_parameters()
@@ -5156,7 +5156,7 @@ def main():  # pragma: no cover
     ap.add_argument("fileName", metavar="fileName", type=str, help="load MetaboLabPy DataSet File")
     dd = ap.parse_known_args()
     # dd = ap.parse_known_intermixed_args()
-    if (len(dd[1]) > 0):
+    if len(dd[1]) > 0:
         sys.argv.pop()
 
     args = vars(ap.parse_args())
@@ -5172,10 +5172,10 @@ def main():  # pragma: no cover
     app.setWindowIcon(icon)
     app.setApplicationDisplayName("MetaboLabPy")
     w = main_w()
-    if (args["FullScreen"] == True):
+    if args["FullScreen"] == True:
         w.w.showFullScreen()
 
-    if (args["noSplash"] == False):
+    if args["noSplash"] == False:
         ##
         # Create and display the splash screen
         p_name = os.path.join(os.path.dirname(__file__), "png")
@@ -5191,17 +5191,17 @@ def main():  # pragma: no cover
         # adding progress bar
         splash.show()
         app.processEvents()
-        maxTime = 2
-        maxRange = 30
-        timeInc = maxRange
-        for i in range(maxRange):
+        max_time = 2
+        max_range = 30
+        time_inc = max_range
+        for i in range(max_range):
             # Simulate something that takes time
-            time.sleep(maxTime / float(maxRange))
+            time.sleep(max_time / float(max_range))
 
         splash.close()
         ## End of splash screen
 
-    if (args["fileName"] != "None"):
+    if args["fileName"] != "None":
         try:
             w.load_file(args["fileName"])
         except:
