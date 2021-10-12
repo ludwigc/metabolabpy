@@ -3294,15 +3294,17 @@ class main_w(object):  # pragma: no cover
 
     def save_button(self):
         pf_name = QFileDialog.getSaveFileName(None, "Save MetaboLabPy DataSet", "", "*.mlpy", "*.mlpy")
-        if (os.path.isfile(pf_name[0])):
-            os.remove(pf_name[0])
+        f_name = pf_name[0].rstrip('.mlpy').rstrip(' ').rstrip('/').rstrip('.mlpy') + '.mlpy'
 
-        if (os.path.isdir(pf_name[0])):
-            shutil.rmtree(pf_name[0])
+        if (os.path.isfile(f_name)):
+            os.remove(f_name)
+
+        if (os.path.isdir(f_name)):
+            shutil.rmtree(f_name)
 
         self.nd.script = self.w.script.toHtml()
         self.nd.console = self.w.console.toHtml()
-        self.nd.save(pf_name[0])
+        self.nd.save(f_name)
         # end save_button
 
     def save_config(self):
@@ -3553,7 +3555,7 @@ class main_w(object):  # pragma: no cover
         return "select_plot_clear"
         # end select_plot_clear
 
-    def select_plot_list(self, plot_select):
+    def select_plot_list(self, plot_select, auto_plot_spc=True):
         plot_select = np.array(plot_select)
         for k in range(len(self.nd.nmrdat[self.nd.s])):
             self.nd.nmrdat[self.nd.s][k].display.display_spc = False
@@ -3566,6 +3568,9 @@ class main_w(object):  # pragma: no cover
         # self.plot_spc()
         self.w.nmrSpectrum.setCurrentIndex(0)
         self.change_data_set_exp()
+        if auto_plot_spc:
+            self.plot_spc()
+
         return "select_plot_list"
         # end select_plot_list
 
