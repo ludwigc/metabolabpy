@@ -13,6 +13,7 @@ import matplotlib  # pragma: no cover
 import matplotlib.pyplot as pl  # pragma: no cover
 from metabolabpy.nmr import nmrConfig  # pragma: no cover
 import metabolabpy.__init__ as ml_version
+import shutil
 
 
 class NmrDataSet:
@@ -568,6 +569,8 @@ class NmrDataSet:
             print("export Bruker")
             if os.path.isdir(self.pp.export_bruker_path + os.sep + self.pp.export_bruker) is False:
                 os.makedirs(self.pp.export_bruker_path + os.sep + self.pp.export_bruker)
+            else:
+                shutil.rmtree(self.pp.export_bruker_path + os.sep + self.pp.export_bruker)
 
             m_max = 0
             for k in range(len(self.pp.plot_select)):
@@ -575,7 +578,6 @@ class NmrDataSet:
 
             scale_factor = 2 * m_max / 2147483647
             for k in range(len(self.pp.plot_select)):
-                print(k)
                 self.nmrdat[self.s][self.pp.plot_select[k]].export_bruker_1d(self.pp.export_bruker_path + os.sep + self.pp.export_bruker,
                                                       str(k + 1), scale_factor)
 
