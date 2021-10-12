@@ -330,10 +330,10 @@ class NmrDataSet:
             ws_nmr_data.title = "NMR data"
             ws_meta_data = wb.create_sheet("Metadata")
             spc = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
-            npts = len(self.nmrdat[self.s][0].spc[0])
-            n_spc = len(self.nmrdat[self.s])
+            npts = len(self.nmrdat[self.s][0].spc[self.pp.plot_select[0]])
+            n_spc = len(self.pp.plot_select)
             for k in range(n_spc):
-                spc += self.nmrdat[self.s][k].spc[0].real
+                spc += self.nmrdat[self.s][k].spc[self.pp.plot_select[0]].real
 
             deselect = np.zeros(npts)
             idx = np.where(spc == 0)
@@ -347,16 +347,16 @@ class NmrDataSet:
                 ws_nmr_data['A1'] = 'Name'
                 ws_nmr_data['B1'] = 'Class / ppm -->'
                 for k in range(len(select[0])):
-                    ws_nmr_data[col_string[k + 2] + '1'] = str(self.nmrdat[self.s][0].ppm1[select[0][k]])
+                    ws_nmr_data[col_string[k + 2] + '1'] = str(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[select[0][k]])
 
-                for k in range(len(self.nmrdat[self.s])):
-                    dse = os.path.split(self.nmrdat[self.s][k].orig_data_set)
+                for k in range(len(self.pp.plot_select)):
+                    dse = os.path.split(self.nmrdat[self.s][self.pp.plot_select[k]].orig_data_set)
                     ds = os.path.split(dse[0])
                     ws_nmr_data['A' + str(k + 2)] = ds[1] + " " + dse[1]
-                    ws_nmr_data['B' + str(k + 2)] = str(self.pp.class_select[k])
+                    ws_nmr_data['B' + str(k + 2)] = str(self.pp.class_select[self.pp.plot_select[k]])
                     for l in range(len(select[0])):
                         ws_nmr_data[col_string[l + 2] + str(k + 2)] = str(
-                            self.nmrdat[self.s][k].spc[0][select[0][l]].real)
+                            self.nmrdat[self.s][self.pp.plot_select[k]].spc[0][select[0][l]].real)
 
 
 
@@ -367,17 +367,17 @@ class NmrDataSet:
                 for s in itertools.islice(self.iter_all_strings(), n_spc + 1):
                     col_string.append(s)
 
-                for k in range(len(self.nmrdat[self.s])):
-                    dse = os.path.split(self.nmrdat[self.s][k].orig_data_set)
+                for k in range(len(self.pp.plot_select)):
+                    dse = os.path.split(self.nmrdat[self.s][self.pp.plot_select[k]].orig_data_set)
                     ds = os.path.split(dse[0])
                     ws_nmr_data[col_string[k + 1] + '1'] = ds[1] + " " + dse[1]
-                    ws_nmr_data[col_string[k + 1] + '2'] = str(self.pp.class_select[k])
+                    ws_nmr_data[col_string[k + 1] + '2'] = str(self.pp.class_select[self.pp.plot_select[k]])
 
                 for l in range(len(select[0])):
-                    ws_nmr_data['A' + str(l + 3)] = str(self.nmrdat[self.s][0].ppm1[select[0][l]])
-                    for k in range(len(self.nmrdat[self.s])):
+                    ws_nmr_data['A' + str(l + 3)] = str(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[select[0][l]])
+                    for k in range(len(self.pp.plot_select)):
                         ws_nmr_data[col_string[k + 1] + str(l + 3)] = str(
-                            self.nmrdat[self.s][k].spc[0][select[0][l]].real)
+                            self.nmrdat[self.s][self.pp.plot_select[k]].spc[0][select[0][l]].real)
 
             wb.save(f_name)
 
@@ -393,49 +393,49 @@ class NmrDataSet:
             else:
                 delim = self.pp.export_character
 
-            spc = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
-            for k in range(len(self.nmrdat[self.s])):
-                spc += self.nmrdat[self.s][k].spc[0].real
+            spc = np.zeros(len(self.nmrdat[self.s][self.pp.plot_select[0]].spc[0]))
+            for k in range(len(self.pp.plot_select)):
+                spc += self.nmrdat[self.s][self.pp.plot_select[k]].spc[0].real
 
-            deselect = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
+            deselect = np.zeros(len(self.nmrdat[self.s][self.pp.plot_select[0]].spc[0]))
             idx = np.where(spc == 0)
             deselect[idx] = np.ones(len(idx))
             if self.pp.export_samples_in_rows_cols == 0:  # samples in rows
                 f.write("ppm" + delim + " ")
-                for k in range(len(self.nmrdat[self.s][0].ppm1)):
+                for k in range(len(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1)):
                     if deselect[k] == 0:
-                        f.write(delim + str(self.nmrdat[self.s][0].ppm1[k]))
+                        f.write(delim + str(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[k]))
 
                 f.write("\n")
-                for k in range(len(self.nmrdat[self.s])):
-                    dse = os.path.split(self.nmrdat[self.s][k].orig_data_set)
+                for k in range(len(self.pp.plot_select)):
+                    dse = os.path.split(self.nmrdat[self.s][self.pp.plot_select[k]].orig_data_set)
                     ds = os.path.split(dse[0])
-                    f.write(ds[1] + " " + dse[1] + delim + self.pp.class_select[k])
-                    for l in range(len(self.nmrdat[self.s][k].spc[0])):
+                    f.write(ds[1] + " " + dse[1] + delim + self.pp.class_select[self.pp.plot_select[k]])
+                    for l in range(len(self.nmrdat[self.s][self.pp.plot_select[k]].spc[0])):
                         if deselect[l] == 0:
-                            f.write(delim + str(self.nmrdat[self.s][k].spc[0][l].real))
+                            f.write(delim + str(self.nmrdat[self.s][self.pp.plot_select[k]].spc[0][l].real))
 
                     f.write("\n")
 
 
             else:  # samples in cols
                 f.write("ppm")
-                for k in range(len(self.nmrdat[self.s])):
-                    dse = os.path.split(self.nmrdat[self.s][k].orig_data_set)
+                for k in range(len(self.pp.plot_select)):
+                    dse = os.path.split(self.nmrdat[self.s][self.pp.plot_select[k]].orig_data_set)
                     ds = os.path.split(dse[0])
                     f.write(delim + ds[1] + " " + dse[1])
 
                 f.write("\n")
                 f.write(" ")
-                for k in range(len(self.pp.class_select)):
-                    f.write(delim + self.pp.class_select[k])
+                for k in range(len(self.pp.plot_select)):
+                    f.write(delim + self.pp.class_select[self.pp.plot_select[k]])
 
                 f.write("\n")
-                for k in range(len(self.nmrdat[self.s][0].spc[0])):
+                for k in range(len(self.nmrdat[self.s][self.pp.plot_select[0]].spc[0])):
                     if (deselect[k] == 0):
-                        f.write(str(self.nmrdat[self.s][0].ppm1[k]))
-                        for l in range(len(self.nmrdat[self.s])):
-                            f.write(delim + str(self.nmrdat[self.s][l].spc[0][k].real))
+                        f.write(str(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[k]))
+                        for l in range(len(self.pp.plot_select)):
+                            f.write(delim + str(self.nmrdat[self.s][self.pp.plot_select[l]].spc[0][k].real))
 
                         f.write("\n")
 
@@ -449,26 +449,26 @@ class NmrDataSet:
             f_name = os.path.join(self.pp.export_metabo_analyst_path, self.pp.export_metabo_analyst)
             f = open(f_name, 'w')
             delim = ','
-            spc = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
-            for k in range(len(self.nmrdat[self.s])):
-                spc += self.nmrdat[self.s][k].spc[0].real
+            spc = np.zeros(len(self.nmrdat[self.s][self.pp.plot_select[0]].spc[0]))
+            for k in range(len(self.pp.plot_select)):
+                spc += self.nmrdat[self.s][self.pp.plot_select[k]].spc[0].real
 
-            deselect = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
+            deselect = np.zeros(len(self.nmrdat[self.s][self.pp.plot_select[0]].spc[0]))
             idx = np.where(spc == 0)
             deselect[idx] = np.ones(len(idx))
             f.write("Sample" + delim + " Class")
-            for k in range(len(self.nmrdat[self.s][0].ppm1)):
+            for k in range(len(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1)):
                 if (deselect[k] == 0):
-                    f.write(delim + " Bin." + str(self.nmrdat[self.s][0].ppm1[k]))
+                    f.write(delim + " Bin." + str(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[k]))
 
             f.write("\n")
-            for k in range(len(self.nmrdat[self.s])):
-                dse = os.path.split(self.nmrdat[self.s][k].orig_data_set)
+            for k in range(len(self.pp.plot_select)):
+                dse = os.path.split(self.nmrdat[self.s][self.pp.plot_select[k]].orig_data_set)
                 ds = os.path.split(dse[0])
                 f.write(ds[1] + " " + dse[1] + delim + " " + self.pp.class_select[k])
-                for l in range(len(self.nmrdat[self.s][k].spc[0])):
+                for l in range(len(self.nmrdat[self.s][k].spc[self.pp.plot_select[0]])):
                     if deselect[l] == 0:
-                        f.write(delim + " " + str(self.nmrdat[self.s][k].spc[0][l].real))
+                        f.write(delim + " " + str(self.nmrdat[self.s][k].spc[self.pp.plot_select[0]][l].real))
 
                 f.write("\n")
 
@@ -482,26 +482,26 @@ class NmrDataSet:
             f_name = os.path.join(self.pp.export_r_dolphin_path, self.pp.export_r_dolphin)
             f = open(f_name, 'w')
             delim = ','
-            spc = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
-            for k in range(len(self.nmrdat[self.s])):
-                spc += self.nmrdat[self.s][k].spc[0].real
+            spc = np.zeros(len(self.nmrdat[self.s][self.pp.plot_select[0]].spc[0]))
+            for k in range(len(self.pp.plot_select)):
+                spc += self.nmrdat[self.s][self.pp.plot_select[k]].spc[0].real
 
-            deselect = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
+            deselect = np.zeros(len(self.nmrdat[self.s][self.pp.plot_select[0]].spc[0]))
             idx = np.where(spc == 0)
             deselect[idx] = np.ones(len(idx))
-            f.write(str(self.nmrdat[self.s][0].ppm1[0]))
-            for k in range(1, len(self.nmrdat[self.s][0].ppm1)):
+            f.write(str(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[0]))
+            for k in range(1, len(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1)):
                 if (deselect[k] == 0):
-                    f.write(delim + str(self.nmrdat[self.s][0].ppm1[k]))
+                    f.write(delim + str(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[k]))
 
             f.write("\n")
-            for k in range(len(self.nmrdat[self.s])):
-                dse = os.path.split(self.nmrdat[self.s][k].orig_data_set)
+            for k in range(len(self.pp.plot_select)):
+                dse = os.path.split(self.nmrdat[self.s][self.pp.plot_select[k]].orig_data_set)
                 ds = os.path.split(dse[0])
-                f.write(str(self.nmrdat[self.s][k].spc[0][0].real))
-                for l in range(1, len(self.nmrdat[self.s][k].spc[0])):
+                f.write(str(self.nmrdat[self.s][self.pp.plot_select[k]].spc[0][0].real))
+                for l in range(1, len(self.nmrdat[self.s][self.pp.plot_select[k]].spc[0])):
                     if (deselect[l] == 0):
-                        f.write(delim + str(self.nmrdat[self.s][k].spc[0][l].real))
+                        f.write(delim + str(self.nmrdat[self.s][self.pp.plot_select[k]].spc[0][l].real))
 
                 f.write("\n")
 
@@ -519,7 +519,7 @@ class NmrDataSet:
             f.write("Normalization (0=No;1=Eretic; 2=TSP; 3=Creatinine; 4=Spectra Sum; 5=PQN),2\n")
             f.write("Alignment (0=No;1=Glucose; 2=TSP; 3=Formate),2\n")
             f.write("Suppression,12-9.5;6.1-5.6;5.1-4.5\n")
-            f.write("Spectrometer Frequency (MHz)," + str(self.nmrdat[self.s][0].acq.sfo1) + "\n")
+            f.write("Spectrometer Frequency (MHz)," + str(self.nmrdat[self.s][self.pp.plot_select[0]].acq.sfo1) + "\n")
             f.write("Bucket resolution," + str(self.pp.bucket_ppm) + "\n")
             f.write("Biofluid,Urine\n")
             f.write("2D-Path,\n")
@@ -528,8 +528,8 @@ class NmrDataSet:
             f_name = os.path.join(self.pp.export_r_dolphin_path, "Metadata.csv")
             f = open(f_name, 'w')
             f.write("Sample,Individual,Sample Type\n")
-            for k in range(len(self.nmrdat[self.s])):
-                f.write(os.path.split(self.nmrdat[self.s][k].orig_data_set)[1] + "," + str(k + 1) + ",1\n")
+            for k in range(len(self.pp.plot_select)):
+                f.write(os.path.split(self.nmrdat[self.s][self.pp.plot_select[k]].orig_data_set)[1] + "," + str(k + 1) + ",1\n")
 
             f.close()
 
@@ -541,40 +541,42 @@ class NmrDataSet:
             f_name = os.path.join(self.pp.export_batman_path, self.pp.export_batman)
             f = open(f_name, 'w')
             delim = '\t'
-            spc = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
-            for k in range(len(self.nmrdat[self.s])):
-                spc += self.nmrdat[self.s][k].spc[0].real
+            spc = np.zeros(len(self.nmrdat[self.s][self.pp.plot_select[0]].spc[0]))
+            for k in range(len(self.pp.plot_select)):
+                spc += self.nmrdat[self.s][self.pp.plot_select[k]].spc[0].real
 
-            deselect = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
+            deselect = np.zeros(len(self.nmrdat[self.s][self.pp.plot_select[0]].spc[0]))
             idx = np.where(spc == 0)
             deselect[idx] = np.ones(len(idx))
             f.write("ppm")
-            for k in range(len(self.nmrdat[self.s])):
+            for k in range(len(self.pp.plot_select)):
                 f.write(delim + "X" + str(k + 1))
 
             f.write("\n")
-            for k in range(len(self.nmrdat[self.s][0].spc[0])):
+            for k in range(len(self.nmrdat[self.s][self.pp.plot_select[0]].spc[0])):
                 if deselect[k] == 0:
-                    f.write(str(self.nmrdat[self.s][0].ppm1[k]))
-                    for l in range(len(self.nmrdat[self.s])):
-                        f.write(delim + str(self.nmrdat[self.s][l].spc[0][k].real))
+                    f.write(str(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[k]))
+                    for l in range(len(self.pp.plot_select)):
+                        f.write(delim + str(self.nmrdat[self.s][self.pp.plot_select[l]].spc[0][k].real))
 
                     f.write("\n")
 
             f.close()
 
-        else:
+
+        elif self.pp.export_method == 5:
             print("export Bruker")
             if os.path.isdir(self.pp.export_bruker_path + os.sep + self.pp.export_bruker) is False:
                 os.makedirs(self.pp.export_bruker_path + os.sep + self.pp.export_bruker)
 
             m_max = 0
-            for k in range(len(self.nmrdat[self.s])):
-                m_max = max(np.max(self.nmrdat[0][0].spc[0].real), m_max)
+            for k in range(len(self.pp.plot_select)):
+                m_max = max(np.max(self.nmrdat[self.s][self.pp.plot_select[k]].spc[0].real), m_max)
 
             scale_factor = 2 * m_max / 2147483647
-            for k in range(len(self.nmrdat[self.s])):
-                self.nmrdat[self.s][k].export_bruker_1d(self.pp.export_bruker_path + os.sep + self.pp.export_bruker,
+            for k in range(len(self.pp.plot_select)):
+                print(k)
+                self.nmrdat[self.s][self.pp.plot_select[k]].export_bruker_1d(self.pp.export_bruker_path + os.sep + self.pp.export_bruker,
                                                       str(k + 1), scale_factor)
 
     # end export_data_set
