@@ -103,19 +103,11 @@ try:
 
         def __init__(self, parent=None):
             QWidget.__init__(self, parent)
-
             fig = Figure()
             self.canvas = FigureCanvas(fig)
-
             vertical_layout = QVBoxLayout()
             vertical_layout.addWidget(self.canvas)
-            self.toolbar = NavigationToolbar(self.canvas, self)
-            vertical_layout.addWidget(self.toolbar)
-
-            self.canvas.axes = self.canvas.figure.add_subplot(111)
-            self.setLayout(vertical_layout)
             home = NavigationToolbar.home
-
             def new_home(self, *args, **kwargs):
                 self.canvas.axes.autoscale()
                 self.canvas.draw()
@@ -123,40 +115,19 @@ try:
                 home(self, *args, **kwargs)
 
             NavigationToolbar.home = new_home
-            self.ph_corr = phCorr.PhCorr()
-            # end __init__
-
-
-    # ------------------ MplWidget ------------------
-
-    # ------------------ MplWidget ------------------
-    class MplWidget2(QWidget):  # pragma: no cover
-
-        def __init__(self, parent=None):
-            QWidget.__init__(self, parent)
-
-            self.canvas = FigureCanvas(Figure())
-
-            vertical_layout = QVBoxLayout()
-            vertical_layout.addWidget(self.canvas)
             self.toolbar = NavigationToolbar(self.canvas, self)
+            #self.toolbar._actions['back'].setEnabled(False)
             vertical_layout.addWidget(self.toolbar)
 
             self.canvas.axes = self.canvas.figure.add_subplot(111)
             self.setLayout(vertical_layout)
-            home = NavigationToolbar.home
-
-            def new_home(self, *args, **kwargs):
-                self.canvas.axes.autoscale()
-                self.canvas.draw()
-                self.canvas.toolbar.update()
-                home(self, *args, **kwargs)
-
-            NavigationToolbar.home = new_home
             self.ph_corr = phCorr.PhCorr()
             # end __init__
 
 
+    # ------------------ MplWidget ------------------
+
+    # ------------------ MplWidget ------------------
     class QWebEngineView2(QWebEngineView):
         def print_cmd(self):
             print("QWebEngineView2")
@@ -169,7 +140,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.6.48'
+        self.__version__ = '0.6.49'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -1828,8 +1799,9 @@ class main_w(object):  # pragma: no cover
 
             self.xdata = []
             self.ydata = []
-            self.nd.nmrdat[self.nd.s][self.nd.e].ref_point[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0],
-                                                                                                               0)
+            self.nd.nmrdat[self.nd.s][self.nd.e].ref_point[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(
+                xy[0][0],
+                0)
             self.nd.nmrdat[self.nd.s][self.nd.e].ref_shift[0] = self.temp_ref_shift
             self.nd.nmrdat[self.nd.s][self.nd.e].calc_ppm()
             self.reset_plot()
@@ -1944,19 +1916,21 @@ class main_w(object):  # pragma: no cover
 
             self.xdata = []
             self.ydata = []
-            self.nd.nmrdat[self.nd.s][self.nd.e].ref_point[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][0],
-                                                                                                               0)
+            self.nd.nmrdat[self.nd.s][self.nd.e].ref_point[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(
+                xy[0][0],
+                0)
             self.nd.nmrdat[self.nd.s][self.nd.e].ref_shift[0] = self.temp_ref_shift[0]
-            self.nd.nmrdat[self.nd.s][self.nd.e].ref_point[1] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(xy[0][1],
-                                                                                                               1)
+            self.nd.nmrdat[self.nd.s][self.nd.e].ref_point[1] = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(
+                xy[0][1],
+                1)
             self.nd.nmrdat[self.nd.s][self.nd.e].ref_shift[1] = self.temp_ref_shift[1]
             self.nd.nmrdat[self.nd.s][self.nd.e].proc.ref_point[0] = self.nd.nmrdat[self.nd.s][self.nd.e].ref_point[0] * \
-                                                                    self.nd.nmrdat[self.nd.s][self.nd.e].proc.n_points[
-                                                                        0] / (len(
+                                                                     self.nd.nmrdat[self.nd.s][self.nd.e].proc.n_points[
+                                                                         0] / (len(
                 self.nd.nmrdat[self.nd.s][self.nd.e].fid[0]) * self.nd.nmrdat[self.nd.s][self.nd.e].proc.mult_factor[0])
             self.nd.nmrdat[self.nd.s][self.nd.e].proc.ref_point[1] = self.nd.nmrdat[self.nd.s][self.nd.e].ref_point[1] * \
-                                                                    self.nd.nmrdat[self.nd.s][self.nd.e].proc.n_points[
-                                                                        1] / (len(
+                                                                     self.nd.nmrdat[self.nd.s][self.nd.e].proc.n_points[
+                                                                         1] / (len(
                 self.nd.nmrdat[self.nd.s][self.nd.e].fid) * self.nd.nmrdat[self.nd.s][self.nd.e].proc.mult_factor[1])
             self.nd.nmrdat[self.nd.s][self.nd.e].calc_ppm()
             self.reset_plot()
@@ -2984,6 +2958,7 @@ class main_w(object):  # pragma: no cover
         self.keep_zoom = False
         if hide_pre_processing == False and self.w.peakPicking.isChecked() == False:
             if self.exited_peak_picking == False:
+                #a = 3
                 pyautogui.click(clicks=1)
             else:
                 self.exited_peak_picking = True
@@ -4595,6 +4570,8 @@ class main_w(object):  # pragma: no cover
                 pass
 
             pyautogui.click(clicks=1)
+            #self.w.MplWidget.setFocus()
+
 
     def show(self):
         self.w.show()

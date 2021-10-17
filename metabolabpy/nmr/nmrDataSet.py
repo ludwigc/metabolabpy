@@ -394,6 +394,9 @@ class NmrDataSet:
             else:
                 delim = self.pp.export_character
 
+            if len(self.pp.plot_select) == 0:
+                self.pp.plot_select = [0]
+
             spc = np.zeros(len(self.nmrdat[self.s][self.pp.plot_select[0]].spc[0]))
             for k in range(len(self.pp.plot_select)):
                 spc += self.nmrdat[self.s][self.pp.plot_select[k]].spc[0].real
