@@ -48,13 +48,13 @@ class NmrDataSet:
         if len(start_end) != 2:
             return
 
-        if self.int_all_data_sets == True:
+        if self.int_all_data_sets:
             ds = range(len(self.nmrdat))
         else:
             ds = [self.s]
 
         for k in ds:
-            if self.int_all_exps == True:
+            if self.int_all_exps:
                 exps = range(len(self.nmrdat[k]))
             else:
                 exps = self.e
@@ -65,13 +65,13 @@ class NmrDataSet:
         # end add_peak
 
     def set_peak(self, start_peak, end_peak, peak_label):
-        if self.int_all_data_sets == True:
+        if self.int_all_data_sets:
             ds = range(len(self.nmrdat))
         else:
             ds = [self.s]
 
         for k in ds:
-            if self.int_all_exps == True:
+            if self.int_all_exps:
                 exps = range(len(self.nmrdat[k]))
             else:
                 exps = [self.e]
@@ -82,13 +82,13 @@ class NmrDataSet:
         # end add_peak
 
     def clear_peak(self):
-        if self.int_all_data_sets == True:
+        if self.int_all_data_sets:
             ds = range(len(self.nmrdat))
         else:
             ds = [self.s]
 
         for k in ds:
-            if self.int_all_exps == True:
+            if self.int_all_exps:
                 exps = range(len(self.nmrdat[k]))
             else:
                 exps = [self.e]
@@ -100,7 +100,7 @@ class NmrDataSet:
 
     def __str__(self):  # pragma: no cover
         r_string = '______________________________________________________________________________________\n'
-        if (len(self.nmrdat[self.s]) > 0):
+        if len(self.nmrdat[self.s]) > 0:
             r_string += '\nMetaboLabPy NMR Data Set (v. ' + self.nmrdat[self.s][self.e].ver + ')\n'
         else:
             r_string += '\nMetaboLabPy NMR Data Set (empty data set)\n'
@@ -117,8 +117,8 @@ class NmrDataSet:
         # end __str__
 
     def autobaseline1d(self):
-        if (len(self.nmrdat) > 0):
-            if (len(self.nmrdat[self.s]) > 0):
+        if len(self.nmrdat) > 0:
+            if len(self.nmrdat[self.s]) > 0:
                 self.nmrdat[self.s][self.e].autobaseline1d()
 
         # end autobaseline1d
@@ -135,8 +135,8 @@ class NmrDataSet:
         # end autobaseline1d_all
 
     def autophase1d(self):
-        if (len(self.nmrdat) > 0):
-            if (len(self.nmrdat[self.s]) > 0):
+        if len(self.nmrdat) > 0:
+            if len(self.nmrdat[self.s]) > 0:
                 self.nmrdat[self.s][self.e].autophase1d()
 
         # end autophase1d
@@ -153,7 +153,7 @@ class NmrDataSet:
         # end autophase1d_all
 
     def auto_ref(self, tmsp=True):
-        if (self.nmrdat[self.s][self.e].dim == 1):
+        if self.nmrdat[self.s][self.e].dim == 1:
             self.nmrdat[self.s][self.e].auto_ref(tmsp)
             # self.nmrdat[self.s][self.e].setRef(np.array([0.0]), np.array([14836]))
 
@@ -178,7 +178,7 @@ class NmrDataSet:
         # end auto_ref_all
 
     def baseline1d(self):
-        if (self.nmrdat[self.s][self.e].dim == 1):
+        if self.nmrdat[self.s][self.e].dim == 1:
             self.nmrdat[self.s][self.e].baseline1d()
 
         # end baseline1d
@@ -255,13 +255,13 @@ class NmrDataSet:
         self.noise_filtering_init()
         self.deselect = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
         self.deselect2 = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
-        if (self.pp.flag_exclude_region == True):
+        if self.pp.flag_exclude_region == True:
             self.exclude_region()
 
-        if (self.pp.flag_segmental_alignment == True):
+        if self.pp.flag_segmental_alignment == True:
             self.segmental_alignment()
 
-        if (self.pp.flag_noise_filtering == True):
+        if self.pp.flag_noise_filtering == True:
             self.noise_filtering()
 
         idx = np.where(self.deselect == 1)
@@ -274,13 +274,13 @@ class NmrDataSet:
             self.nmrdat[self.s][k].spc[0][idx] = np.zeros(len(idx))
             self.nmrdat[self.s][k].spc[0][idx2] = np.zeros(len(idx2))
 
-        if (self.pp.flag_bucket_spectra == True):
+        if self.pp.flag_bucket_spectra == True:
             self.bucket_spectra()
 
-        if (self.pp.flag_compress_buckets == True):
+        if self.pp.flag_compress_buckets == True:
             self.compress_buckets()
 
-        if (self.pp.flag_scale_spectra == True):
+        if self.pp.flag_scale_spectra == True:
             self.scale_spectra()
 
         spc = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
@@ -300,16 +300,16 @@ class NmrDataSet:
         for k in range(len(self.nmrdat[self.s])):
             self.nmrdat[self.s][k].spc[0][idx] = np.zeros(len(idx))
 
-        if (self.pp.flag_variance_stabilisation == True):
+        if self.pp.flag_variance_stabilisation == True:
             self.variance_stabilisation()
 
-        if (self.pp.flag_export_data_set == True):
+        if self.pp.flag_export_data_set == True:
             self.export_data_set()
 
         # end data_pre_processing
 
     def exclude_region(self):
-        if (len(self.pp.exclude_start) != len(self.pp.exclude_end)):
+        if len(self.pp.exclude_start) != len(self.pp.exclude_end):
             return
 
         for k in range(len(self.pp.exclude_start)):
@@ -340,7 +340,7 @@ class NmrDataSet:
             idx = np.where(spc == 0)
             deselect[idx] = np.ones(len(idx))
             select = np.where(deselect == 0)
-            if (self.pp.export_samples_in_rows_cols == 0):  # samples in rows
+            if self.pp.export_samples_in_rows_cols == 0:  # samples in rows
                 col_string = []
                 for s in itertools.islice(self.iter_all_strings(), len(select[0]) + 2):
                     col_string.append(s)
@@ -348,7 +348,8 @@ class NmrDataSet:
                 ws_nmr_data['A1'] = 'Name'
                 ws_nmr_data['B1'] = 'Class / ppm -->'
                 for k in range(len(select[0])):
-                    ws_nmr_data[col_string[k + 2] + '1'] = str(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[select[0][k]])
+                    ws_nmr_data[col_string[k + 2] + '1'] = str(
+                        self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[select[0][k]])
 
                 for k in range(len(self.pp.plot_select)):
                     dse = os.path.split(self.nmrdat[self.s][self.pp.plot_select[k]].orig_data_set)
@@ -447,7 +448,7 @@ class NmrDataSet:
 
         elif self.pp.export_method == 2:
             print("export MetaboAnalyst")
-            if os.path.isdir(self.pp.export_metabo_analyst_path) is False:
+            if not os.path.isdir(self.pp.export_metabo_analyst_path):
                 os.makedirs(self.pp.export_metabo_analyst_path)
 
             f_name = os.path.join(self.pp.export_metabo_analyst_path, self.pp.export_metabo_analyst)
@@ -462,7 +463,7 @@ class NmrDataSet:
             deselect[idx] = np.ones(len(idx))
             f.write("Sample" + delim + " Class")
             for k in range(len(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1)):
-                if (deselect[k] == 0):
+                if deselect[k] == 0:
                     f.write(delim + " Bin." + str(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[k]))
 
             f.write("\n")
@@ -516,7 +517,7 @@ class NmrDataSet:
             f.write("nmr folder path,\n")
             f.write("1D data index,\n")
             f.write("proc_no,\n")
-            f.write("spectra dataset path (csv format)," + self.pp.export_r_dolphin_path + "/" + 
+            f.write("spectra dataset path (csv format)," + self.pp.export_r_dolphin_path + "/" +
                     self.pp.export_r_dolphin + "\n")
             f.write("Metadata path (csv format)," + self.pp.export_r_dolphin_path + "/Metadata.csv\n")
             f.write("ROI patters file," + self.pp.export_r_dolphin_path + "/ROI_profile.csv\n")
@@ -533,7 +534,8 @@ class NmrDataSet:
             f = open(f_name, 'w')
             f.write("Sample,Individual,Sample Type\n")
             for k in range(len(self.pp.plot_select)):
-                f.write(os.path.split(self.nmrdat[self.s][self.pp.plot_select[k]].orig_data_set)[1] + "," + str(k + 1) + ",1\n")
+                f.write(os.path.split(self.nmrdat[self.s][self.pp.plot_select[k]].orig_data_set)[1] + "," + str(
+                    k + 1) + ",1\n")
 
             f.close()
 
@@ -581,8 +583,9 @@ class NmrDataSet:
 
             scale_factor = 2 * m_max / 2147483647
             for k in range(len(self.pp.plot_select)):
-                self.nmrdat[self.s][self.pp.plot_select[k]].export_bruker_1d(self.pp.export_bruker_path + os.sep + self.pp.export_bruker,
-                                                      str(k + 1), scale_factor)
+                self.nmrdat[self.s][self.pp.plot_select[k]].export_bruker_1d(
+                    self.pp.export_bruker_path + os.sep + self.pp.export_bruker,
+                    str(k + 1), scale_factor)
 
     # end export_data_set
 
@@ -607,7 +610,7 @@ class NmrDataSet:
         # end ft_all
 
     def help(self):
-        f_name = os.path.join(os.path.dir_name(__file__), "web", "introduction", "index.html")
+        f_name = os.path.join(os.path.dirname(__file__), "web", "introduction", "index.html")
         url = "file://" + f_name
         webbrowser.open(url, new=2)
         # end help
@@ -654,7 +657,6 @@ class NmrDataSet:
                 if hasattr(c, k2):
                     exec('self.pp.' + k + '=c.' + k2)
 
-
         self.deselect = cur_pars[4]
         self.deselect2 = cur_pars[5]
         self.cmd_buffer = cur_pars[6]
@@ -672,8 +674,9 @@ class NmrDataSet:
             data_exps = np.array([])
             for l in range(len(dir_name)):
                 if os.path.isdir(os.path.join(os.path.join(data_set_name, data_sets[k]), dir_name[l])):
-                    if (os.path.isfile(os.path.join(os.path.join(os.path.join(data_set_name, data_sets[k]), dir_name[l]),
-                                                    'titleFile.txt')) and
+                    if (os.path.isfile(
+                            os.path.join(os.path.join(os.path.join(data_set_name, data_sets[k]), dir_name[l]),
+                                         'titleFile.txt')) and
                             os.path.isfile(
                                 os.path.join(os.path.join(os.path.join(data_set_name, data_sets[k]), dir_name[l]),
                                              'acqusText.txt')) and
@@ -723,7 +726,7 @@ class NmrDataSet:
                     vver = '0.1'
 
                 nd2 = nd.NmrData()
-                #nd2.file_version = n.nmrdat[0][0].ver
+                # nd2.file_version = n.nmrdat[0][0].ver
                 for kk in nd2.__dict__.keys():
                     if kk != 'acq' and kk != 'proc' and kk != 'display' and kk != 'apc':
                         kk2 = kk
@@ -758,7 +761,7 @@ class NmrDataSet:
                                     if hasattr(a, kkk2):
                                         exec('aq.' + kkk + '=a.' + kkk2)
 
-                                #else:
+                                # else:
                                 #    try:
                                 #        r = a.reg_ex
                                 #    except:
@@ -794,17 +797,17 @@ class NmrDataSet:
                                         exec('pc.' + kkk + '=p.' + kkk2)
 
                                 else:
-                                    #try:
+                                    # try:
                                     #    r = p.reg_ex
-                                    #except:
+                                    # except:
                                     #    r = p.regEx
                                     #
                                     re = pc.reg_ex
-                                    #for kkkk in re.__dict__.keys():
+                                    # for kkkk in re.__dict__.keys():
                                     #    if hasattr(r, kkkk):
                                     #        exec('re.' + kkkk + '=r.' + kkkk)
                                     #
-                                    #pc.reg_ex = re
+                                    # pc.reg_ex = re
 
                             nd2.proc = pc
 
@@ -878,9 +881,9 @@ class NmrDataSet:
         for k in range(len(self.nmrdat[self.s])):
             idx = np.where(self.nmrdat[self.s][k].spc[0].real < val)
             self.deselect2[idx] += np.ones(len(idx))
-            if False:
-                idx2 = np.where(self.nmrdat[self.s][k].spc[0].real < 0)
-                self.nmrdat[self.s][k].spc[0][idx2] = np.zeros(len(idx2))
+            # if False:
+            #    idx2 = np.where(self.nmrdat[self.s][k].spc[0].real < 0)
+            #    self.nmrdat[self.s][k].spc[0][idx2] = np.zeros(len(idx2))
 
         # end noise_filtering
 
@@ -1177,7 +1180,8 @@ class NmrDataSet:
         scale = np.ones(n_spc)
         if self.pp.scale_pqn is True:
             for k in range(n_spc):
-                scale_vect = self.nmrdat[self.s][k].spc[0][np.where(ref_spc != 0)].real / ref_spc[np.where(ref_spc != 0)]
+                scale_vect = self.nmrdat[self.s][k].spc[0][np.where(ref_spc != 0)].real / ref_spc[
+                    np.where(ref_spc != 0)]
                 self.nmrdat[self.s][k].spc[0] /= np.median(scale_vect[np.where(scale_vect != 0)])
         else:
             if self.pp.preserve_overall_scale is True:
@@ -1242,7 +1246,7 @@ class NmrDataSet:
                         ex_end = 0
                         if spc_shift < 0:
                             neg_shift[k][l] = 0 - spc_shift
-                            ex_end = self.nmrdat[self.s][self.pp.seg_align_ref_spc - 1].points2ppm(npts - end_pts - 
+                            ex_end = self.nmrdat[self.s][self.pp.seg_align_ref_spc - 1].points2ppm(npts - end_pts -
                                                                                                    spc_shift, 0)
                             ex_sta = self.nmrdat[self.s][self.pp.seg_align_ref_spc - 1].points2ppm(npts - end_pts, 0)
                         elif spc_shift > 0:

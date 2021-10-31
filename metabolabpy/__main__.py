@@ -15,8 +15,8 @@ try:
     from PySide2 import QtCore  # pragma: no cover
     from PySide2.QtWidgets import QFileDialog  # pragma: no cover
     from PySide2.QtCore import SIGNAL  # pragma: no cover
-    from PySide2.QtWebEngineWidgets import QWebEngineView, QWebEngineProfile, QWebEnginePage, \
-        QWebEngineSettings  # pragma: no cover
+    from PySide2.QtWebEngineWidgets import QWebEngineView #, QWebEngineProfile, QWebEnginePage, \
+    #    QWebEngineSettings  # pragma: no cover
     from PySide2.QtCore import QUrl, Qt  # pragma: no cover
     from PySide2.QtWebEngineCore import QWebEngineUrlSchemeHandler  # pragma: no cover
     import PySide2  # pragma: no cover
@@ -140,7 +140,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.6.49'
+        self.__version__ = '0.6.50'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -186,7 +186,7 @@ class main_w(object):  # pragma: no cover
         self.w.invertMatrix_2.stateChanged.connect(self.set_invert)
         self.w.exportFileName.textChanged.connect(self.set_export_file_name)
         self.w.exportDelimiterTab.toggled.connect(self.set_export_delimiter_tab)
-        self.w.exportCharacter.returnPressed.connect(self.set_export_character)
+        self.w.exportCharacter.textChanged.connect(self.set_export_character)
         self.w.samplesInComboBox.currentIndexChanged.connect(self.set_samples_in_combo_box)
         self.w.runPreProcessingButton.clicked.connect(self.data_pre_processing)
         self.w.resetPreProcessingButton.clicked.connect(self.reset_data_pre_processing)
@@ -220,14 +220,14 @@ class main_w(object):  # pragma: no cover
         self.w.selectEvenButton.clicked.connect(self.select_even_pre_proc)
         self.w.selectOddButton.clicked.connect(self.select_odd_pre_proc)
         self.w.selectClassButton.clicked.connect(self.select_class_pre_proc)
-        self.w.selectClassLE.returnPressed.connect(self.select_class_pre_proc)
+        self.w.selectClassLE.textChanged.connect(self.select_class_pre_proc)
         self.w.cmdLine.returnPressed.connect(self.exec_cmd)
-        self.w.noiseThresholdLE.returnPressed.connect(self.set_noise_reg_pre_proc)
-        self.w.noiseRegionStartLE.returnPressed.connect(self.set_noise_reg_pre_proc)
-        self.w.noiseRegionEndLE.returnPressed.connect(self.set_noise_reg_pre_proc)
-        self.w.thLineWidthLE.returnPressed.connect(self.set_noise_reg_pre_proc)
-        self.w.bucketPpmLE.returnPressed.connect(self.set_bucket_ppm_pre_proc)
-        self.w.bucketDataPointsLE.returnPressed.connect(self.set_bucket_points_pre_proc)
+        self.w.noiseThresholdLE.textChanged.connect(self.set_noise_reg_pre_proc)
+        self.w.noiseRegionStartLE.textChanged.connect(self.set_noise_reg_pre_proc)
+        self.w.noiseRegionEndLE.textChanged.connect(self.set_noise_reg_pre_proc)
+        self.w.thLineWidthLE.textChanged.connect(self.set_noise_reg_pre_proc)
+        self.w.bucketPpmLE.textChanged.connect(self.set_bucket_ppm_pre_proc)
+        self.w.bucketDataPointsLE.textChanged.connect(self.set_bucket_points_pre_proc)
         self.w.actionVertical_AutoScale.triggered.connect(self.vertical_auto_scale)
         self.w.actionZoom.triggered.connect(self.set_zoom)
         self.w.actionPan.triggered.connect(self.set_pan)
@@ -292,26 +292,26 @@ class main_w(object):  # pragma: no cover
         self.w.expBox.valueChanged.connect(self.change_data_set_exp)
         self.w.posCol.currentIndexChanged.connect(self.get_disp_pars1)
         self.w.negCol.currentIndexChanged.connect(self.get_disp_pars2)
-        self.w.posColR.returnPressed.connect(self.get_disp_pars3)
-        self.w.posColG.returnPressed.connect(self.get_disp_pars3)
-        self.w.posColB.returnPressed.connect(self.get_disp_pars3)
-        self.w.negColR.returnPressed.connect(self.get_disp_pars3)
-        self.w.negColG.returnPressed.connect(self.get_disp_pars3)
-        self.w.negColB.returnPressed.connect(self.get_disp_pars3)
-        self.w.nLevels.returnPressed.connect(self.get_disp_pars4)
-        self.w.minLevel.returnPressed.connect(self.get_disp_pars5)
-        self.w.maxLevel.returnPressed.connect(self.get_disp_pars6)
+        self.w.posColR.textChanged.connect(self.get_disp_pars3)
+        self.w.posColG.textChanged.connect(self.get_disp_pars3)
+        self.w.posColB.textChanged.connect(self.get_disp_pars3)
+        self.w.negColR.textChanged.connect(self.get_disp_pars3)
+        self.w.negColG.textChanged.connect(self.get_disp_pars3)
+        self.w.negColB.textChanged.connect(self.get_disp_pars3)
+        self.w.nLevels.textChanged.connect(self.get_disp_pars4)
+        self.w.minLevel.textChanged.connect(self.get_disp_pars5)
+        self.w.maxLevel.textChanged.connect(self.get_disp_pars6)
         self.w.axisType1.currentIndexChanged.connect(self.get_disp_pars7)
         self.w.axisType2.currentIndexChanged.connect(self.get_disp_pars8)
         self.w.displaySpc.currentIndexChanged.connect(self.get_disp_pars9)
         self.w.baselineCorrection.currentIndexChanged.connect(self.check_baseline_correction)
         self.w.baselineOrder.currentIndexChanged.connect(self.check_baseline_order)
-        self.w.spcOffset.returnPressed.connect(self.get_disp_pars10)
-        self.w.spcScale.returnPressed.connect(self.get_disp_pars11)
+        self.w.spcOffset.textChanged.connect(self.get_disp_pars10)
+        self.w.spcScale.textChanged.connect(self.get_disp_pars11)
         self.w.fontSize.valueChanged.connect(self.set_font_size)
-        self.w.xLabel.returnPressed.connect(self.get_disp_pars12)
-        self.w.yLabel.returnPressed.connect(self.get_disp_pars13)
-        self.w.spcLabel.returnPressed.connect(self.get_disp_pars14)
+        self.w.xLabel.textChanged.connect(self.get_disp_pars12)
+        self.w.yLabel.textChanged.connect(self.get_disp_pars13)
+        self.w.spcLabel.textChanged.connect(self.get_disp_pars14)
         self.w.preProcessingSelect.currentIndexChanged.connect(self.set_pre_processing_options)
         self.w.exportMethod.currentIndexChanged.connect(self.set_export_method_options)
         self.w.tilt.currentIndexChanged.connect(self.set_tilt)
@@ -324,24 +324,24 @@ class main_w(object):  # pragma: no cover
         self.w.winType.currentIndexChanged.connect(self.get_proc_pars6)
         self.w.gibbs.currentIndexChanged.connect(self.get_proc_pars7)
         self.w.gibbs_2.currentIndexChanged.connect(self.get_proc_pars8)
-        self.w.zeroFilling.returnPressed.connect(self.get_proc_pars9)
-        self.w.zeroFilling_2.returnPressed.connect(self.get_proc_pars10)
-        self.w.lb.returnPressed.connect(self.get_proc_pars11)
-        self.w.gb.returnPressed.connect(self.get_proc_pars12)
-        self.w.ssb.returnPressed.connect(self.get_proc_pars13)
-        self.w.lb_2.returnPressed.connect(self.get_proc_pars14)
-        self.w.gb_2.returnPressed.connect(self.get_proc_pars15)
-        self.w.ssb_2.returnPressed.connect(self.get_proc_pars16)
-        self.w.ph0.returnPressed.connect(self.get_proc_pars17)
-        self.w.ph1.returnPressed.connect(self.get_proc_pars18)
-        self.w.ph0_2.returnPressed.connect(self.get_proc_pars19)
-        self.w.ph1_2.returnPressed.connect(self.get_proc_pars20)
-        self.w.polyOrder.returnPressed.connect(self.get_proc_pars21)
-        self.w.extrapolationSize.returnPressed.connect(self.get_proc_pars22)
-        self.w.windowSize.returnPressed.connect(self.get_proc_pars23)
-        self.w.fidOffsetCorrection.returnPressed.connect(self.get_proc_pars24)
-        self.w.stripTransformStart.returnPressed.connect(self.get_proc_pars25)
-        self.w.stripTransformEnd.returnPressed.connect(self.get_proc_pars26)
+        self.w.zeroFilling.textChanged.connect(self.get_proc_pars9)
+        self.w.zeroFilling_2.textChanged.connect(self.get_proc_pars10)
+        self.w.lb.textChanged.connect(self.get_proc_pars11)
+        self.w.gb.textChanged.connect(self.get_proc_pars12)
+        self.w.ssb.textChanged.connect(self.get_proc_pars13)
+        self.w.lb_2.textChanged.connect(self.get_proc_pars14)
+        self.w.gb_2.textChanged.connect(self.get_proc_pars15)
+        self.w.ssb_2.textChanged.connect(self.get_proc_pars16)
+        self.w.ph0.textChanged.connect(self.get_proc_pars17)
+        self.w.ph1.textChanged.connect(self.get_proc_pars18)
+        self.w.ph0_2.textChanged.connect(self.get_proc_pars19)
+        self.w.ph1_2.textChanged.connect(self.get_proc_pars20)
+        self.w.polyOrder.textChanged.connect(self.get_proc_pars21)
+        self.w.extrapolationSize.textChanged.connect(self.get_proc_pars22)
+        self.w.windowSize.textChanged.connect(self.get_proc_pars23)
+        self.w.fidOffsetCorrection.textChanged.connect(self.get_proc_pars24)
+        self.w.stripTransformStart.textChanged.connect(self.get_proc_pars25)
+        self.w.stripTransformEnd.textChanged.connect(self.get_proc_pars26)
         self.w.phRefDS.valueChanged.connect(self.change_data_set_exp_ph_ref)
         self.w.phRefExp.valueChanged.connect(self.change_data_set_exp_ph_ref)
         self.w.phRefColour.currentIndexChanged.connect(self.get_disp_pars15)
@@ -378,20 +378,20 @@ class main_w(object):  # pragma: no cover
         self.w.actionSave_as_Default.triggered.connect(self.save_config)
         self.w.actionLoad_Default.triggered.connect(self.load_config)
         self.w.actionReset_Config.triggered.connect(self.reset_config)
-        self.w.rSpc_p0.returnPressed.connect(self.get_r_spc_p0)
-        self.w.rSpc_p1.returnPressed.connect(self.get_r_spc_p1)
-        self.w.rSpc_p2.returnPressed.connect(self.get_r_spc_p2)
-        self.w.rSpc_p3.returnPressed.connect(self.get_r_spc_p3)
-        self.w.rSpc_p4.returnPressed.connect(self.get_r_spc_p4)
-        self.w.rSpc_p5.returnPressed.connect(self.get_r_spc_p5)
-        self.w.rSpc_p6.returnPressed.connect(self.get_r_spc_p6)
-        self.w.iSpc_p0.returnPressed.connect(self.get_i_spc_p0)
-        self.w.iSpc_p1.returnPressed.connect(self.get_i_spc_p1)
-        self.w.iSpc_p2.returnPressed.connect(self.get_i_spc_p2)
-        self.w.iSpc_p3.returnPressed.connect(self.get_i_spc_p3)
-        self.w.iSpc_p4.returnPressed.connect(self.get_i_spc_p4)
-        self.w.iSpc_p5.returnPressed.connect(self.get_i_spc_p5)
-        self.w.iSpc_p6.returnPressed.connect(self.get_i_spc_p6)
+        self.w.rSpc_p0.textChanged.connect(self.get_r_spc_p0)
+        self.w.rSpc_p1.textChanged.connect(self.get_r_spc_p1)
+        self.w.rSpc_p2.textChanged.connect(self.get_r_spc_p2)
+        self.w.rSpc_p3.textChanged.connect(self.get_r_spc_p3)
+        self.w.rSpc_p4.textChanged.connect(self.get_r_spc_p4)
+        self.w.rSpc_p5.textChanged.connect(self.get_r_spc_p5)
+        self.w.rSpc_p6.textChanged.connect(self.get_r_spc_p6)
+        self.w.iSpc_p0.textChanged.connect(self.get_i_spc_p0)
+        self.w.iSpc_p1.textChanged.connect(self.get_i_spc_p1)
+        self.w.iSpc_p2.textChanged.connect(self.get_i_spc_p2)
+        self.w.iSpc_p3.textChanged.connect(self.get_i_spc_p3)
+        self.w.iSpc_p4.textChanged.connect(self.get_i_spc_p4)
+        self.w.iSpc_p5.textChanged.connect(self.get_i_spc_p5)
+        self.w.iSpc_p6.textChanged.connect(self.get_i_spc_p6)
         self.set_font_size()
         self.w.MplWidget.toolbar.setVisible(False)
         self.w.MplWidget2.toolbar.setVisible(False)
@@ -929,6 +929,8 @@ class main_w(object):  # pragma: no cover
         # end check_baseline_order
 
     def clear(self):
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
         self.w.MplWidget.canvas.axes.clear()
         self.w.MplWidget.canvas.draw()
         self.zero_disp_pars()
@@ -946,6 +948,10 @@ class main_w(object):  # pragma: no cover
         self.w.setBox.setValue(0)
         self.w.setBox.valueChanged.connect(lambda: self.change_data_set_exp())
         self.w.expBox.valueChanged.connect(lambda: self.change_data_set_exp())
+        code_out = io.StringIO()
+        code_err = io.StringIO()
+        sys.stdout = code_out
+        sys.stderr = code_err
         return "Workspace cleared"
         # end clear
 
@@ -1117,6 +1123,12 @@ class main_w(object):  # pragma: no cover
         code = code.replace('\\', '\\' * 2)
         try:
             exec(code)
+            code = self.w.script.toPlainText()
+            code = code.replace(' interactive ', ' abcint2 ')
+            code = code.replace('''interactive''', '' + self.nd.nmrdat[self.nd.s][self.nd.e].data_set_name + '')
+            code = code.replace(' abcint2 ', ' interactive ')
+            self.w.script.setText(code)
+
 
         except:  # (SyntaxError, NameError, TypeError, ZeroDivisionError, AttributeError):
             self.w.nmrSpectrum.setCurrentIndex(11)
@@ -5143,7 +5155,7 @@ def main():  # pragma: no cover
 
     args = vars(ap.parse_args())
     QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
-    app = QApplication(['MetaboLabPy'])  # sys.argv)
+    app = QApplication(['MetaboLabPy'])
     icon = QIcon()
     p_name = os.path.join(os.path.dirname(__file__), "icon")
     icon.addFile(os.path.join(p_name, "icon-16.png"), QtCore.QSize(16, 16))

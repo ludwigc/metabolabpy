@@ -17,6 +17,8 @@ import metabolabpy.__init__ as ml_version
 
 class NmrData:
 
+    projected_j_res: bool
+
     def __init__(self):
         self.fid = np.array([[]], dtype='complex')
         self.spc = np.array([[]], dtype='complex')
