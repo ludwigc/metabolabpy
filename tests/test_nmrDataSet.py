@@ -177,13 +177,15 @@ class NrDataSetTestCase(unittest.TestCase):
         nd.pp.export_excel = "testExport.xlsx"
         nd.pp.export_samples_in_rows_cols = 0
         nd.pp.export_method = 0
-        nd.export_data_set()
+        nd.export_data_set('init')
+        nd.export_data_set('finish')
         self.assertEqual(os.path.isfile(nd.pp.export_excel_path + os.sep + nd.pp.export_excel), True)
         os.remove(nd.pp.export_excel_path + os.sep + nd.pp.export_excel)
         nd.pp.export_excel = "testExport.xlsx"
         nd.pp.export_samples_in_rows_cols = 1
         nd.pp.export_method = 0
-        nd.export_data_set()
+        nd.export_data_set('init')
+        nd.export_data_set('finish')
         self.assertEqual(os.path.isfile(nd.pp.export_excel_path + os.sep + nd.pp.export_excel), True)
         os.remove(nd.pp.export_excel_path + os.sep + nd.pp.export_excel)
         nd.pp.export_metabo_analyst = "metaboAnalystExport.csv"
