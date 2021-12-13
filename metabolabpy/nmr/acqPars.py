@@ -590,8 +590,8 @@ class AcqPars:
 
         # end parse_reg_ex_varian
 
-    def read(self, spc_dir):
-        acqus_name = spc_dir + os.sep + 'acqus'
+    def read(self, spc_dir, acqus_name='acqus'):
+        acqus_name = spc_dir + os.sep + acqus_name
         acqu2s_name = spc_dir + os.sep + 'acqu2s'
         acqu3s_name = spc_dir + os.sep + 'acqu3s'
         procpar_name = spc_dir + os.sep + 'procpar'

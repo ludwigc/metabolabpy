@@ -76,6 +76,7 @@ class NmrPreProc:
         self.int1 = 0.0
         self.int2 = 0.0
         self.int3 = 0.0
+        self.spc_scale = []
         # end __init__
 
     def __str__(self):  # pragma: no cover

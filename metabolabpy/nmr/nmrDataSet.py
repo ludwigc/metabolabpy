@@ -42,6 +42,7 @@ class NmrDataSet:
         self.export_peak_path = os.path.expanduser('~')
         self.peak_fill = False
         self.file_version = 0.0
+        self.wb = []
         # end __init__
 
     def add_peak(self, start_end=np.array([], dtype='float64'), peak_label=''):
@@ -237,6 +238,7 @@ class NmrDataSet:
         # end compress_buckets
 
     def data_pre_processing(self):
+        self.pp.spc_scale = np.ones(len(self.nmrdat[self.s]))
         if not self.nmrdat[self.s][0].projected_j_res:
             self.ft_all()
             self.baseline1d_all()
@@ -251,6 +253,9 @@ class NmrDataSet:
             self.pjres(s + 1, self.nmrdat[s][e].pjres_mode)
             self.s = s
             self.e = e
+
+        if self.pp.export_method == 0 and self.pp.flag_export_data_set == True:
+            self.export_data_set('init')
 
         self.noise_filtering_init()
         self.deselect = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
@@ -276,12 +281,16 @@ class NmrDataSet:
 
         if self.pp.flag_bucket_spectra == True:
             self.bucket_spectra()
+            if self.pp.export_method == 0 and self.pp.flag_export_data_set == True:
+                self.export_data_set('bucket_spectra')
 
         if self.pp.flag_compress_buckets == True:
             self.compress_buckets()
 
         if self.pp.flag_scale_spectra == True:
             self.scale_spectra()
+            if self.pp.export_method == 0 and self.pp.flag_export_data_set == True:
+                self.export_data_set('pqn_normalised')
 
         spc = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
         n_spc = len(self.nmrdat[self.s])
@@ -302,9 +311,11 @@ class NmrDataSet:
 
         if self.pp.flag_variance_stabilisation == True:
             self.variance_stabilisation()
+            if self.pp.export_method == 0 and self.pp.flag_export_data_set == True:
+                self.export_data_set('pareto_scaled')
 
         if self.pp.flag_export_data_set == True:
-            self.export_data_set()
+            self.export_data_set('finish')
 
         # end data_pre_processing
 
@@ -319,69 +330,148 @@ class NmrDataSet:
 
         # end exclude_region
 
-    def export_data_set(self):
+    def export_data_set(self, cmd_name='finish'):
         if self.pp.export_method == 0:
-            print("export Excel format")
             if os.path.isdir(self.pp.export_excel_path) is False:
                 os.makedirs(self.pp.export_excel_path)
 
             f_name = os.path.join(self.pp.export_excel_path, self.pp.export_excel)
-            wb = Workbook()
-            ws_nmr_data = wb.active
-            ws_nmr_data.title = "NMR data"
-            ws_meta_data = wb.create_sheet("Metadata")
-            spc = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
-            npts = len(self.nmrdat[self.s][0].spc[self.pp.plot_select[0]])
-            n_spc = len(self.pp.plot_select)
-            for k in range(n_spc):
-                spc += self.nmrdat[self.s][k].spc[self.pp.plot_select[0]].real
+            #print(cmd_name)
+            if cmd_name == 'init':
+                self.wb = Workbook()
+                self.wb.remove(self.wb.active)
+                ws_bucket_spectra = self.wb.create_sheet("bucket_spectra")
+                ws_pqn_normalised = self.wb.create_sheet("pqn_normalised")
+                ws_pareto_scaled = self.wb.create_sheet("pareto_scaled")
+                ws_avoid_negative_values = self.wb.create_sheet("avoid_negative_values")
+                ws_sample_meta = self.wb.create_sheet("sample_meta")
+                ws_variable_meta = self.wb.create_sheet("variable_meta")
+                self.wb["variable_meta"]["A1"] = 'id'
+                self.wb["variable_meta"]["B1"] = 'ppm'
+                self.wb["variable_meta"]["C1"] = 'bin'
+                self.wb["variable_meta"]["D1"] = 'ppm_min'
+                self.wb["variable_meta"]["E1"] = 'ppm_max'
+            else:
+                if cmd_name != 'finish':
+                    spc = np.zeros(len(self.nmrdat[self.s][self.pp.plot_select[0]].spc[0]))
+                    npts = len(self.nmrdat[self.s][self.pp.plot_select[0]].spc[0])
+                    n_spc = len(self.pp.plot_select)
+                    for k in range(n_spc):
+                        spc += self.nmrdat[self.s][self.pp.plot_select[k]].spc[0].real
 
-            deselect = np.zeros(npts)
-            idx = np.where(spc == 0)
-            deselect[idx] = np.ones(len(idx))
-            select = np.where(deselect == 0)
-            if self.pp.export_samples_in_rows_cols == 0:  # samples in rows
-                col_string = []
-                for s in itertools.islice(self.iter_all_strings(), len(select[0]) + 2):
-                    col_string.append(s)
+                    deselect = np.zeros(npts)
+                    idx = np.where(spc == 0)
+                    deselect[idx] = np.ones(len(idx))
+                    select = np.where(deselect == 0)
+                    if self.pp.export_samples_in_rows_cols == 0:  # samples in rows
+                        col_string = []
+                        for s in itertools.islice(self.iter_all_strings(), len(select[0]) + 2):
+                            col_string.append(s)
 
-                ws_nmr_data['A1'] = 'Name'
-                ws_nmr_data['B1'] = 'Class / ppm -->'
-                for k in range(len(select[0])):
-                    ws_nmr_data[col_string[k + 2] + '1'] = str(
-                        self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[select[0][k]])
+                        ws_nmr_data['A1'] = 'Name'
+                        ws_nmr_data['B1'] = 'Class / ppm -->'
+                        for k in range(len(select[0])):
+                            ws_nmr_data[col_string[k + 2] + '1'] = str(
+                                self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[select[0][k]])
 
-                for k in range(len(self.pp.plot_select)):
-                    dse = os.path.split(self.nmrdat[self.s][self.pp.plot_select[k]].orig_data_set)
-                    ds = os.path.split(dse[0])
-                    ws_nmr_data['A' + str(k + 2)] = ds[1] + " " + dse[1]
-                    ws_nmr_data['B' + str(k + 2)] = str(self.pp.class_select[self.pp.plot_select[k]])
-                    for l in range(len(select[0])):
-                        ws_nmr_data[col_string[l + 2] + str(k + 2)] = str(
-                            self.nmrdat[self.s][self.pp.plot_select[k]].spc[0][select[0][l]].real)
+                        for k in range(len(self.pp.plot_select)):
+                            dse = os.path.split(self.nmrdat[self.s][self.pp.plot_select[k]].orig_data_set)
+                            ds = os.path.split(dse[0])
+                            ws_nmr_data['A' + str(k + 2)] = ds[1] + " " + dse[1]
+                            ws_nmr_data['B' + str(k + 2)] = str(self.pp.class_select[self.pp.plot_select[k]])
+                            for l in range(len(select[0])):
+                                ws_nmr_data[col_string[l + 2] + str(k + 2)] = str(
+                                    self.nmrdat[self.s][self.pp.plot_select[k]].spc[0][select[0][l]].real)
 
 
 
-            else:  # samples in cols
-                ws_nmr_data['A1'] = 'Name'
-                ws_nmr_data['A2'] = 'Class / ppm -v'
-                col_string = []
-                for s in itertools.islice(self.iter_all_strings(), n_spc + 1):
-                    col_string.append(s)
+                    else:  # samples in cols
+                        self.wb[cmd_name]['A1'] = ''
+                        #ws_nmr_data['A2'] = 'Class / ppm -v'
+                        col_string = []
+                        for s in itertools.islice(self.iter_all_strings(), n_spc + 1):
+                            col_string.append(s)
 
-                for k in range(len(self.pp.plot_select)):
-                    dse = os.path.split(self.nmrdat[self.s][self.pp.plot_select[k]].orig_data_set)
-                    ds = os.path.split(dse[0])
-                    ws_nmr_data[col_string[k + 1] + '1'] = ds[1] + " " + dse[1]
-                    ws_nmr_data[col_string[k + 1] + '2'] = str(self.pp.class_select[self.pp.plot_select[k]])
+                        for k in range(len(self.pp.plot_select)):
+                            dse = os.path.split(self.nmrdat[self.s][self.pp.plot_select[k]].orig_data_set)
+                            ds = os.path.split(dse[0])
+                            self.wb[cmd_name][col_string[k + 1] + '1'] = ds[1] + " " + dse[1]
+                            #self.wb[cmd_name][col_string[k + 1] + '2'] = str(self.pp.class_select[self.pp.plot_select[k]])
 
-                for l in range(len(select[0])):
-                    ws_nmr_data['A' + str(l + 3)] = str(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[select[0][l]])
+                        ppm_vect = self.nmrdat[self.s][self.pp.plot_select[0]].ppm1
+                        bin_range = np.linspace(1, len(ppm_vect), len(ppm_vect), dtype=int)
+                        spc_selected = np.where(self.nmrdat[self.s][self.pp.plot_select[0]].spc[0] != 0)[0]
+                        for k in range(len(spc_selected)):
+                            p_str1 = "B{0:0=3d}".format(bin_range[spc_selected[k]])
+                            p_str2 = "P{:.3f}".format(ppm_vect[spc_selected[k]])
+                            self.wb[cmd_name]["A" + str(k + 2)] = p_str1 + p_str2
+                            for l in range(len(self.pp.plot_select)):
+                                self.wb[cmd_name][col_string[l + 1] + str(k + 2)] = self.nmrdat[self.s][self.pp.plot_select[l]].spc[0][spc_selected[k]].real
+
+                        #for l in range(len(select[0])):
+                        #    ws_nmr_data['A' + str(l + 3)] = str(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[select[0][l]])
+                        #    for k in range(len(self.pp.plot_select)):
+                        #        ws_nmr_data[col_string[k + 1] + str(l + 3)] = str(
+                        #            self.nmrdat[self.s][self.pp.plot_select[k]].spc[0][select[0][l]].real)
+
+                else:
+                    categories = {}
+                    title = self.nmrdat[self.s][self.e].title
+                    idx = 0
+                    while idx > -1:
+                        idx = title.find('\n')
+                        if idx > -1:
+                            idx2 = title.find(':')
+                            categories[title[:idx2].strip()] = []
+                            title = title[idx+1:]
+
+
+                    categories['pqn_coeff'] = []
+                    excelCols = []
+                    for ss in itertools.islice(self.iter_all_strings(), len(categories)):
+                        excelCols.append(ss)
+
+                    ctr = 0
+                    for ss in categories.keys():
+                        self.wb["sample_meta"][excelCols[ctr] + '1'] = ss
+                        ctr += 1
+
                     for k in range(len(self.pp.plot_select)):
-                        ws_nmr_data[col_string[k + 1] + str(l + 3)] = str(
-                            self.nmrdat[self.s][self.pp.plot_select[k]].spc[0][select[0][l]].real)
+                        for ss in categories.keys():
+                            if ss == "pqn_coeff":
+                                categories[ss].append(self.pp.spc_scale[self.pp.plot_select[k]])
+                            else:
+                                idx = self.nmrdat[self.s][self.pp.plot_select[k]].title.find(ss)
+                                tmp_string = self.nmrdat[self.s][self.pp.plot_select[k]].title[idx:]
+                                idx2 = tmp_string.find(':')
+                                idx3 = tmp_string.find('\n')
+                                categories[ss].append(tmp_string[idx2+1:idx3])
 
-            wb.save(f_name)
+                    ctr2 = 2
+                    for k in range(len(self.pp.plot_select)):
+                        ctr = 0
+                        for ss in categories.keys():
+                            self.wb["sample_meta"][excelCols[ctr] + str(ctr2)] = categories[ss][k]
+                            ctr += 1
+
+                        ctr2 += 1
+
+                    ppm_vect = self.nmrdat[self.s][self.pp.plot_select[0]].ppm1
+                    delta_ppm = 0.5*(ppm_vect[0] - ppm_vect[1])
+                    bin_range = np.linspace(1, len(ppm_vect), len(ppm_vect), dtype=int)
+                    spc_selected = np.where(self.nmrdat[self.s][self.pp.plot_select[0]].spc[0] != 0)[0]
+                    for k in range(len(spc_selected)):
+                        p_str1 = "B{0:0=3d}".format(bin_range[spc_selected[k]])
+                        p_str2 = "P{:.3f}".format(ppm_vect[spc_selected[k]])
+                        self.wb["variable_meta"]["A" + str(k+2)] = p_str1 + p_str2
+                        self.wb["variable_meta"]["B" + str(k+2)] = ppm_vect[spc_selected[k]]
+                        self.wb["variable_meta"]["C" + str(k+2)] = bin_range[spc_selected[k]]
+                        self.wb["variable_meta"]["D" + str(k+2)] = ppm_vect[spc_selected[k]] - delta_ppm
+                        self.wb["variable_meta"]["E" + str(k+2)] = ppm_vect[spc_selected[k]] + delta_ppm
+
+                    self.wb.save(f_name)
+                    self.wb = []
+
 
         elif self.pp.export_method == 1:
             print("export CSV format")
@@ -1183,6 +1273,7 @@ class NmrDataSet:
                 scale_vect = self.nmrdat[self.s][k].spc[0][np.where(ref_spc != 0)].real / ref_spc[
                     np.where(ref_spc != 0)]
                 self.nmrdat[self.s][k].spc[0] /= np.median(scale_vect[np.where(scale_vect != 0)])
+                self.pp.spc_scale[k] = np.median(scale_vect[np.where(scale_vect != 0)])
         else:
             if self.pp.preserve_overall_scale is True:
                 for k in range(n_spc):
@@ -1191,6 +1282,7 @@ class NmrDataSet:
             for k in range(n_spc):
                 self.nmrdat[self.s][k].spc[0] /= np.sum(self.nmrdat[self.s][k].spc[0]).real
                 self.nmrdat[self.s][k].spc[0] *= np.max(scale)
+                self.pp.spc_scale[k] = np.sum(self.nmrdat[self.s][k].spc[0]).real/np.max(scale)
 
         # end scale_spectra
 

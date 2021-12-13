@@ -3,6 +3,7 @@ import sys  # pragma: no cover
 import matplotlib  # pragma: no cover
 
 matplotlib.use("Agg")
+matplotlib.rcParams['agg.path.chunksize'] = 64000 #64_000_000_000
 
 try:
     from PySide2.QtUiTools import QUiLoader  # pragma: no cover
@@ -140,7 +141,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.6.50'
+        self.__version__ = '0.6.51'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -4877,7 +4878,7 @@ class main_w(object):  # pragma: no cover
         if self.nd.nmrdat[s][e].dim > 1:
             if self.nd.nmrdat[self.nd.s][self.nd.e].acq.pul_prog_name.find("hsqc") > 0 or self.nd.nmrdat[self.nd.s][
                 self.nd.e].acq.pul_prog_name.find("hmqc") > 0:
-                self.w.hsqcAnalysis.setVisible(False)  # develop set true
+                self.w.hsqcAnalysis.setVisible(True)  # develop set true
             else:
                 self.w.hsqcAnalysis.setVisible(False)
 
