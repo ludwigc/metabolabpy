@@ -336,7 +336,6 @@ class NmrDataSet:
                 os.makedirs(self.pp.export_excel_path)
 
             f_name = os.path.join(self.pp.export_excel_path, self.pp.export_excel)
-            #print(cmd_name)
             if cmd_name == 'init':
                 self.wb = Workbook()
                 self.wb.remove(self.wb.active)
@@ -368,26 +367,25 @@ class NmrDataSet:
                         for s in itertools.islice(self.iter_all_strings(), len(select[0]) + 2):
                             col_string.append(s)
 
-                        ws_nmr_data['A1'] = 'Name'
-                        ws_nmr_data['B1'] = 'Class / ppm -->'
+                        self.wb[cmd_name]['A1'] = 'Name'
+                        self.wb[cmd_name]['B1'] = 'Class / ppm -->'
                         for k in range(len(select[0])):
-                            ws_nmr_data[col_string[k + 2] + '1'] = str(
+                            self.wb[cmd_name][col_string[k + 2] + '1'] = str(
                                 self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[select[0][k]])
 
                         for k in range(len(self.pp.plot_select)):
                             dse = os.path.split(self.nmrdat[self.s][self.pp.plot_select[k]].orig_data_set)
                             ds = os.path.split(dse[0])
-                            ws_nmr_data['A' + str(k + 2)] = ds[1] + " " + dse[1]
-                            ws_nmr_data['B' + str(k + 2)] = str(self.pp.class_select[self.pp.plot_select[k]])
+                            self.wb[cmd_name]['A' + str(k + 2)] = ds[1] + " " + dse[1]
+                            self.wb[cmd_name]['B' + str(k + 2)] = str(self.pp.class_select[self.pp.plot_select[k]])
                             for l in range(len(select[0])):
-                                ws_nmr_data[col_string[l + 2] + str(k + 2)] = str(
+                                self.wb[cmd_name][col_string[l + 2] + str(k + 2)] = str(
                                     self.nmrdat[self.s][self.pp.plot_select[k]].spc[0][select[0][l]].real)
 
 
 
                     else:  # samples in cols
                         self.wb[cmd_name]['A1'] = ''
-                        #ws_nmr_data['A2'] = 'Class / ppm -v'
                         col_string = []
                         for s in itertools.islice(self.iter_all_strings(), n_spc + 1):
                             col_string.append(s)
@@ -396,7 +394,6 @@ class NmrDataSet:
                             dse = os.path.split(self.nmrdat[self.s][self.pp.plot_select[k]].orig_data_set)
                             ds = os.path.split(dse[0])
                             self.wb[cmd_name][col_string[k + 1] + '1'] = ds[1] + " " + dse[1]
-                            #self.wb[cmd_name][col_string[k + 1] + '2'] = str(self.pp.class_select[self.pp.plot_select[k]])
 
                         ppm_vect = self.nmrdat[self.s][self.pp.plot_select[0]].ppm1
                         bin_range = np.linspace(1, len(ppm_vect), len(ppm_vect), dtype=int)
@@ -407,12 +404,6 @@ class NmrDataSet:
                             self.wb[cmd_name]["A" + str(k + 2)] = p_str1 + p_str2
                             for l in range(len(self.pp.plot_select)):
                                 self.wb[cmd_name][col_string[l + 1] + str(k + 2)] = self.nmrdat[self.s][self.pp.plot_select[l]].spc[0][spc_selected[k]].real
-
-                        #for l in range(len(select[0])):
-                        #    ws_nmr_data['A' + str(l + 3)] = str(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[select[0][l]])
-                        #    for k in range(len(self.pp.plot_select)):
-                        #        ws_nmr_data[col_string[k + 1] + str(l + 3)] = str(
-                        #            self.nmrdat[self.s][self.pp.plot_select[k]].spc[0][select[0][l]].real)
 
                 else:
                     categories = {}
@@ -425,15 +416,14 @@ class NmrDataSet:
                             categories[title[:idx2].strip()] = []
                             title = title[idx+1:]
 
-
                     categories['pqn_coeff'] = []
-                    excelCols = []
+                    excel_cols = []
                     for ss in itertools.islice(self.iter_all_strings(), len(categories)):
-                        excelCols.append(ss)
+                        excel_cols.append(ss)
 
                     ctr = 0
                     for ss in categories.keys():
-                        self.wb["sample_meta"][excelCols[ctr] + '1'] = ss
+                        self.wb["sample_meta"][excel_cols[ctr] + '1'] = ss
                         ctr += 1
 
                     for k in range(len(self.pp.plot_select)):
@@ -451,7 +441,7 @@ class NmrDataSet:
                     for k in range(len(self.pp.plot_select)):
                         ctr = 0
                         for ss in categories.keys():
-                            self.wb["sample_meta"][excelCols[ctr] + str(ctr2)] = categories[ss][k]
+                            self.wb["sample_meta"][excel_cols[ctr] + str(ctr2)] = categories[ss][k]
                             ctr += 1
 
                         ctr2 += 1
@@ -471,7 +461,6 @@ class NmrDataSet:
 
                     self.wb.save(f_name)
                     self.wb = []
-
 
         elif self.pp.export_method == 1:
             print("export CSV format")
@@ -512,7 +501,6 @@ class NmrDataSet:
 
                     f.write("\n")
 
-
             else:  # samples in cols
                 f.write("ppm")
                 for k in range(len(self.pp.plot_select)):
@@ -527,7 +515,7 @@ class NmrDataSet:
 
                 f.write("\n")
                 for k in range(len(self.nmrdat[self.s][self.pp.plot_select[0]].spc[0])):
-                    if (deselect[k] == 0):
+                    if deselect[k] == 0:
                         f.write(str(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[k]))
                         for l in range(len(self.pp.plot_select)):
                             f.write(delim + str(self.nmrdat[self.s][self.pp.plot_select[l]].spc[0][k].real))
@@ -586,7 +574,7 @@ class NmrDataSet:
             deselect[idx] = np.ones(len(idx))
             f.write(str(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[0]))
             for k in range(1, len(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1)):
-                if (deselect[k] == 0):
+                if deselect[k] == 0:
                     f.write(delim + str(self.nmrdat[self.s][self.pp.plot_select[0]].ppm1[k]))
 
             f.write("\n")
@@ -595,7 +583,7 @@ class NmrDataSet:
                 ds = os.path.split(dse[0])
                 f.write(str(self.nmrdat[self.s][self.pp.plot_select[k]].spc[0][0].real))
                 for l in range(1, len(self.nmrdat[self.s][self.pp.plot_select[k]].spc[0])):
-                    if (deselect[l] == 0):
+                    if deselect[l] == 0:
                         f.write(delim + str(self.nmrdat[self.s][self.pp.plot_select[k]].spc[0][l].real))
 
                 f.write("\n")
@@ -659,7 +647,6 @@ class NmrDataSet:
 
             f.close()
 
-
         elif self.pp.export_method == 5:
             print("export Bruker")
             if os.path.isdir(self.pp.export_bruker_path + os.sep + self.pp.export_bruker) is False:
@@ -680,7 +667,7 @@ class NmrDataSet:
     # end export_data_set
 
     def ft(self):
-        if (self.nmrdat[self.s][self.e].dim == 1):
+        if self.nmrdat[self.s][self.e].dim == 1:
             self.nmrdat[self.s][self.e].proc_spc1d()
 
         else:
@@ -754,7 +741,7 @@ class NmrDataSet:
         self.script = cur_pars[8]
         self.console = cur_pars[9]
         for k in range(len(l_dir)):
-            if (os.path.isdir(os.path.join(data_set_name, l_dir[k]))):
+            if os.path.isdir(os.path.join(data_set_name, l_dir[k])):
                 data_sets = np.append(data_sets, l_dir[k])
 
         data_sets = np.sort(data_sets)
@@ -866,7 +853,6 @@ class NmrDataSet:
 
                             nd2.acq = aq
 
-
                     elif kk == 'proc':
                         if hasattr(n, kk):
                             p = n.proc
@@ -901,7 +887,6 @@ class NmrDataSet:
 
                             nd2.proc = pc
 
-
                     elif kk == 'display':
                         if hasattr(n, kk):
                             d = n.display
@@ -911,7 +896,6 @@ class NmrDataSet:
                                     exec('dp.' + kkk + '=d.' + kkk)
 
                             nd2.display = dp
-
 
                     elif kk == 'apc':
                         if hasattr(n, kk):
@@ -984,7 +968,7 @@ class NmrDataSet:
         # end noise_filtering_init
 
     def pjres(self, set=-1, mode='skyline'):
-        if (set < 1):
+        if set < 1:
             set = self.s + 2
 
         if (len(self.nmrdat) < set):
@@ -1010,7 +994,7 @@ class NmrDataSet:
             self.nmrdat[set - 1][k].projected_j_res = True
             self.nmrdat[set - 1][k].orig_j_res_set = self.s
             self.nmrdat[set - 1][k].orig_j_res_exp = k
-            if (mode == 'skyline'):
+            if mode == 'skyline':
                 self.nmrdat[set - 1][k].spc[0] = np.max(self.nmrdat[self.s][k].spc, 0)
             else:
                 self.nmrdat[set - 1][k].spc[0] = np.sum(self.nmrdat[self.s][k].spc, 0)
@@ -1023,19 +1007,19 @@ class NmrDataSet:
         xlim = ax.get_xlim()
         ylim = ax.get_ylim()
         ax.clear()
-        if (len(self.nmrdat[self.s]) == 0):
+        if len(self.nmrdat[self.s]) == 0:
             return
 
-        if (len(self.nmrdat[self.s][self.e].spc) == 0):
+        if len(self.nmrdat[self.s][self.e].spc) == 0:
             return
 
         d = self.nmrdat[self.s][self.e].display
-        if (d.pos_col == "RGB"):
+        if d.pos_col == "RGB":
             pos_col = d.pos_col_rgb
         else:
             pos_col = d.pos_col
 
-        if (d.neg_col == "RGB"):
+        if d.neg_col == "RGB":
             neg_col = d.neg_col_rgb
         else:
             neg_col = d.neg_col
@@ -1044,16 +1028,16 @@ class NmrDataSet:
         neg_col = matplotlib.colors.to_hex(neg_col)
         xlabel = d.xLabel + " [" + d.axisType1 + "]"
         ylabel = d.yLabel + " [" + d.axisType2 + "]"
-        if (self.nmrdat[self.s][self.e].dim == 1):
+        if self.nmrdat[self.s][self.e].dim == 1:
             for k in range(len(self.nmrdat[self.s])):
-                if ((k != self.e) and (self.nmrdat[self.s][k].display.display_spc == True)):
+                if k != self.e and self.nmrdat[self.s][k].display.display_spc == True:
                     d = self.nmrdat[self.s][k].display
-                    if (d.pos_col == "RGB"):
+                    if d.pos_col == "RGB":
                         pos_col = d.pos_col_rgb
                     else:
                         pos_col = d.pos_col
 
-                    if (d.neg_col == "RGB"):
+                    if d.neg_col == "RGB":
                         neg_col = d.neg_col_rgb
                     else:
                         neg_col = d.neg_col
@@ -1063,12 +1047,12 @@ class NmrDataSet:
                     pl.plot(self.nmrdat[self.s][k].ppm1, self.nmrdat[self.s][k].spc[0].real, color=pos_col)
 
             d = self.nmrdat[self.s][self.e].display
-            if (d.pos_col == "RGB"):
+            if d.pos_col == "RGB":
                 pos_col = d.pos_col_rgb
             else:
                 pos_col = d.pos_col
 
-            if (d.neg_col == "RGB"):
+            if d.neg_col == "RGB":
                 neg_col = d.neg_col_rgb
             else:
                 neg_col = d.neg_col
@@ -1082,11 +1066,10 @@ class NmrDataSet:
             ax.set_xlabel(xlabel)
             ax.autoscale()
             ax.invert_xaxis()
-            if (self.keep_zoom == True):
+            if self.keep_zoom == True:
                 if xlim[0] != -0.05 and xlim[1] != 1.05 and ylim[0] != -0.05 and ylim[1] != 1.05:
                     ax.set_xlim(xlim)
                     ax.set_ylim(ylim)
-
 
         else:
             mm = np.max(np.abs(self.nmrdat[self.s][self.e].spc.real))
@@ -1141,7 +1124,6 @@ class NmrDataSet:
             for k in range(len(data_exp)):
                 self.read_spc(data_path[0], str(data_exp[k]))
 
-
         else:
             for k in range(len(data_path)):
                 self.read_spc(data_path[k], str(data_exp[0]))
@@ -1162,7 +1144,6 @@ class NmrDataSet:
         if len(data_exp) > 1:
             for k in range(len(data_exp)):
                 self.read_nmrpipe_spc(data_path[0], str(data_exp[k]), proc_data_name)
-
 
         else:
             for k in range(len(data_path)):
@@ -1188,7 +1169,7 @@ class NmrDataSet:
         # end reset_data_pre_processing
 
     def save(self, data_set_name):
-        if (len(data_set_name) == 0):
+        if len(data_set_name) == 0:
             return
 
         try:
@@ -1209,42 +1190,42 @@ class NmrDataSet:
                 pass
 
             for l in range(len(self.nmrdat[k])):
-                expPath = os.path.join(setPath, str(l + 1))
+                exp_path = os.path.join(setPath, str(l + 1))
                 try:
-                    os.makedirs(expPath)
+                    os.makedirs(exp_path)
                 except:
                     pass
 
-                f_name = os.path.join(expPath, 'nmrDataSet.dat')
+                f_name = os.path.join(exp_path, 'nmrDataSet.dat')
                 f = open(f_name, 'wb')
                 self.nmrdat[k][l].ver = self.ver
                 pickle.dump(self.nmrdat[k][l], f)
                 f.close()
-                f_name = os.path.join(expPath, 'titleFile.txt')
+                f_name = os.path.join(exp_path, 'titleFile.txt')
                 f = open(f_name, 'w')
                 f.write(self.nmrdat[k][l].title)
                 f.close()
-                f_name = os.path.join(expPath, 'procsText.txt')
+                f_name = os.path.join(exp_path, 'procsText.txt')
                 f = open(f_name, 'w')
                 f.write(self.nmrdat[k][l].proc.procs_text)
                 f.close()
-                f_name = os.path.join(expPath, 'proc2sText.txt')
+                f_name = os.path.join(exp_path, 'proc2sText.txt')
                 f = open(f_name, 'w')
                 f.write(self.nmrdat[k][l].proc.proc2s_text)
                 f.close()
-                f_name = os.path.join(expPath, 'proc3sText.txt')
+                f_name = os.path.join(exp_path, 'proc3sText.txt')
                 f = open(f_name, 'w')
                 f.write(self.nmrdat[k][l].proc.proc3s_text)
                 f.close()
-                f_name = os.path.join(expPath, 'acqusText.txt')
+                f_name = os.path.join(exp_path, 'acqusText.txt')
                 f = open(f_name, 'w')
                 f.write(self.nmrdat[k][l].acq.acqus_text)
                 f.close()
-                f_name = os.path.join(expPath, 'acqu2sText.txt')
+                f_name = os.path.join(exp_path, 'acqu2sText.txt')
                 f = open(f_name, 'w')
                 f.write(self.nmrdat[k][l].acq.acqu2s_text)
                 f.close()
-                f_name = os.path.join(expPath, 'acqu3sText.txt')
+                f_name = os.path.join(exp_path, 'acqu3sText.txt')
                 f = open(f_name, 'w')
                 f.write(self.nmrdat[k][l].acq.acqu3s_text)
                 f.close()
