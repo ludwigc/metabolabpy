@@ -6,3 +6,4 @@ pyside2
 pyautogui
 qtmodern
 xlsxwriter
+pandas

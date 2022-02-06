@@ -10,3 +10,4 @@ openpyxl
 pyautogui
 qtmodern
 xlsxwriter
+pandas
