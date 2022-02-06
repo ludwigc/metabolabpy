@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1581</width>
+    <width>1582</width>
     <height>954</height>
    </rect>
   </property>
@@ -1985,7 +1985,7 @@
                     </item>
                     <item>
                      <property name="text">
-                      <string> </string>
+                      <string/>
                      </property>
                     </item>
                    </widget>
@@ -5188,6 +5188,11 @@
           </item>
           <item>
            <property name="text">
+            <string>BML</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
             <string>HMDB</string>
            </property>
           </item>
@@ -5257,7 +5262,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1581</width>
+     <width>1582</width>
      <height>24</height>
     </rect>
    </property>

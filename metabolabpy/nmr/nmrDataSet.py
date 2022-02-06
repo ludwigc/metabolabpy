@@ -12,8 +12,9 @@ import webbrowser  # pragma: no cover
 import matplotlib  # pragma: no cover
 import matplotlib.pyplot as pl  # pragma: no cover
 from metabolabpy.nmr import nmrConfig  # pragma: no cover
-import metabolabpy.__init__ as ml_version
-import shutil
+import metabolabpy.__init__ as ml_version  # pragma: no cover
+import shutil  # pragma: no cover
+import pandas as pd  # pragma: no cover
 
 
 class NmrDataSet:
@@ -102,7 +103,7 @@ class NmrDataSet:
     def __str__(self):  # pragma: no cover
         r_string = '______________________________________________________________________________________\n'
         if len(self.nmrdat[self.s]) > 0:
-            r_string += '\nMetaboLabPy NMR Data Set (v. ' + self.nmrdat[self.s][self.e].ver + ')\n'
+            r_string += '\nMetaboLabPy NMR Data Set (ver. ' + self.nmrdat[self.s][self.e].ver + ')\n'
         else:
             r_string += '\nMetaboLabPy NMR Data Set (empty data set)\n'
 
@@ -1384,6 +1385,56 @@ class NmrDataSet:
 
         self.plot_spc()
         # end select_plot_clear
+
+    def set_loadings_from_excel(self, file_name='', worksheet='', columns=['']):
+        if len(file_name) == 0:
+            return
+
+        if len(worksheet) == 0:
+            return
+
+        if len(columns) == 0:
+            return
+
+        if len(columns[0]) == 0:
+            return
+
+        try:
+            xls = pd.ExcelFile(file_name)
+        except:
+            return
+
+        try:
+            df = pd.read_excel(xls, worksheet)
+        except:
+            return
+
+        self.nmrdat.append([])
+        n_sets = len(self.nmrdat)
+        s = n_sets - 1
+        select = np.where(self.nmrdat[self.s][self.e].spc[0] != 0)[0]
+        for k in range(len(columns)):
+            nd1 = nd.NmrData()
+            self.nmrdat[s].append(nd1)
+            self.nmrdat[s][k].dim = 1
+            self.nmrdat[s][k].fid = np.copy(self.nmrdat[self.s][self.e].fid)
+            self.nmrdat[s][k].acq = self.nmrdat[self.s][self.e].acq
+            self.nmrdat[s][k].display = self.nmrdat[self.s][self.e].display
+            self.nmrdat[s][k].proc = self.nmrdat[self.s][self.e].proc
+            self.nmrdat[s][k].ppm1 = np.resize(self.nmrdat[s][self.e].ppm1, (len(self.nmrdat[self.s][self.e].ppm1)))
+            self.nmrdat[s][k].ppm1 = np.copy(self.nmrdat[self.s][self.e].ppm1)
+            self.nmrdat[s][k].spc = np.resize(self.nmrdat[s][self.e].spc,
+                                                    (1, len(self.nmrdat[self.s][self.e].spc[0])))
+            self.nmrdat[s][k].ref_shift = self.nmrdat[self.s][self.e].ref_shift
+            self.nmrdat[s][k].ref_point = self.nmrdat[self.s][self.e].ref_point
+            self.nmrdat[s][k].ref_point[0] = np.where(np.abs(self.nmrdat[s][k].ppm1) == np.min(np.abs(self.nmrdat[s][k].ppm1)))[0][0]
+            self.nmrdat[s][k].spc[0][select] = np.copy(df[columns[k]])
+            self.nmrdat[s][k].title = 'Loadings from ' + columns[k] + '\n'
+            m0 = np.max(self.nmrdat[s][k].spc[0].real)*0.001
+            r2 = 0.001
+            self.nmrdat[s][k].add_tmsp(m0, r2)
+
+        # end set_loadings_from_excel
 
     def set_gb(self, gb):
         n_exp = len(self.nmrdat[self.s])

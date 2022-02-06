@@ -141,7 +141,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.6.53'
+        self.__version__ = '0.6.54'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -188,6 +188,7 @@ class main_w(object):  # pragma: no cover
         self.w.exportFileName.textChanged.connect(self.set_export_file_name)
         self.w.exportDelimiterTab.toggled.connect(self.set_export_delimiter_tab)
         self.w.exportCharacter.textChanged.connect(self.set_export_character)
+        self.w.titleFile.textChanged.connect(self.change_title_file)
         self.w.samplesInComboBox.currentIndexChanged.connect(self.set_samples_in_combo_box)
         self.w.runPreProcessingButton.clicked.connect(self.data_pre_processing)
         self.w.resetPreProcessingButton.clicked.connect(self.reset_data_pre_processing)
@@ -856,6 +857,13 @@ class main_w(object):  # pragma: no cover
 
     # end change_standard_colours
 
+    def change_title_file(self):
+        try:
+            self.nd.nmrdat[self.nd.s][self.nd.e].title = self.w.titleFile.toPlainText()
+        except:
+            pass
+        # end change_title_file
+
     def change_to_next_ds(self):
         self.w.setBox.setValue(self.w.setBox.value() + 1)
         # end change_to_next_ds
@@ -951,8 +959,12 @@ class main_w(object):  # pragma: no cover
         self.w.expBox.valueChanged.connect(lambda: self.change_data_set_exp())
         code_out = io.StringIO()
         code_err = io.StringIO()
-        sys.stdout = code_out
-        sys.stderr = code_err
+        #try:
+        #    sys.stdout = code_out
+        #    sys.stderr = code_err
+        #except:
+        #    pass
+        #
         return "Workspace cleared"
         # end clear
 
@@ -1126,7 +1138,9 @@ class main_w(object):  # pragma: no cover
             exec(code)
             code = self.w.script.toPlainText()
             code = code.replace(' interactive ', ' abcint2 ')
-            code = code.replace('''interactive''', '' + self.nd.nmrdat[self.nd.s][self.nd.e].data_set_name + '')
+            if self.nd.s > -1 and self.nd.e > -1:
+                code = code.replace('''interactive''', '' + self.nd.nmrdat[self.nd.s][self.nd.e].data_set_name + '')
+
             code = code.replace(' abcint2 ', ' interactive ')
             self.w.script.setText(code)
 
@@ -1249,7 +1263,7 @@ class main_w(object):  # pragma: no cover
             self.w.peakWidget.setItem(k, 2, peak_label_tw)
 
         self.nd.peak_fill = False
-        # end fill_pre_processing_numbers
+        # end fill_peak_numbers
 
     def fill_pre_processing_numbers(self):
         self.nd.pp.pre_proc_fill = True
@@ -2087,6 +2101,15 @@ class main_w(object):  # pragma: no cover
         self.w.intAllDS.setHidden(True)
         self.w.exportFormatCB.setHidden(True)
 
+    def html(self, url=''):
+        if len(url) == 0:
+            f_name = os.path.join(os.path.dirname(__file__), "nmr", "web", "introductionDark", "index.html")
+            url = "file:///" + f_name.replace('\\', '/')
+
+        self.w.helpView.setUrl(url)
+        self.w.nmrSpectrum.setCurrentIndex(12)
+        # end html
+
     def show_peak_picking(self):
         self.w.preProcPeak.setHidden(False)
         self.w.peakPickingTab.setHidden(False)
@@ -2232,6 +2255,7 @@ class main_w(object):  # pragma: no cover
         url = []
         f_name = os.path.join(os.path.dirname(__file__), "nmr", "web", "introductionDark", "index.html")
         url.append("file:///" + f_name.replace('\\', '/'))
+        url.append("http://www.bml-nmr.org")
         url.append("https://www.hmdb.ca")
         url.append("https://www.smpdb.ca")
         url.append("https://bmrb.io/metabolomics/")
@@ -2303,6 +2327,7 @@ class main_w(object):  # pragma: no cover
         url = []
         f_name = os.path.join(os.path.dirname(__file__), "nmr", "web", "introduction", "index.html")
         url.append("file:///" + f_name.replace('\\', '/'))
+        url.append("http://www.bml-nmr.org")
         url.append("https://www.hmdb.ca")
         url.append("https://www.smpdb.ca")
         url.append("https://bmrb.io/metabolomics/")
@@ -3559,8 +3584,36 @@ class main_w(object):  # pragma: no cover
         if auto_plot_spc:
             self.plot_spc()
 
+        self.fill_pre_processing_numbers()
         return "select_plot_list"
         # end select_plot_list
+
+    def select_plot_pp(self, keywords=[], classes=[]):
+        if len(keywords) == 0 or len(classes) == 0:
+            return
+
+        if len(keywords) != len(classes):
+            return
+
+        self.nd.pp.plot_select = []
+        for k in range(len(self.nd.nmrdat[self.nd.s])):
+            sum_value = 0
+            for l in range(len(keywords)):
+                title = self.nd.nmrdat[self.nd.s][k].title
+                idx1 = title.find(keywords[l])
+                idx2 = title[idx1:].find(':')
+                idx3 = title[idx1:].find('\n')
+                if title[idx1 + idx2 + 1:idx1 + idx3].strip() in classes[l]:
+                    sum_value += 1
+
+            if sum_value == len(keywords):
+                self.nd.pp.plot_select.append(k)
+
+        self.fill_pre_processing_numbers()
+        self.set_plot_pre_proc()
+        self.plot_spc_pre_proc()
+        self.w.selectClassTW.setFocus()
+        # end select_plot_pp
 
     def set_acq_pars(self):
         s = self.nd.s
@@ -3659,6 +3712,24 @@ class main_w(object):  # pragma: no cover
             self.nd.pp.class_select = cls
 
         # end set_change_pre_proc
+
+    def set_class_pp(self, keyword=''):
+        if len(keyword) == 0:
+            return
+
+        self.nd.pp.class_select = []
+        for k in range(len(self.nd.nmrdat[self.nd.s])):
+            title = self.nd.nmrdat[self.nd.s][k].title
+            idx1 = title.find(keyword)
+            idx2 = title[idx1:].find(':')
+            idx3 = title[idx1:].find('\n')
+            self.nd.pp.class_select.append(title[idx1 + idx2 + 1:idx1 + idx3].strip())
+
+        self.fill_pre_processing_numbers()
+        self.set_plot_pre_proc()
+        self.plot_spc_pre_proc()
+        self.w.selectClassTW.setFocus()
+        # end select_plot_pp
 
     def set_compress_buckets(self):
         if (self.nd.pp.pre_proc_fill == False):
@@ -4098,6 +4169,7 @@ class main_w(object):  # pragma: no cover
             f_name = os.path.join(os.path.dirname(__file__), "nmr", "web", "introduction", "index.html")
 
         url.append("file:///" + f_name.replace('\\', '/'))
+        url.append("http://www.bml-nmr.org")
         url.append("https://www.hmdb.ca")
         url.append("https://www.smpdb.ca")
         url.append("https://bmrb.io/metabolomics/")

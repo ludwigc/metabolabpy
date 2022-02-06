@@ -136,6 +136,15 @@ class NmrData:
 
         # end add_peak
 
+    def add_tmsp(self, m0=1, r2=1):
+        npts = len(self.spc[0])
+        tsp_frq = 2 * math.pi * self.ref_point[0] / npts - math.pi
+        t = np.linspace(0, npts-1, npts);
+        tsp_fid = m0 * np.exp(t * (1j * tsp_frq - r2));
+        spc = fftshift(fft(tsp_fid));
+        self.spc[0] += spc.real
+        # end add_tmsp
+
     def apodise(self, fid, dim, lb, gb, ssb, group_delay, sw_h):
         fid = np.copy(fid)
         wdwf = np.zeros(len(fid))
@@ -382,7 +391,7 @@ class NmrData:
         # write 1r file
         spc = self.spc[0].real
         if scale_factor == -1:
-            scale_factor = int(2 * np.max(spc) / 2147483647)
+            scale_factor = 2 * np.max(spc) / 2147483647
 
         spc /= scale_factor
         spc.real.astype(np.int32).tofile(spc_file1r)
