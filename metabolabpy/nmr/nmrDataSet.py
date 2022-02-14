@@ -1027,8 +1027,8 @@ class NmrDataSet:
 
         pos_col = matplotlib.colors.to_hex(pos_col)
         neg_col = matplotlib.colors.to_hex(neg_col)
-        xlabel = d.xLabel + " [" + d.axisType1 + "]"
-        ylabel = d.yLabel + " [" + d.axisType2 + "]"
+        xlabel = d.x_label + " [" + d.axis_type1 + "]"
+        ylabel = d.y_label + " [" + d.axis_type2 + "]"
         if self.nmrdat[self.s][self.e].dim == 1:
             for k in range(len(self.nmrdat[self.s])):
                 if k != self.e and self.nmrdat[self.s][k].display.display_spc == True:
@@ -1060,8 +1060,8 @@ class NmrDataSet:
 
             pos_col = matplotlib.colors.to_hex(pos_col)
             neg_col = matplotlib.colors.to_hex(neg_col)
-            xlabel = d.xLabel + " [" + d.axisType1 + "]"
-            ylabel = d.yLabel + " [" + d.axisType2 + "]"
+            xlabel = d.x_label + " [" + d.axis_type1 + "]"
+            ylabel = d.y_label + " [" + d.axis_type2 + "]"
             pl.plot(self.nmrdat[self.s][self.e].ppm1, self.nmrdat[self.s][self.e].spc[0].real, color=pos_col)
             ax = pl.gca()
             ax.set_xlabel(xlabel)

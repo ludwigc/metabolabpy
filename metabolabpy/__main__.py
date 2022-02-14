@@ -4828,7 +4828,29 @@ class main_w(object):  # pragma: no cover
     def start_stop_ph_corr(self):
         s = self.nd.s
         e = self.nd.e
-        # self.set_zoom_off()
+        if self.nd.nmrdat[s][e].projected_j_res:
+            if self.cf.mode == 'dark':
+                txt_col = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
+                err_col = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
+            else:
+                txt_col = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
+                err_col = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
+
+            self.w.nmrSpectrum.setCurrentIndex(11)
+            code_out = io.StringIO()
+            code_err = io.StringIO()
+            sys.stdout = code_out
+            sys.stderr = code_err
+            self.w.console.setTextColor(err_col)
+            print("This is a pojected jRes spectrum, phase correction is impossible")
+            self.w.console.append(code_out.getvalue())
+            self.w.console.append(code_err.getvalue())
+            sys.stdout = sys.__stdout__
+            sys.stderr = sys.__stderr__
+            code_out.close()
+            code_err.close()
+            self.w.console.verticalScrollBar().setValue(self.w.console.verticalScrollBar().maximum())
+            return
 
         if (self.nd.nmrdat[s][e].dim == 1):
             try:
@@ -4944,6 +4966,7 @@ class main_w(object):  # pragma: no cover
             self.w.preprocessing.setVisible(True)
             self.w.peakPicking.setVisible(True)
         else:
+            self.w.preprocessing.setChecked(False)
             self.w.preprocessing.setVisible(False)
             self.w.peakPicking.setVisible(False)
 

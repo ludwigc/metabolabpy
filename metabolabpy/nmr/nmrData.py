@@ -81,6 +81,43 @@ class NmrData:
         return r_string
         # end __str__
 
+    def acq_pars(self):
+        a = self.acq
+        acq_str = "originalDataset      " + self.orig_data_set + "\n"
+        acq_str += "___________________________________________________________________________________________________\n"
+        acq_str += "\n"
+        acq_str += "metaInfo             "
+        for k in range(len(a.title)):
+            acq_str += a.title[k] + " "
+
+        acq_str += "\n                    "
+        acq_str += " Origin\t" + a.origin + "\n                    "
+        acq_str += " Owner\t" + a.owner + "\n"
+        acq_str += "___________________________________________________________________________________________________\n"
+        acq_str += "\n"
+        acq_str += "probe                          " + a.probe + "\n"
+        pp = a.pul_prog_name
+        pp = pp[1:]
+        pp = pp[:len(pp) - 1]
+        acq_str += "pulseProgram                   " + pp + "\n\n"
+        acq_str += "sw                   [ppm]    " + "% 9.2f" % a.sw[0] + "        |    % 9.2f" % a.sw[
+            1] + "        |    % 9.2f\n" % a.sw[2]
+        acq_str += "sw_h                 [Hz]     " + "% 9.2f" % a.sw_h[0] + "        |    % 9.2f" % a.sw_h[
+            1] + "        |    % 9.2f\n" % a.sw_h[2]
+        acq_str += "bf1/2/3              [MHz]    " + "% 9.2f" % a.bf1 + "        |    % 9.2f" % a.bf2 + "        |    % 9.2f\n" % a.bf3
+        acq_str += "sfo1/2/3             [MHz]    " + "% 9.2f" % a.sfo1 + "        |    % 9.2f" % a.sfo2 + "        |    % 9.2f\n" % a.sfo3
+        acq_str += "o1/2/3               [Hz]     " + "% 9.2f" % a.o1 + "        |    % 9.2f" % a.o2 + "        |    % 9.2f\n" % a.o3
+        acq_str += "nPoints                       " + "% 6d" % a.n_data_points[0] + "           |    % 6d" % \
+                   a.n_data_points[1] + "           |    % 6d\n" % a.n_data_points[2]
+        acq_str += "transients                    " + "% 6d\n" % a.transients
+        acq_str += "steadyStateScans              " + "% 6d\n\n" % a.steady_state_scans
+        acq_str += "groupDelay           [us]     " + "% 9.2f\n" % a.group_delay
+        acq_str += "decim                         " + "% 6d\n" % a.decim
+        acq_str += "dspfvs                        " + "% 6d\n" % a.dspfvs
+        acq_str += "temperature          [K]      " + "% 9.2f\n" % a.temperature
+        print(acq_str)
+        # end set_acq_pars
+
     def add_peak(self, start_end=np.array([], dtype='float64'), peak_label=''):
         if len(start_end) > 0:
             start_peak = int(1e4 * self.points2ppm(self.ppm2points(max(start_end), 0), 0)) / 1e4
