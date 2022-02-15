@@ -439,9 +439,9 @@ class main_w(object):  # pragma: no cover
         else:
             # print(sys.platform)
             self.w.actionCreate.setText('Create Desktop Starter')
+            self.w.actionCreate.triggered.connect(self.create_icon_linux)
             # print('doing stuffs3....')
-
-            self.w.actionCreate.setVisible(False)
+            self.w.actionCreate.setVisible(True)
 
         self.emp_ref_shift = 0.0
         self.p = []
@@ -1006,7 +1006,21 @@ class main_w(object):  # pragma: no cover
         # end create_icon_mac
 
     def create_icon_linux(self):
-        print("Linux!")
+        base_dir = os.path.dirname(__file__)
+        icon_file = os.path.join(base_dir, 'icon', 'icon-256.png')
+        starter_file = os.path.join(os.path.expanduser('~'), '.local', 'share', 'applications', 'metabolabpy.desktop')
+        f = open(starter_file, 'w')
+        f.write('[Desktop Entry]\n')
+        f.write('Name=MetaboLabPy\n')
+        f.write('GenericName=MetaboLabPy\n')
+        f.write('Comment=Process NMR spectra\n')
+        f.write('Exec=/usr/local/bin/metabolabpy\n')
+        f.write('Icon=' + icon_file + '\n')
+        f.write('Terminal=true\n')
+        f.write('Type=Application\n')
+        f.write('StartupNotify=true\n')
+        f.close()
+
         # end create_icon_linux
 
     def create_icon_win(self):
