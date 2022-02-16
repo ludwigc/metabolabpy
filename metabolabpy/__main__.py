@@ -141,7 +141,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.6.55'
+        self.__version__ = '0.6.56'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -230,6 +230,7 @@ class main_w(object):  # pragma: no cover
         self.w.thLineWidthLE.textChanged.connect(self.set_noise_reg_pre_proc)
         self.w.bucketPpmLE.textChanged.connect(self.set_bucket_ppm_pre_proc)
         self.w.bucketDataPointsLE.textChanged.connect(self.set_bucket_points_pre_proc)
+        self.w.actionAutomatic_Referencing.triggered.connect(self.automatic_referencing)
         self.w.actionVertical_AutoScale.triggered.connect(self.vertical_auto_scale)
         self.w.actionZoom.triggered.connect(self.set_zoom)
         self.w.actionPan.triggered.connect(self.set_pan)
@@ -676,6 +677,13 @@ class main_w(object):  # pragma: no cover
         self.plot_spc()
         return "autoref"
         # end autoref
+
+    def automatic_referencing(self):
+        self.nd.auto_ref(True)
+        self.w.nmrSpectrum.setCurrentIndex(0)
+        self.change_data_set_exp()
+        self.plot_spc()
+        # end automatic_referencing
 
     def baseline1d(self):
         self.nd.baseline1d()
@@ -1157,16 +1165,19 @@ class main_w(object):  # pragma: no cover
         sys.stderr = code_err
         code = self.w.script.toPlainText()
         code = code.replace('\\', '\\' * 2)
+        code = self.w.script.toPlainText()
+        code = code.replace(' interactive ', ' abcint2 ')
+        while code.find('''interactive''') > -1:
+            data_path = QFileDialog.getExistingDirectory()
+            if len(data_path) == 0:
+                return
+
+            code = code.replace('''interactive''', data_path, 1)
+
+        code = code.replace(' abcint2 ', ' interactive ')
+        self.w.script.setText(code)
         try:
             exec(code)
-            code = self.w.script.toPlainText()
-            code = code.replace(' interactive ', ' abcint2 ')
-            if self.nd.s > -1 and self.nd.e > -1:
-                code = code.replace('''interactive''', '' + self.nd.nmrdat[self.nd.s][self.nd.e].data_set_name + '')
-
-            code = code.replace(' abcint2 ', ' interactive ')
-            self.w.script.setText(code)
-
 
         except:  # (SyntaxError, NameError, TypeError, ZeroDivisionError, AttributeError):
             self.w.nmrSpectrum.setCurrentIndex(11)

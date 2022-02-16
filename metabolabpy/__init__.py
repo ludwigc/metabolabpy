@@ -1,4 +1,4 @@
 __author__ = 'Christian Ludwig (C.Ludwig@bham.ac.uk)'
 __credits__ = 'Christian Ludwig (C.Ludwig@bham.ac.uk)'
-__version__ = '0.6.55'
+__version__ = '0.6.56'
 __license__ = 'GPLv3'

@@ -5328,6 +5328,7 @@
     <addaction name="separator"/>
     <addaction name="actionFourier_Transform"/>
     <addaction name="menuPhase_Correction"/>
+    <addaction name="actionAutomatic_Referencing"/>
     <addaction name="separator"/>
     <addaction name="actionShow_NMR_Spectrum"/>
     <addaction name="actionSetup_Processing_Parameters"/>
@@ -5926,6 +5927,14 @@
   <action name="actionCreate">
    <property name="text">
     <string>Create...</string>
+   </property>
+  </action>
+  <action name="actionAutomatic_Referencing">
+   <property name="text">
+    <string>Automatic Referencing</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+R</string>
    </property>
   </action>
  </widget>
