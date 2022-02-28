@@ -1,0 +1,28 @@
+Name                   : L-Glutamic Acid
+AltName                : glutamate
+Source                 : HMDB
+IUPAC                  : (2S)-2-aminopentanedioic acid
+InChI_Identifier       : InChI=1S/C5H9NO4/c6-3(5(9)10)1-2-4(7)8/h3H,1-2,6H2,(H,7,8)(H,9,10)/t3-/m0/s1
+InChI_Key              : WHUUTDBJXJRKMK-VKHMYHEASA-N
+SMILES                 : N[C@@H](CCC(O)=O)C(O)=O
+Formula                : C5H9NO4
+Mass                   : 147.1293
+pKa                    : 
+HMDB                   : HMDB00148
+SMPDB                  : SMP00004 SMP00009 SMP00013 SMP00015 SMP00019 SMP00020 SMP00044 SMP00045 SMP00053 SMP00055 SMP00059 SMP00072 SMP00127 SMP00129
+KEGG                   : map00250 map00260 map00270 map00330 map00340 map00480 map00520 map00670 map00910
+CHEBI                  : 16015
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005
+C13HSQC                : 0  1  1  1  0
+CO_HSQC                : 1  2  2  2  1
+C13Intensities         : 0 1.5673 1 1.9231 0
+H1Index                : 2;1;000 3;1;001 3;1;002 4;2;012
+N15Index               : 
+C13chemicalShift       : 180.0      57.4582      29.7093      36.1705     180.0 
+H1chemicalShift        : 3.7598      2.1031       2.0521      2.3233
+N15chemicalShift       : 
+jCC                    : 1;2;52.7 2;3;35.1 3;4;35.1 4;5;50.674
+jCH                    : 
+jCN                    : 
+jHH                    : 

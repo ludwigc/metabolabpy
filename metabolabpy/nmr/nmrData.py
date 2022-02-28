@@ -13,7 +13,12 @@ from metabolabpy.nmr import nmrpipeData
 from scipy.optimize import leastsq
 from metabolabpy.nmr import apcbc
 import metabolabpy.__init__ as ml_version
-
+from metabolabpy.nmr import nmrHsqc
+import sys
+try:
+    import pygamma as pg
+except:
+    pass
 
 class NmrData:
 
@@ -71,6 +76,18 @@ class NmrData:
         self.proc3 = str('')
         self.outd = str('')
         self.ver = ml_version.__version__
+        self.hsqc = nmrHsqc.NmrHsqc()
+        self.xsa = []
+        self.ysa = []
+        self.xst = []
+        self.yst = []
+        self.assigned_text = []
+        self.library_text = []
+        if 'pygamma' in sys.modules:
+            self.has_pg = True
+        else:
+            self.has_pg = False
+
         # end __init__
 
     def __str__(self):  # pragma: no cover
@@ -657,6 +674,31 @@ class NmrData:
 
         return mat
         # end phase3
+
+    def pick_local_opt(self, start=[0, 0]):
+        start_h1 = len(self.spc[0]) - self.ppm2points(start[0], 0) - 1
+        start_c13 = len(self.spc) - self.ppm2points(start[1], 1) - 1
+        check_matrix = np.array([[[1,1],[0,1],[-1,1]],[[1,0],[0,0],[-1,0]],[[1,-1],[0,-1],[-1,-1]]])
+        local_spc = np.array([[]])
+        local_spc.resize(3,3)
+        for k in range(3):
+            for l in range(3):
+                local_spc[k][l] = self.spc[start_c13 + check_matrix[k][l][0]][start_h1 + check_matrix[k][l][1]].real
+
+        max_pos = np.where(local_spc == local_spc.max())
+        while check_matrix[max_pos][0][0] != 0 or check_matrix[max_pos][0][1] != 0:
+            start_h1 += check_matrix[max_pos][0][1]
+            start_c13 += check_matrix[max_pos][0][0]
+            for k in range(3):
+                for l in range(3):
+                    local_spc[k][l] = self.spc[start_c13 + check_matrix[k][l][0]][start_h1 + check_matrix[k][l][1]].real
+
+            max_pos = np.where(local_spc == local_spc.max())
+
+        start_h1 = self.points2ppm(len(self.spc[0]) - start_h1 - 1, 0)
+        start_c13 = self.points2ppm(len(self.spc) - start_c13 - 1, 1)
+        return [start_h1, start_c13]
+        # end pick_local_opt
 
     def points2hz(self, points, dim=0):
         sw = self.acq.sw_h[dim]

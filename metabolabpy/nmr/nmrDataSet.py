@@ -44,6 +44,8 @@ class NmrDataSet:
         self.peak_fill = False
         self.file_version = 0.0
         self.wb = []
+        self.old_data_set = -1
+        self.old_data_exp = -1
         # end __init__
 
     def add_peak(self, start_end=np.array([], dtype='float64'), peak_label=''):
@@ -806,7 +808,7 @@ class NmrDataSet:
                 nd2 = nd.NmrData()
                 # nd2.file_version = n.nmrdat[0][0].ver
                 for kk in nd2.__dict__.keys():
-                    if kk != 'acq' and kk != 'proc' and kk != 'display' and kk != 'apc':
+                    if kk != 'acq' and kk != 'proc' and kk != 'display' and kk != 'apc' and kk != 'hsqc':
                         kk2 = kk
                         str_idx = kk2.find('_')
                         while str_idx != -1:
@@ -907,6 +909,26 @@ class NmrDataSet:
                                     exec('ac.' + kkk + '=ab.' + kkk)
 
                             nd2.apc = ac
+
+                    elif kk == 'hsqc':
+                        if hasattr(n, kk):
+                            h = n.hsqc
+                            hp = nd2.hsqc
+                            for kkk in hp.__dict__.keys():
+                                if hasattr(h, kkk):
+                                    #if kkk != 'hsqc_data':
+                                    exec('hp.' + kkk + '=h.' + kkk)
+                                    #
+                                    #else:
+                                    #    hd = h.hsqc_data
+                                    #    hdp = hp.hsqc_data
+                                    #    for kkkk in hdp.__dict__.keys():
+                                    #        if hasattr(hd, kkkk):
+                                    #            exec('hdp.' + kkkk + '=hd.' + kkkk)
+                                    #
+                                    #    hp.hsqc_data = hdp
+
+                            nd2.hsqc = hp
 
                 if vver == '0.1':
                     nd2.ver = '0.1'
@@ -1138,6 +1160,8 @@ class NmrDataSet:
         nd1.data_set_number = data_set_number
         nd1.read_spc()
         nd1.read_pipe_2d(data_set_name + os.sep + data_set_number + '.proc', proc_data_name)
+        nd1.acq.sw[0] = nd1.acq.sw[0]*len(nd1.spc[0])/2**math.ceil(math.log(len(nd1.spc[0]),2))
+        nd1.acq.sw_h[0] = nd1.acq.sw_h[0]*len(nd1.spc[0])/2**math.ceil(math.log(len(nd1.spc[0]),2))
         self.nmrdat[self.s].append(nd1)
         # end read_spc
 

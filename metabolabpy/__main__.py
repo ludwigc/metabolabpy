@@ -4,6 +4,8 @@ import matplotlib  # pragma: no cover
 
 matplotlib.use("Agg")
 matplotlib.rcParams['agg.path.chunksize'] = 64000 #64_000_000_000
+#matplotlib.rc('xtick', labelsize=8)
+#matplotlib.rc('ytick', labelsize=8)
 
 try:
     from PySide2.QtUiTools import QUiLoader  # pragma: no cover
@@ -15,6 +17,7 @@ try:
     from PySide2 import QtGui  # pragma: no cover
     from PySide2 import QtCore  # pragma: no cover
     from PySide2.QtWidgets import QFileDialog  # pragma: no cover
+    from PySide2 import QtWidgets  # pragma: no cover
     from PySide2.QtCore import SIGNAL  # pragma: no cover
     from PySide2.QtWebEngineWidgets import QWebEngineView #, QWebEngineProfile, QWebEnginePage, \
     #    QWebEngineSettings  # pragma: no cover
@@ -22,6 +25,7 @@ try:
     from PySide2.QtWebEngineCore import QWebEngineUrlSchemeHandler  # pragma: no cover
     import PySide2  # pragma: no cover
     import qtmodern.styles  # pragma: no cover
+    from PySide2.QtGui import QPixmap
 except:
     pass
 
@@ -88,6 +92,7 @@ import scipy.io  # pragma: no cover
 from io import StringIO
 import contextlib
 import zipfile
+from collections import defaultdict
 # from notebook import notebookapp
 # import multiprocess
 import subprocess
@@ -95,8 +100,10 @@ import subprocess
 import itertools
 import xlsxwriter
 from string import ascii_uppercase
+import metabolabpy.nmr.nmrHsqc as nmrHsqc
 
 ## import pandas as pd                       # pragma: no cover
+
 
 try:
     # ------------------ MplWidget ------------------
@@ -127,13 +134,69 @@ try:
 
 
     # ------------------ MplWidget ------------------
+    # ------------------ MplWidget2 ------------------
+    class MplWidget2(QWidget):  # pragma: no cover
+
+        def __init__(self, parent=None):
+            QWidget.__init__(self, parent)
+            fig = Figure()
+            self.canvas = FigureCanvas(fig)
+            vertical_layout = QVBoxLayout()
+            vertical_layout.addWidget(self.canvas)
+            home = NavigationToolbar.home
+            def new_home(self, *args, **kwargs):
+                self.canvas.axes.autoscale()
+                self.canvas.draw()
+                self.canvas.toolbar.update()
+                home(self, *args, **kwargs)
+
+            NavigationToolbar.home = new_home
+            self.toolbar = NavigationToolbar(self.canvas, self)
+            #self.toolbar._actions['back'].setEnabled(False)
+            vertical_layout.addWidget(self.toolbar)
+
+            self.canvas.axes = self.canvas.figure.add_subplot(111)
+            self.setLayout(vertical_layout)
+            self.ph_corr = phCorr.PhCorr()
+            # end __init__
+
+
+    # ------------------ MplWidget2 ------------------
+    # ------------------ MplWidget3 ------------------
+    class MplWidget3(QWidget):  # pragma: no cover
+
+        def __init__(self, parent=None):
+            QWidget.__init__(self, parent)
+            fig = Figure()
+            self.canvas = FigureCanvas(fig)
+            vertical_layout = QVBoxLayout()
+            vertical_layout.addWidget(self.canvas)
+            home = NavigationToolbar.home
+            def new_home(self, *args, **kwargs):
+                self.canvas.axes.autoscale()
+                self.canvas.draw()
+                self.canvas.toolbar.update()
+                home(self, *args, **kwargs)
+
+            NavigationToolbar.home = new_home
+            self.toolbar = NavigationToolbar(self.canvas, self)
+            #self.toolbar._actions['back'].setEnabled(False)
+            vertical_layout.addWidget(self.toolbar)
+
+            self.canvas.axes = self.canvas.figure.add_subplot(111)
+            self.setLayout(vertical_layout)
+            self.ph_corr = phCorr.PhCorr()
+            # end __init__
+
+
+    # ------------------ MplWidget3 ------------------
 
     # ------------------ MplWidget ------------------
     class QWebEngineView2(QWebEngineView):
         def print_cmd(self):
             print("QWebEngineView2")
 
-    # ------------------ MplWidget2 ------------------
+    # ------------------ hsqcMultiplet ------------------
 except:
     pass
 
@@ -141,7 +204,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.6.56'
+        self.__version__ = '0.7.2'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -162,7 +225,9 @@ class main_w(object):  # pragma: no cover
         self.loader = QUiLoader()
         self.loader.registerCustomWidget(QWebEngineView2)
         self.loader.registerCustomWidget(MplWidget)
-        # self.loader.registerCustomWidget(MplWidget2)
+        self.loader.registerCustomWidget(MplWidget2)
+        self.loader.registerCustomWidget(MplWidget3)
+        # self.loader.registerCustomWidget(hsqcMultiplet)
         self.w = self.loader.load(self.file)
         self.zoom = False
 
@@ -182,6 +247,10 @@ class main_w(object):  # pragma: no cover
             "QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
         # connections
         # self.w.rDolphinExport.clicked.connect(self.setrDolphinExport)
+        self.w.displayAssignedMetabolites.setVisible(False)
+        self.w.displayAssignedMetabolites.stateChanged.connect(self.display_assigned_metabolites)
+        self.w.displayLibraryShifts.setVisible(False)
+        self.w.displayLibraryShifts.stateChanged.connect(self.display_library_shifts)
         self.w.exportPath.textChanged.connect(self.set_export_path)
         self.w.invertMatrix_1.stateChanged.connect(self.set_invert)
         self.w.invertMatrix_2.stateChanged.connect(self.set_invert)
@@ -244,6 +313,7 @@ class main_w(object):  # pragma: no cover
         self.w.actionPrevious_command.triggered.connect(self.previous_command)
         self.w.actionNext_command.triggered.connect(self.next_command)
         self.w.actionCorrect_Phase.triggered.connect(self.start_stop_ph_corr)
+        self.w.actionUpdate_MetaboLabPy_requires_restart.triggered.connect(self.update_metabolabpy)
         # self.w.actionZoomCorrect_Phase.triggered.connect(self.zoom_ph_corr)
         self.w.zoomPhCorr1d.clicked.connect(self.zoom_ph_corr)
         self.w.exitZoomPhCorr1d.clicked.connect(self.zoom_ph_corr)
@@ -292,7 +362,9 @@ class main_w(object):  # pragma: no cover
         self.w.actionHelp.triggered.connect(self.show_help)
         self.w.actionToggle_FullScreen.triggered.connect(self.show_main_window)
         self.w.setBox.valueChanged.connect(self.change_data_set_exp)
+        self.w.setBox.setKeyboardTracking(False)
         self.w.expBox.valueChanged.connect(self.change_data_set_exp)
+        self.w.expBox.setKeyboardTracking(False)
         self.w.posCol.currentIndexChanged.connect(self.get_disp_pars1)
         self.w.negCol.currentIndexChanged.connect(self.get_disp_pars2)
         self.w.posColR.textChanged.connect(self.get_disp_pars3)
@@ -355,6 +427,11 @@ class main_w(object):  # pragma: no cover
         self.w.actionOpen_Script.triggered.connect(self.open_script)
         self.w.actionSave_Script.triggered.connect(self.save_script)
         self.w.actionExecute_Script.triggered.connect(self.exec_script)
+        self.w.hsqcMetabolites.clicked.connect(self.set_hsqc_metabolite)
+        self.w.hsqcAssignedMetabolites.clicked.connect(self.set_hsqc_assigned_metabolite)
+        self.w.mlSaveButton.clicked.connect(self.save_ml_info)
+        self.w.mlResetButton.clicked.connect(self.reset_ml_info)
+        self.w.deleteAssignedHsqc.clicked.connect(self.remove_assigned_metabolite)
         # self.w.helpComboBox.currentIndexChanged.connect(self.set_help)
         self.w.helpComboBox.activated.connect(self.set_help)
         # Quit Button
@@ -397,8 +474,8 @@ class main_w(object):  # pragma: no cover
         self.w.iSpc_p6.textChanged.connect(self.get_i_spc_p6)
         self.set_font_size()
         self.w.MplWidget.toolbar.setVisible(False)
-        self.w.MplWidget2.toolbar.setVisible(False)
-        self.w.MplWidget3.toolbar.setVisible(False)
+        self.w.hsqcMultiplet.toolbar.setVisible(False)
+        self.w.hsqcPeak.toolbar.setVisible(False)
         self.w.MplWidget.setFocus()
         self.set_zoom()
         self.w.pickRowColPhCorr2d.clicked.connect(self.pick_col_row)
@@ -430,6 +507,12 @@ class main_w(object):  # pragma: no cover
         self.w.setStyleSheet("font-size: " + str(self.cf.font_size) + "pt")
         self.w.actionreInitialise_pre_processing_plot_colours.triggered.connect(self.nd.pp.init_plot_colours)
         self.w.actionreInitialise_plot_colours.triggered.connect(self.set_standard_plot_colours)
+        self.w.clearAssignedHsqc.clicked.connect(self.clear_assigned_hsqc)
+        self.w.displayMetaboliteInformation.clicked.connect(self.display_metabolite_information)
+        self.w.hsqcAddPeak.clicked.connect(lambda: self.ginput_hsqc(0))
+        self.w.hsqcRemovePeak.clicked.connect(lambda: self.ginput_hsqc2(0))
+        self.w.metaboliteResetButton.clicked.connect(self.metabolite_reset)
+        self.buttons = {}
         # print(sys.platform)
         if sys.platform == 'darwin':
             self.w.actionCreate.setText('Create Launchpad Icon')
@@ -453,6 +536,15 @@ class main_w(object):  # pragma: no cover
         #
         self.w.helpView.page().profile().downloadRequested.connect(self._download_requested)
         self.w.peakWidget.setColumnWidth(2, 182)
+        self.layout = QGridLayout(self.w.peakSelection)
+        #self.w.h1Range.textChanged.connect(self.get_hsqc_pars1())
+        #self.w.c13Range.textChanged.connect(self.get_hsqc_pars2())
+        #self.w.threshold.textChanged.connect(self.get_hsqc_pars3())
+        #self.w.jCC.textChanged.connect(self.get_hsqc_pars4())
+        #self.w.jCH.textChanged.connect(self.get_hsqc_pars5())
+        #self.w.nMax.textChanged.connect(self.get_hsqc_pars6())
+        #self.w..textChanged.connect(self.get_hsqc_pars())
+        #self.set_hsqc()
         # end __init__
 
     def activate_command_line(self):
@@ -729,7 +821,22 @@ class main_w(object):  # pragma: no cover
         # end cancel2dPhCorr
 
     def change_data_set_exp(self):
+        dam = False
+        if self.w.displayAssignedMetabolites.isChecked() == True:
+            dam = True
+            self.w.displayAssignedMetabolites.setChecked(False)
+
+        self.w.cmdLine.setFocus()
+        self.w.cmdLine.clearFocus()
         cidx = self.w.nmrSpectrum.currentIndex()
+        met_idx = self.w.hsqcMetabolites.currentIndex()
+        cur_peak = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak
+        #if self.w.hsqcAnalysis.isChecked() == True:
+        #    hsqc_analysis_checked = True
+        #    self.w.hsqcAnalysis.setChecked(False)
+        #else:
+        #    hsqc_analysis_checked = False
+
         if (len(self.nd.nmrdat) > 0):
             if (len(self.nd.nmrdat[self.nd.s]) > 0):
                 self.keep_zoom = self.w.keepZoom.isChecked()
@@ -777,6 +884,7 @@ class main_w(object):  # pragma: no cover
 
                     self.keep_zoom = keep_zoom
                     self.w.keepZoom.setChecked(keep_zoom)
+                    #if
                 # else:
                 #    if (self.ph_corr_active == False):
                 #        if (self.w.autoPlot.isChecked()):
@@ -807,9 +915,18 @@ class main_w(object):  # pragma: no cover
             self.w.setBox.valueChanged.connect(lambda: self.change_data_set_exp())
             self.w.expBox.valueChanged.connect(lambda: self.change_data_set_exp())
 
-        if (self.w.autoPlot.isChecked() is False):
+        if self.w.autoPlot.isChecked() is False:
+            if self.w.hsqcAnalysis.isChecked() == True:
+                self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak = cur_peak
+                self.w.hsqcMetabolites.setCurrentIndex(self.w.hsqcMetabolites.model().index(-1, 0))
+                self.w.hsqcAssignedMetabolites.setCurrentIndex(self.w.hsqcAssignedMetabolites.model().index(-1, 0))
+                self.w.hsqcMetabolites.setCurrentIndex(met_idx)
+                self.set_hsqc_metabolite()
+
             self.w.nmrSpectrum.setCurrentIndex(cidx)
 
+        if dam == True:
+            self.w.displayAssignedMetabolites.setChecked(True)
         # end change_data_set_exp
 
     def change_data_set_exp_ph_ref(self):
@@ -976,6 +1093,21 @@ class main_w(object):  # pragma: no cover
         return "Workspace cleared"
         # end clear
 
+    def clear_assigned_hsqc(self):
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data = {}
+        self.update_assigned_metabolites()
+        self.w.hsqcMetabolites.setCurrentIndex(self.w.hsqcMetabolites.model().index(-1, 0))
+        if hasattr(self.w.metaboliteImage.scene(), 'clear'):
+            self.w.metaboliteImage.scene().clear()
+
+        self.delete_buttons(0)
+        self.w.hsqcPeak.canvas.axes.clear()
+        self.w.hsqcPeak.canvas.draw()
+        self.w.hsqcMultiplet.canvas.axes.clear()
+        self.w.hsqcMultiplet.canvas.draw()
+        self.w.metaboliteInformation.setText('')
+        # end clear_assigned_hsqc
+
     def create_icon_mac(self):
         home_dir = os.path.expanduser('~')
         app_dir2 = os.path.join(home_dir, 'Applications')
@@ -1075,6 +1207,407 @@ class main_w(object):  # pragma: no cover
         self.w.MplWidget.canvas.flush_events()
         self.w.MplWidget.canvas.draw()
         # end data_pre_processing
+
+    def display_assigned_metabolites(self):
+        if self.w.displayAssignedMetabolites.isChecked() == True:
+            if self.cf.mode == 'dark':
+                col1 = 'y'
+                col2 = 'gray'
+            else:
+                col1 = 'k'
+                col2 = 'r'
+
+            deltax = 0.01
+            delta_h1 = self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(len(self.nd.nmrdat[self.nd.s][self.nd.e].spc[0]) - 1, 0) - self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(0, 0)
+            delta_c13 = self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(len(self.nd.nmrdat[self.nd.s][self.nd.e].spc) - 1, 1) - self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(0, 1)
+            deltay = deltax * delta_c13 * 2 / delta_h1
+            for k in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data.keys():
+                for l in range(len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked)):
+                    x = np.mean(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked[l])
+                    y = np.mean(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].c13_picked[l])
+                    self.nd.nmrdat[self.nd.s][self.nd.e].xsa.append(self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col1, linewidth=2))
+                    self.nd.nmrdat[self.nd.s][self.nd.e].ysa.append(self.w.MplWidget.canvas.axes.plot([x, x], [y - deltay, y + deltay], color=col1, linewidth=2))
+                    self.nd.nmrdat[self.nd.s][self.nd.e].assigned_text.append(self.w.MplWidget.canvas.axes.text(x - 0.5 * deltax, y - 0.5 * deltay, k, color=col1, fontweight='bold'))
+
+            self.w.MplWidget.canvas.draw()
+
+        else:
+            for k in range(len(self.nd.nmrdat[self.nd.s][self.nd.e].xsa)):
+                line1 = self.nd.nmrdat[self.nd.s][self.nd.e].xsa[k].pop(0)
+                line2 = self.nd.nmrdat[self.nd.s][self.nd.e].ysa[k].pop(0)
+                line1.remove()
+                line2.remove()
+
+            for k in range(len(self.nd.nmrdat[self.nd.s][self.nd.e].assigned_text)):
+                self.nd.nmrdat[self.nd.s][self.nd.e].assigned_text[k].remove()
+
+            self.nd.nmrdat[self.nd.s][self.nd.e].xsa = []
+            self.nd.nmrdat[self.nd.s][self.nd.e].ysa = []
+            self.nd.nmrdat[self.nd.s][self.nd.e].assigned_text = []
+            self.w.MplWidget.canvas.draw()
+        # end display_assigned_metabolites
+
+    def display_library_shifts(self):
+        if self.w.displayLibraryShifts.isChecked() == True:
+            if self.cf.mode == 'dark':
+                col1 = 'y'
+                col2 = 'gray'
+            else:
+                col1 = 'k'
+                col2 = 'gray'
+
+            deltax = 0.01
+            delta_h1 = self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(len(self.nd.nmrdat[self.nd.s][self.nd.e].spc[0]) - 1, 0) - self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(0, 0)
+            delta_c13 = self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(len(self.nd.nmrdat[self.nd.s][self.nd.e].spc) - 1, 1) - self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(0, 1)
+            deltay = deltax * delta_c13 * 2 / delta_h1
+            for k in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.metabolite_list:
+                if k in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data.keys():
+                    for l in range(len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked)):
+                        if len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked[l]) == 0:
+                            x = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_shifts[l]
+                            c13idx = np.where(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].hsqc == 1)[0]
+                            y = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].c13_shifts[c13idx[l]]
+                            self.nd.nmrdat[self.nd.s][self.nd.e].xst.append(self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col2, linewidth=2))
+                            self.nd.nmrdat[self.nd.s][self.nd.e].yst.append(self.w.MplWidget.canvas.axes.plot([x, x], [y - deltay, y + deltay], color=col2, linewidth=2))
+                            self.nd.nmrdat[self.nd.s][self.nd.e].library_text.append(self.w.MplWidget.canvas.axes.text(x - 0.5 * deltax, y - 0.5 * deltay, k, color=col2, fontweight='bold'))
+
+                else:
+                    hsqc = nmrHsqc.NmrHsqc()
+                    hsqc.read_metabolite_information(k)
+                    hsqc.set_metabolite_information(k, hsqc.metabolite_information)
+                    hsqc.hsqc_data[k].init_data(hsqc.metabolite_information)
+                    c13_shifts = hsqc.hsqc_data[k].c13_shifts[np.where(hsqc.hsqc_data[k].hsqc == 1)]
+                    for l in range(len(hsqc.hsqc_data[k].h1_shifts)):
+                        x = hsqc.hsqc_data[k].h1_shifts[l]
+                        y = c13_shifts[l]
+                        self.nd.nmrdat[self.nd.s][self.nd.e].xst.append(self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col2, linewidth=2))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].yst.append(self.w.MplWidget.canvas.axes.plot([x, x], [y - deltay, y + deltay], color=col2, linewidth=2))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].library_text.append(self.w.MplWidget.canvas.axes.text(x - 0.5 * deltax, y - 0.5 * deltay, k, color=col2, fontweight='bold'))
+
+            self.w.MplWidget.canvas.draw()
+
+        else:
+            for k in range(len(self.nd.nmrdat[self.nd.s][self.nd.e].xst)):
+                line1 = self.nd.nmrdat[self.nd.s][self.nd.e].xst[k].pop(0)
+                line2 = self.nd.nmrdat[self.nd.s][self.nd.e].yst[k].pop(0)
+                line1.remove()
+                line2.remove()
+
+            for k in range(len(self.nd.nmrdat[self.nd.s][self.nd.e].library_text)):
+                self.nd.nmrdat[self.nd.s][self.nd.e].library_text[k].remove()
+
+            self.nd.nmrdat[self.nd.s][self.nd.e].xst = []
+            self.nd.nmrdat[self.nd.s][self.nd.e].yst = []
+            self.nd.nmrdat[self.nd.s][self.nd.e].library_text = []
+            self.w.MplWidget.canvas.draw()
+        # end display_assigned_metabolites
+
+    def display_metabolite_information(self):
+        code_out = io.StringIO()
+        code_err = io.StringIO()
+        sys.stdout = code_out
+        sys.stderr = code_err
+        if self.w.hsqcAssignedMetabolites.currentIndex().row() < 0:
+            print("No metabolite selected")
+        else:
+            metabolite_name = self.w.hsqcAssignedMetabolites.currentIndex().data()
+            print(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].__str__())
+
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
+        if self.cf.mode == 'dark':
+            txt_col = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
+        else:
+            txt_col = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
+
+        self.w.console.setTextColor(txt_col)
+        self.w.console.append(code_out.getvalue())
+        self.w.console.setTextColor(err_col)
+        self.w.console.append(code_err.getvalue())
+        code_out.close()
+        code_err.close()
+        self.show_console()
+        # end display_metabolite_information
+
+    def delete_buttons(self, n_buttons=0):
+        n_entries = len(self.w.peakSelection.children())
+        for k in range(n_entries):
+            if hasattr( self.w.peakSelection.children()[k], 'text'):
+                if int(self.w.peakSelection.children()[k].text())  > n_buttons:
+                    self.w.peakSelection.children()[k].deleteLater()
+
+        # end delete_buttons
+
+    def create_buttons(self, n_buttons=0):
+        existing_buttons = len(self.w.peakSelection.children()) - 1
+
+        if existing_buttons < 1:
+            self.button1 = QPushButton("1", self.w.peakSelection)
+            self.button1.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button1.clicked.connect(lambda: self.plot_metabolite_peak(1))
+
+        if n_buttons > 1 and existing_buttons < 2:
+            self.button2 = QPushButton("2", self.w.peakSelection)
+            self.button2.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button2.clicked.connect(lambda: self.plot_metabolite_peak(2))
+
+        if n_buttons > 2 and existing_buttons < 3:
+            self.button3 = QPushButton("3", self.w.peakSelection)
+            self.button3.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button3.clicked.connect(lambda: self.plot_metabolite_peak(3))
+
+        if n_buttons > 3 and existing_buttons < 4:
+            self.button4 = QPushButton("4", self.w.peakSelection)
+            self.button4.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button4.clicked.connect(lambda: self.plot_metabolite_peak(4))
+
+        if n_buttons > 4 and existing_buttons < 5:
+            self.button5 = QPushButton("5", self.w.peakSelection)
+            self.button5.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button5.clicked.connect(lambda: self.plot_metabolite_peak(5))
+
+        if n_buttons > 5 and existing_buttons < 6:
+            self.button6 = QPushButton("6", self.w.peakSelection)
+            self.button6.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button6.clicked.connect(lambda: self.plot_metabolite_peak(6))
+
+        if n_buttons > 6 and existing_buttons < 7:
+            self.button7 = QPushButton("7", self.w.peakSelection)
+            self.button7.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button7.clicked.connect(lambda: self.plot_metabolite_peak(7))
+
+        if n_buttons > 7 and existing_buttons < 8:
+            self.button8 = QPushButton("8", self.w.peakSelection)
+            self.button8.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button8.clicked.connect(lambda: self.plot_metabolite_peak(8))
+
+        if n_buttons > 8 and existing_buttons < 9:
+            self.button9 = QPushButton("9", self.w.peakSelection)
+            self.button9.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button9.clicked.connect(lambda: self.plot_metabolite_peak(9))
+
+        if n_buttons > 9 and existing_buttons < 10:
+            self.button10 = QPushButton("10", self.w.peakSelection)
+            self.button10.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button10.clicked.connect(lambda: self.plot_metabolite_peak(10))
+
+        if n_buttons > 10 and existing_buttons < 11:
+            self.button11 = QPushButton("11", self.w.peakSelection)
+            self.button11.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button11.clicked.connect(lambda: self.plot_metabolite_peak(11))
+
+        if n_buttons > 11 and existing_buttons < 12:
+            self.button12 = QPushButton("12", self.w.peakSelection)
+            self.button12.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button12.clicked.connect(lambda: self.plot_metabolite_peak(12))
+
+        if n_buttons > 12 and existing_buttons < 13:
+            self.button13 = QPushButton("13", self.w.peakSelection)
+            self.button13.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button13.clicked.connect(lambda: self.plot_metabolite_peak(13))
+
+        if n_buttons > 13 and existing_buttons < 14:
+            self.button14 = QPushButton("14", self.w.peakSelection)
+            self.button14.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button14.clicked.connect(lambda: self.plot_metabolite_peak(14))
+
+        if n_buttons > 14 and existing_buttons < 15:
+            self.button15 = QPushButton("15", self.w.peakSelection)
+            self.button15.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button15.clicked.connect(lambda: self.plot_metabolite_peak(15))
+
+        if n_buttons > 15 and existing_buttons < 16:
+            self.button16 = QPushButton("16", self.w.peakSelection)
+            self.button16.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button16.clicked.connect(lambda: self.plot_metabolite_peak(16))
+
+        if n_buttons > 16 and existing_buttons < 17:
+            self.button17 = QPushButton("17", self.w.peakSelection)
+            self.button17.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button17.clicked.connect(lambda: self.plot_metabolite_peak(17))
+
+        if n_buttons > 17 and existing_buttons < 18:
+            self.button18 = QPushButton("18", self.w.peakSelection)
+            self.button18.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button18.clicked.connect(lambda: self.plot_metabolite_peak(18))
+
+        if n_buttons > 18 and existing_buttons < 19:
+            self.button19 = QPushButton("19", self.w.peakSelection)
+            self.button19.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button19.clicked.connect(lambda: self.plot_metabolite_peak(19))
+
+        if n_buttons > 19 and existing_buttons < 20:
+            self.button20 = QPushButton("20", self.w.peakSelection)
+            self.button20.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button20.clicked.connect(lambda: self.plot_metabolite_peak(20))
+
+        if n_buttons > 20 and existing_buttons < 21:
+            self.button21 = QPushButton("21", self.w.peakSelection)
+            self.button21.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button21.clicked.connect(lambda: self.plot_metabolite_peak(21))
+
+        if n_buttons > 21 and existing_buttons < 22:
+            self.button22 = QPushButton("22", self.w.peakSelection)
+            self.button22.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button22.clicked.connect(lambda: self.plot_metabolite_peak(22))
+
+        if n_buttons > 22 and existing_buttons < 23:
+            self.button23 = QPushButton("23", self.w.peakSelection)
+            self.button23.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button23.clicked.connect(lambda: self.plot_metabolite_peak(23))
+
+        if n_buttons > 23 and existing_buttons < 24:
+            self.button24 = QPushButton("24", self.w.peakSelection)
+            self.button24.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button24.clicked.connect(lambda: self.plot_metabolite_peak(24))
+
+        if n_buttons > 24 and existing_buttons < 25:
+            self.button25 = QPushButton("25", self.w.peakSelection)
+            self.button25.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button25.clicked.connect(lambda: self.plot_metabolite_peak(25))
+
+        if n_buttons > 25 and existing_buttons < 26:
+            self.button26 = QPushButton("26", self.w.peakSelection)
+            self.button26.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button26.clicked.connect(lambda: self.plot_metabolite_peak(26))
+
+        if n_buttons > 26 and existing_buttons < 27:
+            self.button27 = QPushButton("27", self.w.peakSelection)
+            self.button27.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button27.clicked.connect(lambda: self.plot_metabolite_peak(27))
+
+        if n_buttons > 27 and existing_buttons < 28:
+            self.button28 = QPushButton("28", self.w.peakSelection)
+            self.button28.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button28.clicked.connect(lambda: self.plot_metabolite_peak(28))
+
+        if n_buttons > 28 and existing_buttons < 29:
+            self.button29 = QPushButton("29", self.w.peakSelection)
+            self.button29.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button29.clicked.connect(lambda: self.plot_metabolite_peak(29))
+
+        if n_buttons > 29 and existing_buttons < 30:
+            self.button30 = QPushButton("30", self.w.peakSelection)
+            self.button30.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button30.clicked.connect(lambda: self.plot_metabolite_peak(30))
+
+        if n_buttons > 30 and existing_buttons < 31:
+            self.button31 = QPushButton("31", self.w.peakSelection)
+            self.button31.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button31.clicked.connect(lambda: self.plot_metabolite_peak(31))
+
+        if n_buttons > 31 and existing_buttons < 32:
+            self.button32 = QPushButton("32", self.w.peakSelection)
+            self.button32.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button32.clicked.connect(lambda: self.plot_metabolite_peak(32))
+
+        if n_buttons > 32 and existing_buttons < 33:
+            self.button33 = QPushButton("33", self.w.peakSelection)
+            self.button33.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button33.clicked.connect(lambda: self.plot_metabolite_peak(33))
+
+        if n_buttons > 33 and existing_buttons < 34:
+            self.button34 = QPushButton("34", self.w.peakSelection)
+            self.button34.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button34.clicked.connect(lambda: self.plot_metabolite_peak(34))
+
+        if n_buttons > 34 and existing_buttons < 35:
+            self.button35 = QPushButton("35", self.w.peakSelection)
+            self.button35.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button35.clicked.connect(lambda: self.plot_metabolite_peak(35))
+
+        if n_buttons > 35 and existing_buttons < 36:
+            self.button36 = QPushButton("36", self.w.peakSelection)
+            self.button36.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button36.clicked.connect(lambda: self.plot_metabolite_peak(36))
+
+        if n_buttons > 36 and existing_buttons < 37:
+            self.button37 = QPushButton("37", self.w.peakSelection)
+            self.button37.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button37.clicked.connect(lambda: self.plot_metabolite_peak(37))
+
+        if n_buttons >37 and existing_buttons < 38:
+            self.button38 = QPushButton("38", self.w.peakSelection)
+            self.button38.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button38.clicked.connect(lambda: self.plot_metabolite_peak(38))
+
+        if n_buttons > 38 and existing_buttons < 39:
+            self.button39 = QPushButton("39", self.w.peakSelection)
+            self.button39.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button39.clicked.connect(lambda: self.plot_metabolite_peak(39))
+
+        if n_buttons > 39 and existing_buttons < 40:
+            self.button40 = QPushButton("40", self.w.peakSelection)
+            self.button40.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button40.clicked.connect(lambda: self.plot_metabolite_peak(40))
+
+        if n_buttons > 40 and existing_buttons < 41:
+            self.button41 = QPushButton("41", self.w.peakSelection)
+            self.button41.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button41.clicked.connect(lambda: self.plot_metabolite_peak(41))
+
+        if n_buttons > 41 and existing_buttons < 42:
+            self.button42 = QPushButton("42", self.w.peakSelection)
+            self.button42.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button42.clicked.connect(lambda: self.plot_metabolite_peak(42))
+
+        if n_buttons > 42 and existing_buttons < 43:
+            self.button43 = QPushButton("43", self.w.peakSelection)
+            self.button43.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button43.clicked.connect(lambda: self.plot_metabolite_peak(43))
+
+        if n_buttons > 43 and existing_buttons < 44:
+            self.button44 = QPushButton("44", self.w.peakSelection)
+            self.button44.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button44.clicked.connect(lambda: self.plot_metabolite_peak(44))
+
+        if n_buttons > 44 and existing_buttons < 45:
+            self.button45 = QPushButton("45", self.w.peakSelection)
+            self.button45.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button45.clicked.connect(lambda: self.plot_metabolite_peak(45))
+
+        if n_buttons > 45 and existing_buttons < 46:
+            self.button46 = QPushButton("46", self.w.peakSelection)
+            self.button46.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button46.clicked.connect(lambda: self.plot_metabolite_peak(46))
+
+        if n_buttons > 46 and existing_buttons < 47:
+            self.button47 = QPushButton("47", self.w.peakSelection)
+            self.button47.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button47.clicked.connect(lambda: self.plot_metabolite_peak(47))
+
+        if n_buttons > 47 and existing_buttons < 48:
+            self.button48 = QPushButton("48", self.w.peakSelection)
+            self.button48.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button48.clicked.connect(lambda: self.plot_metabolite_peak(48))
+
+        if n_buttons > 48 and existing_buttons < 49:
+            self.button49 = QPushButton("49", self.w.peakSelection)
+            self.button49.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+            self.button49.clicked.connect(lambda: self.plot_metabolite_peak(49))
+        # end create_buttons
+
+    def make_buttons(self, n_buttons=0):
+        if n_buttons == 0:
+            return
+
+        existing_buttons = len(self.w.peakSelection.children()) - 1
+        self.delete_buttons(n_buttons)
+        self.create_buttons(n_buttons)
+        while self.layout.itemAt(0) != None:
+            self.layout.removeItem(self.layout.itemAt(0))
+
+        n_rows = round(math.sqrt(n_buttons))
+        n_cols = math.ceil(n_buttons / n_rows)
+        for k in range(n_buttons):
+            col = k % n_cols
+            row = math.floor((k + 0.1) / n_cols)
+            #print("n_rows: {}, n_cols: {}, row: {}, col: {}".format(n_rows, n_cols, row, col))
+            exec("self.layout.addWidget(self.button" + str(k+1) + ", " + str(row) + " , " + str(col) + ")")
+
+    # end make_buttons
 
     def empty_col_row(self):
         while len(self.w.MplWidget.canvas.axes.lines) > 0:
@@ -1520,6 +2053,159 @@ class main_w(object):  # pragma: no cover
 
         # end get_disp_pars15
 
+    def get_hsqc_pars1(self):
+        h = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        h.range_h = float(self.w.h1Range.text())
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.range_h = h.range_h
+
+        # end get_hsqc_pars1
+
+    def get_hsqc_pars2(self):
+        h = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        h.range_c = float(self.w.c13Range.text())
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.range_c = h.range_c
+
+        # end get_hsqc_pars2
+
+    def get_hsqc_pars3(self):
+        h = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        h.threshold = float(self.w.threshold.text())
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.threshold = h.threshold
+
+        # end get_hsqc_pars3
+
+    def get_hsqc_pars4(self):
+        h = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        h.j_cc = float(self.w.jCC.text())
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.j_cc = h.j_cc
+
+        # end get_hsqc_pars4
+
+    def get_hsqc_pars5(self):
+        h = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        h.j_ch = float(self.w.jCH.text())
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.j_ch = h.j_ch
+
+        # end get_hsqc_pars5
+
+    def get_hsqc_pars6(self):
+        h = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        h.n_max = int(self.w.nMax.text())
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.n_max = h.n_max
+
+        # end get_hsqc_pars6
+
+    def get_hsqc_pars7(self):
+        tf = [True, False]
+        h = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        tf2 = self.w.useSplittingCB.currentIndex()
+        h.use_splitting = tf[tf2]
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.use_splitting = h.use_splitting
+
+        # end get_hsqc_pars7
+
+    def get_hsqc_pars8(self):
+        tf = [True, False]
+        h = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        tf2 = self.w.tiltHsqcCB.currentIndex()
+        h.tilt_hsqc = tf[tf2]
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.tilt_hsqc = h.tilt_hsqc
+
+        # end get_hsqc_pars8
+
+    def get_hsqc_pars9(self):
+        tf = [True, False]
+        h = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        tf2 = self.w.displayLibraryCB.currentIndex()
+        h.display_library_shift = tf[tf2]
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.display_library_shift = h.display_library_shift
+
+        # end get_hsqc_pars9
+
+    def get_hsqc_pars10(self):
+        tf = [True, False]
+        h = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        tf2 = self.w.displayPickedCB.currentIndex()
+        h.display_peaks_of_metabolite = tf[tf2]
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.display_peaks_of_metabolite = h.display_peaks_of_metabolite
+
+        # end get_hsqc_pars10
+
+    def get_hsqc_pars11(self):
+        tf = [True, False]
+        h = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        tf2 = self.w.highlightDoubleCB.currentIndex()
+        h.highlight_double_assignments = tf[tf2]
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.highlight_double_assignments = h.highlight_double_assignments
+
+        # end get_hsqc_pars11
+
+    def get_hsqc_pars12(self):
+        tf = [True, False]
+        h = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        tf2 = self.w.displayOverlayShiftsCB.currentIndex()
+        h.display_overlay_shifts = tf[tf2]
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.display_overlay_shifts = h.display_overlay_shifts
+
+        # end get_hsqc_pars12
+
+    def get_hsqc_pars13(self):
+        tf = [True, False]
+        h = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        tf2 = self.w.coHsqcCB.currentIndex()
+        h.co_hsqc = tf[tf2]
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.co_hsqc = h.co_hsqc
+
+        # end get_hsqc_pars13
+
+    def get_hsqc_pars14(self):
+        tf = [True, False]
+        h = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        tf2 = self.w.pickLocalOptCB.currentIndex()
+        h.pick_local_opt = tf[tf2]
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.pick_local_opt = h.pick_local_opt
+
+        # end get_hsqc_pars14
+
+    def get_hsqc_pars15(self):
+        tf = [True, False]
+        h = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        tf2 = self.w.autoscaleCB.currentIndex()
+        h.autoscale_j = tf[tf2]
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.autoscale_j = h.autoscale_j
+
+        # end get_hsqc_pars15
+
     def get_proc_pars1(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
         p.window_type[0] = self.w.windowFunction.currentIndex()
@@ -1840,6 +2526,77 @@ class main_w(object):  # pragma: no cover
             self.plot_spc()
             # self.set_exclude_pre_proc()
 
+    def on_g_input_hsqc2_click(self, event):
+        self.cur_clicks += 1
+        if self.cur_clicks < self.n_clicks:
+            self.xdata.append(event.xdata)
+            self.ydata.append(event.ydata)
+        else:
+            self.xdata.append(event.xdata)
+            self.ydata.append(event.ydata)
+            self.n_clicks = 1
+            self.cur_clicks = 0
+            cid = self.w.hsqcPeak.canvas.mpl_connect('button_press_event', self.on_g_input_hsqc2_click)
+            cid = self.w.hsqcPeak.canvas.mpl_disconnect(cid)
+            cid2 = self.w.hsqcPeak.canvas.mpl_connect('button_release_event', self.on_g_input_hsqc2_click)
+            cid2 = self.w.hsqcPeak.canvas.mpl_disconnect(cid2)
+            if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.pick_local_opt == True:
+                new_max = self.nd.nmrdat[self.nd.s][self.nd.e].pick_local_opt([self.xdata[0], self.ydata[0]])
+                self.xdata[0] = new_max[0]
+                self.ydata[0] = new_max[1]
+
+            h1_picked = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[
+                self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite].h1_picked[
+                self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak - 1]
+            c13_picked = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[
+                self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite].c13_picked[
+                self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak - 1]
+            dist = np.array([])
+            dist.resize(len(h1_picked))
+            for k in range(len(h1_picked)):
+                dist[k] = (h1_picked[k] - self.xdata[0]) ** 2 + (c13_picked[k] - self.ydata[0]) ** 2
+
+            idx = np.where(dist == dist.min())[0][0]
+            print("h1_picked: {}, c13_picked: {}, idx: {}".format(h1_picked, c13_picked, idx))
+            h1_picked.remove(h1_picked[idx])
+            c13_picked.remove(c13_picked[idx])
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[
+                self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite].h1_picked[
+                self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak - 1] = h1_picked
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[
+                self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite].c13_picked[
+                self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak - 1] = c13_picked
+            self.xdata = []
+            self.ydata = []
+            self.plot_metabolite_peak(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak)
+            # self.set_exclude_pre_proc()
+
+    def on_g_input_hsqc_click(self, event):
+        self.cur_clicks += 1
+        if self.cur_clicks < self.n_clicks:
+            self.xdata.append(event.xdata)
+            self.ydata.append(event.ydata)
+        else:
+            self.xdata.append(event.xdata)
+            self.ydata.append(event.ydata)
+            self.n_clicks = 1
+            self.cur_clicks = 0
+            cid = self.w.hsqcPeak.canvas.mpl_connect('button_press_event', self.on_g_input_hsqc_click)
+            cid = self.w.hsqcPeak.canvas.mpl_disconnect(cid)
+            cid2 = self.w.hsqcPeak.canvas.mpl_connect('button_release_event', self.on_g_input_hsqc_click)
+            cid2 = self.w.hsqcPeak.canvas.mpl_disconnect(cid2)
+            if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.pick_local_opt == True:
+                new_max = self.nd.nmrdat[self.nd.s][self.nd.e].pick_local_opt([self.xdata[0], self.ydata[0]])
+                self.xdata[0] = new_max[0]
+                self.ydata[0] = new_max[1]
+
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite].h1_picked[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak - 1].append(self.xdata[0])
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite].c13_picked[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak - 1].append(self.ydata[0])
+            self.xdata = []
+            self.ydata = []
+            self.plot_metabolite_peak(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak)
+            # self.set_exclude_pre_proc()
+
     def on_g_input_click_ref_1d(self, event):
         self.cur_clicks += 1
         if self.cur_clicks < self.n_clicks:
@@ -2039,6 +2796,22 @@ class main_w(object):  # pragma: no cover
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
         # end ginput
 
+    def ginput_hsqc(self, n_clicks=1):
+        self.w.hsqcPeak.canvas.setFocus()
+        self.n_clicks = n_clicks
+        cid = self.w.hsqcPeak.canvas.mpl_connect('button_press_event', self.on_g_input_hsqc_click)
+        cid2 = self.w.hsqcPeak.canvas.mpl_connect('button_release_event', self.on_g_input_hsqc_click)
+        cid2 = self.w.hsqcPeak.canvas.mpl_disconnect(cid2)
+        # end ginput_hsqc
+
+    def ginput_hsqc2(self, n_clicks=1):
+        self.w.hsqcPeak.canvas.setFocus()
+        self.n_clicks = n_clicks
+        cid = self.w.hsqcPeak.canvas.mpl_connect('button_press_event', self.on_g_input_hsqc2_click)
+        cid2 = self.w.hsqcPeak.canvas.mpl_connect('button_release_event', self.on_g_input_hsqc2_click)
+        cid2 = self.w.hsqcPeak.canvas.mpl_disconnect(cid2)
+        # end ginput_hsqc
+
     def ginput_add_peak(self, n_clicks=2):
         self.w.MplWidget.canvas.setFocus()
         self.show_nmr_spectrum()
@@ -2046,7 +2819,7 @@ class main_w(object):  # pragma: no cover
         cid = self.w.MplWidget.canvas.mpl_connect('button_press_event', self.on_g_input_click_add_peak)
         cid2 = self.w.MplWidget.canvas.mpl_connect('button_release_event', self.on_g_input_click_add_peak)
         cid2 = self.w.MplWidget.canvas.mpl_disconnect(cid2)
-        # end ginput
+        # end ginput_add_peak
 
     def ginput_ref_1d(self, n_clicks=1):
         self.w.MplWidget.canvas.setFocus()
@@ -2310,26 +3083,26 @@ class main_w(object):  # pragma: no cover
         self.w.MplWidget.canvas.axes.spines['top'].set_color(fg)
         self.w.MplWidget.canvas.axes.spines['left'].set_color(fg)
         self.w.MplWidget.canvas.axes.spines['right'].set_color(fg)
-        self.w.MplWidget2.canvas.figure.set_facecolor(bg)
-        self.w.MplWidget2.canvas.axes.set_facecolor(bg)
-        self.w.MplWidget2.canvas.axes.xaxis.label.set_color(fg)
-        self.w.MplWidget2.canvas.axes.yaxis.label.set_color(fg)
-        self.w.MplWidget2.canvas.axes.tick_params(axis='x', colors=fg)
-        self.w.MplWidget2.canvas.axes.tick_params(axis='y', colors=fg)
-        self.w.MplWidget2.canvas.axes.spines['bottom'].set_color(fg)
-        self.w.MplWidget2.canvas.axes.spines['top'].set_color(fg)
-        self.w.MplWidget2.canvas.axes.spines['left'].set_color(fg)
-        self.w.MplWidget2.canvas.axes.spines['right'].set_color(fg)
-        self.w.MplWidget3.canvas.figure.set_facecolor(bg)
-        self.w.MplWidget3.canvas.axes.set_facecolor(bg)
-        self.w.MplWidget3.canvas.axes.xaxis.label.set_color(fg)
-        self.w.MplWidget3.canvas.axes.yaxis.label.set_color(fg)
-        self.w.MplWidget3.canvas.axes.tick_params(axis='x', colors=fg)
-        self.w.MplWidget3.canvas.axes.tick_params(axis='y', colors=fg)
-        self.w.MplWidget3.canvas.axes.spines['bottom'].set_color(fg)
-        self.w.MplWidget3.canvas.axes.spines['top'].set_color(fg)
-        self.w.MplWidget3.canvas.axes.spines['left'].set_color(fg)
-        self.w.MplWidget3.canvas.axes.spines['right'].set_color(fg)
+        self.w.hsqcMultiplet.canvas.figure.set_facecolor(bg)
+        self.w.hsqcMultiplet.canvas.axes.set_facecolor(bg)
+        self.w.hsqcMultiplet.canvas.axes.xaxis.label.set_color(fg)
+        self.w.hsqcMultiplet.canvas.axes.yaxis.label.set_color(fg)
+        self.w.hsqcMultiplet.canvas.axes.tick_params(axis='x', colors=fg)
+        self.w.hsqcMultiplet.canvas.axes.tick_params(axis='y', colors=fg)
+        self.w.hsqcMultiplet.canvas.axes.spines['bottom'].set_color(fg)
+        self.w.hsqcMultiplet.canvas.axes.spines['top'].set_color(fg)
+        self.w.hsqcMultiplet.canvas.axes.spines['left'].set_color(fg)
+        self.w.hsqcMultiplet.canvas.axes.spines['right'].set_color(fg)
+        self.w.hsqcPeak.canvas.figure.set_facecolor(bg)
+        self.w.hsqcPeak.canvas.axes.set_facecolor(bg)
+        self.w.hsqcPeak.canvas.axes.xaxis.label.set_color(fg)
+        self.w.hsqcPeak.canvas.axes.yaxis.label.set_color(fg)
+        self.w.hsqcPeak.canvas.axes.tick_params(axis='x', colors=fg)
+        self.w.hsqcPeak.canvas.axes.tick_params(axis='y', colors=fg)
+        self.w.hsqcPeak.canvas.axes.spines['bottom'].set_color(fg)
+        self.w.hsqcPeak.canvas.axes.spines['top'].set_color(fg)
+        self.w.hsqcPeak.canvas.axes.spines['left'].set_color(fg)
+        self.w.hsqcPeak.canvas.axes.spines['right'].set_color(fg)
         # end load_dark_mode
 
     def set_standard_plot_colours(self):
@@ -2349,6 +3122,7 @@ class main_w(object):  # pragma: no cover
         self.w.console.verticalScrollBar().setValue(self.w.console.verticalScrollBar().maximum())
         self.show_title_file_information()
         self.show_acquisition_parameters()
+        self.set_hsqc()
         self.show_nmr_spectrum()
         # end load_file
 
@@ -2382,27 +3156,34 @@ class main_w(object):  # pragma: no cover
         self.w.MplWidget.canvas.axes.spines['top'].set_color(fg)
         self.w.MplWidget.canvas.axes.spines['left'].set_color(fg)
         self.w.MplWidget.canvas.axes.spines['right'].set_color(fg)
-        self.w.MplWidget2.canvas.figure.set_facecolor(bg)
-        self.w.MplWidget2.canvas.axes.set_facecolor(bg)
-        self.w.MplWidget2.canvas.axes.xaxis.label.set_color(fg)
-        self.w.MplWidget2.canvas.axes.yaxis.label.set_color(fg)
-        self.w.MplWidget2.canvas.axes.tick_params(axis='x', colors=fg)
-        self.w.MplWidget2.canvas.axes.tick_params(axis='y', colors=fg)
-        self.w.MplWidget2.canvas.axes.spines['bottom'].set_color(fg)
-        self.w.MplWidget2.canvas.axes.spines['top'].set_color(fg)
-        self.w.MplWidget2.canvas.axes.spines['left'].set_color(fg)
-        self.w.MplWidget2.canvas.axes.spines['right'].set_color(fg)
-        self.w.MplWidget3.canvas.figure.set_facecolor(bg)
-        self.w.MplWidget3.canvas.axes.set_facecolor(bg)
-        self.w.MplWidget3.canvas.axes.xaxis.label.set_color(fg)
-        self.w.MplWidget3.canvas.axes.yaxis.label.set_color(fg)
-        self.w.MplWidget3.canvas.axes.tick_params(axis='x', colors=fg)
-        self.w.MplWidget3.canvas.axes.tick_params(axis='y', colors=fg)
-        self.w.MplWidget3.canvas.axes.spines['bottom'].set_color(fg)
-        self.w.MplWidget3.canvas.axes.spines['top'].set_color(fg)
-        self.w.MplWidget3.canvas.axes.spines['left'].set_color(fg)
-        self.w.MplWidget3.canvas.axes.spines['right'].set_color(fg)
+        self.w.hsqcMultiplet.canvas.figure.set_facecolor(bg)
+        self.w.hsqcMultiplet.canvas.axes.set_facecolor(bg)
+        self.w.hsqcMultiplet.canvas.axes.xaxis.label.set_color(fg)
+        self.w.hsqcMultiplet.canvas.axes.yaxis.label.set_color(fg)
+        self.w.hsqcMultiplet.canvas.axes.tick_params(axis='x', colors=fg)
+        self.w.hsqcMultiplet.canvas.axes.tick_params(axis='y', colors=fg)
+        self.w.hsqcMultiplet.canvas.axes.spines['bottom'].set_color(fg)
+        self.w.hsqcMultiplet.canvas.axes.spines['top'].set_color(fg)
+        self.w.hsqcMultiplet.canvas.axes.spines['left'].set_color(fg)
+        self.w.hsqcMultiplet.canvas.axes.spines['right'].set_color(fg)
+        self.w.hsqcPeak.canvas.figure.set_facecolor(bg)
+        self.w.hsqcPeak.canvas.axes.set_facecolor(bg)
+        self.w.hsqcPeak.canvas.axes.xaxis.label.set_color(fg)
+        self.w.hsqcPeak.canvas.axes.yaxis.label.set_color(fg)
+        self.w.hsqcPeak.canvas.axes.tick_params(axis='x', colors=fg)
+        self.w.hsqcPeak.canvas.axes.tick_params(axis='y', colors=fg)
+        self.w.hsqcPeak.canvas.axes.spines['bottom'].set_color(fg)
+        self.w.hsqcPeak.canvas.axes.spines['top'].set_color(fg)
+        self.w.hsqcPeak.canvas.axes.spines['left'].set_color(fg)
+        self.w.hsqcPeak.canvas.axes.spines['right'].set_color(fg)
         # end load_light_mode
+
+    def metabolite_reset(self):
+        print("metabolite_reset")
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite].h1_picked[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak - 1] = []
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite].c13_picked[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak - 1] = []
+        self.plot_metabolite_peak(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak)
+        # end metabolite_reset
 
     def next_command(self):
         if (self.w.cmdLine.hasFocus() == True):
@@ -2910,6 +3691,122 @@ class main_w(object):  # pragma: no cover
 
         self.w.MplWidget.canvas.draw()
 
+    def plot_metabolite_peak(self, spin_number=0):
+        if spin_number == 0:
+            return
+
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak = spin_number
+        metabolite_name = self.w.hsqcAssignedMetabolites.currentIndex().data()
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite = metabolite_name
+        hd = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name]
+        h1_shift = hd.h1_shifts[spin_number -1]
+        #print(hd.c13_shifts[np.where(hd.hsqc == 1)[0]])
+        #c13_shifts = hd.c13_shifts[np.where(hd.hsqc == 1)[0]]
+        c13_shift = hd.c13_shifts[hd.h1_index[spin_number - 1] - 1]
+        h1_picked = hd.h1_picked[spin_number -1]
+        c13_picked = hd.c13_picked[spin_number - 1]
+        if len(c13_picked) > 0:
+            h1_centre = np.mean(h1_picked)
+            c13_centre = np.mean(c13_picked)
+        else:
+            h1_centre = h1_shift
+            c13_centre = c13_shift
+
+        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autoscale_j == True:
+            scale = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.j_scale
+        else:
+            scale = 1.0
+
+        hsqc_idx = np.where(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].hsqc == 1)[0]
+        h1_index = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].h1_index[spin_number - 1]
+        c13_index = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].c13_index[hd.h1_index[spin_number - 1] - 1]
+        h1_suffix = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].h1_suffix[spin_number - 1]
+        h1_beg = h1_centre + self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.range_h
+        h1_end = h1_centre - self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.range_h
+        c13_beg = c13_centre + self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.range_c*scale
+        c13_end = c13_centre - self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.range_c*scale
+        h1_pts = len(self.nd.nmrdat[self.nd.s][self.nd.e].spc[0])
+        c13_pts = len(self.nd.nmrdat[self.nd.s][self.nd.e].spc)
+        h1_pts1 = h1_pts - self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(h1_beg, 0) - 1
+        h1_pts2 = h1_pts - self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(h1_end, 0) - 1
+        c13_pts1 = c13_pts - self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(c13_beg, 1) - 1
+        c13_pts2 = c13_pts - self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(c13_end, 1) - 1
+        d = self.nd.nmrdat[self.nd.s][self.nd.e].display
+        if d.pos_col == "RGB":
+            pos_col = d.pos_col_rgb
+        else:
+            pos_col = d.pos_col
+
+        if d.neg_col == "RGB":
+            neg_col = d.neg_col_rgb
+        else:
+            neg_col = d.neg_col
+
+        pos_col = matplotlib.colors.to_hex(pos_col)
+        neg_col = matplotlib.colors.to_hex(neg_col)
+        xlabel = d.x_label + " C" + str(c13_index) + "H" + str(h1_index) + h1_suffix + " [" + d.axis_type1 + "]"
+        ylabel = d.y_label + " C" + str(c13_index) + "H" + str(h1_index) + h1_suffix + " [" + d.axis_type2 + "]"
+        mm = np.max(np.abs(self.nd.nmrdat[self.nd.s][self.nd.e].spc.real))
+        pos_lev = np.linspace(d.min_level * mm, d.max_level * mm, d.n_levels)
+        neg_lev = np.linspace(-d.max_level * mm, -d.min_level * mm, d.n_levels)
+        self.w.hsqcPeak.canvas.axes.clear()
+        self.w.hsqcPeak.canvas.axes.contour(self.nd.nmrdat[self.nd.s][self.nd.e].ppm1[h1_pts1:h1_pts2],
+                                            self.nd.nmrdat[self.nd.s][self.nd.e].ppm2[c13_pts1:c13_pts2],
+                                            self.nd.nmrdat[self.nd.s][self.nd.e].spc[c13_pts1:c13_pts2, h1_pts1:h1_pts2].real, pos_lev, colors=pos_col,
+                                            linestyles='solid', antialiased=True)
+        self.w.hsqcPeak.canvas.axes.contour(self.nd.nmrdat[self.nd.s][self.nd.e].ppm1[h1_pts1:h1_pts2],
+                                            self.nd.nmrdat[self.nd.s][self.nd.e].ppm2[c13_pts1:c13_pts2],
+                                            self.nd.nmrdat[self.nd.s][self.nd.e].spc.real[c13_pts1:c13_pts2, h1_pts1:h1_pts2], neg_lev, colors=neg_col,
+                                            linestyles='solid', antialiased=True)
+        self.w.hsqcPeak.canvas.axes.set_xlabel(xlabel)
+        self.w.hsqcPeak.canvas.axes.set_ylabel(ylabel)
+        self.w.hsqcPeak.canvas.axes.autoscale()
+        self.w.hsqcPeak.canvas.axes.invert_xaxis()
+        self.w.hsqcPeak.canvas.axes.invert_yaxis()
+        xlim = self.w.hsqcPeak.canvas.axes.get_xlim()
+        ylim = self.w.hsqcPeak.canvas.axes.get_ylim()
+        if self.cf.mode == 'dark':
+            col1 = 'w'
+            col2 = 'y'
+        else:
+            col1 = 'k'
+            col2 = 'r'
+
+        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.display_library_shift == True:
+            self.w.hsqcPeak.canvas.axes.plot([np.min(xlim), np.max(xlim)], [c13_shift, c13_shift], color=col1)
+            self.w.hsqcPeak.canvas.axes.plot([h1_shift, h1_shift], [np.min(ylim), np.max(ylim)], color=col1)
+
+        cur_peak = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak
+        cur_metabolite = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite
+        h1_picked = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[cur_metabolite].h1_picked
+        c13_picked = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[cur_metabolite].c13_picked
+        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.display_peaks_of_metabolite == True:
+            if len(h1_picked[spin_number - 1]) > 0:
+                xdata = h1_picked[spin_number - 1]
+                ydata = c13_picked[spin_number - 1]
+                delta_x = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.range_h
+                delta_y = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.range_c*scale
+                factor = 0.05
+                for k in range(len(xdata)):
+                    self.w.hsqcPeak.canvas.axes.plot([xdata[k] - factor*delta_x, xdata[k] + factor*delta_x], [ydata[k], ydata[k]], color=col2, linewidth=4)
+                    self.w.hsqcPeak.canvas.axes.plot([xdata[k], xdata[k]], [ydata[k] - factor*delta_y, ydata[k] + factor*delta_y], color=col2, linewidth=4)
+
+
+        self.w.hsqcPeak.canvas.draw()
+        self.w.hsqcMultiplet.canvas.axes.clear()
+        if len(h1_picked[spin_number - 1]) > 0:
+            h1_pos = np.mean(h1_picked[spin_number - 1])
+        else:
+            h1_pos = h1_shift
+
+        h1_pts = len(self.nd.nmrdat[self.nd.s][self.nd.e].spc[0]) - self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(h1_pos, 0) - 1
+        self.w.hsqcMultiplet.canvas.axes.plot(self.nd.nmrdat[self.nd.s][self.nd.e].ppm2[c13_pts1:c13_pts2], self.nd.nmrdat[self.nd.s][self.nd.e].spc.real[c13_pts1:c13_pts2, h1_pts], color=col1, linewidth=2)
+        self.w.hsqcMultiplet.canvas.axes.set_xlabel(ylabel)
+        self.w.hsqcMultiplet.canvas.axes.autoscale()
+        self.w.hsqcMultiplet.canvas.axes.invert_xaxis()
+        self.w.hsqcMultiplet.canvas.draw()
+        # end
+
     def plot_spc(self, hide_pre_processing=False):
         self.keep_zoom = self.w.keepZoom.isChecked()
         xlim = self.w.MplWidget.canvas.axes.get_xlim()
@@ -3291,6 +4188,26 @@ class main_w(object):  # pragma: no cover
         self.ginput_ref_2d(1)
         # end reference2d
 
+    def remove_assigned_metabolite(self):
+        idx = self.w.hsqcAssignedMetabolites.currentIndex().row()
+        if idx == -1:
+            return
+
+        metabolite_name = self.w.hsqcAssignedMetabolites.currentIndex().data()
+        del self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name]
+        self.update_assigned_metabolites()
+        self.w.hsqcMetabolites.setCurrentIndex(self.w.hsqcMetabolites.model().index(-1, 0))
+        self.w.metaboliteImage.scene().clear()
+        self.delete_buttons(0)
+        self.w.hsqcPeak.canvas.axes.clear()
+        self.w.hsqcPeak.canvas.draw()
+        self.w.hsqcMultiplet.canvas.axes.clear()
+        self.w.hsqcMultiplet.canvas.draw()
+        self.w.metaboliteInformation.setText('')
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite = ''
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak = -1
+        # end remove_asssigned_metabolite
+
     def remove_last_col_row(self):
         n_lines = len(self.w.MplWidget.canvas.axes.lines)
         if n_lines > 0:
@@ -3330,6 +4247,23 @@ class main_w(object):  # pragma: no cover
         self.w.nmrSpectrum.setCurrentIndex(12)
         # end reset_help
 
+    def reset_ml_info(self):
+        idx = self.w.hsqcMetabolites.currentIndex().row()
+        if idx == -1:
+            return
+
+        metabolite_name = self.w.hsqcMetabolites.currentIndex().data()
+        file_name1 = os.path.join(os.path.dirname(__file__), 'nmr', 'reset_metabolites', metabolite_name + '.mlInfo')
+        file_name2 = os.path.join(os.path.dirname(__file__), 'nmr', 'metabolites', metabolite_name + '.mlInfo')
+        fid = open(file_name1, 'r')
+        metabolite_text = fid.read()
+        fid.close()
+        fid = open(file_name2, 'w')
+        fid.write(metabolite_text)
+        fid.close()
+        self.w.metaboliteInformation.setText(metabolite_text)
+        # end reset_ml_info
+
     def reset_plot(self):
         zoom_checked = self.w.keepZoom.isChecked()
         self.w.keepZoom.setChecked(False)
@@ -3351,6 +4285,9 @@ class main_w(object):  # pragma: no cover
 
         self.nd.script = self.w.script.toHtml()
         self.nd.console = self.w.console.toHtml()
+        if self.w.hsqcAnalysis.isChecked() == True:
+            self.w.hsqcAnalysis.setChecked(False)
+
         self.nd.save(f_name)
         # end save_button
 
@@ -3378,6 +4315,18 @@ class main_w(object):  # pragma: no cover
         scipy.io.save_mat('/Users/ludwigc/metabolabpy.mat',
                           {'spc': self.nd.nmrdat[0][0].spc, 'fid': self.nd.nmrdat[0][0].fid})
         # end save_mat
+
+    def save_ml_info(self):
+        idx = self.w.hsqcMetabolites.currentIndex().row()
+        if idx == -1:
+            return
+
+        metabolite_name = self.w.hsqcMetabolites.currentIndex().data()
+        file_name = os.path.join(os.path.dirname(__file__), 'nmr', 'metabolites', metabolite_name + '.mlInfo')
+        fid = open(file_name, 'w')
+        fid.write(self.w.metaboliteInformation.toPlainText())
+        fid.close()
+        #end save_ml_info
 
     def save_script(self, f_name=""):
         if (f_name == False):
@@ -3874,6 +4823,24 @@ class main_w(object):  # pragma: no cover
         self.w.phRefExp.setValue(d.ph_ref_exp)
         # end set_disp_pars
 
+    def set_hsqc(self):
+        self.set_hsqc_pars1()
+        self.set_hsqc_pars2()
+        self.set_hsqc_pars3()
+        self.set_hsqc_pars4()
+        self.set_hsqc_pars5()
+        self.set_hsqc_pars6()
+        self.set_hsqc_pars7()
+        self.set_hsqc_pars8()
+        self.set_hsqc_pars9()
+        self.set_hsqc_pars10()
+        self.set_hsqc_pars11()
+        self.set_hsqc_pars12()
+        self.set_hsqc_pars13()
+        self.set_hsqc_pars14()
+        self.set_hsqc_pars15()
+        # end set_hsqc
+
     def set_add_peak(self):
         if (self.nd.peak_fill == False):
             n_rows = self.w.peakWidget.rowCount()
@@ -4214,6 +5181,111 @@ class main_w(object):  # pragma: no cover
         self.w.helpView.setUrl(url[idx])
         # end set_help
 
+    def set_hsqc_pars1(self):
+        self.w.h1Range.setText(str(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.range_h))
+        # end set_hsqc_pars1
+
+    def set_hsqc_pars2(self):
+        self.w.c13Range.setText(str(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.range_c))
+        # end set_hsqc_pars2
+
+    def set_hsqc_pars3(self):
+        self.w.threshold.setText(str(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.threshold))
+        # end set_hsqc_pars3
+
+    def set_hsqc_pars4(self):
+        self.w.jCC.setText(str(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.j_cc))
+        # end set_hsqc_pars4
+
+    def set_hsqc_pars5(self):
+        self.w.jCH.setText(str(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.j_ch))
+        # end set_hsqc_pars5
+
+    def set_hsqc_pars6(self):
+        self.w.nMax.setText(str(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.n_max))
+        # end set_hsqc_pars6
+
+    def set_hsqc_pars7(self):
+        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.use_splitting == True:
+            idx = 0
+        else:
+            idx = 1
+
+        self.w.useSplittingCB.setCurrentIndex(idx)
+        # end set_hsqc_pars7
+
+    def set_hsqc_pars8(self):
+        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.tilt_hsqc == True:
+            idx = 0
+        else:
+            idx = 1
+
+        self.w.tiltHsqcCB.setCurrentIndex(idx)
+        # end set_hsqc_pars8
+
+    def set_hsqc_pars9(self):
+        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.display_library_shift == True:
+            idx = 0
+        else:
+            idx = 1
+
+        self.w.displayLibraryCB.setCurrentIndex(idx)
+        # end set_hsqc_pars9
+
+    def set_hsqc_pars10(self):
+        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.display_peaks_of_metabolite == True:
+            idx = 0
+        else:
+            idx = 1
+
+        self.w.displayPickedCB.setCurrentIndex(idx)
+        # end set_hsqc_pars10
+
+    def set_hsqc_pars11(self):
+        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.highlight_double_assignments == True:
+            idx = 0
+        else:
+            idx = 1
+
+        self.w.highlightDoubleCB.setCurrentIndex(idx)
+        # end set_hsqc_pars11
+
+    def set_hsqc_pars12(self):
+        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.display_overlay_shifts == True:
+            idx = 0
+        else:
+            idx = 1
+
+        self.w.displayOverlayShiftsCB.setCurrentIndex(idx)
+        # end set_hsqc_pars12
+
+    def set_hsqc_pars13(self):
+        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.co_hsqc == True:
+            idx = 0
+        else:
+            idx = 1
+
+        self.w.coHsqcCB.setCurrentIndex(idx)
+        # end set_hsqc_pars13
+
+    def set_hsqc_pars14(self):
+        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.pick_local_opt == True:
+            idx = 0
+        else:
+            idx = 1
+
+        self.w.pickLocalOptCB.setCurrentIndex(idx)
+        # end set_hsqc_pars14
+
+    def set_hsqc_pars15(self):
+        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autoscale_j == True:
+            idx = 0
+        else:
+            idx = 1
+
+        self.w.autoscaleCB.setCurrentIndex(idx)
+        # end set_hsqc_pars15
+
     def set_invert(self):
         s = self.nd.s
         e = self.nd.e
@@ -4368,30 +5440,155 @@ class main_w(object):  # pragma: no cover
                 self.nd.nmrdat[self.nd.s][k].display.neg_col_rgb = self.std_neg_col1
 
         self.plot_spc()
+        # end set_standard_colours
+
+    def update_assigned_metabolites(self):
+        model = QtGui.QStandardItemModel()
+        for l in sorted(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data.keys()):
+            it = QtGui.QStandardItem(l)
+            model.appendRow(it)
+
+        self.w.hsqcAssignedMetabolites.setModel(model)
+        metabolite_name = self.w.hsqcMetabolites.currentIndex().data()
+        try:
+            idx1 = sorted(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data.keys()).index(metabolite_name)
+            self.w.hsqcAssignedMetabolites.setCurrentIndex(self.w.hsqcAssignedMetabolites.model().index(idx1, 0))
+        except:
+            pass
+        # end update_assigned_metabolites
 
     def set_hsqc_analysis(self):
         if (self.w.hsqcAnalysis.isChecked() == True):
-            self.w.multipletAnalysis.setVisible(True)
-            self.w.isotopomerAnalysis.setVisible(True)
+            self.w.displayAssignedMetabolites.setVisible(True)
+            self.w.displayLibraryShifts.setVisible(True)
+            self.nd.old_data_set = self.nd.s
+            self.nd.old_data_exp = self.nd.e
+            self.w.multipletAnalysis.setVisible(False)
+            self.w.isotopomerAnalysis.setVisible(False)
             self.w.nmrSpectrum.setTabEnabled(1, True)
-            self.w.nmrSpectrum.setTabEnabled(2, True)
+            #self.w.nmrSpectrum.setTabEnabled(2, True)
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.set_metabolite_list()
+            model = QtGui.QStandardItemModel()
+            if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autoscale_j == True:
+                if len(self.nd.nmrdat[self.nd.s][self.nd.e].acq.cnst) > 0:
+                    self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.j_scale = self.nd.nmrdat[self.nd.s][self.nd.e].acq.cnst[18]
+
+            for l in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.metabolite_list:
+                it = QtGui.QStandardItem(l)
+                model.appendRow(it)
+
+            self.w.hsqcMetabolites.setModel(model)
+            self.update_assigned_metabolites()
             self.w.nmrSpectrum.setStyleSheet(
                 "QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
+            self.set_hsqc()
+            self.w.h1Range.textChanged.connect(self.get_hsqc_pars1)
+            self.w.c13Range.textChanged.connect(self.get_hsqc_pars2)
+            self.w.threshold.textChanged.connect(self.get_hsqc_pars3)
+            self.w.jCC.textChanged.connect(self.get_hsqc_pars4)
+            self.w.jCH.textChanged.connect(self.get_hsqc_pars5)
+            self.w.nMax.textChanged.connect(self.get_hsqc_pars6)
+            self.w.useSplittingCB.currentIndexChanged.connect(self.get_hsqc_pars7)
+            self.w.useSplittingCB.setVisible(False)
+            self.w.label_82.setVisible(False)
+            self.w.tiltHsqcCB.currentIndexChanged.connect(self.get_hsqc_pars8)
+            self.w.tiltHsqcCB.setVisible(False)
+            self.w.label_78.setVisible(False)
+            self.w.displayLibraryCB.currentIndexChanged.connect(self.get_hsqc_pars9)
+            self.w.displayPickedCB.currentIndexChanged.connect(self.get_hsqc_pars10)
+            self.w.highlightDoubleCB.currentIndexChanged.connect(self.get_hsqc_pars11)
+            self.w.highlightDoubleCB.setVisible(False)
+            self.w.label_84.setVisible(False)
+            self.w.displayOverlayShiftsCB.currentIndexChanged.connect(self.get_hsqc_pars12)
+            self.w.displayOverlayShiftsCB.setVisible(False)
+            self.w.label_83.setVisible(False)
+            self.w.coHsqcCB.currentIndexChanged.connect(self.get_hsqc_pars13)
+            self.w.pickLocalOptCB.currentIndexChanged.connect(self.get_hsqc_pars14)
+            self.w.autoscaleCB.currentIndexChanged.connect(self.get_hsqc_pars15)
             self.w.nmrSpectrum.setCurrentIndex(1)
             self.activate_command_line()
-            self.activate_command_line()
         else:
+            self.w.displayAssignedMetabolites.setChecked(False)
+            self.w.displayAssignedMetabolites.setVisible(False)
+            self.w.displayLibraryShifts.setChecked(False)
+            self.w.displayLibraryShifts.setVisible(False)
             self.w.multipletAnalysis.setChecked(False)
             self.w.isotopomerAnalysis.setChecked(False)
             self.w.multipletAnalysis.setVisible(False)
             self.w.isotopomerAnalysis.setVisible(False)
             self.w.nmrSpectrum.setTabEnabled(1, False)
             self.w.nmrSpectrum.setTabEnabled(2, False)
+            self.w.hsqcMetabolites.setCurrentIndex(self.w.hsqcMetabolites.model().index(-1, 0))
+            self.w.hsqcAssignedMetabolites.setCurrentIndex(self.w.hsqcMetabolites.model().index(-1, 0))
+            if hasattr(self.w.metaboliteImage.scene(), 'clear'):
+                self.w.metaboliteImage.scene().clear()
+
+            self.w.hsqcPeak.canvas.axes.clear()
+            self.w.hsqcPeak.canvas.draw()
+            self.w.hsqcMultiplet.canvas.axes.clear()
+            self.w.hsqcMultiplet.canvas.draw()
             self.w.nmrSpectrum.setStyleSheet(
                 "QTabBar::tab::disabled {width: 0; height: 0; margin: 0; padding: 0; border: none;} ")
+            self.delete_buttons(0)
+            if self.nd.s != self.nd.old_data_set or self.nd.e != self.nd.old_data_exp:
+                self.plot_spc()
+
+            self.w.metaboliteInformation.setText('')
             self.w.nmrSpectrum.setCurrentIndex(0)
 
         # end set_hsqc_analysis
+
+    def set_hsqc_assigned_metabolite(self):
+        idx = self.w.hsqcAssignedMetabolites.currentIndex().row()
+        if idx == -1:
+            return
+
+        metabolite_name = self.w.hsqcAssignedMetabolites.currentIndex().data()
+        try:
+            idx1 = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.metabolite_list.index(metabolite_name)
+            self.w.hsqcMetabolites.setCurrentIndex(self.w.hsqcMetabolites.model().index(idx1, 0))
+            self.set_hsqc_metabolite()
+        except:
+            pass
+
+        # end set_hsqc_metabolite
+
+    def set_hsqc_metabolite(self):
+        idx = self.w.hsqcMetabolites.currentIndex().row()
+        if idx == -1:
+            return
+
+        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.j_scale == -1:
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.j_scale = self.nd.nmrdat[self.nd.s][self.nd.e].acq.cnst[18]
+
+        metabolite_name = self.w.hsqcMetabolites.currentIndex().data()
+        cur_peak = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak
+        if cur_peak == 0:
+            cur_peak = 1
+
+        if metabolite_name in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data.keys():
+            if cur_peak > len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].h1_picked):
+                cur_peak = 1
+
+        else:
+            cur_peak = 1
+
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.read_metabolite_information(metabolite_name)
+        self.w.metaboliteInformation.setText(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.metabolite_information)
+        image_path = os.path.join(os.path.dirname(__file__), 'nmr', 'metabolites_png', metabolite_name + '.png')
+        pix = QPixmap(image_path)
+        item = QtWidgets.QGraphicsPixmapItem(pix)
+        scene = QtWidgets.QGraphicsScene()
+        scene.addItem(item)
+        self.w.metaboliteImage.setScene(scene)
+        #graphicsView->fitInView(scene->sceneRect(), Qt::KeepAspectRatio)
+        self.w.metaboliteImage.fitInView(scene.sceneRect(), QtCore.Qt.KeepAspectRatio)
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.set_metabolite_information(metabolite_name, self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.metabolite_information)
+        self.update_assigned_metabolites()
+        n_peaks = len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].h1_shifts)
+        self.make_buttons(n_peaks)
+        self.plot_metabolite_peak(cur_peak)
+        # end set_hsqc_metabolite
 
     def set_multiplet_analysis(self):
         if (self.w.multipletAnalysis.isChecked() == True):
@@ -5002,6 +6199,7 @@ class main_w(object):  # pragma: no cover
         else:
             self.w.preprocessing.setChecked(False)
             self.w.preprocessing.setVisible(False)
+            self.w.peakPicking.setChecked(False)
             self.w.peakPicking.setVisible(False)
 
         if self.nd.nmrdat[s][e].dim > 1:
@@ -5018,6 +6216,32 @@ class main_w(object):  # pragma: no cover
         self.w.isotopomerAnalysis.setVisible(False)
         return "updated GUI"
         # end update_gui
+
+    def update_metabolabpy(self):
+        code_out = io.StringIO()
+        code_err = io.StringIO()
+        sys.stdout = code_out
+        sys.stderr = code_err
+        if self.cf.mode == 'dark':
+            txt_col = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
+        else:
+            txt_col = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
+
+        cmd_msg = subprocess.run([sys.executable, '-m', 'pip', 'install', '--upgrade', 'metabolabpy'], stdout=subprocess.PIPE)
+        print(cmd_msg.stdout.decode('utf-8'))
+        print("Update finished.\nPlease restart MetaboLabPy to use the new version.")
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
+        self.w.console.setTextColor(txt_col)
+        self.w.console.append(code_out.getvalue())
+        self.w.console.setTextColor(err_col)
+        self.w.console.append(code_err.getvalue())
+        code_out.close()
+        code_err.close()
+        self.show_console()
+        # end update_metabolabpy
 
     def vertical_auto_scale(self):
         if (self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1):
@@ -5227,6 +6451,10 @@ class main_w(object):  # pragma: no cover
             txt_col = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
             err_col = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
 
+        code_out = io.StringIO()
+        code_err = io.StringIO()
+        sys.stdout = code_out
+        sys.stderr = code_err
         self.w.console.setTextColor(txt_col)
         self.w.console.append(code_out.getvalue())
         self.w.console.setTextColor(err_col)
