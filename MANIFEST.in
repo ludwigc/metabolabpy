@@ -14,3 +14,6 @@ include metabolabpy/mlStarter/Contents
 include metabolabpy/mlStarter/Icon
 include metabolabpy/mlStarter/Contents/*
 include metabolabpy/mlStarter/Contents/Resources/*
+include metabolabpy/metabolites
+include metabolabpy/reset_metabolites
+include metabolabpy/metabolites_png

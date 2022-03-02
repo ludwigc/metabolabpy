@@ -204,7 +204,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.7.2'
+        self.__version__ = '0.7.3'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -822,9 +822,14 @@ class main_w(object):  # pragma: no cover
 
     def change_data_set_exp(self):
         dam = False
+        dls = False
         if self.w.displayAssignedMetabolites.isChecked() == True:
             dam = True
             self.w.displayAssignedMetabolites.setChecked(False)
+
+        if self.w.displayLibraryShifts.isChecked() == True:
+            dls = True
+            self.w.displayLibraryShifts.setChecked(False)
 
         self.w.cmdLine.setFocus()
         self.w.cmdLine.clearFocus()
@@ -925,8 +930,12 @@ class main_w(object):  # pragma: no cover
 
             self.w.nmrSpectrum.setCurrentIndex(cidx)
 
-        if dam == True:
+        if dam:
             self.w.displayAssignedMetabolites.setChecked(True)
+
+        if dls:
+            self.w.displayLibraryShifts.setChecked(True)
+
         # end change_data_set_exp
 
     def change_data_set_exp_ph_ref(self):
@@ -1265,8 +1274,7 @@ class main_w(object):  # pragma: no cover
                     for l in range(len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked)):
                         if len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked[l]) == 0:
                             x = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_shifts[l]
-                            c13idx = np.where(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].hsqc == 1)[0]
-                            y = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].c13_shifts[c13idx[l]]
+                            y = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].c13_shifts[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_index[l] - 1]
                             self.nd.nmrdat[self.nd.s][self.nd.e].xst.append(self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col2, linewidth=2))
                             self.nd.nmrdat[self.nd.s][self.nd.e].yst.append(self.w.MplWidget.canvas.axes.plot([x, x], [y - deltay, y + deltay], color=col2, linewidth=2))
                             self.nd.nmrdat[self.nd.s][self.nd.e].library_text.append(self.w.MplWidget.canvas.axes.text(x - 0.5 * deltax, y - 0.5 * deltay, k, color=col2, fontweight='bold'))
@@ -1276,10 +1284,9 @@ class main_w(object):  # pragma: no cover
                     hsqc.read_metabolite_information(k)
                     hsqc.set_metabolite_information(k, hsqc.metabolite_information)
                     hsqc.hsqc_data[k].init_data(hsqc.metabolite_information)
-                    c13_shifts = hsqc.hsqc_data[k].c13_shifts[np.where(hsqc.hsqc_data[k].hsqc == 1)]
                     for l in range(len(hsqc.hsqc_data[k].h1_shifts)):
                         x = hsqc.hsqc_data[k].h1_shifts[l]
-                        y = c13_shifts[l]
+                        y = hsqc.hsqc_data[k].c13_shifts[hsqc.hsqc_data[k].h1_index[l] - 1]
                         self.nd.nmrdat[self.nd.s][self.nd.e].xst.append(self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col2, linewidth=2))
                         self.nd.nmrdat[self.nd.s][self.nd.e].yst.append(self.w.MplWidget.canvas.axes.plot([x, x], [y - deltay, y + deltay], color=col2, linewidth=2))
                         self.nd.nmrdat[self.nd.s][self.nd.e].library_text.append(self.w.MplWidget.canvas.axes.text(x - 0.5 * deltax, y - 0.5 * deltay, k, color=col2, fontweight='bold'))
