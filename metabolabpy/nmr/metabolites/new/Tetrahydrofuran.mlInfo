@@ -1,0 +1,28 @@
+Name                   : Tetrahydrofuran
+AltName                : tetrahydrofuran
+Source                 : HMDB
+IUPAC                  : oxolane
+InChI_Identifier       : InChI=1S/C4H8O/c1-2-4-5-3-1/h1-4H2
+InChI_Key              : WYURNTSHIVDZCO-UHFFFAOYSA-N
+SMILES                 : C1CCOC1
+Formula                : C4H8O
+Mass                   : 72.1057
+pKa                    : 
+HMDB                   : HMDB00246
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 26911
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 4;2;003 3;2;003
+N15Index               : 
+C13chemicalShift       : 0            0       27.739       70.556
+H1chemicalShift        : 3.744       1.877
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

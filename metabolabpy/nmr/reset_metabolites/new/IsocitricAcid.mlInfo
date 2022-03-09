@@ -1,0 +1,28 @@
+Name                   : Isocitric Acid
+AltName                : citrateiso
+Source                 : HMDB
+IUPAC                  : 1-hydroxypropane-1,2,3-tricarboxylic acid
+InChI_Identifier       : InChI=1S/C6H8O7/c7-3(8)1-2(5(10)11)4(9)6(12)13/h2,4,9H,1H2,(H,7,8)(H,10,11)(H,12,13)
+InChI_Key              : ODBLHEXUDAPZAU-UHFFFAOYSA-N
+SMILES                 : OC(C(CC(O)=O)C(O)=O)C(O)=O
+Formula                : C6H8O7
+Mass                   : 192.1235
+pKa                    : 
+HMDB                   : HMDB00193
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 30887
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;1;000 3;1;000 4;1;001 4;1;002
+N15Index               : 
+C13chemicalShift       : 0       76.533       51.772       40.292
+H1chemicalShift        : 3.976       2.962       2.419       2.499
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

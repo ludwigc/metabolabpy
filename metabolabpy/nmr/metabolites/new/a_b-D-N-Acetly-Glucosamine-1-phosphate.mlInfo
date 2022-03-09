@@ -1,0 +1,28 @@
+Name                   : a/b-D-N-Acetly-Glucosamine-1-phosphate
+AltName                : glucosamine1p_n_acetyl
+Source                 : BMRB
+IUPAC                  : {[(3R,4R,5S,6R)-3-acetamido-4,5-dihydroxy-6-(hydroxymethyl)oxan-2-yl]oxy}phosphonic acid
+InChI_Identifier       : InChI=1S/C8H16NO9P/c1-3(11)9-5-7(13)6(12)4(2-10)17-8(5)18-19(14,15)16/h4-8,10,12-13H,2H2,1H3,(H,9,11)(H2,14,15,16)/t4-,5-,6-,7-,8?/m1/s1
+InChI_Key              : FZLJPEPAYPUMMR-RTRLPJTCSA-N
+SMILES                 : CC(=O)N[C@@H]1[C@@H](O)[C@H](O)[C@@H](CO)OC1OP(O)(O)=O
+Formula                : C8H16NO9P
+Mass                   : 301.1877
+pKa                    : 
+HMDB                   : HMDB01367
+SMPDB                  : SMP00045 SMP00072
+KEGG                   : map00250 map00520
+CHEBI                  : 7125
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 1;1;000 2;1;000 3;1;000 4;1;000 5;1;000 6;1;001 6;1;002 1001;3;001
+N15Index               : 
+C13chemicalShift       : 95.454       56.829       72.687       74.103       74.816       63.426
+H1chemicalShift        : 5.342       3.913       3.474       3.787       3.948       3.771       3.875           0
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

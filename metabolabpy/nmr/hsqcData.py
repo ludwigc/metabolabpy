@@ -33,6 +33,7 @@ class HsqcData:
         self.h1_number = np.array([])
         self.h1_suffix = np.array([])
         self.c13_index = np.array([])
+        self.sim_spc = np.array([[]])
         # end __init__
 
     def __str__(self):  # pragma: no cover
@@ -114,6 +115,7 @@ class HsqcData:
         self.h1_shifts = np.matrix(mi[idx1 + 1:idx2].strip()).A[0]
         for k in range(len(self.h1_shifts)):
             self.h1_picked = np.copy(np.append(self.h1_picked, [np.array(np.array([]))]))
+            self.sim_spc = np.copy(np.append(self.sim_spc, [np.array(np.array([]))]))
 
         idx1 = metabolite_information.find('C13Intensities')
         mi = metabolite_information[idx1:]
@@ -126,6 +128,7 @@ class HsqcData:
         idx2 = mi.find('\n')
         self.h1_picked = [[] for n in range(len(self.h1_shifts))]
         self.c13_picked = [[] for n in range(len(self.h1_shifts))]
+        self.sim_spc = [[] for n in range(len(self.h1_shifts))]
         self.hsqc = np.matrix(mi[idx1 + 1:idx2].strip(), dtype=int).A[0]
         idx1 = metabolite_information.find('CO_HSQC')
         mi = metabolite_information[idx1:]

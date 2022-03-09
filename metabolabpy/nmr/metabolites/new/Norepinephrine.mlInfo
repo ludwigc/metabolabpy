@@ -1,0 +1,28 @@
+Name                   : Norepinephrine
+AltName                : norepinephrine
+Source                 : HMDB
+IUPAC                  : 4-[(1R)-2-amino-1-hydroxyethyl]benzene-1,2-diol
+InChI_Identifier       : InChI=1S/C8H11NO3/c9-4-8(12)5-1-2-6(10)7(11)3-5/h1-3,8,10-12H,4,9H2/t8-/m0/s1
+InChI_Key              : SFLSHLFXELFNJZ-QMMMGPOBSA-N
+SMILES                 : NC[C@H](O)C1=CC(O)=C(O)C=C1
+Formula                : C8H11NO3
+Mass                   : 169.1778
+pKa                    : 
+HMDB                   : HMDB00216
+SMPDB                  : SMP00006 SMP00012
+KEGG                   : 
+CHEBI                  : 18357
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 1;1;001 1;1;002 2;1;000 4;1;000 7;1;000 8;1;000
+N15Index               : 
+C13chemicalShift       : 48.184        72.082             0       121.243             0             0       119.194       116.698
+H1chemicalShift        : 3.256       3.028       4.893       6.862       6.943       6.952
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

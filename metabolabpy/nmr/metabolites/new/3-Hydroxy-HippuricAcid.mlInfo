@@ -1,0 +1,28 @@
+Name                   : 3-Hydroxy-Hippuric Acid
+AltName                : hippurate_hydroxy3
+Source                 : HMDB
+IUPAC                  : 2-[(3-hydroxyphenyl)formamido]acetic acid
+InChI_Identifier       : InChI=1S/C9H9NO4/c11-7-3-1-2-6(4-7)9(14)10-5-8(12)13/h1-4,11H,5H2,(H,10,14)(H,12,13)
+InChI_Key              : XDOFWFNMYJRHEW-UHFFFAOYSA-N
+SMILES                 : OC(=O)CNC(=O)C1=CC=CC(O)=C1
+Formula                : C9H9NO4
+Mass                   : 195.1721
+pKa                    : 
+HMDB                   : HMDB06116
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 70824
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 6;2;003 5;2;003 9;2;001
+N15Index               : 
+C13chemicalShift       : 0             0             0             0       118.248       132.255             0             0        46.585
+H1chemicalShift        : 7.748       6.966       3.931
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

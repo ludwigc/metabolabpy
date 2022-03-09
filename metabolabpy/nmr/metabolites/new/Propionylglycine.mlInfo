@@ -1,0 +1,28 @@
+Name                   : Propionylglycine
+AltName                : glycinepropionyl
+Source                 : HMDB
+IUPAC                  : 2-propanamidoacetic acid
+InChI_Identifier       : InChI=1S/C5H9NO3/c1-2-4(7)6-3-5(8)9/h2-3H2,1H3,(H,6,7)(H,8,9)
+InChI_Key              : WOMAZEJKVZLLFE-UHFFFAOYSA-N
+SMILES                 : CCC(=O)NCC(O)=O
+Formula                : C5H9NO3
+Mass                   : 131.1299
+pKa                    : 
+HMDB                   : HMDB00783
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;2;001 4;2;001 5;3;001
+N15Index               : 
+C13chemicalShift       : 0       46.003            0       31.669       12.011
+H1chemicalShift        : 3.745       2.307       1.118
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

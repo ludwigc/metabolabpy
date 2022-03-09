@@ -1,0 +1,28 @@
+Name                   : Creatine
+AltName                : creatine
+Source                 : HMDB
+IUPAC                  : 2-(N-methylcarbamimidamido)acetic acid
+InChI_Identifier       : InChI=1S/C4H9N3O2/c1-7(4(5)6)2-3(8)9/h2H2,1H3,(H3,5,6)(H,8,9)
+InChI_Key              : CVSVTCORWBXHQV-UHFFFAOYSA-N
+SMILES                 : CN(CC(O)=O)C(N)=N
+Formula                : C4H9N3O2
+Mass                   : 131.1332
+pKa                    : 
+HMDB                   : HMDB00064
+SMPDB                  : SMP00004 SMP00020
+KEGG                   : map00260 map00330
+CHEBI                  : 16919
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004
+C13HSQC                : 0  1  0  1
+CO_HSQC                : 
+C13Intensities         : 0  1  0  1
+H1Index                : 2;2;001 4;3;001
+N15Index               : 
+C13chemicalShift       : 0       56.436            0       39.505
+H1chemicalShift        : 3.918       3.027
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

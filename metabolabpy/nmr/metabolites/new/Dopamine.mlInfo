@@ -1,0 +1,28 @@
+Name                   : Dopamine
+AltName                : dopamine
+Source                 : HMDB
+IUPAC                  : 4-(2-aminoethyl)benzene-1,2-diol
+InChI_Identifier       : InChI=1S/C8H11NO2/c9-4-3-6-1-2-7(10)8(11)5-6/h1-2,5,10-11H,3-4,9H2
+InChI_Key              : VYFYYTLLBUKUHU-UHFFFAOYSA-N
+SMILES                 : NCCC1=CC(O)=C(O)C=C1
+Formula                : C8H11NO2
+Mass                   : 153.1784
+pKa                    : 
+HMDB                   : HMDB00073
+SMPDB                  : SMP00006 SMP00012
+KEGG                   : 
+CHEBI                  : 18243
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;2;001 3;2;001 5;1;000 8;1;000 9;1;000
+N15Index               : 
+C13chemicalShift       : 0        43.651        34.752             0       119.261             0             0       119.195       123.819
+H1chemicalShift        : 3.221       2.865       6.842       6.898       6.747
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

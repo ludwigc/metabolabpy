@@ -81,8 +81,11 @@ class NmrData:
         self.ysa = []
         self.xst = []
         self.yst = []
+        self.xss = []
+        self.yss = []
         self.assigned_text = []
         self.library_text = []
+        self.metabolite_text = []
         if 'pygamma' in sys.modules:
             self.has_pg = True
         else:
@@ -747,6 +750,7 @@ class NmrData:
 
             npts = int(len(self.spc))
 
+        #points = np.round(((ppm - self.ref_shift[dim]) * (sfo / sw) + self.ref_point[dim] / (npts - 1)) * (npts - 1))
         points = np.round(((ppm - self.ref_shift[dim]) * (sfo / sw) + self.ref_point[dim] / (npts - 1)) * (npts - 1))
         return points.astype(int)
         # end ppm2points

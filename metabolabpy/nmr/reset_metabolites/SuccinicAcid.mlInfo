@@ -1,0 +1,28 @@
+Name                   : Succinic Acid
+AltName                : succinate
+Source                 : HMDB
+IUPAC                  : butanedioic acid
+InChI_Identifier       : InChI=1S/C4H6O4/c5-3(6)1-2-4(7)8/h1-2H2,(H,5,6)(H,7,8)
+InChI_Key              : KDYFGRWQOYBRFD-UHFFFAOYSA-N
+SMILES                 : OC(=O)CCC(O)=O
+Formula                : C4H6O4
+Mass                   : 118.088
+pKa                    : 
+HMDB                   : HMDB00254
+SMPDB                  : SMP00057 SMP00072 SMP00355 SMP00450 SMP00465
+KEGG                   : map00020 map00190 map00250
+CHEBI                  : 15741
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004
+C13HSQC                : 0 1 1 0
+CO_HSQC                : 1 2 2 1
+C13Intensities         : 1 1 1 1
+H1Index                : 2;2;012 3;2;012
+N15Index               : 
+C13chemicalShift       : 185.203 36.827 36.827 185.203
+H1chemicalShift        : 2.388 2.388
+N15chemicalShift       : 
+jCC                    : 1;2;49.6 2;3;28.2 3;4;49.6
+jCH                    : 
+jCN                    : 
+jHH                    : 

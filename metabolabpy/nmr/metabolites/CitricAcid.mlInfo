@@ -1,0 +1,28 @@
+Name                   : Citric Acid
+AltName                : citrate
+Source                 : HMDB
+IUPAC                  : 2-hydroxypropane-1,2,3-tricarboxylic acid
+InChI_Identifier       : InChI=1S/C6H8O7/c7-3(8)1-6(13,5(11)12)2-4(9)10/h13H,1-2H2,(H,7,8)(H,9,10)(H,11,12)
+InChI_Key              : KRKNYBCHXYNGOX-UHFFFAOYSA-N
+SMILES                 : OC(=O)CC(O)(CC(O)=O)C(O)=O
+Formula                : C6H8O7
+Mass                   : 192.1235
+pKa                    : 
+HMDB                   : HMDB00094
+SMPDB                  : SMP00057 SMP00466
+KEGG                   : 
+CHEBI                  : 30769
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005 0;1;006
+C13HSQC                : 0 1 0 1 0 0
+CO_HSQC                : 0 0 0 0 0 0
+C13Intensities         : 1 1 1 1 1 1
+H1Index                : 2;1;001 2;1;002 4;1;001 4;1;002
+N15Index               : 
+C13chemicalShift       : 176.465 48.711 79.063 48.711 183.128 182.676
+H1chemicalShift        : 2.521 2.659 2.521 2.659
+N15chemicalShift       : 
+jCC                    : 1;2;37.2491 2;3;52.4915 4;5;52.4915 5;6;37.2491
+jCH                    : 
+jCN                    : 
+jHH                    : 

@@ -1,0 +1,28 @@
+Name                   : L-Carnitine
+AltName                : carnitine_l
+Source                 : HMDB
+IUPAC                  : (3R)-3-hydroxy-4-(trimethylazaniumyl)butanoate
+InChI_Identifier       : InChI=1S/C7H15NO3/c1-8(2,3)5-6(9)4-7(10)11/h6,9H,4-5H2,1-3H3/t6-/m1/s1
+InChI_Key              : PHIQHXFUZVPYII-ZCFIWIBFSA-N
+SMILES                 : C[N+](C)(C)C[C@H](O)CC([O-])=O
+Formula                : C7H15NO3
+Mass                   : 161.1989
+pKa                    : 
+HMDB                   : HMDB00062
+SMPDB                  : SMP00030 SMP00052 SMP00465 SMP00480 SMP00482
+KEGG                   : 
+CHEBI                  : 16347
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;2;001 3;1;000 4;2;001 7;9;001
+N15Index               : 
+C13chemicalShift       : 0       45.708       66.953       72.875            0            0       56.914
+H1chemicalShift        : 2.413       4.587       3.412       3.216
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

@@ -1,0 +1,28 @@
+Name                   : Adenosine-5-Diphosphate (ADP)
+AltName                : adenosinediphosphate
+Source                 : HMDB
+IUPAC                  : [({[(2R,3S,4R,5R)-5-(6-amino-9H-purin-9-yl)-3,4-dihydroxyoxolan-2-yl]methoxy}(hydroxy)phosphoryl)oxy]phosphonic acid
+InChI_Identifier       : InChI=1S/C10H15N5O10P2/c11-8-5-9(13-2-12-8)15(3-14-5)10-7(17)6(16)4(24-10)1-23-27(21,22)25-26(18,19)20/h2-4,6-7,10,16-17H,1H2,(H,21,22)(H2,11,12,13)(H2,18,19,20)/t4-,6-,7-,10-/m1/s1
+InChI_Key              : XTWYTFMLZFPYCI-KQYNXXCUSA-N
+SMILES                 : NC1=NC=NC2=C1N=CN2[C@@H]1O[C@H](COP(O)(=O)OP(O)(O)=O)[C@@H](O)[C@H]1O
+Formula                : C10H15N5O10P2
+Mass                   : 427.2011
+pKa                    : 
+HMDB                   : HMDB01341
+SMPDB                  : SMP00004 SMP00009 SMP00039 SMP00040 SMP00044 SMP00045 SMP00050 SMP00053 SMP00057 SMP00059 SMP00128 SMP00355 SMP00444 SMP00450 SMP00452 SMP00457 SMP00462 SMP00463 SMP00466 SMP00467
+KEGG                   : map00010 map00020 map00190 map00230 map00260 map00330 map00340 map00520 map00561 map00562 map00670 map00910
+CHEBI                  : 16761
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 1;1;000 2;1;000 3;1;000 4;1;000 5;1;001 5;1;002 8;1;000 14;1;000
+N15Index               : 
+C13chemicalShift       : 90.134         77.45        73.166        86.858        65.406             0             0       152.545             0             0             0             0             0        143.33
+H1chemicalShift        : 6.088       4.721       4.544       4.418       4.172       4.072       8.194       8.482
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

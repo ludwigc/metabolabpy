@@ -1,0 +1,28 @@
+Name                   : 3,4-Dihydroxyphenylglycol
+AltName                : glycol34_dihydroxyphenyl
+Source                 : HMDB
+IUPAC                  : 4-(1,2-dihydroxyethyl)benzene-1,2-diol
+InChI_Identifier       : InChI=1S/C8H10O4/c9-4-8(12)5-1-2-6(10)7(11)3-5/h1-3,8-12H,4H2
+InChI_Key              : MTVWFVDWRVYDOR-UHFFFAOYSA-N
+SMILES                 : OCC(O)C1=CC(O)=C(O)C=C1
+Formula                : C8H10O4
+Mass                   : 170.1626
+pKa                    : 
+HMDB                   : HMDB00318
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 1387
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;2;001 3;1;000 5;1;000 8;1;000 9;1;000
+N15Index               : 
+C13chemicalShift       : 0        68.815        76.412             0       116.989             0             0       118.898       121.648
+H1chemicalShift        : 3.696       4.664       6.924       6.916       6.833
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

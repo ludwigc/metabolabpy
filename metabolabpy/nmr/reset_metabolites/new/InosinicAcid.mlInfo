@@ -1,0 +1,28 @@
+Name                   : Inosinic Acid
+AltName                : inosinic_acid
+Source                 : HMDB
+IUPAC                  : {[(2R,3S,4R,5R)-3,4-dihydroxy-5-(6-oxo-6,9-dihydro-1H-purin-9-yl)oxolan-2-yl]methoxy}phosphonic acid
+InChI_Identifier       : InChI=1S/C10H13N4O8P/c15-6-4(1-21-23(18,19)20)22-10(7(6)16)14-3-13-5-8(14)11-2-12-9(5)17/h2-4,6-7,10,15-16H,1H2,(H,11,12,17)(H2,18,19,20)/t4-,6-,7-,10-/m1/s1
+InChI_Key              : GRSZFWQUAKGDAV-KQYNXXCUSA-N
+SMILES                 : O[C@@H]1[C@@H](COP(O)(O)=O)O[C@H]([C@@H]1O)N1C=NC2=C1N=CNC2=O
+Formula                : C10H13N4O8P
+Mass                   : 348.206
+pKa                    : 
+HMDB                   : HMDB00175
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 17202
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 1;1;000 2;1;000 3;1;000 4;1;000 5;2;000 8;1;001 8;1;002 14;1;000
+N15Index               : 
+C13chemicalShift       : 89.953         77.39        73.317        87.425         66.17             0             0       149.013             0             0             0             0             0       142.603
+H1chemicalShift        : 6.123       4.777       4.511       4.367       4.025       8.259        8.14       8.549
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

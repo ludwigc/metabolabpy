@@ -1,0 +1,28 @@
+Name                   : Threo-Isocitric Acid
+AltName                : citrate_threo_iso
+Source                 : HMDB
+IUPAC                  : (1R,2S)-1-hydroxypropane-1,2,3-tricarboxylic acid
+InChI_Identifier       : InChI=1S/C6H8O7/c7-3(8)1-2(5(10)11)4(9)6(12)13/h2,4,9H,1H2,(H,7,8)(H,10,11)(H,12,13)/t2-,4+/m0/s1
+InChI_Key              : ODBLHEXUDAPZAU-ZAFYKAAXSA-N
+SMILES                 : O[C@H]([C@H](CC(O)=O)C(O)=O)C(O)=O
+Formula                : C6H8O7
+Mass                   : 192.1235
+pKa                    : 
+HMDB                   : HMDB01874
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 151
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;1;000 3;1;000 4;1;000 4;1;000
+N15Index               : 
+C13chemicalShift       : 0       76.321        51.57       40.139
+H1chemicalShift        : 3.986       2.961       2.417        2.51
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

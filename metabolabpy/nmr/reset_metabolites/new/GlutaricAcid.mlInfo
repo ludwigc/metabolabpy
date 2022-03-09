@@ -1,0 +1,28 @@
+Name                   : Glutaric Acid
+AltName                : glutarate
+Source                 : HMDB
+IUPAC                  : pentanedioic acid
+InChI_Identifier       : InChI=1S/C5H8O4/c6-4(7)2-1-3-5(8)9/h1-3H2,(H,6,7)(H,8,9)
+InChI_Key              : JFCQEDHGNNZCLN-UHFFFAOYSA-N
+SMILES                 : OC(=O)CCCC(O)=O
+Formula                : C5H8O4
+Mass                   : 132.1146
+pKa                    : 
+HMDB                   : HMDB00661
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 17859
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 4;4;001 3;2;001
+N15Index               : 
+C13chemicalShift       : 0            0       25.657       39.905
+H1chemicalShift        : 2.177       1.777
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

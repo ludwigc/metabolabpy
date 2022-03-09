@@ -1,0 +1,28 @@
+Name                   : L-Asparagine
+AltName                : asparagine
+Source                 : HMDB
+IUPAC                  : (2S)-2-amino-3-carbamoylpropanoic acid
+InChI_Identifier       : InChI=1S/C4H8N2O3/c5-2(4(8)9)1-3(6)7/h2H,1,5H2,(H2,6,7)(H,8,9)/t2-/m0/s1
+InChI_Key              : DCXYFEDJOCDNAF-REOHCLBHSA-N
+SMILES                 : N[C@@H](CC(N)=O)C(O)=O
+Formula                : C4H8N2O3
+Mass                   : 132.1179
+pKa                    : 
+HMDB                   : HMDB00168
+SMPDB                  : SMP00009 SMP00019 SMP00067
+KEGG                   : map00250 map00910
+CHEBI                  : 17196
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004
+C13HSQC                : 0 1 1 0
+CO_HSQC                : 0 0 0 0
+C13Intensities         : 1 1 1 1
+H1Index                : 2;1;000 3;1;001 3;1;002
+N15Index               : 2;1;000 4;1;000
+C13chemicalShift       : 177.235  54.130 37.432 165.024
+H1chemicalShift        :   3.993   2.944  2.843
+N15chemicalShift       :  42.709 102.736
+jCC                    : 1;2;52.732 2;3;38.1122 3;4;47.8
+jCH                    : 
+jCN                    : 
+jHH                    : 

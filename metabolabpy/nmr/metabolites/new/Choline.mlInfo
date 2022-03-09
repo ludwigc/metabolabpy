@@ -1,0 +1,28 @@
+Name                   : Choline
+AltName                : choline
+Source                 : HMDB
+IUPAC                  : (2-hydroxyethyl)trimethylazanium
+InChI_Identifier       : InChI=1S/C5H14NO/c1-6(2,3)4-5-7/h7H,4-5H2,1-3H3/q+1
+InChI_Key              : OEYIOHPDSNJKLS-UHFFFAOYSA-N
+SMILES                 : C[N+](C)(C)CCO
+Formula                : C5H14NO
+Mass                   : 104.1708
+pKa                    : 
+HMDB                   : HMDB00097
+SMPDB                  : SMP00025 SMP00033 SMP00123
+KEGG                   : map00260 map00270 map00564
+CHEBI                  : 15354
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 1;2;001 2;2;001 5;9;001
+N15Index               : 
+C13chemicalShift       : 58.493       70.148            0            0       56.698
+H1chemicalShift        : 4.052       3.502       3.187
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

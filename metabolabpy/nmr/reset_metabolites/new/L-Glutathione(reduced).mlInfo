@@ -1,0 +1,28 @@
+Name                   : L-Glutathione (reduced)
+AltName                : glutathione_reduced
+Source                 : BMRB000185
+IUPAC                  : (2S)-2-amino-4-{[(1R)-1-[(carboxymethyl)carbamoyl]-2-sulfanylethyl]carbamoyl}butanoic acid
+InChI_Identifier       : InChI=1S/C10H17N3O6S/c11-5(10(18)19)1-2-7(14)13-6(4-20)9(17)12-3-8(15)16/h5-6,20H,1-4,11H2,(H,12,17)(H,13,14)(H,15,16)(H,18,19)/t5-,6-/m0/s1
+InChI_Key              : RWSXRVCMGQZWBV-WDSKDSINSA-N
+SMILES                 : N[C@@H](CCC(=O)N[C@@H](CS)C(=O)NCC(O)=O)C(O)=O
+Formula                : C10H17N3O6S
+Mass                   : 307.323
+pKa                    : 
+HMDB                   : HMDB00125
+SMPDB                  : SMP00015 SMP00072 SMP00075 SMP00459
+KEGG                   : map00250 map00480 map00590
+CHEBI                  : 16856
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;1;000 3;2;001 4;2;001 12;1;000 13;2;001 22;2;001
+N15Index               : 
+C13chemicalShift       : 0         56.8        28.89        34.03            0            0            0            0            0            0            0        58.43        28.27            0            0            0            0            0            0            0            0        46.05
+H1chemicalShift        : 3.77        2.16        2.55        4.56       2.943        3.77
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

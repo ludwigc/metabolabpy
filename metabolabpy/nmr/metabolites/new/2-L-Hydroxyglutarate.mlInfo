@@ -1,0 +1,28 @@
+Name                   : 2-L-Hydroxyglutarate
+AltName                : glutaratehydroxy2l
+Source                 : HMDB
+IUPAC                  : (2S)-2-hydroxypentanedioic acid
+InChI_Identifier       : InChI=1S/C5H8O5/c6-3(5(9)10)1-2-4(7)8/h3,6H,1-2H2,(H,7,8)(H,9,10)/t3-/m0/s1
+InChI_Key              : HWXBTNAVRSUOJR-VKHMYHEASA-N
+SMILES                 : O[C@@H](CCC(O)=O)C(O)=O
+Formula                : C5H8O5
+Mass                   : 148.114
+pKa                    : 
+HMDB                   : HMDB00694
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 32797
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005
+C13HSQC                : 0  1  1  1  0
+CO_HSQC                : 
+C13Intensities         : 0  1  1  1  0
+H1Index                : 2;1;000 3;1;001 3;1;002 4;1;000
+N15Index               : 
+C13chemicalShift       : 0         74.8       33.668       36.029            0
+H1chemicalShift        : 4.014       1.982       1.825       2.247
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

@@ -1162,6 +1162,7 @@ class NmrDataSet:
         nd1.read_pipe_2d(data_set_name + os.sep + data_set_number + '.proc', proc_data_name)
         nd1.acq.sw[0] = nd1.acq.sw[0]*len(nd1.spc[0])/2**math.ceil(math.log(len(nd1.spc[0]),2))
         nd1.acq.sw_h[0] = nd1.acq.sw_h[0]*len(nd1.spc[0])/2**math.ceil(math.log(len(nd1.spc[0]),2))
+        nd1.calc_ppm()
         self.nmrdat[self.s].append(nd1)
         # end read_spc
 

@@ -1,0 +1,28 @@
+Name                   : Homo-L-arginine
+AltName                : argininehomo
+Source                 : HMDB
+IUPAC                  : (2S)-2-amino-6-carbamimidamidohexanoic acid
+InChI_Identifier       : InChI=1S/C7H16N4O2/c8-5(6(12)13)3-1-2-4-11-7(9)10/h5H,1-4,8H2,(H,12,13)(H4,9,10,11)/t5-/m0/s1
+InChI_Key              : QUOGESRFPZDMMT-YFKPBYRVSA-N
+SMILES                 : N[C@@H](CCCCNC(N)=N)C(O)=O
+Formula                : C7H16N4O2
+Mass                   : 188.2275
+pKa                    : 
+HMDB                   : HMDB00670
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 27747
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;1;000 3;2;001 4;1;001 4;1;002 5;2;001 6;2;001
+N15Index               : 
+C13chemicalShift       : 0       57.478       32.759       24.257       30.219       43.503
+H1chemicalShift        : 3.736       1.872       1.434       1.426       1.633       3.197
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

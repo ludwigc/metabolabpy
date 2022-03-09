@@ -1,0 +1,28 @@
+Name                   : Thymidine
+AltName                : thymidine
+Source                 : HMDB
+IUPAC                  : 1-[(2R,4S,5R)-4-hydroxy-5-(hydroxymethyl)oxolan-2-yl]-5-methyl-1,2,3,4-tetrahydropyrimidine-2,4-dione
+InChI_Identifier       : InChI=1S/C10H14N2O5/c1-5-3-12(10(16)11-9(5)15)8-2-6(14)7(4-13)17-8/h3,6-8,13-14H,2,4H2,1H3,(H,11,15,16)/t6-,7+,8+/m0/s1
+InChI_Key              : IQFYYKKMVGJFEH-XLPZGREQSA-N
+SMILES                 : CC1=CN([C@H]2C[C@H](O)[C@@H](CO)O2)C(=O)NC1=O
+Formula                : C10H14N2O5
+Mass                   : 242.2286
+pKa                    : 
+HMDB                   : HMDB00273
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 17748
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 1;1;000 2;2;001 3;1;000 4;1;000 5;1;001 5;1;002 12;1;000 13;3;001
+N15Index               : 
+C13chemicalShift       : 87.628        41.248         73.13         89.26        64.048             0             0             0             0             0             0       140.104         14.38
+H1chemicalShift        : 6.282       2.364       4.465       4.011       3.841       3.767       7.631       1.908
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

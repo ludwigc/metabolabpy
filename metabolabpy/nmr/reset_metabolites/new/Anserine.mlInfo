@@ -1,0 +1,28 @@
+Name                   : Anserine
+AltName                : anserine
+Source                 : HMDB
+IUPAC                  : (2S)-2-(3-aminopropanamido)-3-(1-methyl-1H-imidazol-5-yl)propanoic acid
+InChI_Identifier       : InChI=1S/C10H16N4O3/c1-14-6-12-5-7(14)4-8(10(16)17)13-9(15)2-3-11/h5-6,8H,2-4,11H2,1H3,(H,13,15)(H,16,17)/t8-/m0/s1
+InChI_Key              : MYYIAHXIVFADCU-QMMMGPOBSA-N
+SMILES                 : CN1C=NC=C1C[C@H](NC(=O)CCN)C(O)=O
+Formula                : C10H16N4O3
+Mass                   : 240.259
+pKa                    : 
+HMDB                   : HMDB00194
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 18323
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;1;000 3;1;001 3;1;002 5;1;000 6;1;000 7;3;001 9;2;001 10;2;001
+N15Index               : 
+C13chemicalShift       : 0        56.101        28.558             0       122.833       138.774        35.194             0         34.53        38.184
+H1chemicalShift        : 4.487       3.227       3.051       7.115       8.288       3.783       2.686       3.205
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

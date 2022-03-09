@@ -1,0 +1,28 @@
+Name                   : Alpha-D-Glucose
+AltName                : glucose_alpha
+Source                 : HMDB
+IUPAC                  : (2R,3R,4S,5S,6R)-6-(hydroxymethyl)oxane-2,3,4,5-tetrol
+InChI_Identifier       : InChI=1S/C6H12O6/c7-1-2-3(8)4(9)5(10)6(11)12-2/h2-11H,1H2/t2-,3-,4+,5-,6-/m1/s1
+InChI_Key              : WQZGKKKJIJFFOK-VFUOTHLCSA-N
+SMILES                 : OC[C@H]1O[C@@H](O)[C@H](O)[C@@H](O)[C@@H]1O
+Formula                : C6H12O6
+Mass                   : 180.1559
+pKa                    : 
+HMDB                   : HMDB00122
+SMPDB                  : SMP00040 SMP00043 SMP00127 SMP00128 SMP00444 SMP00457 SMP00466
+KEGG                   : map00010 map00052
+CHEBI                  : 15903
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005 0;1;006
+C13HSQC                : 1 1 1 1 1 1
+CO_HSQC                : 0 0 0 0 0 0
+C13Intensities         : 1 1 1 1 1 1
+H1Index                : 1;1;000 2;1;000 3;1;000 4;1;000 5;1;000 6;1;001 6;1;002
+N15Index               : 
+C13chemicalShift       : 94.936 74.199 75.63  72.341 74.139 63.39
+H1chemicalShift        :  5.224  3.522  3.712  3.394  3.816  3.833  3.765
+N15chemicalShift       : 
+jCC                    : 1;2;46.1963 2;3;46.0092 3;4;58.7919 4;5;58.7919 5;6;43.3517
+jCH                    : 
+jCN                    : 
+jHH                    : 

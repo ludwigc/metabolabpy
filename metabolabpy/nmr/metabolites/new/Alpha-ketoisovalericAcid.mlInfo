@@ -1,0 +1,28 @@
+Name                   : Alpha-ketoisovaleric Acid
+AltName                : ketoisovalerate_alpha
+Source                 : HMDB
+IUPAC                  : 3-methyl-2-oxobutanoic acid
+InChI_Identifier       : InChI=1S/C5H8O3/c1-3(2)4(6)5(7)8/h3H,1-2H3,(H,7,8)
+InChI_Key              : QHKABHOOEWYVLI-UHFFFAOYSA-N
+SMILES                 : CC(C)C(=O)C(O)=O
+Formula                : C5H8O3
+Mass                   : 116.1152
+pKa                    : 
+HMDB                   : HMDB00019
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 16530
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 3;1;000 5;6;001
+N15Index               : 
+C13chemicalShift       : 0            0       39.542            0       18.864
+H1chemicalShift        : 3.033       1.117
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

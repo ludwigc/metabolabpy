@@ -1,0 +1,28 @@
+Name                   : Trans-2-Octenoic Acid
+AltName                : trans_2_octenoic_acid
+Source                 : HMDB
+IUPAC                  : (2E)-oct-2-enoic acid
+InChI_Identifier       : InChI=1S/C8H14O2/c1-2-3-4-5-6-7-8(9)10/h6-7H,2-5H2,1H3,(H,9,10)/b7-6+
+InChI_Key              : CWMPPVPFLSZGCY-VOTSOKGWSA-N
+SMILES                 : CCCCC\C=C\C(O)=O
+Formula                : C8H14O2
+Mass                   : 142.1956
+pKa                    : 
+HMDB                   : HMDB01568
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 86544
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;1;000 3;1;000 4;2;001 5;2;001 6;2;001 7;2;001 8;3;001
+N15Index               : 
+C13chemicalShift       : 0       122.486       151.365        33.178        29.004        32.524        23.552        14.392
+H1chemicalShift        : 5.787        6.95       2.215       1.475        1.33        1.34       0.914
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

@@ -1,0 +1,28 @@
+Name                   : S-Adenosylhomocysteine
+AltName                : adenosylhomocysteine_s
+Source                 : HMDB
+IUPAC                  : (2S)-2-amino-4-({[(2S,3S,4R,5R)-5-(6-amino-9H-purin-9-yl)-3,4-dihydroxyoxolan-2-yl]methyl}sulfanyl)butanoic acid
+InChI_Identifier       : InChI=1S/C14H20N6O5S/c15-6(14(23)24)1-2-26-3-7-9(21)10(22)13(25-7)20-5-19-8-11(16)17-4-18-12(8)20/h4-7,9-10,13,21-22H,1-3,15H2,(H,23,24)(H2,16,17,18)/t6-,7+,9+,10+,13+/m0/s1
+InChI_Key              : ZJUKTBDSGOFHSH-WFMPWKQPSA-N
+SMILES                 : N[C@@H](CCSC[C@H]1O[C@H]([C@H](O)[C@@H]1O)N1C=NC2=C1N=CN=C2N)C(O)=O
+Formula                : C14H20N6O5S
+Mass                   : 384.411
+pKa                    : 
+HMDB                   : HMDB00939
+SMPDB                  : SMP00004 SMP00033 SMP00123 SMP00465
+KEGG                   : map00260 map00270
+CHEBI                  : 16680
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 1;1;000 2;1;000 3;1;000 4;1;000 5;1;001 5;1;002 8;1;000 14;1;000 15;2;001 16;1;001 16;1;002 17;1;000
+N15Index               : 
+C13chemicalShift       : 87.261        72.532        72.369        83.327        33.679             0             0       152.378             0             0             0             0             0       139.755        27.891        31.201        52.784
+H1chemicalShift        : 5.892       4.727       4.147       4.027       2.911        2.81       8.159       8.365       2.633       1.996        1.83       3.303
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

@@ -1,0 +1,28 @@
+Name                   : Vanillylmandelic Acid
+AltName                : vanillylmandelate
+Source                 : HMDB
+IUPAC                  : (2S)-2-hydroxy-2-(4-hydroxy-3-methoxyphenyl)acetic acid
+InChI_Identifier       : InChI=1S/C9H10O5/c1-14-7-4-5(2-3-6(7)10)8(11)9(12)13/h2-4,8,10-11H,1H3,(H,12,13)/t8-/m0/s1
+InChI_Key              : CGQCWMIAEPEHNQ-QMMMGPOBSA-N
+SMILES                 : COC1=C(O)C=CC(=C1)[C@H](O)C(O)=O
+Formula                : C9H10O5
+Mass                   : 198.1727
+pKa                    : 
+HMDB                   : HMDB00291
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;1;000 4;1;000 7;1;000 8;1;000 9;3;001
+N15Index               : 
+C13chemicalShift       : 0        76.855             0       113.805             0             0       118.194       122.983         58.55
+H1chemicalShift        : 4.917       7.025       6.902       6.902       3.851
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

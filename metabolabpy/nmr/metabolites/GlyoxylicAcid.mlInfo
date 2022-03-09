@@ -1,0 +1,28 @@
+Name                   : Glyoxylic Acid
+AltName                : glyoxylic_acid
+Source                 : HMDB
+IUPAC                  : 2-oxoacetic acid
+InChI_Identifier       : InChI=1S/C2H2O3/c3-1-2(4)5/h1H,(H,4,5)
+InChI_Key              : HHLFWLYXYJOTON-UHFFFAOYSA-N
+SMILES                 : OC(=O)C=O
+Formula                : C2H2O3
+Mass                   : 74.0355
+pKa                    : 
+HMDB                   : HMDB00119
+SMPDB                  : SMP00004 SMP00055
+KEGG                   : map00250 map00260
+CHEBI                  : 16891
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003
+C13HSQC                : 0 1
+CO_HSQC                : 0 0
+C13Intensities         : 1 1
+H1Index                : 2;1;000
+N15Index               : 
+C13chemicalShift       : 179.497 90.765
+H1chemicalShift        : 5.061
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

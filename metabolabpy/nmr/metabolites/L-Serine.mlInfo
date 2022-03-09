@@ -1,0 +1,28 @@
+Name                   : L-Serine
+AltName                : serine
+Source                 : HMDB
+IUPAC                  : (2S)-2-amino-3-hydroxypropanoic acid
+InChI_Identifier       : InChI=1S/C3H7NO3/c4-2(1-5)3(6)7/h2,5H,1,4H2,(H,6,7)/t2-/m0/s1
+InChI_Key              : MTCFGRXMJLQNBG-REOHCLBHSA-N
+SMILES                 : N[C@@H](CO)C(O)=O
+Formula                : C3H7NO3
+Mass                   : 105.0926
+pKa                    : 
+HMDB                   : HMDB00187
+SMPDB                  : SMP00004 SMP00009 SMP00033 SMP00034 SMP00455
+KEGG                   : map00260 map00270 map00500 map00910
+CHEBI                  : 17115
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003
+C13HSQC                : 0 1 1
+CO_HSQC                : 0 0 0
+C13Intensities         : 0 1 1
+H1Index                : 2;1;000 3;2;01
+N15Index               : 2;1;000
+C13chemicalShift       : 176.354 59.178 62.7101
+H1chemicalShift        :   3.833  3.9739
+N15chemicalShift       :  31.898
+jCC                    : 1;2;55 2;3;37.1
+jCH                    : 
+jCN                    : 
+jHH                    : 

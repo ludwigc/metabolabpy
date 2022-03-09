@@ -1,0 +1,28 @@
+Name                   : Guanosine Triphosphate (GTP)
+AltName                : guanosinetriphosphate
+Source                 : HMDB
+IUPAC                  : ({[({[(2R,3S,4R,5R)-5-(2-amino-6-oxo-6,9-dihydro-1H-purin-9-yl)-3,4-dihydroxyoxolan-2-yl]methoxy}(hydroxy)phosphoryl)oxy](hydroxy)phosphoryl}oxy)phosphonic acid
+InChI_Identifier       : InChI=1S/C10H16N5O14P3/c11-10-13-7-4(8(18)14-10)12-2-15(7)9-6(17)5(16)3(27-9)1-26-31(22,23)29-32(24,25)28-30(19,20)21/h2-3,5-6,9,16-17H,1H2,(H,22,23)(H,24,25)(H2,19,20,21)(H3,11,13,14,18)/t3-,5-,6-,9-/m1/s1
+InChI_Key              : XKMLYUALXHKNFT-UUOKFMHZSA-N
+SMILES                 : NC1=NC2=C(N=CN2[C@@H]2O[C@H](COP(O)(=O)OP(O)(=O)OP(O)(O)=O)[C@@H](O)[C@H]2O)C(=O)N1
+Formula                : C10H16N5O14P3
+Mass                   : 523.1804
+pKa                    : 
+HMDB                   : HMDB01273
+SMPDB                  : SMP00005 SMP00019 SMP00050 SMP00057 SMP00128 SMP00477
+KEGG                   : map00010 map00020 map00230 map00790
+CHEBI                  : 15996
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 1;1;000 2;1;000 3;1;000 4;1;000 5;1;001 5;1;002 14;1;000
+N15Index               : 
+C13chemicalShift       : 89.304        76.355        73.031        86.649         67.72             0             0             0             0             0             0             0             0       140.429
+H1chemicalShift        : 5.923       4.787       4.587       4.347       4.247         4.2        8.13
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

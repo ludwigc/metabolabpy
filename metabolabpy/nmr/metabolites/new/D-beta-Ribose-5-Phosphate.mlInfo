@@ -1,0 +1,28 @@
+Name                   : D-beta-Ribose-5-Phosphate
+AltName                : ribose5phosphate_beta
+Source                 : HMDB
+IUPAC                  : {[(2R,3S,4R,5S)-3,4,5-trihydroxyoxolan-2-yl]methoxy}phosphonic acid
+InChI_Identifier       : InChI=1S/C5H11O8P/c6-3-2(1-12-14(9,10)11)13-5(8)4(3)7/h2-8H,1H2,(H2,9,10,11)/t2-,3-,4-,5+/m1/s1
+InChI_Key              : KTVPXOYAKDPRHY-AIHAYLRMSA-N
+SMILES                 : O[C@H]1O[C@H](COP(O)(O)=O)[C@@H](O)[C@H]1O
+Formula                : C5H11O8P
+Mass                   : 230.1098
+pKa                    : 
+HMDB                   : HMDB01548
+SMPDB                  : SMP00031 SMP00050
+KEGG                   : map00030 map00230
+CHEBI                  : 18189
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 1;1;000 2;1;000 3;1;000 4;1;000 5;1;001 5;1;002
+N15Index               : 
+C13chemicalShift       : 103.793        78.005        73.249        84.406         67.48
+H1chemicalShift        : 5.241       4.051        4.29       4.073       3.943        3.85
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

@@ -1,0 +1,28 @@
+Name                   : Monoethyl-Malonic Acid
+AltName                : malonate_monoethyl
+Source                 : HMDB
+IUPAC                  : 3-ethoxy-3-oxopropanoic acid
+InChI_Identifier       : InChI=1S/C5H8O4/c1-2-9-5(8)3-4(6)7/h2-3H2,1H3,(H,6,7)
+InChI_Key              : HGINADPHJQTSKN-UHFFFAOYSA-N
+SMILES                 : CCOC(=O)CC(O)=O
+Formula                : C5H8O4
+Mass                   : 132.1146
+pKa                    : 
+HMDB                   : HMDB00576
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 86907
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;2;001 4;2;001 5;3;001
+N15Index               : 
+C13chemicalShift       : 0        47.35            0       64.742       15.913
+H1chemicalShift        : 3.299        4.18       1.258
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

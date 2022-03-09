@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1734</width>
+    <width>1914</width>
     <height>1015</height>
    </rect>
   </property>
@@ -2005,65 +2005,7 @@
           <property name="spacing">
            <number>0</number>
           </property>
-          <item row="0" column="10">
-           <widget class="QPushButton" name="exitPhCorr2d">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Exit</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="13">
-           <widget class="QPushButton" name="cancelPhCorr2d">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Cancel PhCorr</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="4">
-           <widget class="QPushButton" name="exitZoomPhCorr1d">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Exit Zoom</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="7">
-           <widget class="QPushButton" name="removeRowColPhCorr2d">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Remove last Row/Col</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="14">
+          <item row="0" column="16">
            <widget class="QPushButton" name="exitZoomPhCorr2d">
             <property name="maximumSize">
              <size>
@@ -2076,47 +2018,8 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="6">
-           <widget class="QPushButton" name="emptyRowColPhCorr2d">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Empty Row/Col</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="displayAssignedMetabolites">
-            <property name="text">
-             <string>Display assigned metabolites</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="5">
-           <widget class="QPushButton" name="pickRowColPhCorr2d">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Pick Row/Col</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="9">
-           <widget class="QPushButton" name="vertPhCorr2d">
+           <widget class="QPushButton" name="removeRowColPhCorr2d">
             <property name="maximumSize">
              <size>
               <width>16777215</width>
@@ -2124,25 +2027,12 @@
              </size>
             </property>
             <property name="text">
-             <string>Vert. PhCorr</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="8">
-           <widget class="QPushButton" name="horzPhCorr2d">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Hor. PhCorr</string>
+             <string>Remove last Row/Col</string>
             </property>
            </widget>
           </item>
           <item row="0" column="12">
-           <widget class="QPushButton" name="applyPhCorr2d">
+           <widget class="QPushButton" name="exitPhCorr2d">
             <property name="maximumSize">
              <size>
               <width>16777215</width>
@@ -2150,56 +2040,11 @@
              </size>
             </property>
             <property name="text">
-             <string>Apply 2D PhCorr</string>
+             <string>Exit</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
-           <widget class="QPushButton" name="zoomPhCorr1d">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Zoom</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="11">
-           <widget class="QPushButton" name="zoomPhCorr2d">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Zoom</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="15">
-           <spacer name="horizontalSpacer_44">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>128</width>
-              <height>13</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="2">
+          <item row="0" column="4">
            <widget class="QPushButton" name="exitPhCorr1d">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
@@ -2218,10 +2063,172 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
+          <item row="0" column="2">
            <widget class="QCheckBox" name="displayLibraryShifts">
             <property name="text">
              <string>Display library shifts</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="14">
+           <widget class="QPushButton" name="applyPhCorr2d">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Apply 2D PhCorr</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5">
+           <widget class="QPushButton" name="zoomPhCorr1d">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Zoom</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="8">
+           <widget class="QPushButton" name="emptyRowColPhCorr2d">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Empty Row/Col</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="13">
+           <widget class="QPushButton" name="zoomPhCorr2d">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Zoom</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="10">
+           <widget class="QPushButton" name="horzPhCorr2d">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Hor. PhCorr</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="displayAssignedMetabolites">
+            <property name="text">
+             <string>Display assigned metabolites</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="7">
+           <widget class="QPushButton" name="pickRowColPhCorr2d">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Pick Row/Col</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="17">
+           <spacer name="horizontalSpacer_44">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>128</width>
+              <height>13</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="15">
+           <widget class="QPushButton" name="cancelPhCorr2d">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Cancel PhCorr</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="11">
+           <widget class="QPushButton" name="vertPhCorr2d">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Vert. PhCorr</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="6">
+           <widget class="QPushButton" name="exitZoomPhCorr1d">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Exit Zoom</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="displaySelectedMetabolite">
+            <property name="text">
+             <string>Display selected metabolite</string>
             </property>
            </widget>
           </item>
@@ -2492,6 +2499,13 @@
                   </item>
                   <item>
                    <layout class="QGridLayout" name="gridLayout_22">
+                    <item row="0" column="1">
+                     <widget class="QPushButton" name="displayMetaboliteInformation">
+                      <property name="text">
+                       <string>Display Info</string>
+                      </property>
+                     </widget>
+                    </item>
                     <item row="0" column="0">
                      <widget class="QLabel" name="label_72">
                       <property name="sizePolicy">
@@ -2504,29 +2518,6 @@
                        <string>Search</string>
                       </property>
                      </widget>
-                    </item>
-                    <item row="0" column="3">
-                     <widget class="QLabel" name="label_74">
-                      <property name="text">
-                       <string>Metabolites</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="2">
-                     <spacer name="horizontalSpacer_42">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>40</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
                     </item>
                     <item row="1" column="0" colspan="2">
                      <widget class="QLineEdit" name="searchHsqcMetabolites">
@@ -2541,7 +2532,7 @@
                       </property>
                      </widget>
                     </item>
-                    <item row="1" column="2" colspan="2">
+                    <item row="1" column="2" colspan="3">
                      <widget class="QComboBox" name="hsqcPathwaySelect">
                       <property name="enabled">
                        <bool>false</bool>
@@ -2629,12 +2620,44 @@
                       </item>
                      </widget>
                     </item>
-                    <item row="0" column="1">
-                     <widget class="QPushButton" name="displayMetaboliteInformation">
+                    <item row="0" column="4">
+                     <widget class="QLabel" name="label_74">
                       <property name="text">
-                       <string>Display Info</string>
+                       <string>Metabolites</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                       </property>
                      </widget>
+                    </item>
+                    <item row="0" column="2">
+                     <widget class="QComboBox" name="openWeb">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>120</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="3">
+                     <spacer name="horizontalSpacer_42">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
                     </item>
                    </layout>
                   </item>
@@ -3357,6 +3380,12 @@
                 </item>
                 <item>
                  <widget class="QComboBox" name="windowFunction">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <item>
                    <property name="text">
                     <string>None</string>
@@ -3444,6 +3473,12 @@
                 </item>
                 <item>
                  <widget class="QComboBox" name="phaseCorrection">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <item>
                    <property name="text">
                     <string>None</string>
@@ -3518,6 +3553,12 @@
                     </item>
                     <item>
                      <widget class="QComboBox" name="waterSuppression">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
                       <item>
                        <property name="text">
                         <string>None</string>
@@ -3683,6 +3724,12 @@
                 </item>
                 <item>
                  <widget class="QComboBox" name="gibbs">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <item>
                    <property name="text">
                     <string>No</string>
@@ -3710,6 +3757,12 @@
               </item>
               <item>
                <widget class="QComboBox" name="baselineCorrection">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <item>
                  <property name="text">
                   <string>No</string>
@@ -4165,6 +4218,12 @@
                 </item>
                 <item>
                  <widget class="QComboBox" name="windowFunction_2">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <item>
                    <property name="text">
                     <string>None</string>
@@ -4252,6 +4311,12 @@
                 </item>
                 <item>
                  <widget class="QComboBox" name="phaseCorrection_2">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <item>
                    <property name="text">
                     <string>None</string>
@@ -4322,6 +4387,12 @@
                 </item>
                 <item>
                  <widget class="QComboBox" name="gibbs_2">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <item>
                    <property name="text">
                     <string>No</string>
@@ -4349,6 +4420,12 @@
               </item>
               <item>
                <widget class="QComboBox" name="quadratureDetection">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <item>
                  <property name="text">
                   <string>Jres</string>
@@ -4394,6 +4471,12 @@
               </item>
               <item>
                <widget class="QComboBox" name="tilt">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <item>
                  <property name="text">
                   <string>Yes</string>
@@ -4419,6 +4502,12 @@
               </item>
               <item>
                <widget class="QComboBox" name="symJ">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <item>
                  <property name="text">
                   <string>Yes</string>
@@ -4522,6 +4611,12 @@
           </item>
           <item>
            <widget class="QComboBox" name="posCol">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="minimumSize">
              <size>
               <width>300</width>
@@ -4700,6 +4795,12 @@
           </item>
           <item>
            <widget class="QComboBox" name="negCol">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="minimumSize">
              <size>
               <width>300</width>
@@ -4956,6 +5057,12 @@
           </item>
           <item>
            <widget class="QComboBox" name="axisType1">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="minimumSize">
              <size>
               <width>300</width>
@@ -5002,6 +5109,12 @@
           </item>
           <item>
            <widget class="QComboBox" name="axisType2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="minimumSize">
              <size>
               <width>300</width>
@@ -5039,6 +5152,12 @@
           </item>
           <item>
            <widget class="QComboBox" name="displaySpc">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="minimumSize">
              <size>
               <width>300</width>
@@ -5284,6 +5403,12 @@
           </item>
           <item>
            <widget class="QComboBox" name="phRefColour">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <item>
              <property name="text">
               <string>Red</string>
@@ -5485,6 +5610,11 @@
             <item>
              <property name="text">
               <string>Automatic Phase and Baseline Correction</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Automatic Baseline Correction</string>
              </property>
             </item>
             <item>
@@ -5749,7 +5879,7 @@
          <string>AutoPlot |</string>
         </property>
         <property name="checked">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -5830,7 +5960,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1734</width>
+     <width>1914</width>
      <height>24</height>
     </rect>
    </property>

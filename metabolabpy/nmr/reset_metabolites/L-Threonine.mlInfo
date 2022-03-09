@@ -1,0 +1,28 @@
+Name                   : L-Threonine
+AltName                : threonine
+Source                 : HMDB
+IUPAC                  : (2S,3R)-2-amino-3-hydroxybutanoic acid
+InChI_Identifier       : InChI=1S/C4H9NO3/c1-2(6)3(5)4(7)8/h2-3,6H,5H2,1H3,(H,7,8)/t2-,3+/m1/s1
+InChI_Key              : AYFVYJQAPQTCCC-GBXIJSLDSA-N
+SMILES                 : C[C@@H](O)[C@H](N)C(O)=O
+Formula                : C4H9NO3
+Mass                   : 119.1192
+pKa                    : 
+HMDB                   : HMDB00167
+SMPDB                  : SMP00004 SMP00019 SMP00452
+KEGG                   : 
+CHEBI                  : 16857
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004
+C13HSQC                : 0 1 1 1
+CO_HSQC                : 0 0 0 0
+C13Intensities         : 1 1 1 1
+H1Index                : 2;1;000 3;1;000 4;3;123
+N15Index               : 2;1;000
+C13chemicalShift       : 181.986 63.462 68.915 22.305
+H1chemicalShift        :   3.571  4.244  1.316
+N15chemicalShift       :  25.633
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

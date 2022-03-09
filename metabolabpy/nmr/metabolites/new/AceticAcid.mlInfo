@@ -1,0 +1,28 @@
+Name                   : Acetic Acid
+AltName                : acetate
+Source                 : HMDB
+IUPAC                  : acetic acid
+InChI_Identifier       : InChI=1S/C2H4O2/c1-2(3)4/h1H3,(H,3,4)
+InChI_Key              : QTBSBXVTEAMEQO-UHFFFAOYSA-N
+SMILES                 : CC(O)=O
+Formula                : C2H4O2
+Mass                   : 60.052
+pKa                    : 
+HMDB                   : HMDB00042
+SMPDB                  : SMP00045 SMP00060 SMP00449 SMP00456
+KEGG                   : map00520 map00620
+CHEBI                  : 15366
+CID                    : 
+C13Index               : 0;1;001 0;1;002
+C13HSQC                : 0  1
+CO_HSQC                : 
+C13Intensities         : 0  1
+H1Index                : 2;3;001
+N15Index               : 
+C13chemicalShift       : 0      26.0899
+H1chemicalShift        : 1.9059
+N15chemicalShift       : 
+jCC                    : 1;2;51.3843
+jCH                    : 
+jCN                    : 
+jHH                    : 

@@ -1,0 +1,28 @@
+Name                   : L-Isoleucine
+AltName                : leucineiso
+Source                 : HMDB
+IUPAC                  : (2S,3S)-2-amino-3-methylpentanoic acid
+InChI_Identifier       : InChI=1S/C6H13NO2/c1-3-4(2)5(7)6(8)9/h4-5H,3,7H2,1-2H3,(H,8,9)/t4-,5-/m0/s1
+InChI_Key              : AGPKZVBTJJNPAG-WHFBIAKZSA-N
+SMILES                 : CC[C@H](C)[C@H](N)C(O)=O
+Formula                : C6H13NO2
+Mass                   : 131.1729
+pKa                    : 
+HMDB                   : HMDB00172
+SMPDB                  : SMP00019 SMP00032
+KEGG                   : 
+CHEBI                  : 17191
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005 0;1;006
+C13HSQC                : 0 1 1 1 1 1
+CO_HSQC                : 0 0 0 0 0 0
+C13Intensities         : 1 1 1 1 1 1
+H1Index                : 2;1;000 3;1;000 4;1;001 4;1;002 5;3;123 6;3;123
+N15Index               : 2;1;000
+C13chemicalShift       : 179.714 62.523 38.686 27.426 13.911 17.368
+H1chemicalShift        :   3.653  1.962  1.453  1.271  0.926  0.995
+N15chemicalShift       :  43.188
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

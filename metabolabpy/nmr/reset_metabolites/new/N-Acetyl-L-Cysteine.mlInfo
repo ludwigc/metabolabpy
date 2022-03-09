@@ -1,0 +1,28 @@
+Name                   : N-Acetyl-L-Cysteine
+AltName                : cysteine_nacetyl
+Source                 : HMDB
+IUPAC                  : (2R)-2-acetamido-3-sulfanylpropanoic acid
+InChI_Identifier       : InChI=1S/C5H9NO3S/c1-3(7)6-4(2-10)5(8)9/h4,10H,2H2,1H3,(H,6,7)(H,8,9)/t4-/m0/s1
+InChI_Key              : PWKSKIMOESPYIA-BYPYZUCNSA-N
+SMILES                 : CC(=O)N[C@@H](CS)C(O)=O
+Formula                : C5H9NO3S
+Mass                   : 163.195
+pKa                    : 
+HMDB                   : HMDB01890
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 28939
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;1;000 3;2;001 5;3;001
+N15Index               : 
+C13chemicalShift       : 0        59.52       29.011            0       24.675
+H1chemicalShift        : 4.375       2.918       2.064
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

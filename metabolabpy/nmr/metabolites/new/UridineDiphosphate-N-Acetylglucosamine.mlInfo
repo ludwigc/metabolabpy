@@ -1,0 +1,28 @@
+Name                   : Uridine Diphosphate-N-Acetylglucosamine
+AltName                : uridinediphosphate_acetylglucosamine
+Source                 : HMDB
+IUPAC                  : [({[(2R,3S,4R,5R)-5-(2,4-dioxo-1,2,3,4-tetrahydropyrimidin-1-yl)-3,4-dihydroxyoxolan-2-yl]methoxy}(hydroxy)phosphoryl)oxy]({[(2R,3R,4R,5S,6R)-3-acetamido-4,5-dihydroxy-6-(hydroxymethyl)oxan-2-yl]oxy})phosphinic acid
+InChI_Identifier       : InChI=1S/C17H27N3O17P2/c1-6(22)18-10-13(26)11(24)7(4-21)35-16(10)36-39(31,32)37-38(29,30)33-5-8-12(25)14(27)15(34-8)20-3-2-9(23)19-17(20)28/h2-3,7-8,10-16,21,24-27H,4-5H2,1H3,(H,18,22)(H,29,30)(H,31,32)(H,19,23,28)/t7-,8-,10-,11-,12-,13-,14-,15-,16-/m1/s1
+InChI_Key              : LFTYTUAZOPRMMI-CFRASDGPSA-N
+SMILES                 : CC(=O)N[C@@H]1[C@@H](O)[C@H](O)[C@@H](CO)O[C@@H]1OP(O)(=O)OP(O)(=O)OC[C@H]1O[C@H]([C@H](O)[C@@H]1O)N1C=CC(=O)NC1=O
+Formula                : C17H27N3O17P2
+Mass                   : 607.3537
+pKa                    : 
+HMDB                   : HMDB00290
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 16264
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 1;1;000 2;1;000 3;1;000 4;1;000 5;1;001 5;1;002 11;1;000 12;1;000 21;1;000 22;1;000 23;1;000 24;1;000 25;1;000 26;1;000
+N15Index               : 
+C13chemicalShift       : 91.034         76.38        72.325         85.65        67.593             0             0             0             0             0       105.276       144.255             0             0             0             0             0             0             0             0        97.031        56.199        73.484        72.132        75.608        62.765
+H1chemicalShift        : 5.974       4.369       4.351       4.285       4.237       4.175        5.97       7.936       5.508       3.985       3.809       3.562        3.91       3.844
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

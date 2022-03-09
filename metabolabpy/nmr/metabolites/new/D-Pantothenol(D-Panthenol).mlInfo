@@ -1,0 +1,28 @@
+Name                   : D-Pantothenol (D-Panthenol)
+AltName                : pantothenol
+Source                 : HMDB
+IUPAC                  : 2,4-dihydroxy-N-(3-hydroxypropyl)-3,3-dimethylbutanamide
+InChI_Identifier       : InChI=1S/C9H19NO4/c1-9(2,6-12)7(13)8(14)10-4-3-5-11/h7,11-13H,3-6H2,1-2H3,(H,10,14)
+InChI_Key              : SNPLKNRPJHDVJA-UHFFFAOYSA-N
+SMILES                 : CC(C)(CO)C(O)C(=O)NCCCO
+Formula                : C9H19NO4
+Mass                   : 205.2515
+pKa                    : 
+HMDB                   : HMDB04231
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;1;000 4;1;002 4;1;001 5;3;001 6;3;001 7;2;001 8;2;001 9;2;001
+N15Index               : 
+C13chemicalShift       : 0       78.575            0       71.165       21.914        23.36       38.632       33.752       62.038
+H1chemicalShift        : 4.001       3.539       3.422       0.911        0.95       3.328       1.787       3.649
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

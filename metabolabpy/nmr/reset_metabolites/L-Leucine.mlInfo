@@ -1,0 +1,28 @@
+Name                   : L-Leucine
+AltName                : leucine
+Source                 : HMDB
+IUPAC                  : (2S)-2-amino-4-methylpentanoic acid
+InChI_Identifier       : InChI=1S/C6H13NO2/c1-4(2)3-5(7)6(8)9/h4-5H,3,7H2,1-2H3,(H,8,9)/t5-/m0/s1
+InChI_Key              : ROHFNLRQFUQHCH-YFKPBYRVSA-N
+SMILES                 : CC(C)C[C@H](N)C(O)=O
+Formula                : C6H13NO2
+Mass                   : 131.1729
+pKa                    : 
+HMDB                   : HMDB00687
+SMPDB                  : SMP00019 SMP00032
+KEGG                   : 
+CHEBI                  : 15603
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005 0;1;005 0;1;006
+C13HSQC                : 0 1 1 1 1 1
+CO_HSQC                : 0 0 0 0 0 0
+C13Intensities         : 1 1 1 1 1 1
+H1Index                : 2;1;000 3;2;012 4;1;000 5;3;123 6;3;123
+N15Index               : 2;1;000
+C13chemicalShift       : 180.634 56.211 42.596 26.778 24.798 23.572
+H1chemicalShift        :   3.741  1.703  1.708  0.96   0.944
+N15chemicalShift       :  38.120
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

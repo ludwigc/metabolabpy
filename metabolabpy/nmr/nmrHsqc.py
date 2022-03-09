@@ -27,7 +27,7 @@ class NmrHsqc:
         self.metabolite_information = ''
         self.hsqc_data = {}
         self.co_hsqc = False
-        self.cur_peak = 0
+        self.cur_peak = -1
         self.cur_metabolite = ''
         self.pick_local_opt = True
         self.autoscale_j = True
@@ -42,10 +42,8 @@ class NmrHsqc:
         # end __str__
 
     def read_metabolite_information(self, metabolite_name=''):
-        print('====================')
-        print(metabolite_name)
-        print('====================')
         if len(metabolite_name) == 0:
+            self.metabolite_information = ''
             return
 
         file_name = os.path.join(os.path.dirname(__file__), 'metabolites', metabolite_name + '.mlInfo')

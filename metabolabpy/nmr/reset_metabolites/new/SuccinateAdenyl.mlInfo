@@ -1,0 +1,28 @@
+Name                   : Succinate Adenyl
+AltName                : succinate_adenyl
+Source                 : HMDB
+IUPAC                  : (2S)-2-({9-[(2R,3R,4S,5R)-3,4-dihydroxy-5-[(phosphonooxy)methyl]oxolan-2-yl]-9H-purin-6-yl}amino)butanedioic acid
+InChI_Identifier       : InChI=1S/C14H18N5O11P/c20-7(21)1-5(14(24)25)18-11-8-12(16-3-15-11)19(4-17-8)13-10(23)9(22)6(30-13)2-29-31(26,27)28/h3-6,9-10,13,22-23H,1-2H2,(H,20,21)(H,24,25)(H,15,16,18)(H2,26,27,28)/t5-,6+,9+,10+,13+/m0/s1
+InChI_Key              : OFBHPPMPBOJXRT-VWJPMABRSA-N
+SMILES                 : O[C@@H]1[C@@H](COP(O)(O)=O)O[C@H]([C@@H]1O)N1C=NC2=C1N=CN=C2N[C@@H](CC(O)=O)C(O)=O
+Formula                : C14H18N5O11P
+Mass                   : 463.2934
+pKa                    : 
+HMDB                   : HMDB00536
+SMPDB                  : SMP00050 SMP00067
+KEGG                   : map00230 map00250
+CHEBI                  : 
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 1;1;000 2;1;000 3;1;000 4;1;000 5;1;001 5;1;002 8;1;000 14;1;000 16;1;000 17;1;000
+N15Index               : 
+C13chemicalShift       : 89.642        76.032        71.887        85.164        66.737             0             0       153.053             0             0             0             0             0       141.099             0        51.121        37.185
+H1chemicalShift        : 6.094       4.628       4.378       4.252       4.244       4.181       8.329       8.421        5.27       3.059
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

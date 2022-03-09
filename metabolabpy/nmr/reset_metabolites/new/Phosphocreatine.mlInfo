@@ -1,0 +1,28 @@
+Name                   : Phosphocreatine
+AltName                : creatinephospho
+Source                 : HMDB
+IUPAC                  : 2-(N-methyl-N'-phosphonocarbamimidamido)acetic acid
+InChI_Identifier       : InChI=1S/C4H10N3O5P/c1-7(2-3(8)9)4(5)6-13(10,11)12/h2H2,1H3,(H,8,9)(H4,5,6,10,11,12)
+InChI_Key              : DRBBFCLWYRJSJZ-UHFFFAOYSA-N
+SMILES                 : CN(CC(O)=O)C(=N)NP(O)(O)=O
+Formula                : C4H10N3O5P
+Mass                   : 211.1131
+pKa                    : 
+HMDB                   : HMDB01511
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 17287
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;2;001 4;3;001
+N15Index               : 
+C13chemicalShift       : 0       56.435            0        39.48
+H1chemicalShift        : 3.951       3.031
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

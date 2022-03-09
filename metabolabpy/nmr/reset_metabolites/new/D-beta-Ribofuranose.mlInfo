@@ -1,0 +1,28 @@
+Name                   : D-beta-Ribofuranose
+AltName                : ribose_b_furanose
+Source                 : HMDB
+IUPAC                  : (3R,4S,5R)-5-(hydroxymethyl)oxolane-2,3,4-triol
+InChI_Identifier       : InChI=1S/C5H10O5/c6-1-2-3(7)4(8)5(9)10-2/h2-9H,1H2/t2-,3-,4-,5?/m1/s1
+InChI_Key              : HMFHBZSHGGEWLO-SOOFDHNKSA-N
+SMILES                 : OC[C@H]1OC(O)[C@H](O)[C@@H]1O
+Formula                : C5H10O5
+Mass                   : 150.1299
+pKa                    : 
+HMDB                   : HMDB00283
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 47013
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 1;1;000 2;1;000 3;1;000 4;1;000 5;1;000 5;1;000
+N15Index               : 
+C13chemicalShift       : 103.803        77.953        73.104        85.062        65.247
+H1chemicalShift        : 5.255       4.006       4.211       3.974       3.803       3.658
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

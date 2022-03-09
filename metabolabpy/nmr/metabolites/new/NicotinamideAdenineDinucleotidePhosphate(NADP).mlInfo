@@ -1,0 +1,28 @@
+Name                   : Nicotinamide Adenine Dinucleotide Phosphate (NADP)
+AltName                : nadp
+Source                 : HMDB
+IUPAC                  : 1-[(2R,3R,4S,5R)-5-{[({[(2R,3R,4R,5R)-5-(6-amino-9H-purin-9-yl)-3-hydroxy-4-(phosphonooxy)oxolan-2-yl]methoxy}(hydroxy)phosphoryl phosphono)oxy]methyl}-3,4-dihydroxyoxolan-2-yl]-3-carbamoyl-1lambda5-pyridin-1-ylium
+InChI_Identifier       : InChI=1S/C21H28N7O17P3/c22-17-12-19(25-7-24-17)28(8-26-12)21-16(44-46(33,34)35)14(30)11(43-21)6-41-48(38,39)45-47(36,37)40-5-10-13(29)15(31)20(42-10)27-3-1-2-9(4-27)18(23)32/h1-4,7-8,10-11,13-16,20-21,29-31H,5-6H2,(H7-,22,23,24,25,32,33,34,35,36,37,38,39)/t10-,11-,13-,14-,15-,16-,20-,21-/m1/s1
+InChI_Key              : XJLXINKUBYWONI-NNYOXOHSSA-N
+SMILES                 : NC(=O)C1=C[N+](=CC=C1)[C@@H]1O[C@H](COP([O-])(=O)OP(O)(=O)OC[C@H]2O[C@H]([C@H](OP(O)(O)=O)[C@@H]2O)N2C=NC3=C2N=CN=C3N)[C@@H](O)[C@H]1O
+Formula                : C21H28N7O17P3
+Mass                   : 743.405
+pKa                    : 
+HMDB                   : HMDB00217
+SMPDB                  : SMP00005 SMP00015 SMP00039 SMP00044 SMP00048 SMP00053 SMP00075 SMP00127 SMP00449 SMP00450 SMP00464 SMP00466 SMP00479
+KEGG                   : map00340 map00480 map00561 map00590 map00670 map00760 map00790
+CHEBI                  : 44409
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 1;1;000 2;1;000 3;1;000 4;1;000 5;1;001 5;1;002 8;1;000 14;1;000 101;1;000 102;1;000 103;1;000 104;1;000 105;1;001 105;1;002 21;1;000 23;1;001 23;1;002 24;1;000 25;1;000
+N15Index               : 
+C13chemicalShift       : 89.199        85.828         72.72        78.837        68.056             0             0       142.876             0             0             0             0             0       155.209             0             0             0             0             0             0       142.492             0       148.339       131.311       144.925             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0             0       102.681        80.335        73.469        89.698        67.659
+H1chemicalShift        : 6.09       4.366       4.611       4.971       4.278       4.193       8.398       8.097        6.03        4.45       4.406       4.494       4.315       4.211       9.278       8.843       8.769       8.171       9.099
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

@@ -1,0 +1,28 @@
+Name                   : Oxaloacetic Acid
+AltName                : oxaloacetate
+Source                 : HMDB
+IUPAC                  : 2-oxobutanedioic acid
+InChI_Identifier       : InChI=1S/C4H4O5/c5-2(4(8)9)1-3(6)7/h1H2,(H,6,7)(H,8,9)
+InChI_Key              : KHPXUQMNIQBQEV-UHFFFAOYSA-N
+SMILES                 : OC(=O)CC(=O)C(O)=O
+Formula                : C4H4O5
+Mass                   : 132.0716
+pKa                    : 
+HMDB                   : HMDB00223
+SMPDB                  : SMP00055 SMP00057 SMP00059 SMP00060 SMP00067 SMP00128 SMP00129 SMP00466
+KEGG                   : map00010 map00020 map00250 map00330 map00620
+CHEBI                  : 30744
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004
+C13HSQC                : 0 0 1 0
+CO_HSQC                : 0 0 0 0
+C13Intensities         : 0 0 1 0
+H1Index                : 3;2;012
+N15Index               : 
+C13chemicalShift       : 180.0 180.0 29.223 180.0
+H1chemicalShift        : 2.369
+N15chemicalShift       : 
+jCC                    : 2;3;39.5429 3;4;39.5429
+jCH                    : 
+jCN                    : 
+jHH                    : 

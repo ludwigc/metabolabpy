@@ -1,0 +1,28 @@
+Name                   : Alpha-Keto-Glutarate
+AltName                : glutarateoxo
+Source                 : HMDB
+IUPAC                  : 2-oxopentanedioic acid
+InChI_Identifier       : InChI=1S/C5H6O5/c6-3(5(9)10)1-2-4(7)8/h1-2H2,(H,7,8)(H,9,10)
+InChI_Key              : KPGXRSRHYNQIFN-UHFFFAOYSA-N
+SMILES                 : OC(=O)CCC(=O)C(O)=O
+Formula                : C5H6O5
+Mass                   : 146.0981
+pKa                    : 
+HMDB                   : HMDB00208
+SMPDB                  : SMP00004 SMP00009 SMP00055 SMP00057 SMP00059 SMP00072 SMP00127 SMP00128 SMP00129 SMP00450 SMP00465
+KEGG                   : map00010 map00020 map00250 map00260 map00330 map00910
+CHEBI                  : 30915
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005
+C13HSQC                : 0 0 1 1 0
+CO_HSQC                : 0 0 0 0 0
+C13Intensities         : 1 1 1 1 1
+H1Index                : 3;2;012 4;2;012
+N15Index               : 
+C13chemicalShift       : 160.491 201.739 38.63 33.423 175.655
+H1chemicalShift        : 2.997 2.423
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

@@ -1,0 +1,28 @@
+Name                   : Maleic Acid
+AltName                : maleic_acid
+Source                 : HMDB
+IUPAC                  : (2Z)-but-2-enedioic acid
+InChI_Identifier       : InChI=1S/C4H4O4/c5-3(6)1-2-4(7)8/h1-2H,(H,5,6)(H,7,8)/b2-1-
+InChI_Key              : VZCYOOQTPOCHFL-UPHRSURJSA-N
+SMILES                 : OC(=O)\C=C/C(O)=O
+Formula                : C4H4O4
+Mass                   : 116.0722
+pKa                    : 
+HMDB                   : HMDB00176
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 18300
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 3;2;003
+N15Index               : 
+C13chemicalShift       : 0             0       133.508
+H1chemicalShift        : 6.013
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

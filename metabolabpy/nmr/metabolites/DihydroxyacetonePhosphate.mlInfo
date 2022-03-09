@@ -1,0 +1,28 @@
+Name                   : Dihydroxyacetone Phosphate
+AltName                : dihydroxyacetonephosphate
+Source                 : HMDB
+IUPAC                  : (3-hydroxy-2-oxopropoxy)phosphonic acid
+InChI_Identifier       : InChI=1S/C3H7O6P/c4-1-3(5)2-9-10(6,7)8/h4H,1-2H2,(H2,6,7,8)
+InChI_Key              : GNGACRATGGDKBX-UHFFFAOYSA-N
+SMILES                 : OCC(=O)COP(O)(O)=O
+Formula                : C3H7O6P
+Mass                   : 170.0578
+pKa                    : 
+HMDB                   : HMDB01473
+SMPDB                  : SMP00025 SMP00039 SMP00040 SMP00064 SMP00124 SMP00128 SMP00355
+KEGG                   : map00010 map00051 map00190 map00561 map00564
+CHEBI                  : 16108
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003
+C13HSQC                : 1 0 1
+CO_HSQC                : 0 1 0
+C13Intensities         : 1 1 1
+H1Index                : 1;1;000 3;1;000 
+N15Index               : 
+C13chemicalShift       : 70.058 203.000 68.161
+H1chemicalShift        :  4.498   4.545 
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

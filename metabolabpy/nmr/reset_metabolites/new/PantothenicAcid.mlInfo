@@ -1,0 +1,28 @@
+Name                   : Pantothenic Acid
+AltName                : pantothenate
+Source                 : HMDB
+IUPAC                  : 3-[(2R)-2,4-dihydroxy-3,3-dimethylbutanamido]propanoic acid
+InChI_Identifier       : InChI=1S/C9H17NO5/c1-9(2,5-11)7(14)8(15)10-4-3-6(12)13/h7,11,14H,3-5H2,1-2H3,(H,10,15)(H,12,13)/t7-/m0/s1
+InChI_Key              : GHOKWGTUZJEAQD-ZETCQYMHSA-N
+SMILES                 : CC(C)(CO)[C@@H](O)C(=O)NCCC(O)=O
+Formula                : C9H17NO5
+Mass                   : 219.235
+pKa                    : 
+HMDB                   : HMDB00210
+SMPDB                  : SMP00007 SMP00027
+KEGG                   : map00410 map00770
+CHEBI                  : 46905
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;1;000 4;1;001 4;1;002 5;3;001 5;3;001 6;3;001 6;3;001 7;2;001 8;2;001
+N15Index               : 
+C13chemicalShift       : 0       78.652            0       71.206       21.831       23.157       38.799       39.077
+H1chemicalShift        : 3.978       3.508       3.387       0.918       0.882       0.882       0.918       3.436       2.418
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

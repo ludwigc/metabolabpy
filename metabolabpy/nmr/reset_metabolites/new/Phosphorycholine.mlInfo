@@ -1,0 +1,28 @@
+Name                   : Phosphorycholine
+AltName                : choline_phosphoryl
+Source                 : HMDB
+IUPAC                  : [2-(trimethylazaniumyl)ethoxy]phosphonic acid
+InChI_Identifier       : InChI=1S/C5H14NO4P/c1-6(2,3)4-5-10-11(7,8)9/h4-5H2,1-3H3,(H-,7,8,9)/p+1
+InChI_Key              : YHHSONZFOIEMCP-UHFFFAOYSA-O
+SMILES                 : C[N+](C)(C)CCOP(O)(O)=O
+Formula                : C5H15NO4P
+Mass                   : 184.1507
+pKa                    : 
+HMDB                   : HMDB01565
+SMPDB                  : 
+KEGG                   : map00260 map00564
+CHEBI                  : 18132
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 3;1;000 2;1;000 1;1;000
+N15Index               : 
+C13chemicalShift       : 56.523       68.901       60.609
+H1chemicalShift        : 4.149       3.575       3.197
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

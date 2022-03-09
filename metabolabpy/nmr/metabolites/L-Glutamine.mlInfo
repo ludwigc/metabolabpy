@@ -1,0 +1,28 @@
+Name                   : L-Glutamine
+AltName                : glutamine
+Source                 : HMDB
+IUPAC                  : (2S)-2-amino-4-carbamoylbutanoic acid
+InChI_Identifier       : InChI=1S/C5H10N2O3/c6-3(5(9)10)1-2-4(7)8/h3H,1-2,6H2,(H2,7,8)(H,9,10)/t3-/m0/s1
+InChI_Key              : ZDXPYRJPNDTMRX-VKHMYHEASA-N
+SMILES                 : N[C@@H](CCC(N)=O)C(O)=O
+Formula                : C5H10N2O3
+Mass                   : 146.1445
+pKa                    : 
+HMDB                   : HMDB00641
+SMPDB                  : SMP00009 SMP00019 SMP00045 SMP00046 SMP00050 SMP00059 SMP00072 SMP00126
+KEGG                   : map00230 map00240 map00250 map00330 map00360 map00520 map00910
+CHEBI                  : 18050
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005
+C13HSQC                : 0 1 1 1 0
+CO_HSQC                : 0 0 0 0 0
+C13Intensities         : 0 1 1 1 0
+H1Index                : 2;1;000 3;2;001 4;2;001
+N15Index               : 2;1;000 5;1;000
+C13chemicalShift       : 179.575  56.518 28.499 33.2845 170.537
+H1chemicalShift        :   3.834   2.179  2.421
+N15chemicalShift       :  40.929 108.164
+jCC                    : 1;2;52.732 2;3;34.7 3;4;34.7 4;5;47.4915
+jCH                    : 
+jCN                    : 
+jHH                    : 

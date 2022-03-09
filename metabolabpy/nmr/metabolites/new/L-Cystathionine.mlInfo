@@ -1,0 +1,28 @@
+Name                   : L-Cystathionine
+AltName                : cystathionine_l
+Source                 : HMDB
+IUPAC                  : (2S)-2-amino-4-{[(2R)-2-amino-2-carboxyethyl]sulfanyl}butanoic acid
+InChI_Identifier       : InChI=1S/C7H14N2O4S/c8-4(6(10)11)1-2-14-3-5(9)7(12)13/h4-5H,1-3,8-9H2,(H,10,11)(H,12,13)/t4-,5-/m0/s1
+InChI_Key              : ILRYLPWNYFXEMH-WHFBIAKZSA-N
+SMILES                 : N[C@@H](CCSC[C@H](N)C(O)=O)C(O)=O
+Formula                : C7H14N2O4S
+Mass                   : 222.262
+pKa                    : 
+HMDB                   : HMDB00099
+SMPDB                  : SMP00004 SMP00033
+KEGG                   : map00260 map00270
+CHEBI                  : 17482
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;1;000 3;1;000 4;1;000 5;1;000 6;1;000
+N15Index               : 
+C13chemicalShift       : 0       56.465       34.714       29.961       32.986       56.537
+H1chemicalShift        : 3.967       3.124        2.73       2.159        3.86
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

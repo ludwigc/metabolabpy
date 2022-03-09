@@ -1,0 +1,28 @@
+Name                   : L-Phenylalanine
+AltName                : phenylalanine
+Source                 : HMDB
+IUPAC                  : (2S)-2-amino-3-phenylpropanoic acid
+InChI_Identifier       : InChI=1S/C9H11NO2/c10-8(9(11)12)6-7-4-2-1-3-5-7/h1-5,8H,6,10H2,(H,11,12)/t8-/m0/s1
+InChI_Key              : COLNVLDHVKWLRT-QMMMGPOBSA-N
+SMILES                 : N[C@@H](CC1=CC=CC=C1)C(O)=O
+Formula                : C9H11NO2
+Mass                   : 165.1891
+pKa                    : 
+HMDB                   : HMDB00159
+SMPDB                  : SMP00008 SMP00019
+KEGG                   : 
+CHEBI                  : 17295
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005 0;1;006 0;1;007 0;1;008 0;1;009
+C13HSQC                : 0 1 1 0 1 1 1 1 1
+CO_HSQC                : 0 0 0 0 0 0 0 0 0
+C13Intensities         : 1 1 1 1 1 1 1 1 1
+H1Index                : 2;1;000 3;1;001 3;1;002 5;1;000 6;1;000 7;1;000 8;1;000 9;1;000
+N15Index               : 2;1;000
+C13chemicalShift       : 179.914 58.933 39.151 55.208 132.117 131.811 130.428 131.811 132.117
+H1chemicalShift        :   3.976  3.274  3.110  7.316   7.419   7.366 7.419 7.316
+N15chemicalShift       :  46.068
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

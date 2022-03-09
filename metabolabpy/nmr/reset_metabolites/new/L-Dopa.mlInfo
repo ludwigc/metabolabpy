@@ -1,0 +1,28 @@
+Name                   : L-Dopa
+AltName                : dopa_l
+Source                 : HMDB
+IUPAC                  : (2S)-2-amino-3-(3,4-dihydroxyphenyl)propanoic acid
+InChI_Identifier       : InChI=1S/C9H11NO4/c10-6(9(13)14)3-5-1-2-7(11)8(12)4-5/h1-2,4,6,11-12H,3,10H2,(H,13,14)/t6-/m0/s1
+InChI_Key              : WTDRDQBEARUVNC-LURJTMIESA-N
+SMILES                 : N[C@@H](CC1=CC=C(O)C(O)=C1)C(O)=O
+Formula                : C9H11NO4
+Mass                   : 197.1879
+pKa                    : 
+HMDB                   : HMDB00181
+SMPDB                  : SMP00006 SMP00012
+KEGG                   : 
+CHEBI                  : 15765
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;1;000 3;1;001 3;1;002 5;1;000 8;1;000 9;1;000
+N15Index               : 
+C13chemicalShift       : 0        58.889        38.355             0       119.713             0             0       119.291       124.472
+H1chemicalShift        : 3.916       3.142       2.982       6.815       6.887       6.723
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

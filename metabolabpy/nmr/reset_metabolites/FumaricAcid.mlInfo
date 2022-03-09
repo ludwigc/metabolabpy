@@ -1,0 +1,28 @@
+Name                   : Fumaric Acid
+AltName                : fumarate
+Source                 : HMDB
+IUPAC                  : (2E)-but-2-enedioic acid
+InChI_Identifier       : InChI=1S/C4H4O4/c5-3(6)1-2-4(7)8/h1-2H,(H,5,6)(H,7,8)/b2-1+
+InChI_Key              : VZCYOOQTPOCHFL-OWOJBTEDSA-N
+SMILES                 : OC(=O)\C=C\C(O)=O
+Formula                : C4H4O4
+Mass                   : 116.0722
+pKa                    : 
+HMDB                   : HMDB00134
+SMPDB                  : SMP00006 SMP00008 SMP00020 SMP00057 SMP00059 SMP00067 SMP00355
+KEGG                   : map00020 map00190 map00250 map00330 map00350 map00360
+CHEBI                  : 18012
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004
+C13HSQC                : 0 1 1 0
+CO_HSQC                : 1 2 2 1
+C13Intensities         : 1 1 1 1
+H1Index                : 2;2;012 3;2;012
+N15Index               : 
+C13chemicalShift       : 169.613 138.003 138.003 169.613
+H1chemicalShift        : 6.507 6.507
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

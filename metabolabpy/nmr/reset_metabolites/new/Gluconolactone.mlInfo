@@ -1,0 +1,28 @@
+Name                   : Gluconolactone
+AltName                : gluconolactone
+Source                 : HMDB
+IUPAC                  : (3R,4S,5S,6R)-3,4,5-trihydroxy-6-(hydroxymethyl)oxan-2-one
+InChI_Identifier       : InChI=1S/C6H10O6/c7-1-2-3(8)4(9)5(10)6(11)12-2/h2-5,7-10H,1H2/t2-,3-,4+,5-/m1/s1
+InChI_Key              : PHOQVHQSTUBQQK-SQOUGZDYSA-N
+SMILES                 : OC[C@H]1OC(=O)[C@H](O)[C@@H](O)[C@@H]1O
+Formula                : C6H10O6
+Mass                   : 178.14
+pKa                    : 
+HMDB                   : HMDB00150
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 16217
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;1;000 3;1;000 4;1;000 5;1;000 6;1;001 6;1;002
+N15Index               : 
+C13chemicalShift       : 0       76.766       73.764       73.932       75.279       65.318
+H1chemicalShift        : 4.134       4.025       3.758       3.755       3.816       3.657
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

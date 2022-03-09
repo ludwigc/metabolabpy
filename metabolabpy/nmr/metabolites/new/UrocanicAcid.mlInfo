@@ -1,0 +1,28 @@
+Name                   : Urocanic Acid
+AltName                : urocanic_acid
+Source                 : HMDB
+IUPAC                  : (2E)-3-(1H-imidazol-4-yl)prop-2-enoic acid
+InChI_Identifier       : InChI=1S/C6H6N2O2/c9-6(10)2-1-5-3-7-4-8-5/h1-4H,(H,7,8)(H,9,10)/b2-1+
+InChI_Key              : LOIYMIARKYCTBW-OWOJBTEDSA-N
+SMILES                 : OC(=O)\C=C\C1=CNC=N1
+Formula                : C6H6N2O2
+Mass                   : 138.124
+pKa                    : 
+HMDB                   : HMDB00301
+SMPDB                  : SMP00009 SMP00044
+KEGG                   : map00340 map00910
+CHEBI                  : 30817
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;1;000 3;1;000 5;1;000 6;1;000
+N15Index               : 
+C13chemicalShift       : 0       124.557       133.421             0       123.941       140.384
+H1chemicalShift        : 6.381       7.294       7.386       7.865
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

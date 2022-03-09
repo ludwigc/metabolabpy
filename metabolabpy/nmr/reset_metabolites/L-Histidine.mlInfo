@@ -1,0 +1,28 @@
+Name                   : L-Histidine
+AltName                : histidine
+Source                 : HMDB
+IUPAC                  : (2S)-2-amino-3-(1H-imidazol-5-yl)propanoic acid
+InChI_Identifier       : InChI=1S/C6H9N3O2/c7-5(6(10)11)1-4-2-8-3-9-4/h2-3,5H,1,7H2,(H,8,9)(H,10,11)/t5-/m0/s1
+InChI_Key              : HNDVDQJCIGZPNO-YFKPBYRVSA-N
+SMILES                 : N[C@@H](CC1=CN=CN1)C(O)=O
+Formula                : C6H9N3O2
+Mass                   : 155.1546
+pKa                    : 
+HMDB                   : HMDB00177
+SMPDB                  : SMP00009 SMP00019 SMP00044
+KEGG                   : map00340 map00910
+CHEBI                  : 15971
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005 0;1;007
+C13HSQC                : 0 1 1 1 1 0 1
+CO_HSQC                : 0 0 0 0 0 0 0
+C13Intensities         : 1 1 1 1 1 0 1
+H1Index                : 2;1;000 3;1;001 3;1;002 5;1;000 5;1;000 7;1;000
+N15Index               : 2;1;000 4;1;000 7;1;000
+C13chemicalShift       : 182.171  57.285  30.204 126.433 119.994 0 138.366
+H1chemicalShift        :   4.004   3.267   3.208   7.196  8.025 
+N15chemicalShift       :  36.146 169.337 296.302
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

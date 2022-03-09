@@ -1,0 +1,28 @@
+Name                   : L-Proline
+AltName                : proline
+Source                 : HMDB
+IUPAC                  : (2S)-pyrrolidine-2-carboxylic acid
+InChI_Identifier       : InChI=1S/C5H9NO2/c7-5(8)4-2-1-3-6-4/h4,6H,1-3H2,(H,7,8)/t4-/m0/s1
+InChI_Key              : ONIBWKKTOPOVIA-BYPYZUCNSA-N
+SMILES                 : OC(=O)[C@@H]1CCCN1
+Formula                : C5H9NO2
+Mass                   : 115.1305
+pKa                    : 
+HMDB                   : HMDB00162
+SMPDB                  : SMP00019 SMP00020
+KEGG                   : 
+CHEBI                  : 17203
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005
+C13HSQC                : 0 1 1 1 1
+CO_HSQC                : 0 0 0 0 0
+C13Intensities         : 0 1 1 1 1
+H1Index                : 2;1;000 3;1;001 3;1;002 4;2;012 5;1;001 5;1;002
+N15Index               : 2;1;000
+C13chemicalShift       : 178.668 64.039 31.720 26.454 48.957
+H1chemicalShift        :   4.127  2.344  2.068  1.992  3.407  3.324
+N15chemicalShift       :  53.643
+jCC                    : 1;2;53.6298 2;3;34.001 3;4;30.1154 4;5;33.6444
+jCH                    : 
+jCN                    : 
+jHH                    : 

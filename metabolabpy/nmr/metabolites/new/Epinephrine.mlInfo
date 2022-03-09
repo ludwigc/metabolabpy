@@ -1,0 +1,28 @@
+Name                   : Epinephrine
+AltName                : epinephrine
+Source                 : HMDB
+IUPAC                  : 4-[(1R)-1-hydroxy-2-(methylamino)ethyl]benzene-1,2-diol
+InChI_Identifier       : InChI=1S/C9H13NO3/c1-10-5-9(13)6-2-3-7(11)8(12)4-6/h2-4,9-13H,5H2,1H3/t9-/m0/s1
+InChI_Key              : UCTWMZQNUQWSLP-VIFPVBQESA-N
+SMILES                 : CNC[C@H](O)C1=CC(O)=C(O)C=C1
+Formula                : C9H13NO3
+Mass                   : 183.2044
+pKa                    : 
+HMDB                   : HMDB00068
+SMPDB                  : SMP00006 SMP00012
+KEGG                   : 
+CHEBI                  : 28918
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 1;3;001 2;2;001 3;1;000 5;1;000 8;1;000 9;1;000
+N15Index               : 
+C13chemicalShift       : 35.89        57.436        71.133             0       116.563             0             0       119.073       121.224
+H1chemicalShift        : 2.767       3.273       4.933       6.951       6.942       6.862
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

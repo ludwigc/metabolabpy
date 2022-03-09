@@ -1,0 +1,28 @@
+Name                   : Hippuric Acid
+AltName                : hippurate
+Source                 : HMDB
+IUPAC                  : 2-(phenylformamido)acetic acid
+InChI_Identifier       : InChI=1S/C9H9NO3/c11-8(12)6-10-9(13)7-4-2-1-3-5-7/h1-5H,6H2,(H,10,13)(H,11,12)
+InChI_Key              : QIAFMBKCNZACKA-UHFFFAOYSA-N
+SMILES                 : OC(=O)CNC(=O)C1=CC=CC=C1
+Formula                : C9H9NO3
+Mass                   : 179.1727
+pKa                    : 
+HMDB                   : HMDB00714
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 18089
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 6;2;003 5;2;003 4;1;000 9;1;000
+N15Index               : 
+C13chemicalShift       : 0             0             0       134.915       131.547       129.937             0             0         46.75
+H1chemicalShift        : 7.821       7.543       7.625       3.956
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

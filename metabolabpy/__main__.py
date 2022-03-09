@@ -80,6 +80,7 @@ import numpy as np  # pragma: no cover
 import io  # pragma: no cover
 from metabolabpy.nmr import nmrDataSet  # pragma: no cover
 from metabolabpy.GUI import phCorr  # pragma: no cover
+from metabolabpy.nmr import nmrHsqc # pragma: no cover
 import time  # pragma: no cover
 ##import platform  # pragma: no cover
 import math  # pragma: no cover
@@ -204,7 +205,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.7.5'
+        self.__version__ = '0.7.6'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -251,6 +252,8 @@ class main_w(object):  # pragma: no cover
         self.w.displayAssignedMetabolites.stateChanged.connect(self.display_assigned_metabolites)
         self.w.displayLibraryShifts.setVisible(False)
         self.w.displayLibraryShifts.stateChanged.connect(self.display_library_shifts)
+        self.w.displaySelectedMetabolite.setVisible(False)
+        self.w.displaySelectedMetabolite.stateChanged.connect(self.display_selected_metabolite)
         self.w.exportPath.textChanged.connect(self.set_export_path)
         self.w.invertMatrix_1.stateChanged.connect(self.set_invert)
         self.w.invertMatrix_2.stateChanged.connect(self.set_invert)
@@ -259,6 +262,7 @@ class main_w(object):  # pragma: no cover
         self.w.exportCharacter.textChanged.connect(self.set_export_character)
         self.w.titleFile.textChanged.connect(self.change_title_file)
         self.w.samplesInComboBox.currentIndexChanged.connect(self.set_samples_in_combo_box)
+        self.w.openWeb.activated.connect(self.open_metabolite_web)
         self.w.runPreProcessingButton.clicked.connect(self.data_pre_processing)
         self.w.resetPreProcessingButton.clicked.connect(self.reset_data_pre_processing)
         self.w.avoidNegValues.stateChanged.connect(self.set_avoid_neg_values)
@@ -821,8 +825,16 @@ class main_w(object):  # pragma: no cover
         # end cancel2dPhCorr
 
     def change_data_set_exp(self):
+        self.w.cmdLine.setFocus()
+        self.w.cmdLine.clearFocus()
+        met_idx = self.w.hsqcMetabolites.currentIndex()
+        cur_peak = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak
+        cur_metabolite = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite
+        cidx = self.w.nmrSpectrum.currentIndex()
         dam = False
         dls = False
+        dsm = False
+        hac = False
         if self.w.displayAssignedMetabolites.isChecked() == True:
             dam = True
             self.w.displayAssignedMetabolites.setChecked(False)
@@ -831,11 +843,14 @@ class main_w(object):  # pragma: no cover
             dls = True
             self.w.displayLibraryShifts.setChecked(False)
 
-        self.w.cmdLine.setFocus()
-        self.w.cmdLine.clearFocus()
-        cidx = self.w.nmrSpectrum.currentIndex()
-        met_idx = self.w.hsqcMetabolites.currentIndex()
-        cur_peak = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak
+        if self.w.displaySelectedMetabolite.isChecked() == True:
+            dsm = True
+            self.w.displaySelectedMetabolite.setChecked(False)
+
+        if self.w.hsqcAnalysis.isChecked() == True:
+            hac = True
+            self.w.hsqcAnalysis.setChecked(False)
+
         #if self.w.hsqcAnalysis.isChecked() == True:
         #    hsqc_analysis_checked = True
         #    self.w.hsqcAnalysis.setChecked(False)
@@ -920,22 +935,16 @@ class main_w(object):  # pragma: no cover
             self.w.setBox.valueChanged.connect(lambda: self.change_data_set_exp())
             self.w.expBox.valueChanged.connect(lambda: self.change_data_set_exp())
 
-        if self.w.autoPlot.isChecked() is False:
-            if self.w.hsqcAnalysis.isChecked() == True:
-                self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak = cur_peak
-                self.w.hsqcMetabolites.setCurrentIndex(self.w.hsqcMetabolites.model().index(-1, 0))
-                self.w.hsqcAssignedMetabolites.setCurrentIndex(self.w.hsqcAssignedMetabolites.model().index(-1, 0))
-                self.w.hsqcMetabolites.setCurrentIndex(met_idx)
-                self.set_hsqc_metabolite()
 
-            self.w.nmrSpectrum.setCurrentIndex(cidx)
+        if hac == True:
+            self.w.hsqcAnalysis.setChecked(True)
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak = cur_peak
+            self.w.hsqcMetabolites.setCurrentIndex(self.w.hsqcMetabolites.model().index(met_idx.row(), 0))
+            self.w.hsqcAssignedMetabolites.setCurrentIndex(self.w.hsqcAssignedMetabolites.model().index(-1, 0))
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite = cur_metabolite
+            self.set_hsqc_metabolite()
 
-        if dam:
-            self.w.displayAssignedMetabolites.setChecked(True)
-
-        if dls:
-            self.w.displayLibraryShifts.setChecked(True)
-
+        self.w.nmrSpectrum.setCurrentIndex(cidx)
         # end change_data_set_exp
 
     def change_data_set_exp_ph_ref(self):
@@ -1074,6 +1083,14 @@ class main_w(object):  # pragma: no cover
     def clear(self):
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
+        self.w.displayAssignedMetabolites.setChecked(False)
+        self.w.displayLibraryShifts.setChecked(False)
+        self.w.displaySelectedMetabolite.setChecked(False)
+        self.w.displayAssignedMetabolites.setVisible(False)
+        self.w.displayLibraryShifts.setVisible(False)
+        self.w.displaySelectedMetabolite.setVisible(False)
+        self.w.hsqcAnalysis.setChecked(False)
+        self.w.hsqcAnalysis.setVisible(False)
         self.w.MplWidget.canvas.axes.clear()
         self.w.MplWidget.canvas.draw()
         self.zero_disp_pars()
@@ -1115,6 +1132,9 @@ class main_w(object):  # pragma: no cover
         self.w.hsqcMultiplet.canvas.axes.clear()
         self.w.hsqcMultiplet.canvas.draw()
         self.w.metaboliteInformation.setText('')
+        self.w.openWeb.clear()
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite = ''
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak = -1
         # end clear_assigned_hsqc
 
     def create_icon_mac(self):
@@ -1218,9 +1238,14 @@ class main_w(object):  # pragma: no cover
         # end data_pre_processing
 
     def display_assigned_metabolites(self):
+        dsmwo = False
+        if self.w.displaySelectedMetabolite.isChecked():
+            self.w.displaySelectedMetabolite.setChecked(False)
+            dsmwo = True
+
         if self.w.displayAssignedMetabolites.isChecked() == True:
             if self.cf.mode == 'dark':
-                col1 = 'y'
+                col1 = 'yellow'
                 col2 = 'gray'
             else:
                 col1 = 'k'
@@ -1231,12 +1256,18 @@ class main_w(object):  # pragma: no cover
             delta_c13 = self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(len(self.nd.nmrdat[self.nd.s][self.nd.e].spc) - 1, 1) - self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(0, 1)
             deltay = deltax * delta_c13 * 2 / delta_h1
             for k in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data.keys():
-                for l in range(len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked)):
-                    x = np.mean(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked[l])
-                    y = np.mean(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].c13_picked[l])
-                    self.nd.nmrdat[self.nd.s][self.nd.e].xsa.append(self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col1, linewidth=2))
-                    self.nd.nmrdat[self.nd.s][self.nd.e].ysa.append(self.w.MplWidget.canvas.axes.plot([x, x], [y - deltay, y + deltay], color=col1, linewidth=2))
-                    self.nd.nmrdat[self.nd.s][self.nd.e].assigned_text.append(self.w.MplWidget.canvas.axes.text(x - 0.5 * deltax, y - 0.5 * deltay, k, color=col1, fontweight='bold'))
+                display_metabolite = True
+                if k == self.nd.nmrdat[self.nd.s][
+                    self.nd.e].hsqc.cur_metabolite and self.w.displaySelectedMetabolite.isChecked() == True:
+                    display_metabolite = False
+
+                if display_metabolite:
+                    for l in range(len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked)):
+                        x = np.mean(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked[l])
+                        y = np.mean(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].c13_picked[l])
+                        self.nd.nmrdat[self.nd.s][self.nd.e].xsa.append(self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col1, linewidth=2))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].ysa.append(self.w.MplWidget.canvas.axes.plot([x, x], [y - deltay, y + deltay], color=col1, linewidth=2))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].assigned_text.append(self.w.MplWidget.canvas.axes.text(x - 0.5 * deltax, y - 0.5 * deltay, k, color=col1, fontweight='bold'))
 
             self.w.MplWidget.canvas.draw()
 
@@ -1254,12 +1285,26 @@ class main_w(object):  # pragma: no cover
             self.nd.nmrdat[self.nd.s][self.nd.e].ysa = []
             self.nd.nmrdat[self.nd.s][self.nd.e].assigned_text = []
             self.w.MplWidget.canvas.draw()
+
+        if dsmwo:
+            self.w.displaySelectedMetabolite.setChecked(True)
+
         # end display_assigned_metabolites
 
     def display_library_shifts(self):
+        dsmwo = False
+        damwo = False
+        if self.w.displaySelectedMetabolite.isChecked():
+            dsmwo = True
+            self.w.displaySelectedMetabolite.setChecked(False)
+
+        if self.w.displayAssignedMetabolites.isChecked():
+            damwo = True
+            self.w.displayAssignedMetabolites.setChecked(False)
+
         if self.w.displayLibraryShifts.isChecked() == True:
             if self.cf.mode == 'dark':
-                col1 = 'y'
+                col1 = 'yellow'
                 col2 = 'gray'
             else:
                 col1 = 'k'
@@ -1271,8 +1316,12 @@ class main_w(object):  # pragma: no cover
             deltay = deltax * delta_c13 * 2 / delta_h1
             for k in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.metabolite_list:
                 if k in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data.keys():
+                    display_metabolite = True
+                    if k == self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite and self.w.displaySelectedMetabolite.isChecked() == True:
+                        display_metabolite = False
+
                     for l in range(len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked)):
-                        if len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked[l]) == 0:
+                        if len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked[l]) == 0 and display_metabolite:
                             x = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_shifts[l]
                             y = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].c13_shifts[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_index[l] - 1]
                             self.nd.nmrdat[self.nd.s][self.nd.e].xst.append(self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col2, linewidth=2))
@@ -1307,7 +1356,67 @@ class main_w(object):  # pragma: no cover
             self.nd.nmrdat[self.nd.s][self.nd.e].yst = []
             self.nd.nmrdat[self.nd.s][self.nd.e].library_text = []
             self.w.MplWidget.canvas.draw()
-        # end display_assigned_metabolites
+
+        if damwo:
+            self.w.displayAssignedMetabolites.setChecked(True)
+
+        if dsmwo:
+            self.w.displaySelectedMetabolite.setChecked(True)
+        # end display_library_shifts
+
+    def display_selected_metabolite(self):
+        if self.w.displaySelectedMetabolite.isChecked() == True:
+            if self.cf.mode == 'dark':
+                col1 = 'lime'
+                col2 = 'gray'
+            else:
+                col1 = 'limegreen'
+                col2 = 'gray'
+
+            deltax = 0.01
+            delta_h1 = self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(len(self.nd.nmrdat[self.nd.s][self.nd.e].spc[0]) - 1, 0) - self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(0, 0)
+            delta_c13 = self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(len(self.nd.nmrdat[self.nd.s][self.nd.e].spc) - 1, 1) - self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(0, 1)
+            deltay = deltax * delta_c13 * 2 / delta_h1
+            #for k in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.metabolite_list:
+            k = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite
+            if k in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data.keys():
+                hsqc = nmrHsqc.NmrHsqc()
+                hsqc.read_metabolite_information(k)
+                hsqc.set_metabolite_information(k, hsqc.metabolite_information)
+                hsqc.hsqc_data[k].init_data(hsqc.metabolite_information)
+                for l in range(len(hsqc.hsqc_data[k].h1_shifts)):
+                    if len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked[l]) > 0:
+                        #print("picked: {}".format(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked[l]))
+                        x = np.mean(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked[l])
+                        y = np.mean(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].c13_picked[l])
+                        self.nd.nmrdat[self.nd.s][self.nd.e].xss.append(self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col1, linewidth=2))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].yss.append(self.w.MplWidget.canvas.axes.plot([x, x], [y - deltay, y + deltay], color=col1, linewidth=2))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].metabolite_text.append(self.w.MplWidget.canvas.axes.text(x - 0.5 * deltax, y - 0.5 * deltay, k, color=col1, fontweight='bold'))
+                    else:
+                        x = hsqc.hsqc_data[k].h1_shifts[l]
+                        y = hsqc.hsqc_data[k].c13_shifts[hsqc.hsqc_data[k].h1_index[l] - 1]
+                        self.nd.nmrdat[self.nd.s][self.nd.e].xss.append(self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col1, linewidth=2))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].yss.append(self.w.MplWidget.canvas.axes.plot([x, x], [y - deltay, y + deltay], color=col1, linewidth=2))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].metabolite_text.append(self.w.MplWidget.canvas.axes.text(x - 0.5 * deltax, y - 0.5 * deltay, k, color=col1, fontweight='bold'))
+
+            self.w.MplWidget.canvas.draw()
+
+        else:
+            for k in range(len(self.nd.nmrdat[self.nd.s][self.nd.e].xss)):
+                line1 = self.nd.nmrdat[self.nd.s][self.nd.e].xss[k].pop(0)
+                line2 = self.nd.nmrdat[self.nd.s][self.nd.e].yss[k].pop(0)
+                line1.remove()
+                line2.remove()
+
+            for k in range(len(self.nd.nmrdat[self.nd.s][self.nd.e].metabolite_text)):
+                self.nd.nmrdat[self.nd.s][self.nd.e].metabolite_text[k].remove()
+
+            self.nd.nmrdat[self.nd.s][self.nd.e].xss = []
+            self.nd.nmrdat[self.nd.s][self.nd.e].yss = []
+            self.nd.nmrdat[self.nd.s][self.nd.e].metabolite_text = []
+
+        self.w.MplWidget.canvas.draw()
+        # end display_selected_metabolite
 
     def display_metabolite_information(self):
         code_out = io.StringIO()
@@ -1601,19 +1710,27 @@ class main_w(object):  # pragma: no cover
             return
 
         existing_buttons = len(self.w.peakSelection.children()) - 1
+        print(existing_buttons)
+        print(n_buttons)
         self.delete_buttons(n_buttons)
+        print(n_buttons)
         self.create_buttons(n_buttons)
+        print(n_buttons)
         while self.layout.itemAt(0) != None:
             self.layout.removeItem(self.layout.itemAt(0))
 
+        print("aaaaa")
         n_rows = round(math.sqrt(n_buttons))
+        print("bbbbb")
         n_cols = math.ceil(n_buttons / n_rows)
+        print("ccccc")
         for k in range(n_buttons):
             col = k % n_cols
             row = math.floor((k + 0.1) / n_cols)
             #print("n_rows: {}, n_cols: {}, row: {}, col: {}".format(n_rows, n_cols, row, col))
             exec("self.layout.addWidget(self.button" + str(k+1) + ", " + str(row) + " , " + str(col) + ")")
 
+        print("ddddd")
     # end make_buttons
 
     def empty_col_row(self):
@@ -1760,6 +1877,10 @@ class main_w(object):  # pragma: no cover
         # end exec_script
 
     def export_peak(self):
+        hsqcAnalysis = False
+        if self.w.hsqcAnalysis.isChecked() == True:
+            self.w.hsqcAnalysis.setChecked(False)
+
         f_name = QFileDialog.getSaveFileName(None, "Save Excel file", "", "*.xlsx", "*.xlsx")
         f_name = f_name[0]
         if len(f_name) == 0:
@@ -2564,7 +2685,7 @@ class main_w(object):  # pragma: no cover
                 dist[k] = (h1_picked[k] - self.xdata[0]) ** 2 + (c13_picked[k] - self.ydata[0]) ** 2
 
             idx = np.where(dist == dist.min())[0][0]
-            print("h1_picked: {}, c13_picked: {}, idx: {}".format(h1_picked, c13_picked, idx))
+            #print("h1_picked: {}, c13_picked: {}, idx: {}".format(h1_picked, c13_picked, idx))
             h1_picked.remove(h1_picked[idx])
             c13_picked.remove(c13_picked[idx])
             self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[
@@ -3022,6 +3143,16 @@ class main_w(object):  # pragma: no cover
             return
 
         self.load_file(selectedDirectory)
+        if 'pygamma' in sys.modules:
+            for k in range(len(self.nd.nmrdat)):
+                for l in range(len(self.nd.nmrdat[k])):
+                    self.nd.nmrdat[k][l].has_pg = True
+
+        else:
+            for k in range(len(self.nd.nmrdat)):
+                for l in range(len(self.nd.nmrdat[k])):
+                    self.nd.nmrdat[k][l].has_pg = False
+
         # end save_button
 
     def load_config(self):
@@ -3047,12 +3178,15 @@ class main_w(object):  # pragma: no cover
             f_name = os.path.join(os.path.dirname(__file__), "exampleScripts", "exampleAutoPhaseScript.py")
 
         if (idx == 2):
-            f_name = os.path.join(os.path.dirname(__file__), "exampleScripts", "example2DJresScript.py")
+            f_name = os.path.join(os.path.dirname(__file__), "exampleScripts", "exampleAutoBaselineScript.py")
 
         if (idx == 3):
-            f_name = os.path.join(os.path.dirname(__file__), "exampleScripts", "examplePreprocessingScript.py")
+            f_name = os.path.join(os.path.dirname(__file__), "exampleScripts", "example2DJresScript.py")
 
         if (idx == 4):
+            f_name = os.path.join(os.path.dirname(__file__), "exampleScripts", "examplePreprocessingScript.py")
+
+        if (idx == 5):
             f_name = os.path.join(os.path.dirname(__file__), "exampleScripts", "example2DNMRPipeScript.py")
 
         f = open(f_name, 'r')
@@ -3545,6 +3679,18 @@ class main_w(object):  # pragma: no cover
 
         # end on_ph_corr_release_2d
 
+    def open_metabolite_web(self):
+        current_text = self.w.openWeb.currentText()
+        base_url = ''
+        if current_text.find('HMDB') > -1:
+            base_url = 'https://hmdb.ca/metabolites/'
+
+        if current_text.find('SMP') > - 1:
+            base_url = 'https://smpdb.ca/view/'
+
+        self.html(base_url + current_text)
+        # end open_metabolite_web
+
     def open_script(self, f_name=""):
         if (f_name == False):
             f_name = ""
@@ -3765,8 +3911,6 @@ class main_w(object):  # pragma: no cover
                                             self.nd.nmrdat[self.nd.s][self.nd.e].ppm2[c13_pts1:c13_pts2],
                                             self.nd.nmrdat[self.nd.s][self.nd.e].spc.real[c13_pts1:c13_pts2, h1_pts1:h1_pts2], neg_lev, colors=neg_col,
                                             linestyles='solid', antialiased=True)
-        self.w.hsqcPeak.canvas.axes.set_xlabel(xlabel)
-        self.w.hsqcPeak.canvas.axes.set_ylabel(ylabel)
         self.w.hsqcPeak.canvas.axes.autoscale()
         self.w.hsqcPeak.canvas.axes.invert_xaxis()
         self.w.hsqcPeak.canvas.axes.invert_yaxis()
@@ -3774,7 +3918,7 @@ class main_w(object):  # pragma: no cover
         ylim = self.w.hsqcPeak.canvas.axes.get_ylim()
         if self.cf.mode == 'dark':
             col1 = 'w'
-            col2 = 'y'
+            col2 = 'yellow'
         else:
             col1 = 'k'
             col2 = 'r'
@@ -3799,6 +3943,13 @@ class main_w(object):  # pragma: no cover
                     self.w.hsqcPeak.canvas.axes.plot([xdata[k], xdata[k]], [ydata[k] - factor*delta_y, ydata[k] + factor*delta_y], color=col2, linewidth=4)
 
 
+        if len(h1_picked[spin_number - 1]) == 1:
+            xlabel += " (Peak {}, {} signal picked)".format(spin_number, len(h1_picked[spin_number - 1]))
+        else:
+            xlabel += " (Peak {}, {} signals picked)".format(spin_number, len(h1_picked[spin_number - 1]))
+
+        self.w.hsqcPeak.canvas.axes.set_xlabel(xlabel)
+        self.w.hsqcPeak.canvas.axes.set_ylabel(ylabel)
         self.w.hsqcPeak.canvas.draw()
         self.w.hsqcMultiplet.canvas.axes.clear()
         if len(h1_picked[spin_number - 1]) > 0:
@@ -3930,6 +4081,19 @@ class main_w(object):  # pragma: no cover
 
             # self.w.MplWidget.canvas.toolbar.update()
             self.w.MplWidget.canvas.draw()
+            if self.w.displayLibraryShifts.isChecked():
+                self.w.displayLibraryShifts.setChecked(False)
+                self.w.displayLibraryShifts.setChecked(True)
+
+            else:
+                if self.w.displayAssignedMetabolites.isChecked():
+                    self.w.displayAssignedMetabolites.setChecked(False)
+                    self.w.displayAssignedMetabolites.setChecked(True)
+
+                else:
+                    if self.w.displaySelectedMetabolite.isChecked():
+                        self.w.displaySelectedMetabolite(False)
+                        self.w.displaySelectedMetabolite(True)
 
         self.keep_zoom = False
         if hide_pre_processing == False and self.w.peakPicking.isChecked() == False:
@@ -4181,18 +4345,58 @@ class main_w(object):  # pragma: no cover
 
         # end read_spcs
 
-    def reference1d(self, ref_shift=0.0):
-        self.temp_ref_shift = ref_shift
-        self.w.MplWidget.canvas.setFocus()
-        self.show_nmr_spectrum()
-        self.ginput_ref_1d(1)
+    def reference1d(self, ref_shift=0.0, peak_number=-1):
+        if peak_number == -1 and not isinstance(ref_shift, str):
+            self.temp_ref_shift = ref_shift
+            self.w.MplWidget.canvas.setFocus()
+            self.show_nmr_spectrum()
+            self.ginput_ref_1d(1)
+        else:
+            if peak_number == -1:
+                return
+
+            else:
+                metabolite_name = ref_shift
+                ref_shift = 0.0
+                hsqc = nmrHsqc.NmrHsqc()
+                hsqc.read_metabolite_information(metabolite_name)
+                hsqc.set_metabolite_information(metabolite_name, hsqc.metabolite_information)
+                peak_number = max(peak_number, 1)
+                peak_number = min(peak_number, len(hsqc.hsqc_data[metabolite_name].h1_shifts))
+                ref_shift = hsqc.hsqc_data[metabolite_name].h1_shifts[peak_number - 1]
+                self.temp_ref_shift = ref_shift
+                self.w.MplWidget.canvas.setFocus()
+                self.show_nmr_spectrum()
+                self.ginput_ref_1d(1)
+
         # end reference1d
 
-    def reference2d(self, ref_shift=[0.0, 0.0]):
-        self.temp_ref_shift = ref_shift
-        self.w.MplWidget.canvas.setFocus()
-        self.show_nmr_spectrum()
-        self.ginput_ref_2d(1)
+    def reference2d(self, ref_shift=[0.0, 0.0], peak_number=-1):
+        if peak_number == -1 and not isinstance(ref_shift, str):
+            self.temp_ref_shift = ref_shift
+            self.w.MplWidget.canvas.setFocus()
+            self.show_nmr_spectrum()
+            self.ginput_ref_2d(1)
+        else:
+            if peak_number == -1:
+                return
+
+            else:
+                metabolite_name = ref_shift
+                ref_shift = [0.0, 0.0]
+                hsqc = nmrHsqc.NmrHsqc()
+                hsqc.read_metabolite_information(metabolite_name)
+                hsqc.set_metabolite_information(metabolite_name, hsqc.metabolite_information)
+                peak_number = max(peak_number, 1)
+                peak_number = min(peak_number, len(hsqc.hsqc_data[metabolite_name].h1_shifts))
+                ref_shift[0] = hsqc.hsqc_data[metabolite_name].h1_shifts[peak_number - 1]
+                c13idx = np.where(hsqc.hsqc_data[metabolite_name].hsqc == 1)[0]
+                ref_shift[1] = hsqc.hsqc_data[metabolite_name].c13_shifts[c13idx[peak_number - 1]]
+                self.temp_ref_shift = ref_shift
+                self.w.MplWidget.canvas.setFocus()
+                self.show_nmr_spectrum()
+                self.ginput_ref_2d(1)
+
         # end reference2d
 
     def remove_assigned_metabolite(self):
@@ -4211,6 +4415,7 @@ class main_w(object):  # pragma: no cover
         self.w.hsqcMultiplet.canvas.axes.clear()
         self.w.hsqcMultiplet.canvas.draw()
         self.w.metaboliteInformation.setText('')
+        self.w.openWeb.clear()
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite = ''
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak = -1
         # end remove_asssigned_metabolite
@@ -5466,8 +5671,14 @@ class main_w(object):  # pragma: no cover
 
     def set_hsqc_analysis(self):
         if (self.w.hsqcAnalysis.isChecked() == True):
+            for k in range(len(self.nd.nmrdat)):
+                for l in range(len(self.nd.nmrdat[k])):
+                    self.nd.nmrdat[k][l].hsqc.cur_metabolite = ''
+                    self.nd.nmrdat[k][l].hsqc.cur_peak = -1
+
             self.w.displayAssignedMetabolites.setVisible(True)
             self.w.displayLibraryShifts.setVisible(True)
+            self.w.displaySelectedMetabolite.setVisible(True)
             self.nd.old_data_set = self.nd.s
             self.nd.old_data_exp = self.nd.e
             self.w.multipletAnalysis.setVisible(False)
@@ -5519,14 +5730,22 @@ class main_w(object):  # pragma: no cover
             self.w.displayAssignedMetabolites.setVisible(False)
             self.w.displayLibraryShifts.setChecked(False)
             self.w.displayLibraryShifts.setVisible(False)
+            self.w.displaySelectedMetabolite.setChecked(False)
+            self.w.displaySelectedMetabolite.setVisible(False)
             self.w.multipletAnalysis.setChecked(False)
             self.w.isotopomerAnalysis.setChecked(False)
             self.w.multipletAnalysis.setVisible(False)
             self.w.isotopomerAnalysis.setVisible(False)
             self.w.nmrSpectrum.setTabEnabled(1, False)
             self.w.nmrSpectrum.setTabEnabled(2, False)
+            self.w.openWeb.clear()
             self.w.hsqcMetabolites.setCurrentIndex(self.w.hsqcMetabolites.model().index(-1, 0))
             self.w.hsqcAssignedMetabolites.setCurrentIndex(self.w.hsqcMetabolites.model().index(-1, 0))
+            for k in range(len(self.nd.nmrdat)):
+                for l in range(len(self.nd.nmrdat[k])):
+                    self.nd.nmrdat[k][l].hsqc.cur_metabolite = ''
+                    self.nd.nmrdat[k][l].hsqc.cur_peak = -1
+
             if hasattr(self.w.metaboliteImage.scene(), 'clear'):
                 self.w.metaboliteImage.scene().clear()
 
@@ -5561,6 +5780,7 @@ class main_w(object):  # pragma: no cover
         # end set_hsqc_metabolite
 
     def set_hsqc_metabolite(self):
+        self.w.openWeb.clear()
         idx = self.w.hsqcMetabolites.currentIndex().row()
         if idx == -1:
             return
@@ -5570,7 +5790,7 @@ class main_w(object):  # pragma: no cover
 
         metabolite_name = self.w.hsqcMetabolites.currentIndex().data()
         cur_peak = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak
-        if cur_peak == 0:
+        if cur_peak < 1:
             cur_peak = 1
 
         if metabolite_name in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data.keys():
@@ -5588,12 +5808,18 @@ class main_w(object):  # pragma: no cover
         scene = QtWidgets.QGraphicsScene()
         scene.addItem(item)
         self.w.metaboliteImage.setScene(scene)
-        #graphicsView->fitInView(scene->sceneRect(), Qt::KeepAspectRatio)
         self.w.metaboliteImage.fitInView(scene.sceneRect(), QtCore.Qt.KeepAspectRatio)
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.set_metabolite_information(metabolite_name, self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.metabolite_information)
         self.update_assigned_metabolites()
         n_peaks = len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].h1_shifts)
         self.make_buttons(n_peaks)
+        self.make_buttons(n_peaks)
+        for k in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].hmdb:
+            self.w.openWeb.addItem(k)
+
+        for k in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].smpdb:
+            self.w.openWeb.addItem(k)
+
         self.plot_metabolite_peak(cur_peak)
         # end set_hsqc_metabolite
 

@@ -1,0 +1,28 @@
+Name                   : Cytosine
+AltName                : cytosine
+Source                 : HMDB
+IUPAC                  : 6-amino-1,2-dihydropyrimidin-2-one
+InChI_Identifier       : InChI=1S/C4H5N3O/c5-3-1-2-6-4(8)7-3/h1-2H,(H3,5,6,7,8)
+InChI_Key              : OPTASPLRGRRNAP-UHFFFAOYSA-N
+SMILES                 : NC1=CC=NC(=O)N1
+Formula                : C4H5N3O
+Mass                   : 111.102
+pKa                    : 
+HMDB                   : HMDB0000630
+SMPDB                  : SMP0000046
+KEGG                   : map01100
+CHEBI                  : 16040
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 3;1;000 4;1;000
+N15Index               : 
+C13chemicalShift       : 0             0      145.8609       97.8135
+H1chemicalShift        : 7.4873      5.9643
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

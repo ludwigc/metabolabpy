@@ -1,0 +1,28 @@
+Name                   : CO L-Lactic Acid
+AltName                : lactate
+Source                 : HMDB
+IUPAC                  : (2S)-2-hydroxypropanoic acid
+InChI_Identifier       : InChI=1S/C3H6O3/c1-2(4)3(5)6/h2,4H,1H3,(H,5,6)/t2-/m0/s1
+InChI_Key              : JVTAAEKCZFNVCJ-REOHCLBHSA-N
+SMILES                 : C[C@H](O)C(O)=O
+Formula                : C3H6O3
+Mass                   : 90.0779
+pKa                    : 
+HMDB                   : HMDB00190
+SMPDB                  : SMP00060 SMP00128
+KEGG                   : map00010 map00620
+CHEBI                  : 422
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 1;1;000 1;1;000
+N15Index               : 
+C13chemicalShift       : 185.3073
+H1chemicalShift        : 4.1258      1.3256
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

@@ -1,0 +1,28 @@
+Name                   : L-Methionine
+AltName                : methionine
+Source                 : HMDB
+IUPAC                  : (2S)-2-amino-4-(methylsulfanyl)butanoic acid
+InChI_Identifier       : InChI=1S/C5H11NO2S/c1-9-3-2-4(6)5(7)8/h4H,2-3,6H2,1H3,(H,7,8)/t4-/m0/s1
+InChI_Key              : FFEARJCKVFRZRR-BYPYZUCNSA-N
+SMILES                 : CSCC[C@H](N)C(O)=O
+Formula                : C5H11NO2S
+Mass                   : 149.211
+pKa                    : 
+HMDB                   : HMDB00696
+SMPDB                  : SMP00004 SMP00019 SMP00033 SMP00123 SMP00445
+KEGG                   : map00260 map00270
+CHEBI                  : 
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005 0;1;006
+C13HSQC                : 0 1 1 1 0 1
+CO_HSQC                : 0 0 0 0 0 0
+C13Intensities         : 1 1 1 1 1 1
+H1Index                : 2;1;000 3;1;001 3;1;002 4;2;012 6;3;123
+N15Index               : 2;1;000
+C13chemicalShift       : 179.798 56.842 32.718 31.579  0.0   16.566
+H1chemicalShift        :   3.848  2.184  2.174  2.634  2.103
+N15chemicalShift       :  38.784
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

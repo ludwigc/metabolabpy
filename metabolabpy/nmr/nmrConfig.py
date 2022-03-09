@@ -5,7 +5,7 @@ import configparser
 class NmrConfig:
 
     def __init__(self):
-        self.auto_plot = True
+        self.auto_plot = False
         self.keep_zoom = True
         self.font_size = 13
         self.phase_reference_colour = 'Red'

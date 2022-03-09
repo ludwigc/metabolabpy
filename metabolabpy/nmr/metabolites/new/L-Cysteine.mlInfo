@@ -1,0 +1,28 @@
+Name                   : L-Cysteine
+AltName                : cysteine
+Source                 : HMDB
+IUPAC                  : (2R)-2-amino-3-sulfanylpropanoic acid
+InChI_Identifier       : InChI=1S/C3H7NO2S/c4-2(1-7)3(5)6/h2,7H,1,4H2,(H,5,6)/t2-/m0/s1
+InChI_Key              : XUJNEKJLAYXESH-REOHCLBHSA-N
+SMILES                 : N[C@@H](CS)C(O)=O
+Formula                : C3H7NO2S
+Mass                   : 121.158
+pKa                    : 
+HMDB                   : HMDB00574
+SMPDB                  : SMP00004 SMP00013 SMP00015 SMP00019 SMP00021 SMP00027 SMP00033
+KEGG                   : map00260 map00270 map00430 map00480 map00770
+CHEBI                  : 17561
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;1;000 3;1;002 3;1;001
+N15Index               : 
+C13chemicalShift       : 0       58.882       27.794
+H1chemicalShift        : 3.949       3.096       3.048
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

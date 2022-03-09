@@ -1,0 +1,28 @@
+Name                   : Orotic Acid
+AltName                : orotate
+Source                 : HMDB
+IUPAC                  : 2,6-dioxo-1,2,3,6-tetrahydropyrimidine-4-carboxylic acid
+InChI_Identifier       : InChI=1S/C5H4N2O4/c8-3-1-2(4(9)10)6-5(11)7-3/h1H,(H,9,10)(H2,6,7,8,11)
+InChI_Key              : PXQPEWDEAKTCGB-UHFFFAOYSA-N
+SMILES                 : OC(=O)C1=CC(=O)NC(=O)N1
+Formula                : C5H4N2O4
+Mass                   : 156.0963
+pKa                    : 
+HMDB                   : HMDB00226
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 16742
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 5;1;000
+N15Index               : 
+C13chemicalShift       : 0             0             0             0       104.226
+H1chemicalShift        : 6.188
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

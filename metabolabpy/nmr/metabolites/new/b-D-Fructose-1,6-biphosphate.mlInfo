@@ -1,0 +1,28 @@
+Name                   : b-D-Fructose-1,6-biphosphate
+AltName                : fructose16bp
+Source                 : HMDB
+IUPAC                  : {[(2R,3S,4S,5R)-3,4,5-trihydroxy-5-[(phosphonooxy)methyl]oxolan-2-yl]methoxy}phosphonic acid
+InChI_Identifier       : InChI=1S/C6H14O12P2/c7-4-3(1-16-19(10,11)12)18-6(9,5(4)8)2-17-20(13,14)15/h3-5,7-9H,1-2H2,(H2,10,11,12)(H2,13,14,15)/t3-,4-,5+,6-/m1/s1
+InChI_Key              : RNBGYGVWRKECFJ-ARQDHWQXSA-N
+SMILES                 : O[C@H]1[C@H](O)[C@@](O)(COP(O)(O)=O)O[C@@H]1COP(O)(O)=O
+Formula                : C6H14O12P2
+Mass                   : 340.1157
+pKa                    : 
+HMDB                   : HMDB01058
+SMPDB                  : SMP00031 SMP00040 SMP00064 SMP00128
+KEGG                   : map00010 map00030 map00051
+CHEBI                  : 28013
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 1;1;000 3;1;000 4;1;000 5;1;000 6;1;000
+N15Index               : 
+C13chemicalShift       : 78.68            0       68.487       77.005       82.241       67.022
+H1chemicalShift        : 4.167       3.771       4.182       3.926       3.888
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

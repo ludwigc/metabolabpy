@@ -1,0 +1,28 @@
+Name                   : Methylomalonic Acid
+AltName                : malonate_methylo
+Source                 : HMDB
+IUPAC                  : 2-methylpropanedioic acid
+InChI_Identifier       : InChI=1S/C4H6O4/c1-2(3(5)6)4(7)8/h2H,1H3,(H,5,6)(H,7,8)
+InChI_Key              : ZIYVHBGGAOATLY-UHFFFAOYSA-N
+SMILES                 : CC(C(O)=O)C(O)=O
+Formula                : C4H6O4
+Mass                   : 118.088
+pKa                    : 
+HMDB                   : HMDB00202
+SMPDB                  : SMP00016 SMP00032
+KEGG                   : map00280 map00640
+CHEBI                  : 30860
+CID                    : 
+C13Index               : 
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;1;000 4;3;001
+N15Index               : 
+C13chemicalShift       : 0       54.749            0       17.919
+H1chemicalShift        : 3.156       1.225
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

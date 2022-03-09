@@ -1,0 +1,28 @@
+Name                   : L-Lysine
+AltName                : lysine
+Source                 : HMDB
+IUPAC                  : (2S)-2,6-diaminohexanoic acid
+InChI_Identifier       : InChI=1S/C6H14N2O2/c7-4-2-1-3-5(8)6(9)10/h5H,1-4,7-8H2,(H,9,10)/t5-/m0/s1
+InChI_Key              : KDXKERNSBIXSRK-YFKPBYRVSA-N
+SMILES                 : NCCCC[C@H](N)C(O)=O
+Formula                : C6H14N2O2
+Mass                   : 146.1876
+pKa                    : 
+HMDB                   : HMDB00182
+SMPDB                  : SMP00019 SMP00037 SMP00066 SMP00465
+KEGG                   : map00310 map00780
+CHEBI                  : 18019
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005 0;1;006
+C13HSQC                : 0 1 1 1 1 1
+CO_HSQC                : 0 0 0 0 0 0
+C13Intensities         : 1 1 1 1 1 1
+H1Index                : 2;1;000 3;2;012 4;1;001 4;1;002 5;2;012 6;2;012
+N15Index               : 2;1;000 6;1;000
+C13chemicalShift       : 180.403 57.453 32.654 24.041 29.152 42.119
+H1chemicalShift        :   3.747  1.884  1.492  1.43   1.718  3.018
+N15chemicalShift       : 39.376 37.678
+jCC                    : 1;2;47.4915 2;3;34.7491 3;4;47.4915 4;5;34.7491 5;6;34.7491 
+jCH                    : 
+jCN                    : 
+jHH                    : 
