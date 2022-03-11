@@ -1137,6 +1137,10 @@ class main_w(object):  # pragma: no cover
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak = -1
         # end clear_assigned_hsqc
 
+    def cnst(self, index=0):
+        print("cnst({}) = {}".format(index, self.nd.nmrdat[self.nd.s][self.nd.e].acq.cnst[index]))
+        # end cnst
+
     def create_icon_mac(self):
         home_dir = os.path.expanduser('~')
         app_dir2 = os.path.join(home_dir, 'Applications')
