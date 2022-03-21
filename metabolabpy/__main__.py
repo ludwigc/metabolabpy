@@ -205,7 +205,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.7.6'
+        self.__version__ = '0.7.7'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -276,6 +276,7 @@ class main_w(object):  # pragma: no cover
         self.w.scaleSpectra.stateChanged.connect(self.set_scale_spectra)
         self.w.pqnButton.clicked.connect(self.set_pqn_tsa_scaling)
         self.w.tsaButton.clicked.connect(self.set_pqn_tsa_scaling)
+        self.w.fitUpToBonds.currentIndexChanged.connect(self.set_up_to_bonds)
         self.w.autoScaling.clicked.connect(self.set_variance_stabilisation_options)
         self.w.paretoScaling.clicked.connect(self.set_variance_stabilisation_options)
         self.w.gLogTransform.clicked.connect(self.set_variance_stabilisation_options)
@@ -936,7 +937,7 @@ class main_w(object):  # pragma: no cover
             self.w.expBox.valueChanged.connect(lambda: self.change_data_set_exp())
 
 
-        if hac == True:
+        if self.nd.nmrdat[self.nd.s][self.nd.e].dim == 2 and hac == True:
             self.w.hsqcAnalysis.setChecked(True)
             self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak = cur_peak
             self.w.hsqcMetabolites.setCurrentIndex(self.w.hsqcMetabolites.model().index(met_idx.row(), 0))
@@ -1723,18 +1724,14 @@ class main_w(object):  # pragma: no cover
         while self.layout.itemAt(0) != None:
             self.layout.removeItem(self.layout.itemAt(0))
 
-        print("aaaaa")
         n_rows = round(math.sqrt(n_buttons))
-        print("bbbbb")
         n_cols = math.ceil(n_buttons / n_rows)
-        print("ccccc")
         for k in range(n_buttons):
             col = k % n_cols
             row = math.floor((k + 0.1) / n_cols)
             #print("n_rows: {}, n_cols: {}, row: {}, col: {}".format(n_rows, n_cols, row, col))
             exec("self.layout.addWidget(self.button" + str(k+1) + ", " + str(row) + " , " + str(col) + ")")
 
-        print("ddddd")
     # end make_buttons
 
     def empty_col_row(self):
@@ -3967,6 +3964,9 @@ class main_w(object):  # pragma: no cover
         self.w.hsqcMultiplet.canvas.axes.autoscale()
         self.w.hsqcMultiplet.canvas.axes.invert_xaxis()
         self.w.hsqcMultiplet.canvas.draw()
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.set_peak_information()
+        #self.clear_hsqc_spin_sys()
+        self.set_hsqc_spin_sys()
         # end
 
     def plot_spc(self, hide_pre_processing=False):
@@ -4279,7 +4279,7 @@ class main_w(object):  # pragma: no cover
             self.nd.read_nmrpipe_spcs(data_path, data_sets, proc_data_name)
         # end read_nmrpipe_spcs
 
-    def read_spcs(self, data_path, data_sets):
+    def read_spcs(self, data_path, data_sets, dataset=1):
         z_fill = 25
         if (data_path[0] == 'interactive'):
             data_path = [QFileDialog.getExistingDirectory()]
@@ -4345,7 +4345,7 @@ class main_w(object):  # pragma: no cover
                 data_sets = ds
 
             if len(data_path) > 0 and len(data_sets) > 0:
-                self.nd.read_spcs(data_path, data_sets)
+                self.nd.read_spcs(data_path, data_sets, dataset)
 
         # end read_spcs
 
@@ -4680,6 +4680,15 @@ class main_w(object):  # pragma: no cover
         self.set_compress_pre_proc()
         self.w.MplWidget.canvas.flush_events()
         self.w.MplWidget.canvas.draw()
+        # end select_clear_exclude_pre_proc
+
+    def clear_hsqc_spin_sys(self):
+        for k in range(self.w.hsqcSpinSys.rowCount()):
+            self.w.hsqcSpinSys.item(k, 0).setText("")
+            self.w.hsqcSpinSys.setFocus()
+            self.w.hsqcSpinSys.item(k, 1).setText("")
+            self.w.hsqcSpinSys.setFocus()
+
         # end select_clear_exclude_pre_proc
 
     def select_clear_exclude_pre_proc(self):
@@ -5082,7 +5091,7 @@ class main_w(object):  # pragma: no cover
                 except:
                     p_label = np.append(p_label, '')
 
-            print("s: {}, e: {}, l: {}".format(s_peak, e_peak, p_label))
+            #print("s: {}, e: {}, l: {}".format(s_peak, e_peak, p_label))
             self.w.peakWidget.setRowCount(0)
             self.w.peakWidget.setRowCount(n_rows)
             self.nd.peak_fill = True
@@ -5096,7 +5105,7 @@ class main_w(object):  # pragma: no cover
                 p_label1 = QTableWidgetItem(3 * k + 2)
                 p_label1.setTextAlignment(QtCore.Qt.AlignHCenter)
                 self.w.peakWidget.setItem(k, 3, p_label1)
-                print("k: {}, s_peak[k]: {}, s_peak: {}".format(k, s_peak[k], s_peak))
+                #print("k: {}, s_peak[k]: {}, s_peak: {}".format(k, s_peak[k], s_peak))
                 if ((s_peak[k] > -10000.0) & (e_peak[k] > -10000.0)):
                     p_min = min(s_peak[k], e_peak[k])
                     e_peak[k] = max(s_peak[k], e_peak[k])
@@ -5502,6 +5511,31 @@ class main_w(object):  # pragma: no cover
         self.w.autoscaleCB.setCurrentIndex(idx)
         # end set_hsqc_pars15
 
+    def set_hsqc_spin_sys(self):
+        hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        spin_sys = hsqc.hsqc_data[hsqc.cur_metabolite].spin_systems[hsqc.cur_peak - 1]
+        self.w.hsqcSpinSys.setRowCount(0)
+        self.w.hsqcSpinSys.setRowCount(len(spin_sys['c13_idx']))
+        for k in range(len(spin_sys['c13_idx'])):
+            idx = QTableWidgetItem(' '.join(str(e) for e in spin_sys['c13_idx'][k]))
+            offset = QTableWidgetItem("0")
+            j_cc = QTableWidgetItem(' '.join(str(e) for e in spin_sys['j_cc'][k]))
+            perc = QTableWidgetItem(str(spin_sys['contribution'][k]))
+            idx.setTextAlignment(QtCore.Qt.AlignLeft)
+            offset.setTextAlignment(QtCore.Qt.AlignHCenter)
+            j_cc.setTextAlignment(QtCore.Qt.AlignLeft)
+            perc.setTextAlignment(QtCore.Qt.AlignHCenter)
+            self.w.hsqcSpinSys.setItem(k, 0, idx)
+            self.w.hsqcSpinSys.setItem(k, 1, offset)
+            self.w.hsqcSpinSys.setItem(k, 2, j_cc)
+            self.w.hsqcSpinSys.setItem(k, 3, perc)
+            #self.w.hsqcSpinSys.item(k, 0).setText(' '.join(str(e) for e in spin_sys['c13_shifts'][k]))
+            #self.w.hsqcSpinSys.item(k, 1).setText('0') # '.join(str(e) for e in spin_sys['c13_shifts'][k]))
+            #self.w.hsqcSpinSys.item(k, 2).setText(' '.join(str(e) for e in spin_sys['j_cc'][k]))
+            #self.w.hsqcSpinSys.item(k, 3).setText(str(spin_sys['contribution'][k]))
+
+        # end set_hsqc_spin_sys XXXX
+
     def set_invert(self):
         s = self.nd.s
         e = self.nd.e
@@ -5680,6 +5714,14 @@ class main_w(object):  # pragma: no cover
                     self.nd.nmrdat[k][l].hsqc.cur_metabolite = ''
                     self.nd.nmrdat[k][l].hsqc.cur_peak = -1
 
+            self.w.fitUpToBonds.setCurrentIndex(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.n_bonds)
+            self.w.hsqcSpinSys.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+            self.w.hsqcSpinSys.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+            self.w.hsqcSpinSys.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+            #self.w.hsqcSpinSys.setResizeMode()
+            #header = table.horizontalHeader()
+            #header.setResizeMode(QHeaderView.ResizeToContents)
+            #header.setStretchLastSection(True)
             self.w.displayAssignedMetabolites.setVisible(True)
             self.w.displayLibraryShifts.setVisible(True)
             self.w.displaySelectedMetabolite.setVisible(True)
@@ -6051,6 +6093,13 @@ class main_w(object):  # pragma: no cover
         self.w.nmrSpectrum.setCurrentIndex(5)
         # end setup_processing_parameters
 
+    def set_up_to_bonds(self):
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.n_bonds = int(self.w.fitUpToBonds.currentText())
+
+        # end set_up_to_bonds
+
     def set_variance_stabilisation(self):
         if (self.nd.pp.pre_proc_fill == False):
             if (self.w.varianceStabilisation.isChecked() == True):
@@ -6405,6 +6454,13 @@ class main_w(object):  # pragma: no cover
         sys.stdout = old
         # end stdoutIO
 
+    def sub_lists(self, l):
+        lists = [[]]
+        for i in range(len(l) + 1):
+            for j in range(i):
+                lists.append(l[j: i])
+        return lists
+
     def tutorials(self):
         # url = "http://beregond.bham.ac.uk/~ludwigc/tutorials"
         f_name = os.path.join(os.path.dirname(__file__), "nmr", "web", "tutorials", "index.html")
@@ -6414,12 +6470,10 @@ class main_w(object):  # pragma: no cover
         # end tutorials
 
     def update_gui(self):
-        s = self.nd.s
-        e = self.nd.e
         self.w.setBox.valueChanged.disconnect()
         self.w.expBox.valueChanged.disconnect()
-        self.w.expBox.setValue(e + 1)
-        self.w.setBox.setValue(s + 1)
+        self.w.expBox.setValue(self.nd.e + 1)
+        self.w.setBox.setValue(self.nd.s + 1)
         self.w.setBox.valueChanged.connect(lambda: self.change_data_set_exp())
         self.w.expBox.valueChanged.connect(lambda: self.change_data_set_exp())
         self.set_disp_pars()
@@ -6427,10 +6481,10 @@ class main_w(object):  # pragma: no cover
         self.set_acq_pars()
         self.set_title_file()
         self.set_pulse_program()
-        self.w.expBox.setValue(e + 1)
-        self.w.invertMatrix_1.setChecked(self.nd.nmrdat[s][e].proc.invert_matrix[0])
-        self.w.invertMatrix_2.setChecked(self.nd.nmrdat[s][e].proc.invert_matrix[1])
-        if (self.nd.nmrdat[s][e].dim == 1):
+        self.w.expBox.setValue(self.nd.e + 1)
+        self.w.invertMatrix_1.setChecked(self.nd.nmrdat[self.nd.s][self.nd.e].proc.invert_matrix[0])
+        self.w.invertMatrix_2.setChecked(self.nd.nmrdat[self.nd.s][self.nd.e].proc.invert_matrix[1])
+        if (self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1):
             self.w.preprocessing.setVisible(True)
             self.w.peakPicking.setVisible(True)
         else:
@@ -6439,14 +6493,17 @@ class main_w(object):  # pragma: no cover
             self.w.peakPicking.setChecked(False)
             self.w.peakPicking.setVisible(False)
 
-        if self.nd.nmrdat[s][e].dim > 1:
+        if self.nd.nmrdat[self.nd.s][self.nd.e].dim > 1:
             if self.nd.nmrdat[self.nd.s][self.nd.e].acq.pul_prog_name.find("hsqc") > 0 or self.nd.nmrdat[self.nd.s][
-                self.nd.e].acq.pul_prog_name.find("hmqc") > 0:
+            self.nd.e].acq.pul_prog_name.find("hmqc") > 0:
                 self.w.hsqcAnalysis.setVisible(True)  # develop set true
+
             else:
+                self.w.hsqcAnalysis.setChecked(False)
                 self.w.hsqcAnalysis.setVisible(False)
 
         else:
+            self.w.hsqcAnalysis.setChecked(False)
             self.w.hsqcAnalysis.setVisible(False)
 
         self.w.multipletAnalysis.setVisible(False)

@@ -14,9 +14,19 @@ class HsqcData:
         self.name = ''
         self.alt_name = ''
         self.source = ''
+        self.iupac = ''
+        self.inchi_identifier = ''
+        self.inchi_key = ''
+        self.smiles = ''
+        self.formula = ''
+        self.mass = 0.0
+        self.pka = ''
         self.hmdb = []
         self.smpdb = []
         self.kegg = []
+        self.chebi = ''
+        self.cid = ''
+        self.n15_shifts = np.array([])
         self.c13_shifts = np.array([])
         self.h1_shifts = np.array([])
         self.c13_picked = np.array([[]])
@@ -25,6 +35,9 @@ class HsqcData:
         self.h1_picked_lib = np.array([[]])
         self.hsqc = np.array([])
         self.co_hsqc = np.array([])
+        self.j_ch = np.array([])
+        self.j_cn = np.array([])
+        self.j_hh = np.array([])
         self.j_cc = np.array([])
         self.j_nuc1 = np.array([])
         self.j_nuc2 = np.array([])
@@ -33,7 +46,10 @@ class HsqcData:
         self.h1_number = np.array([])
         self.h1_suffix = np.array([])
         self.c13_index = np.array([])
+        self.n15_index = np.array([])
         self.sim_spc = np.array([[]])
+        self.c13_offset = {}
+        self.spin_systems = np.array([])
         # end __init__
 
     def __str__(self):  # pragma: no cover
@@ -85,6 +101,41 @@ class HsqcData:
         idx1 = mi.find(':')
         idx2 = mi.find('\n')
         self.source = mi[idx1 + 1:idx2].strip()
+        idx1 = metabolite_information.find('IUPAC')
+        mi = metabolite_information[idx1:]
+        idx1 = mi.find(':')
+        idx2 = mi.find('\n')
+        self.iupac = mi[idx1 + 1:idx2].strip()
+        idx1 = metabolite_information.find('InChi_Identifier')
+        mi = metabolite_information[idx1:]
+        idx1 = mi.find(':')
+        idx2 = mi.find('\n')
+        self.inchi_identifier = mi[idx1 + 1:idx2].strip()
+        idx1 = metabolite_information.find('InChi_key')
+        mi = metabolite_information[idx1:]
+        idx1 = mi.find(':')
+        idx2 = mi.find('\n')
+        self.inchi_key = mi[idx1 + 1:idx2].strip()
+        idx1 = metabolite_information.find('SMILES')
+        mi = metabolite_information[idx1:]
+        idx1 = mi.find(':')
+        idx2 = mi.find('\n')
+        self.smiles = mi[idx1 + 1:idx2].strip()
+        idx1 = metabolite_information.find('Formula')
+        mi = metabolite_information[idx1:]
+        idx1 = mi.find(':')
+        idx2 = mi.find('\n')
+        self.formula = mi[idx1 + 1:idx2].strip()
+        idx1 = metabolite_information.find('Mass')
+        mi = metabolite_information[idx1:]
+        idx1 = mi.find(':')
+        idx2 = mi.find('\n')
+        self.mass = float(mi[idx1 + 1:idx2].strip())
+        idx1 = metabolite_information.find('pKa')
+        mi = metabolite_information[idx1:]
+        idx1 = mi.find(':')
+        idx2 = mi.find('\n')
+        self.pKa = mi[idx1 + 1:idx2].strip()
         idx1 = metabolite_information.find('HMDB ')
         mi = metabolite_information[idx1:]
         idx1 = mi.find(':')
@@ -100,6 +151,16 @@ class HsqcData:
         idx1 = mi.find(':')
         idx2 = mi.find('\n')
         self.kegg = mi[idx1 + 1:idx2].strip().split()
+        idx1 = metabolite_information.find('CHEBI')
+        mi = metabolite_information[idx1:]
+        idx1 = mi.find(':')
+        idx2 = mi.find('\n')
+        self.chebi = mi[idx1 + 1:idx2].strip()
+        idx1 = metabolite_information.find('CID')
+        mi = metabolite_information[idx1:]
+        idx1 = mi.find(':')
+        idx2 = mi.find('\n')
+        self.cid = mi[idx1 + 1:idx2].strip()
         idx1 = metabolite_information.find('C13chemicalShift')
         mi = metabolite_information[idx1:]
         idx1 = mi.find(':')
@@ -129,6 +190,7 @@ class HsqcData:
         self.h1_picked = [[] for n in range(len(self.h1_shifts))]
         self.c13_picked = [[] for n in range(len(self.h1_shifts))]
         self.sim_spc = [[] for n in range(len(self.h1_shifts))]
+        self.spin_systems = [{} for n in range(len(self.h1_shifts))]
         self.hsqc = np.matrix(mi[idx1 + 1:idx2].strip(), dtype=int).A[0]
         idx1 = metabolite_information.find('CO_HSQC')
         mi = metabolite_information[idx1:]
@@ -176,6 +238,15 @@ class HsqcData:
             suffix = suffix.replace('l', 'ab')
             suffix = suffix.replace('Û', 'abc')
             self.h1_suffix.append(suffix)
+
+        idx1 = metabolite_information.find('C13Offset')
+        mi = metabolite_information[idx1:]
+        idx1 = mi.find(':')
+        idx2 = mi.find('\n')
+        c13_offset_info = mi[idx1 + 1:idx2].strip().split()
+        for k in c13_offset_info:
+            index = k.split(';')[0] + " " + k.split(';')[1]
+            self.c13_offset[index] = float(k.split(';')[2])
 
         # end init_data
 

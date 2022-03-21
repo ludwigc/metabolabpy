@@ -33,6 +33,7 @@ class NmrHsqc:
         self.autoscale_j = True
         self.j_scale = -1
         self.assigned_peaks = []
+        self.n_bonds = 1
 
         # end __init__
 
@@ -72,3 +73,90 @@ class NmrHsqc:
             self.hsqc_data[metabolite_name].init_data(metabolite_information)
 
         # end set_metabolite_information
+
+    def set_peak_information(self):
+        n_carbons = len(self.hsqc_data[self.cur_metabolite].c13_shifts)
+        c13_idx = self.hsqc_data[self.cur_metabolite].h1_index[self.cur_peak - 1]
+        cs = []
+        for l in range(self.n_bonds + 1):
+            cs.append(c13_idx - l)
+            cs.append(c13_idx + l)
+
+        used = []
+        unique = [used.append(x) for x in cs if x not in used]
+        used2 = np.array(used)
+        used2 = used2[np.where(np.array(used) > 0)[0]]
+        used2 = used2[np.where(used2 < n_carbons + 1)[0]].tolist()[1:]
+        used2 = self.sub_lists(used2)
+        for k in range(len(used2)):
+            used2[k].insert(0, used[0])
+
+        used2.sort(key=len)
+        c13_idx = []
+        j_cc = []
+        for k in range(len(used2)):
+            if len(used2[k]) == 1:
+                c13_idx.append(used2[k])
+                j_cc.append([])
+            else:
+                c13_idx2 = []
+                j_cc2 = []
+                for l in range(len(used2[k]) - 1):
+                    if used2[k][0] > used2[k][l + 1]:
+                        idx1 = np.where(self.hsqc_data[self.cur_metabolite].j_nuc1 == used2[k][l + 1])[0]
+                        idx2 = np.where(self.hsqc_data[self.cur_metabolite].j_nuc2 == used2[k][0])[0]
+                        ddd1 = self.hsqc_data[self.cur_metabolite].j_nuc1 == used2[k][l + 1]
+                        ddd2 = self.hsqc_data[self.cur_metabolite].j_nuc2 == used2[k][0]
+                    else:
+                        idx1 = np.where(self.hsqc_data[self.cur_metabolite].j_nuc1 == used2[k][0])[0]
+                        idx2 = np.where(self.hsqc_data[self.cur_metabolite].j_nuc2 == used2[k][l + 1])[0]
+                        ddd1 = self.hsqc_data[self.cur_metabolite].j_nuc1 == used2[k][0]
+                        ddd2 = self.hsqc_data[self.cur_metabolite].j_nuc2 == used2[k][l + 1]
+
+                    if len(idx1) > 0 and len(idx2) > 0:
+                        has_j = False
+                        idx0 = 0
+                        for m in range(len(ddd1)):
+                            if ddd1[m] == True and ddd2[m] == True:
+                                if abs(self.hsqc_data[self.cur_metabolite].j_nuc1[m] - self.hsqc_data[self.cur_metabolite].j_nuc2[m]) <= self.n_bonds:
+                                    has_j = True
+                                    idx0 = m
+
+                        if has_j:
+                            if len(c13_idx2) == 0:
+                                c13_idx2.append(used2[k][0])
+
+                            c13_idx2.append(used2[k][l + 1])
+                            j_cc2.append(self.hsqc_data[self.cur_metabolite].j_cc[idx0])
+
+                if len(c13_idx2) > 0 and len(j_cc2) > 0 and c13_idx2 not in c13_idx:
+                    c13_idx.append(c13_idx2)
+                    #j_cc2 = [item for sublist in j_cc2 for item in sublist]
+                    j_cc.append(j_cc2)
+
+        self.hsqc_data[self.cur_metabolite].spin_systems[self.cur_peak - 1]['c13_idx'] = c13_idx
+        self.hsqc_data[self.cur_metabolite].spin_systems[self.cur_peak - 1]['j_cc'] = j_cc
+        if 'contribution' not in self.hsqc_data[self.cur_metabolite].spin_systems[self.cur_peak - 1].keys() or len(self.hsqc_data[self.cur_metabolite].spin_systems[self.cur_peak - 1]['c13_idx']) != len(self.hsqc_data[self.cur_metabolite].spin_systems[self.cur_peak - 1]['contribution']):
+            contribution = []
+            contribution.append(100)
+            for k in range(len(used2) - 1):
+                contribution.append(0)
+
+            self.hsqc_data[self.cur_metabolite].spin_systems[self.cur_peak - 1]['contribution'] = contribution
+
+        chem_shift = []
+        for k in range(len(used2)):
+            chem_shift.append([])
+            for l in range(len(used2[k])):
+                chem_shift[k].append(self.hsqc_data[self.cur_metabolite].c13_shifts[used2[k][l] - 1])
+
+        self.hsqc_data[self.cur_metabolite].spin_systems[self.cur_peak - 1]['c13_shifts'] = chem_shift
+        # end set_peak_information
+
+    def sub_lists(self, l):
+        lists = [[]]
+        for i in range(len(l) + 1):
+            for j in range(i):
+                lists.append(l[j: i])
+
+        return lists

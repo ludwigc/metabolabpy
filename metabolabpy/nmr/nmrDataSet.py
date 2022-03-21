@@ -1133,7 +1133,11 @@ class NmrDataSet:
         self.pp.init(len(self.nmrdat[self.s]))
         # end pre_proc_init
 
-    def read_spc(self, data_set_name, data_set_number):
+    def read_spc(self, data_set_name, data_set_number, dataset=1):
+        if len(self.nmrdat) < dataset:
+            self.nmrdat.append([])
+
+        self.s = dataset - 1
         self.e = len(self.nmrdat[self.s])
         nd1 = nd.NmrData()
         nd1.data_set_name = data_set_name
@@ -1142,14 +1146,14 @@ class NmrDataSet:
         self.nmrdat[self.s].append(nd1)
         # end read_spc
 
-    def read_spcs(self, data_path, data_exp):
+    def read_spcs(self, data_path, data_exp, dataset=1):
         if len(data_exp) > 1:
             for k in range(len(data_exp)):
-                self.read_spc(data_path[0], str(data_exp[k]))
+                self.read_spc(data_path[0], str(data_exp[k]), dataset)
 
         else:
             for k in range(len(data_path)):
-                self.read_spc(data_path[k], str(data_exp[0]))
+                self.read_spc(data_path[k], str(data_exp[0]), dataset)
 
     # end read_spcs
 
