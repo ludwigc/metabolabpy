@@ -7,7 +7,6 @@ import numpy as np
 from metabolabpy.nmr import nmrConfig  # pragma: no cover
 import os
 
-
 class HsqcData:
 
     def __init__(self):
@@ -46,10 +45,14 @@ class HsqcData:
         self.h1_number = np.array([])
         self.h1_suffix = np.array([])
         self.c13_index = np.array([])
+        self.c13_nc = np.array([])
         self.n15_index = np.array([])
         self.sim_spc = np.array([[]])
         self.c13_offset = {}
         self.spin_systems = np.array([])
+        self.n_bonds = 1
+        self.intensities = []
+        self.r2 = []
         # end __init__
 
     def __str__(self):  # pragma: no cover
@@ -178,6 +181,12 @@ class HsqcData:
             self.h1_picked = np.copy(np.append(self.h1_picked, [np.array(np.array([]))]))
             self.sim_spc = np.copy(np.append(self.sim_spc, [np.array(np.array([]))]))
 
+        self.intensities = []
+        self.r2 = []
+        for k in range(len(self.h1_shifts)):
+            self.intensities.append(1)
+            self.r2.append(0)
+
         idx1 = metabolite_information.find('C13Intensities')
         mi = metabolite_information[idx1:]
         idx1 = mi.find(':')
@@ -222,6 +231,10 @@ class HsqcData:
         for k in c13idx:
             self.c13_index.append(int(k.split(';')[2]))
 
+        self.c13_nc = []
+        for k in c13idx:
+            self.c13_nc.append(int(k.split(';')[1]))
+
         idx1 = metabolite_information.find('H1Index')
         mi = metabolite_information[idx1:]
         idx1 = mi.find(':')
@@ -245,8 +258,16 @@ class HsqcData:
         idx2 = mi.find('\n')
         c13_offset_info = mi[idx1 + 1:idx2].strip().split()
         for k in c13_offset_info:
-            index = k.split(';')[0] + " " + k.split(';')[1]
-            self.c13_offset[index] = float(k.split(';')[2])
+            #k = k.replace('0','')
+            index = ''
+            for l in range(len(k.split(';')) - 1):
+                index = index + " " + k.split(';')[l]
+
+            index = index.strip()
+            if len(k.split(';')[len(k.split(';')) - 1]) > 0:
+                self.c13_offset[index] = float(k.split(';')[len(k.split(';')) - 1])
 
         # end init_data
+
+
 

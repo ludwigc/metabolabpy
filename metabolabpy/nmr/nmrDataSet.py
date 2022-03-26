@@ -46,6 +46,7 @@ class NmrDataSet:
         self.wb = []
         self.old_data_set = -1
         self.old_data_exp = -1
+        self.hsqc_spin_sys_connected = True
         # end __init__
 
     def add_peak(self, start_end=np.array([], dtype='float64'), peak_label=''):

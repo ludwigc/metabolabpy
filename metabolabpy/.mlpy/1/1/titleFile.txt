@@ -1,0 +1,2 @@
+sample: K17 p6
+sadrhsqc2 H2O+D2O /opt/topspin4.0.5 ludwigc {1  D1 - 104}

@@ -205,7 +205,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.7.7'
+        self.__version__ = '0.7.8'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -255,6 +255,9 @@ class main_w(object):  # pragma: no cover
         self.w.displaySelectedMetabolite.setVisible(False)
         self.w.displaySelectedMetabolite.stateChanged.connect(self.display_selected_metabolite)
         self.w.exportPath.textChanged.connect(self.set_export_path)
+        self.w.multipletAnalysisIntensity.textChanged.connect(self.set_ma_intensity)
+        self.w.multipletAnalysisR2.textChanged.connect(self.set_ma_r2)
+        self.w.multipletAnalysisEchoTime.textChanged.connect(self.set_ma_echo_time)
         self.w.invertMatrix_1.stateChanged.connect(self.set_invert)
         self.w.invertMatrix_2.stateChanged.connect(self.set_invert)
         self.w.exportFileName.textChanged.connect(self.set_export_file_name)
@@ -286,6 +289,8 @@ class main_w(object):  # pragma: no cover
         self.w.segAlignTW.cellChanged.connect(self.set_seg_align_pre_proc)
         self.w.selectClassTW.itemSelectionChanged.connect(self.set_plot_pre_proc)
         self.w.selectClassTW.cellChanged.connect(self.set_change_pre_proc)
+        self.w.hsqcSpinSys.cellChanged.connect(self.hsqc_spin_sys_change)
+        self.nd.hsqc_spin_sys_connected = True
         self.w.excludeClearButton.clicked.connect(self.select_clear_exclude_pre_proc)
         self.w.segAlignClearButton.clicked.connect(self.select_clear_seg_align_pre_proc)
         self.w.compressClearButton.clicked.connect(self.select_clear_compress_pre_proc)
@@ -370,6 +375,9 @@ class main_w(object):  # pragma: no cover
         self.w.setBox.setKeyboardTracking(False)
         self.w.expBox.valueChanged.connect(self.change_data_set_exp)
         self.w.expBox.setKeyboardTracking(False)
+        self.w.maFitChemShifts.stateChanged.connect(self.set_fit_ma_chem_shifts)
+        self.w.maFitContributions.stateChanged.connect(self.set_fit_ma_percentages)
+        self.w.maAutoSim.stateChanged.connect(self.set_ma_autosim)
         self.w.posCol.currentIndexChanged.connect(self.get_disp_pars1)
         self.w.negCol.currentIndexChanged.connect(self.get_disp_pars2)
         self.w.posColR.textChanged.connect(self.get_disp_pars3)
@@ -517,6 +525,7 @@ class main_w(object):  # pragma: no cover
         self.w.hsqcAddPeak.clicked.connect(lambda: self.ginput_hsqc(0))
         self.w.hsqcRemovePeak.clicked.connect(lambda: self.ginput_hsqc2(0))
         self.w.metaboliteResetButton.clicked.connect(self.metabolite_reset)
+        self.w.maSimButton.clicked.connect(self.ma_sim_hsqc_1d)
         self.buttons = {}
         # print(sys.platform)
         if sys.platform == 'darwin':
@@ -1133,9 +1142,13 @@ class main_w(object):  # pragma: no cover
         self.w.hsqcMultiplet.canvas.axes.clear()
         self.w.hsqcMultiplet.canvas.draw()
         self.w.metaboliteInformation.setText('')
+        self.w.multipletAnalysisIntensity.setText('')
+        self.w.multipletAnalysisR2.setText('')
+        self.w.multipletAnalysisEchoTime.setText('')
         self.w.openWeb.clear()
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite = ''
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak = -1
+        self.w.hsqcSpinSys.setRowCount(0)
         # end clear_assigned_hsqc
 
     def cnst(self, index=0):
@@ -1715,12 +1728,8 @@ class main_w(object):  # pragma: no cover
             return
 
         existing_buttons = len(self.w.peakSelection.children()) - 1
-        print(existing_buttons)
-        print(n_buttons)
         self.delete_buttons(n_buttons)
-        print(n_buttons)
         self.create_buttons(n_buttons)
-        print(n_buttons)
         while self.layout.itemAt(0) != None:
             self.layout.removeItem(self.layout.itemAt(0))
 
@@ -3128,6 +3137,60 @@ class main_w(object):  # pragma: no cover
         self.show_nmr_spectrum()
         # end horz_ph_corr_2d
 
+    def hsqc_spin_sys_change(self):
+        if self.nd.hsqc_spin_sys_connected == True:
+            self.w.hsqcSpinSys.cellChanged.disconnect()
+            self.nd.hsqc_spin_sys_connected = False
+
+        hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        spin_sys = hsqc.hsqc_data[hsqc.cur_metabolite].spin_systems[hsqc.cur_peak - 1]
+        perc_sum = 0
+        for k in range(len(spin_sys['c13_idx'])):
+            idx = QTableWidgetItem(' '.join(str(e) for e in spin_sys['c13_idx'][k]))
+            self.w.hsqcSpinSys.setItem(k, 0, idx)
+            if self.w.hsqcSpinSys.item(k,1) != None:
+                if hasattr(self.w.hsqcSpinSys.item(k,1), 'text'):
+                    #print("k: {}, self.w.hsqcSpinSys.item(k,1).text(): {}".format(k, self.w.hsqcSpinSys.item(k, 1).text()))
+                    if len(self.w.hsqcSpinSys.item(k,1).text()) > 0:
+                        hsqc.hsqc_data[hsqc.cur_metabolite].c13_offset[idx.text()] = float(self.w.hsqcSpinSys.item(k, 1).text())
+                    else:
+                        hsqc.hsqc_data[hsqc.cur_metabolite].c13_offset[idx.text()] = 0.0
+                else:
+                    hsqc.hsqc_data[hsqc.cur_metabolite].c13_offset[idx.text()] = 0.0
+
+            if hasattr(self.w.hsqcSpinSys.item(k,3), 'text'):
+                if len(self.w.hsqcSpinSys.item(k,3).text()) > 0:
+                    perc_sum += float(self.w.hsqcSpinSys.item(k,3).text())
+
+        for k in range(len(spin_sys['c13_idx'])):
+            if self.w.hsqcSpinSys.item(k,3) != None:
+                if len(self.w.hsqcSpinSys.item(k, 3).text()) > 0:
+                    perc = round(float(self.w.hsqcSpinSys.item(k,3).text()) * 100.0 / perc_sum, 3)
+                else:
+                    if k > 0:
+                        perc = 0.0
+                    else:
+                        perc = 100.0
+
+            else:
+                if k > 0:
+                    perc = 0.0
+                else:
+                    perc = 100.0
+
+
+            spin_sys['contribution'][k] = perc
+
+        self.set_hsqc_spin_sys()
+        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim:
+            self.plot_metabolite_peak(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak)
+
+        if self.nd.hsqc_spin_sys_connected == False:
+            self.w.hsqcSpinSys.cellChanged.connect(self.hsqc_spin_sys_change)
+            self.nd.hsqc_spin_sys_connected = True
+
+        # end hsqc_spin_sys_change
+
     def iter_all_strings(self):
         for size in itertools.count(1):
             for s in itertools.product(ascii_uppercase, repeat=size):
@@ -3319,6 +3382,28 @@ class main_w(object):  # pragma: no cover
         self.w.hsqcPeak.canvas.axes.spines['left'].set_color(fg)
         self.w.hsqcPeak.canvas.axes.spines['right'].set_color(fg)
         # end load_light_mode
+
+    def ma_sim_hsqc_1d(self):
+        if self.nd.hsqc_spin_sys_connected == True:
+            self.w.hsqcSpinSys.cellChanged.disconnect()
+            self.nd.hsqc_spin_sys_connected = False
+
+        hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        if self.w.maAutoScale.isChecked():
+            hsqc.hsqc_data[hsqc.cur_metabolite].intensities[hsqc.cur_peak - 1] = 1
+
+        intensities = hsqc.hsqc_data[hsqc.cur_metabolite].intensities[hsqc.cur_peak - 1]
+        self.nd.nmrdat[self.nd.s][self.nd.e].sim_hsqc_1d()
+        self.w.multipletAnalysisIntensity.setText(str(hsqc.hsqc_data[hsqc.cur_metabolite].intensities[hsqc.cur_peak - 1]))
+        if intensities == 1:
+            self.nd.nmrdat[self.nd.s][self.nd.e].sim_hsqc_1d()
+
+        self.plot_metabolite_peak(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak)
+        if self.nd.hsqc_spin_sys_connected == False:
+            self.w.hsqcSpinSys.cellChanged.connect(self.hsqc_spin_sys_change)
+            self.nd.hsqc_spin_sys_connected = True
+
+        # end ma_sim_hsqc_1d
 
     def metabolite_reset(self):
         print("metabolite_reset")
@@ -3849,9 +3934,22 @@ class main_w(object):  # pragma: no cover
         if spin_number == 0:
             return
 
+        if self.nd.hsqc_spin_sys_connected == True:
+            self.w.hsqcSpinSys.cellChanged.disconnect()
+            self.nd.hsqc_spin_sys_connected = False
+
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak = spin_number
         metabolite_name = self.w.hsqcAssignedMetabolites.currentIndex().data()
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite = metabolite_name
+        my_autosim = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim
+        if metabolite_name in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data.keys():
+            if len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].c13_picked[spin_number - 1]) == 0:
+                self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim = False
+
+        self.w.fitUpToBonds.setCurrentIndex(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].n_bonds)
+        self.w.multipletAnalysisIntensity.setText(str(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].intensities[spin_number - 1]))
+        self.w.multipletAnalysisR2.setText(str(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].r2[spin_number - 1]))
+        self.w.multipletAnalysisEchoTime.setText(str(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.echo_time))
         hd = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name]
         h1_shift = hd.h1_shifts[spin_number -1]
         #print(hd.c13_shifts[np.where(hd.hsqc == 1)[0]])
@@ -3960,6 +4058,9 @@ class main_w(object):  # pragma: no cover
 
         h1_pts = len(self.nd.nmrdat[self.nd.s][self.nd.e].spc[0]) - self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(h1_pos, 0) - 1
         self.w.hsqcMultiplet.canvas.axes.plot(self.nd.nmrdat[self.nd.s][self.nd.e].ppm2[c13_pts1:c13_pts2], self.nd.nmrdat[self.nd.s][self.nd.e].spc.real[c13_pts1:c13_pts2, h1_pts], color=col1, linewidth=2)
+        if len(hd.sim_spc[spin_number - 1]) > 0:
+            self.w.hsqcMultiplet.canvas.axes.plot(self.nd.nmrdat[self.nd.s][self.nd.e].ppm2[c13_pts1:c13_pts2], hd.sim_spc[spin_number - 1][c13_pts1:c13_pts2], color=col2, linewidth=2)
+
         self.w.hsqcMultiplet.canvas.axes.set_xlabel(ylabel)
         self.w.hsqcMultiplet.canvas.axes.autoscale()
         self.w.hsqcMultiplet.canvas.axes.invert_xaxis()
@@ -3967,6 +4068,16 @@ class main_w(object):  # pragma: no cover
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.set_peak_information()
         #self.clear_hsqc_spin_sys()
         self.set_hsqc_spin_sys()
+        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim:
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim = False
+            self.ma_sim_hsqc_1d()
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim = True
+
+        if self.nd.hsqc_spin_sys_connected == False:
+            self.w.hsqcSpinSys.cellChanged.connect(self.hsqc_spin_sys_change)
+            self.nd.hsqc_spin_sys_connected = True
+
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim = my_autosim
         # end
 
     def plot_spc(self, hide_pre_processing=False):
@@ -4419,9 +4530,13 @@ class main_w(object):  # pragma: no cover
         self.w.hsqcMultiplet.canvas.axes.clear()
         self.w.hsqcMultiplet.canvas.draw()
         self.w.metaboliteInformation.setText('')
+        self.w.multipletAnalysisIntensity.setText('')
+        self.w.multipletAnalysisR2.setText('')
+        self.w.multipletAnalysisEchoTime.setText('')
         self.w.openWeb.clear()
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite = ''
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak = -1
+        self.w.hsqcSpinSys.setRowCount(0)
         # end remove_asssigned_metabolite
 
     def remove_last_col_row(self):
@@ -4620,6 +4735,21 @@ class main_w(object):  # pragma: no cover
         peak_label = self.nd.nmrdat[self.nd.s][self.nd.e].peak_label
         self.nd.set_peak(start_peak, end_peak, peak_label)
         # end set_datasets_exps
+
+    def set_fit_ma_chem_shifts(self):
+        hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        hsqc.fit_chemical_shifts = self.w.maFitChemShifts.isChecked()
+    # end set_fit_ma_chem_shifts
+
+    def set_ma_autosim(self):
+        hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        hsqc.autosim = self.w.maAutoSim.isChecked()
+    # end set_ma_autosim
+
+    def set_fit_ma_percentages(self):
+        hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        hsqc.fit_percentages = self.w.maFitContributions.isChecked()
+    # end set_fit_ma_percentages
 
     def select_add_compress_pre_proc(self):
         self.ginput_compress(2)
@@ -5436,7 +5566,7 @@ class main_w(object):  # pragma: no cover
         else:
             idx = 1
 
-        self.w.useSplittingCB.setCurrentIndex(idx)
+        #self.w.useSplittingCB.setCurrentIndex(idx)
         # end set_hsqc_pars7
 
     def set_hsqc_pars8(self):
@@ -5472,7 +5602,7 @@ class main_w(object):  # pragma: no cover
         else:
             idx = 1
 
-        self.w.highlightDoubleCB.setCurrentIndex(idx)
+        #self.w.highlightDoubleCB.setCurrentIndex(idx)
         # end set_hsqc_pars11
 
     def set_hsqc_pars12(self):
@@ -5481,7 +5611,7 @@ class main_w(object):  # pragma: no cover
         else:
             idx = 1
 
-        self.w.displayOverlayShiftsCB.setCurrentIndex(idx)
+        #self.w.displayOverlayShiftsCB.setCurrentIndex(idx)
         # end set_hsqc_pars12
 
     def set_hsqc_pars13(self):
@@ -5518,7 +5648,13 @@ class main_w(object):  # pragma: no cover
         self.w.hsqcSpinSys.setRowCount(len(spin_sys['c13_idx']))
         for k in range(len(spin_sys['c13_idx'])):
             idx = QTableWidgetItem(' '.join(str(e) for e in spin_sys['c13_idx'][k]))
-            offset = QTableWidgetItem("0")
+            idx_key_num = spin_sys['c13_idx'][k]
+            idx_key_str = ' '.join(str(e) for e in idx_key_num)
+            if idx_key_str in hsqc.hsqc_data[hsqc.cur_metabolite].c13_offset.keys():
+                offset = QTableWidgetItem(str(hsqc.hsqc_data[hsqc.cur_metabolite].c13_offset[idx_key_str]))
+            else:
+                offset = QTableWidgetItem("0")
+
             j_cc = QTableWidgetItem(' '.join(str(e) for e in spin_sys['j_cc'][k]))
             perc = QTableWidgetItem(str(spin_sys['contribution'][k]))
             idx.setTextAlignment(QtCore.Qt.AlignLeft)
@@ -5557,6 +5693,46 @@ class main_w(object):  # pragma: no cover
         self.cf.mode = 'light'
         self.cf.save_config()
         # end save_config
+
+    def set_ma_echo_time(self):
+        if len(self.w.multipletAnalysisEchoTime.text()) > 0:
+            echo_time = float(self.w.multipletAnalysisEchoTime.text())
+            if self.w.maApplyToAll.isChecked():
+                for k in range(len(self.nd.nmrdat[self.nd.s])):
+                    hsqc = self.nd.nmrdat[self.nd.s][k].hsqc
+                    hsqc.echo_time = echo_time
+
+            else:
+                hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+                hsqc.echo_time = echo_time
+
+        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim:
+            self.plot_metabolite_peak(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak)
+
+    # end set_ma_echo_time
+
+    def set_ma_intensity(self):
+        hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        if len(self.w.multipletAnalysisIntensity.text()) > 0:
+            intensity = float(self.w.multipletAnalysisIntensity.text())
+            hsqc.hsqc_data[hsqc.cur_metabolite].intensities[hsqc.cur_peak - 1] = intensity
+        else:
+            self.w.multipletAnalysisIntensity.setText('')
+
+    # end set_ma_intensity
+
+    def set_ma_r2(self):
+        hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        if len(self.w.multipletAnalysisR2.text()) > 0:
+            r2 = float(self.w.multipletAnalysisR2.text())
+            hsqc.hsqc_data[hsqc.cur_metabolite].r2[hsqc.cur_peak - 1] = r2
+            if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim:
+                self.plot_metabolite_peak(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak)
+
+        else:
+            self.w.multipletAnalysisR2.setText('')
+
+    # end set_ma_r2
 
     def set_noise_filtering(self):
         if (self.nd.pp.pre_proc_fill == False):
@@ -5714,7 +5890,7 @@ class main_w(object):  # pragma: no cover
                     self.nd.nmrdat[k][l].hsqc.cur_metabolite = ''
                     self.nd.nmrdat[k][l].hsqc.cur_peak = -1
 
-            self.w.fitUpToBonds.setCurrentIndex(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.n_bonds)
+            #self.w.fitUpToBonds.setCurrentIndex(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.n_bonds)
             self.w.hsqcSpinSys.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
             self.w.hsqcSpinSys.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
             self.w.hsqcSpinSys.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
@@ -5752,20 +5928,20 @@ class main_w(object):  # pragma: no cover
             self.w.jCC.textChanged.connect(self.get_hsqc_pars4)
             self.w.jCH.textChanged.connect(self.get_hsqc_pars5)
             self.w.nMax.textChanged.connect(self.get_hsqc_pars6)
-            self.w.useSplittingCB.currentIndexChanged.connect(self.get_hsqc_pars7)
-            self.w.useSplittingCB.setVisible(False)
-            self.w.label_82.setVisible(False)
+            #self.w.useSplittingCB.currentIndexChanged.connect(self.get_hsqc_pars7)
+            #self.w.useSplittingCB.setVisible(False)
+            #self.w.label_82.setVisible(False)
             self.w.tiltHsqcCB.currentIndexChanged.connect(self.get_hsqc_pars8)
             self.w.tiltHsqcCB.setVisible(False)
             self.w.label_78.setVisible(False)
             self.w.displayLibraryCB.currentIndexChanged.connect(self.get_hsqc_pars9)
             self.w.displayPickedCB.currentIndexChanged.connect(self.get_hsqc_pars10)
-            self.w.highlightDoubleCB.currentIndexChanged.connect(self.get_hsqc_pars11)
-            self.w.highlightDoubleCB.setVisible(False)
-            self.w.label_84.setVisible(False)
-            self.w.displayOverlayShiftsCB.currentIndexChanged.connect(self.get_hsqc_pars12)
-            self.w.displayOverlayShiftsCB.setVisible(False)
-            self.w.label_83.setVisible(False)
+            #self.w.highlightDoubleCB.currentIndexChanged.connect(self.get_hsqc_pars11)
+            #self.w.highlightDoubleCB.setVisible(False)
+            #self.w.label_84.setVisible(False)
+            #self.w.displayOverlayShiftsCB.currentIndexChanged.connect(self.get_hsqc_pars12)
+            #self.w.displayOverlayShiftsCB.setVisible(False)
+            #self.w.label_83.setVisible(False)
             self.w.coHsqcCB.currentIndexChanged.connect(self.get_hsqc_pars13)
             self.w.pickLocalOptCB.currentIndexChanged.connect(self.get_hsqc_pars14)
             self.w.autoscaleCB.currentIndexChanged.connect(self.get_hsqc_pars15)
@@ -5806,6 +5982,10 @@ class main_w(object):  # pragma: no cover
                 self.plot_spc()
 
             self.w.metaboliteInformation.setText('')
+            self.w.multipletAnalysisIntensity.setText('')
+            self.w.multipletAnalysisR2.setText('')
+            self.w.multipletAnalysisEchoTime.setText('')
+            self.w.hsqcSpinSys.setRowCount(0)
             self.w.nmrSpectrum.setCurrentIndex(0)
 
         # end set_hsqc_analysis
@@ -5826,6 +6006,8 @@ class main_w(object):  # pragma: no cover
         # end set_hsqc_metabolite
 
     def set_hsqc_metabolite(self):
+        my_autosim = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim = False
         self.w.openWeb.clear()
         idx = self.w.hsqcMetabolites.currentIndex().row()
         if idx == -1:
@@ -5867,6 +6049,7 @@ class main_w(object):  # pragma: no cover
             self.w.openWeb.addItem(k)
 
         self.plot_metabolite_peak(cur_peak)
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim = my_autosim
         # end set_hsqc_metabolite
 
     def set_multiplet_analysis(self):
@@ -6094,9 +6277,12 @@ class main_w(object):  # pragma: no cover
         # end setup_processing_parameters
 
     def set_up_to_bonds(self):
-        for k in range(len(self.nd.nmrdat)):
-            for l in range(len(self.nd.nmrdat[k])):
-                self.nd.nmrdat[k][l].hsqc.n_bonds = int(self.w.fitUpToBonds.currentText())
+        if len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite) == 0:
+            self.w.fitUpToBonds.setCurrentIndex(1)
+            return
+
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite].n_bonds = \
+            int(self.w.fitUpToBonds.currentText())
 
         # end set_up_to_bonds
 
