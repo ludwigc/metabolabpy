@@ -1291,7 +1291,7 @@ class NmrData:
                 fit_parameters.append(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['contribution'][k])
 
         n_fit_parameters = len(fit_parameters)
-        eval_parameters = optimize.minimize(self.fct_hsqc_1d, fit_parameters, method='Powell', options={'xtol': 1e-21, 'ftol': 1e-21})
+        eval_parameters = optimize.minimize(self.fct_hsqc_1d, fit_parameters, method='BFGS', options={'xtol': 1e-21, 'ftol': 1e-21})
         #eval_parameters = optimize.leastsq(self.fct_hsqc_1d, fit_parameters, ftol=1e-12, xtol=1e-12, maxfev=1e10)
         e_pars = np.array(eval_parameters.x).tolist()
         #e_pars_array = np.array(e_pars)
