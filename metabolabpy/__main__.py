@@ -205,7 +205,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.7.9'
+        self.__version__ = '0.7.10'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -377,6 +377,7 @@ class main_w(object):  # pragma: no cover
         self.w.expBox.setKeyboardTracking(False)
         self.w.maFitChemShifts.stateChanged.connect(self.set_fit_ma_chem_shifts)
         self.w.maFitContributions.stateChanged.connect(self.set_fit_ma_percentages)
+        self.w.doNotFitZeroPercentages.stateChanged.connect(self.set_fit_zero_percentages)
         self.w.maAutoSim.stateChanged.connect(self.set_ma_autosim)
         self.w.posCol.currentIndexChanged.connect(self.get_disp_pars1)
         self.w.negCol.currentIndexChanged.connect(self.get_disp_pars2)
@@ -4788,6 +4789,10 @@ class main_w(object):  # pragma: no cover
         hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
         hsqc.fit_percentages = self.w.maFitContributions.isChecked()
     # end set_fit_ma_percentages
+
+    def set_fit_zero_percentages(self):
+        hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        hsqc.fit_zero_percentages = not self.w.doNotFitZeroPercentages.isChecked()
 
     def select_add_compress_pre_proc(self):
         self.ginput_compress(2)

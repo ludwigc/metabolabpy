@@ -37,6 +37,7 @@ class NmrHsqc:
         self.echo_time = 1.95
         self.fit_chemical_shifts = True
         self.fit_percentages = True
+        self.fit_zero_percentages = True
         self.autosim = False
         # end __init__
 

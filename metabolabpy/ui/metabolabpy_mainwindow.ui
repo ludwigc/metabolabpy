@@ -2763,6 +2763,23 @@
                   </property>
                  </widget>
                 </item>
+                <item row="1" column="1">
+                 <widget class="QCheckBox" name="maAutoScale">
+                  <property name="text">
+                   <string>Autoscale</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="2" colspan="2">
+                 <widget class="QLineEdit" name="multipletAnalysisIntensity">
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
                 <item row="2" column="0">
                  <widget class="QLabel" name="label_83">
                   <property name="text">
@@ -2822,6 +2839,16 @@
                   </property>
                  </widget>
                 </item>
+                <item row="6" column="3">
+                 <widget class="QCheckBox" name="maAutoSim">
+                  <property name="text">
+                   <string>Autosim</string>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
                 <item row="7" column="0" colspan="3">
                  <widget class="QCheckBox" name="maFitContributions">
                   <property name="text">
@@ -2840,12 +2867,9 @@
                  </widget>
                 </item>
                 <item row="8" column="0" colspan="3">
-                 <widget class="QCheckBox" name="maAutoSim">
+                 <widget class="QCheckBox" name="doNotFitZeroPercentages">
                   <property name="text">
-                   <string>Autosim</string>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
+                   <string>Do not fit 0% contributions</string>
                   </property>
                  </widget>
                 </item>
@@ -2853,23 +2877,6 @@
                  <widget class="QPushButton" name="maFitButton">
                   <property name="text">
                    <string>Fit</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="2" colspan="2">
-                 <widget class="QLineEdit" name="multipletAnalysisIntensity">
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QCheckBox" name="maAutoScale">
-                  <property name="text">
-                   <string>Autoscale</string>
-                  </property>
-                  <property name="checked">
-                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
