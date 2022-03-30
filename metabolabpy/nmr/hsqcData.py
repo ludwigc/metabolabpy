@@ -185,7 +185,7 @@ class HsqcData:
         self.r2 = []
         for k in range(len(self.h1_shifts)):
             self.intensities.append(1)
-            self.r2.append(0)
+            self.r2.append(4.0)
 
         idx1 = metabolite_information.find('C13Intensities')
         mi = metabolite_information[idx1:]

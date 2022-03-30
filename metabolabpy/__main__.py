@@ -205,7 +205,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.7.10'
+        self.__version__ = '0.7.11'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -2730,8 +2730,7 @@ class main_w(object):  # pragma: no cover
                 self.xdata[0] = new_max[0]
                 self.ydata[0] = new_max[1]
 
-            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite].h1_picked[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak - 1].append(self.xdata[0])
-            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite].c13_picked[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak - 1].append(self.ydata[0])
+            self.nd.nmrdat[self.nd.s][self.nd.e].add_hsqc_peak(self.xdata[0], self.ydata[0])
             self.xdata = []
             self.ydata = []
             self.plot_metabolite_peak(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak)
@@ -3386,39 +3385,27 @@ class main_w(object):  # pragma: no cover
         # end load_light_mode
 
     def ma_fit_hsqc_1d(self):
-        #if self.w.maFitChemShifts.isChecked() and self.w.maFitContributions.isChecked():
-        #    hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
-        #    cont = hsqc.hsqc_data[hsqc.cur_metabolite].spin_systems[hsqc.cur_peak - 1]['contribution']
-        #    c2 = np.array(cont)
-        #    if np.abs(c2 - 100/len(c2)).sum() == 0.0:
-        #        hsqc.fit_chemical_shifts = True
-        #        hsqc.fit_percentages = False
-        #        self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_1d()
-        #        hsqc.fit_percentages = True
-        #        hsqc.fit_chemical_shifts = False
-        #        self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_1d()
-        #        hsqc.fit_chemical_shifts = True
-        #
-        #    else:
-        #        hsqc.fit_percentages = True
-        #        hsqc.fit_chemical_shifts = False
-        #        self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_1d()
-        #        hsqc.fit_chemical_shifts = True
-        #        hsqc.fit_percentages = False
-        #        self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_1d()
-        #        hsqc.fit_percentages = True
-        #        hsqc.fit_chemical_shifts = False
-        #        self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_1d()
-        #        hsqc.fit_chemical_shifts = True
-        #
-        #else:
-        #    self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_1d()
+        fit_again_counter = 0
+        auto_scale = self.w.maAutoScale.isChecked()
+        if self.w.maAutoScale.isChecked():
+            self.w.maAutoScale.setChecked(False)
+
         hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
         if hsqc.hsqc_data[hsqc.cur_metabolite].spin_systems[hsqc.cur_peak - 1]['contribution'][0] == 100.0:
             self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_1d()
 
         self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_1d()
+        while self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_again:
+            if fit_again_counter < 3:
+                fit_again_counter += 1
+                print("self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_again[iteration: {}]: {}".format(fit_again_counter, self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_again))
+                self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_again = False
+                self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_1d()
+            else:
+                self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_again = False
+
         #self.hsqc_spin_sys_change()
+        self.w.maAutoScale.setChecked(auto_scale)
         self.ma_sim_hsqc_1d()
         # end ma_fit_hsqc_1d
 

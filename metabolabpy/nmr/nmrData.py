@@ -15,6 +15,7 @@ from metabolabpy.nmr import apcbc
 import metabolabpy.__init__ as ml_version
 from metabolabpy.nmr import nmrHsqc
 import sys
+
 try:
     import pygamma as pg
 except:
@@ -22,7 +23,6 @@ except:
 
 
 class NmrData:
-
     projected_j_res: bool
 
     def __init__(self):
@@ -84,9 +84,11 @@ class NmrData:
         self.yst = []
         self.xss = []
         self.yss = []
+        self.offset = 300.0
         self.assigned_text = []
         self.library_text = []
         self.metabolite_text = []
+        self.fit_hsqc_again = False
         if 'pygamma' in sys.modules:
             self.has_pg = True
         else:
@@ -138,6 +140,15 @@ class NmrData:
         acq_str += "temperature          [K]      " + "% 9.2f\n" % a.temperature
         print(acq_str)
         # end set_acq_pars
+
+    def add_hsqc_peak(self, xdata=[], ydata=[]):
+        self.hsqc.hsqc_data[self.hsqc.cur_metabolite].h1_picked[self.hsqc.cur_peak - 1].append(xdata)
+        self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1].append(ydata)
+        for k in range(len(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_shifts'])):
+            self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_shifts'][k][0] = \
+                np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1])
+
+    # end add_hsqc_peak
 
     def add_peak(self, start_end=np.array([], dtype='float64'), peak_label=''):
         if len(start_end) > 0:
@@ -197,7 +208,7 @@ class NmrData:
     def add_tmsp(self, m0=1, r2=1):
         npts = len(self.spc[0])
         tsp_frq = 2 * math.pi * self.ref_point[0] / npts - math.pi
-        t = np.linspace(0, npts-1, npts);
+        t = np.linspace(0, npts - 1, npts);
         tsp_fid = m0 * np.exp(t * (1j * tsp_frq - r2));
         spc = fftshift(fft(tsp_fid));
         self.spc[0] += spc.real
@@ -612,12 +623,13 @@ class NmrData:
         if len(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1]) > 0:
             for k in range(len(c13_idx)):
                 chem_shift[k][0] = np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak \
-                    - 1]) + c13_offset[k] / 1000.0
+                                    - 1]) + c13_offset[k] / 1000.0
 
         j_cc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['j_cc']
         sys = pg.spin_system(sum(c13_nc[idx]))
         sys.Omega(self.acq.sfo2)
         for k in range(len(c13_nc[idx])):
+            #print('chem_shift[idx][k]: {}'.format(chem_shift[idx][k]))
             sys.PPM(k, chem_shift[idx][k])
 
         for k in range(len(j_cc[idx])):
@@ -703,9 +715,9 @@ class NmrData:
     def pick_local_opt(self, start=[0, 0]):
         start_h1 = len(self.spc[0]) - self.ppm2points(start[0], 0) - 1
         start_c13 = len(self.spc) - self.ppm2points(start[1], 1) - 1
-        check_matrix = np.array([[[1,1],[0,1],[-1,1]],[[1,0],[0,0],[-1,0]],[[1,-1],[0,-1],[-1,-1]]])
+        check_matrix = np.array([[[1, 1], [0, 1], [-1, 1]], [[1, 0], [0, 0], [-1, 0]], [[1, -1], [0, -1], [-1, -1]]])
         local_spc = np.array([[]])
-        local_spc.resize(3,3)
+        local_spc.resize(3, 3)
         for k in range(3):
             for l in range(3):
                 local_spc[k][l] = self.spc[start_c13 + check_matrix[k][l][0]][start_h1 + check_matrix[k][l][1]].real
@@ -772,7 +784,7 @@ class NmrData:
 
             npts = int(len(self.spc))
 
-        #points = np.round(((ppm - self.ref_shift[dim]) * (sfo / sw) + self.ref_point[dim] / (npts - 1)) * (npts - 1))
+        # points = np.round(((ppm - self.ref_shift[dim]) * (sfo / sw) + self.ref_point[dim] / (npts - 1)) * (npts - 1))
         points = np.round(((ppm - self.ref_shift[dim]) * (sfo / sw) + self.ref_point[dim] / (npts - 1)) * (npts - 1))
         return points.astype(int)
         # end ppm2points
@@ -969,6 +981,9 @@ class NmrData:
         self.proc.mult_factor = [1, 1]
         self.proc.n_points[0] = len(self.spc[0])
         self.proc.n_points[1] = len(self.spc)
+        if self.acq.sw[1] == 0.0:
+            self.acq.sw[1] = self.acq.sw_h[1] / self.acq.sfo2
+
         self.calc_ppm()
         # end read_pipe_2d
 
@@ -1062,7 +1077,7 @@ class NmrData:
                 self.outd = fid.read()
                 fid.close()
 
-            self.acq.sfo2 = self.acq.bf2 + self.acq.o2/1000000.0 #self.proc.sf[1]
+            self.acq.sfo2 = self.acq.bf2 + self.acq.o2 / 1000000.0  # self.proc.sf[1]
             if self.proc.axis_nucleus[1] != 'off':
                 self.display.y_label = self.proc.axis_nucleus[1]
 
@@ -1244,19 +1259,56 @@ class NmrData:
         # end set_window_function
 
     def sim_hsqc_1d(self):
+        sim_spc1 = np.array([], dtype=complex)
         sim_spc = np.array([], dtype=complex)
         n_points = self.proc.n_points[1]
         c13_nc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_nc']
         perc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['contribution']
         n_spin_sys = len(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_shifts'])
         intensity = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].intensities[self.hsqc.cur_peak - 1]
-        offset = ((self.proc.n_points[1] - self.ref_point[1])*self.acq.sw[1] / self.proc.n_points[1] + self.ref_shift[1] - self.acq.sw[1]) * self.acq.sfo2
+        ref_shift2 = np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1])
+        ref_point2 = n_points - self.ppm2points(ref_shift2, 1) - 1
+        offset = (ref_point2 * (self.proc.sw_h[1] / self.acq.sfo2) / self.proc.n_points[1] + ref_shift2 - self.proc.sw_h[1] / self.acq.sfo2) * self.acq.sfo2
+        #print('sim: ref_shift2: {}, ref_point2: {}, offset: {}'.format(ref_shift2, ref_point2, offset))
         sim_spc.resize(1, self.proc.n_points[1])
-        for k in range(n_spin_sys):
-            sys = self.make_hsqc_spin_sys(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset'], k)
-            sys.offsetShifts(offset)
-            sim_spc[0] += intensity * self.c13spc1d(sys, perc[k]) / sum(c13_nc[k])
+        c13_centre = np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1])
+        if self.hsqc.autoscale_j == True:
+            scale = self.hsqc.j_scale
+        else:
+            scale = 1.0
 
+        c13_offset = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset']
+        c13_beg = self.proc.n_points[1] - self.ppm2points(c13_centre + self.hsqc.range_c * scale) - 1
+        c13_end = self.proc.n_points[1] - self.ppm2points(c13_centre - self.hsqc.range_c * scale) - 1
+        n_points = 2 ** math.ceil(math.log2(abs(c13_beg - c13_end)) + 1)
+        c13_centre_points = self.proc.n_points[1] - self.ppm2points(c13_centre, 1) - 1
+        c13_beg = c13_centre_points - n_points - 1
+        c13_end = c13_centre_points + n_points - 1
+        c13_range = range(c13_centre_points - int(n_points / 2), c13_centre_points + int(n_points / 2))
+        c13_beg_ppm = self.points2ppm(self.proc.n_points[1] - np.min([c13_range[0], c13_range[-1]]) - 1, 1)
+        c13_end_ppm = self.points2ppm(self.proc.n_points[1] - np.max([c13_range[0], c13_range[-1]]) - 1, 1)
+        # c13_midpoint = self.points2ppm(self.proc.n_points[1] - int(np.round(np.mean([c13_range[0], c13_range[-1]]))) - 1, 1)
+        c13_nc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_nc']
+        n_spin_sys = len(
+            self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_shifts'])
+        ref_shift2 = self.ppm2[
+            c13_range[0]]  # np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1])
+        ref_point2 = 0  # n_points - self.ppm2points(ref_shift2, 1) - 1
+        sw = abs(c13_beg_ppm - c13_end_ppm)
+        offset = (ref_point2 * sw / (2 * n_points) + ref_shift2 - sw) * self.acq.sfo2
+        sim_spc1.resize(1, n_points)
+        for k in range(n_spin_sys):
+            sys = self.make_hsqc_spin_sys(c13_offset, k)
+            sys.offsetShifts(offset)
+            sim_spc1[0] += intensity * self.c13spc1d(sys, perc[k], angle=90.0, dly_n=0.0,
+                                                    c13_range=[c13_range[0], c13_range[-1]],
+                                                    c13_sw=[c13_beg_ppm, c13_end_ppm]) / sum(c13_nc[k])
+
+        #for k in range(n_spin_sys):
+        #    sys = self.make_hsqc_spin_sys(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset'], k)
+        #    sys.offsetShifts(offset)
+        #    sim_spc[0] += intensity * self.c13spc1d(sys, perc[k]) / sum(c13_nc[k])
+        sim_spc[0][c13_range] = sim_spc1[0]
         if intensity == 1.0:
             spc_max = np.array([], dtype=complex)
             spin_number = self.hsqc.cur_peak
@@ -1264,31 +1316,47 @@ class NmrData:
             h1_shift = hd.h1_shifts[spin_number - 1]
             max_idx = np.where(sim_spc[0] == np.max(sim_spc[0]))[0][0]
             h1_picked = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].h1_picked
+            c13_picked = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked
             if len(h1_picked[spin_number - 1]) > 0:
                 h1_pos = np.mean(h1_picked[spin_number - 1])
             else:
                 h1_pos = h1_shift
 
-            h1_pts = len(self.spc[0]) - self.ppm2points(h1_pos, 0) - 1
-            spc_max.resize(len(sim_spc[0]))
-            for dd in range(len(sim_spc[0])):
-                spc_max[dd] = self.spc[dd][h1_pts]
+            if len(c13_picked[spin_number - 1]) > 0:
+                c13_pos = np.mean(c13_picked[spin_number - 1])
+            else:
+                c13_pos = c13_shift
 
-            intensity = spc_max[max_idx].real / sim_spc[0][max_idx].real
+            h1_pts = len(self.spc[0]) - self.ppm2points(h1_pos, 0) - 1
+            c13_pts = len(self.spc) - self.ppm2points(c13_pos, 1) - 1
+            #c13_ptsa = len(self.spc) - self.ppm2points(c13_pos + self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset'][0] / 1000.0, 1) - 1
+            # spc_max.resize(len(sim_spc[0]))
+            # for dd in range(len(sim_spc[0])):
+            #    spc_max[dd] = self.spc[dd][h1_pts]
+            #
+            intensity = abs(self.spc[c13_pts][h1_pts].real / sim_spc[0][c13_pts].real)
             self.hsqc.hsqc_data[self.hsqc.cur_metabolite].intensities[self.hsqc.cur_peak - 1] = intensity
 
         self.hsqc.hsqc_data[self.hsqc.cur_metabolite].sim_spc[self.hsqc.cur_peak - 1] = sim_spc[0].real
         # end sim_hsqc_1d
 
     def fit_hsqc_1d(self):
+        autosim = self.hsqc.autosim
+        self.hsqc.autosim = False
+        intensity = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].intensities[self.hsqc.cur_peak - 1]
         fit_parameters = []
         c13_offset = []
         contribution = []
-        for k in range(len(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset'])):
-            c13_offset.append(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset'][k])
+        fit_parameters.append(intensity)
+        for k in range(
+                len(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset'])):
+            c13_offset.append(
+                self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset'][k])
 
-        for k in range(len(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset'])):
-            contribution.append(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['contribution'][k])
+        for k in range(
+                len(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset'])):
+            contribution.append(
+                self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['contribution'][k])
 
         if self.hsqc.fit_zero_percentages == False:
             c13_offset = np.array(c13_offset)[np.where(np.array(contribution) != 0)]
@@ -1302,51 +1370,69 @@ class NmrData:
             for k in range(len(contribution)):
                 fit_parameters.append(contribution[k])
 
-        n_fit_parameters = len(fit_parameters)
-        eval_parameters = optimize.minimize(self.fct_hsqc_1d, fit_parameters, method='BFGS', options={'gtol': 1e-10, 'maxiter': 1e12})
-        #eval_parameters = optimize.leastsq(self.fct_hsqc_1d, fit_parameters, ftol=1e-12, xtol=1e-12, maxfev=1e10)
+        eval_parameters = optimize.minimize(self.fct_hsqc_1d, fit_parameters, method='Powell')
+        # eval_parameters = optimize.leastsq(self.fct_hsqc_1d, fit_parameters, ftol=1e-12, xtol=1e-12, maxfev=1e10)
         e_pars = np.array(eval_parameters.x).tolist()
-        #e_pars_array = np.array(e_pars)
-        #e_pars_array[np.where(e_pars_array < 0)] = 0
-        #e_pars = eval_parameters
+        intensity = e_pars.pop(0)
+        n_fit_parameters = len(e_pars)
+        self.hsqc.hsqc_data[self.hsqc.cur_metabolite].intensities[self.hsqc.cur_peak - 1] = intensity
         if self.hsqc.fit_chemical_shifts and self.hsqc.fit_percentages:
-            contribution = ( np.array(e_pars[int(n_fit_parameters/2):]) * 100.0 / np.array(e_pars[int(n_fit_parameters/2):]).sum()).tolist()
+            contribution = (np.array(e_pars[int(n_fit_parameters / 2):]) * 100.0 / np.array(
+                e_pars[int(n_fit_parameters / 2):]).sum()).tolist()
             for k in range(len(contribution)):
                 if contribution[k] < 0:
                     contribution[k] = 0
 
-            contribution = ( np.array(contribution) * 100.0 / np.array(contribution).sum()).tolist()
+            contribution = (np.array(contribution) * 100.0 / np.array(contribution).sum()).tolist()
             for k in range(len(contribution)):
                 contribution[k] = round(contribution[k], 3)
 
-            c13_offset = e_pars[:int(n_fit_parameters/2)]
+            c13_offset = e_pars[:int(n_fit_parameters / 2)]
             for k in range(len(c13_offset)):
-                if c13_offset[k] > 100 or c13_offset[k] < -100:
+                if c13_offset[k] > 50 or c13_offset[k] < -50:
                     c13_offset[k] = 0
+                    contribution[k] = 0
+                    self.fit_hsqc_again = True
 
                 if contribution[k] == 0:
                     c13_offset[k] = 0
 
                 c13_offset[k] = round(c13_offset[k], 2)
 
+            contribution = (np.array(contribution) * 100.0 / np.array(contribution).sum()).tolist()
+            for k in range(len(contribution)):
+                contribution[k] = round(contribution[k], 3)
+
             if self.hsqc.fit_zero_percentages:
-                self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset'] = c13_offset
-                self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['contribution'] = contribution
-                for k in range(len(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_idx'])):
-                    idx = ' '.join(str(e) for e in self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_idx'][k])
+                self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1][
+                    'c13_offset'] = c13_offset
+                self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1][
+                    'contribution'] = contribution
+                for k in range(len(
+                        self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_idx'])):
+                    idx = ' '.join(str(e) for e in
+                                   self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1][
+                                       'c13_idx'][k])
                     self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_offset[idx] = c13_offset[k]
 
             else:
-                c13_offset2 = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset']
-                contribution2 = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['contribution']
+                c13_offset2 = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1][
+                    'c13_offset']
+                contribution2 = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1][
+                    'contribution']
                 contribution2 = np.array(contribution2)
                 c13_offset2 = np.array(c13_offset2)
                 c13_offset2[np.where(contribution2 != 0)] = np.array(c13_offset)
                 contribution2[np.where(contribution2 != 0)] = np.array(contribution)
-                self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset'] = c13_offset2.tolist()
-                self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['contribution'] = contribution2.tolist()
-                for k in range(len(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_idx'])):
-                    idx = ' '.join(str(e) for e in self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_idx'][k])
+                self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1][
+                    'c13_offset'] = c13_offset2.tolist()
+                self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1][
+                    'contribution'] = contribution2.tolist()
+                for k in range(len(
+                        self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_idx'])):
+                    idx = ' '.join(str(e) for e in
+                                   self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1][
+                                       'c13_idx'][k])
                     self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_offset[idx] = c13_offset2[k]
 
 
@@ -1355,47 +1441,56 @@ class NmrData:
                 c13_offset = e_pars
 
             else:
-                c13_offset = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset']
+                c13_offset = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1][
+                    'c13_offset']
                 c13_offset = np.array(c13_offset)
-                contribution = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['contribution']
+                contribution = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1][
+                    'contribution']
                 contribution = np.array(contribution)
                 c13_offset[np.where(contribution != 0)] = np.array(e_pars)
                 c13_offset = c13_offset.tolist()
 
             for k in range(len(c13_offset)):
-                if c13_offset[k] > 100 or c13_offset[k] < -100:
+                if c13_offset[k] > 50 or c13_offset[k] < -50:
                     c13_offset[k] = 0
 
-                if self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['contribution'][k] < 0.8:
+                if self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['contribution'][
+                    k] < 0.8:
                     c13_offset[k] = 0
 
                 c13_offset[k] = round(c13_offset[k], 2)
 
-            self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset'] = c13_offset
-            for k in range(len(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_idx'])):
-                idx = ' '.join(str(e) for e in self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_idx'][k])
+            self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1][
+                'c13_offset'] = c13_offset
+            for k in range(
+                    len(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_idx'])):
+                idx = ' '.join(str(e) for e in
+                               self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1][
+                                   'c13_idx'][k])
                 self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_offset[idx] = c13_offset[k]
 
         else:
             if self.hsqc.fit_zero_percentages:
-                contribution = ( np.array(e_pars) * 100.0 / np.array(e_pars).sum()).tolist()
+                contribution = (np.array(e_pars) * 100.0 / np.array(e_pars).sum()).tolist()
             else:
-                contribution2 = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['contribution']
+                contribution2 = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1][
+                    'contribution']
                 contribution2 = np.array(contribution2)
                 contribution2[np.where(contribution2 != 0)] = np.array(e_pars)
-                contribution = ( contribution2 * 100.0 / contribution2.sum() ).tolist()
-
+                contribution = (contribution2 * 100.0 / contribution2.sum()).tolist()
 
             for k in range(len(contribution)):
                 if contribution[k] < 0:
                     contribution[k] = 0
 
-            contribution = ( np.array(contribution) * 100.0 / np.array(contribution).sum()).tolist()
+            contribution = (np.array(contribution) * 100.0 / np.array(contribution).sum()).tolist()
             for k in range(len(contribution)):
                 contribution[k] = round(contribution[k], 3)
 
-            self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['contribution'] = contribution
+            self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1][
+                'contribution'] = contribution
 
+        self.hsqc.autosim = autosim
         # end fit_hsqc_1d
 
     def fct_hsqc_1d(self, fit_parameters=[]):
@@ -1403,18 +1498,24 @@ class NmrData:
         if n_fit_pars == 0:
             return []
 
+        intensity = fit_parameters[0]
+        fit_parameters = fit_parameters[1:]
+        n_fit_pars = len(fit_parameters)
+        #print(fit_parameters)
         if self.hsqc.fit_chemical_shifts and self.hsqc.fit_percentages:
             if self.hsqc.fit_zero_percentages:
-                c13_offset = fit_parameters[:int(n_fit_pars/2)]
-                perc = fit_parameters[int(n_fit_pars/2):]
+                c13_offset = fit_parameters[:int(n_fit_pars / 2)]
+                perc = fit_parameters[int(n_fit_pars / 2):]
             else:
-                perc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['contribution']
-                c13_offset = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset']
+                perc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1][
+                    'contribution']
+                c13_offset = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1][
+                    'c13_offset']
                 c13_offset = np.array(c13_offset)
-                c13_offset[np.where(np.array(perc) != 0)] = np.array(fit_parameters[:int(n_fit_pars/2)])
+                c13_offset[np.where(np.array(perc) != 0)] = np.array(fit_parameters[:int(n_fit_pars / 2)])
                 c13_offset = c13_offset.tolist()
                 perc = np.array(perc)
-                perc[np.where(perc != 0)] = np.array(fit_parameters[int(n_fit_pars/2):])
+                perc[np.where(perc != 0)] = np.array(fit_parameters[int(n_fit_pars / 2):])
                 perc = perc.tolist()
 
         elif self.hsqc.fit_chemical_shifts:
@@ -1422,56 +1523,55 @@ class NmrData:
             if self.hsqc.fit_zero_percentages:
                 c13_offset = fit_parameters
             else:
-                c13_offset = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset']
+                c13_offset = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1][
+                    'c13_offset']
                 c13_offset = np.array(c13_offset)
                 c13_offset[np.where(np.array(perc) != 0)] = np.array(fit_parameters)
                 c13_offset = c13_offset.tolist()
 
         else:
-            c13_offset = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset']
+            c13_offset = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1][
+                'c13_offset']
             if self.hsqc.fit_zero_percentages:
                 perc = fit_parameters
             else:
-                perc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['contribution']
+                perc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1][
+                    'contribution']
                 perc = np.array(perc)
                 perc[np.where(perc != 0)] = np.array(fit_parameters)
                 perc = perc.tolist()
 
+        perc = np.abs(np.array(perc)).tolist()
         sim_spc = np.array([], dtype=complex)
-        n_points = self.proc.n_points[1]
-        c13_nc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_nc']
-        n_spin_sys = len(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_shifts'])
-        intensity = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].intensities[self.hsqc.cur_peak - 1]
-        offset = ((self.proc.n_points[1] - self.ref_point[1])*self.acq.sw[1] / self.proc.n_points[1] + self.ref_shift[1] - self.acq.sw[1]) * self.acq.sfo2
-        sim_spc.resize(1, self.proc.n_points[1])
-        for k in range(n_spin_sys):
-            sys = self.make_hsqc_spin_sys(c13_offset, k)
-            sys.offsetShifts(offset)
-            sim_spc[0] += intensity * self.c13spc1d(sys, perc[k]) / sum(c13_nc[k])
-
-        spc_max = np.array([], dtype=complex)
-        spin_number = self.hsqc.cur_peak
-        hd = self.hsqc.hsqc_data[self.hsqc.cur_metabolite]
-        max_idx = np.where(sim_spc[0] == np.max(sim_spc[0]))[0][0]
-        h1_shift = hd.h1_shifts[spin_number - 1]
-        h1_shift = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].h1_shifts[self.hsqc.cur_peak -1]
-        c13_shift = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_shifts[hd.h1_index[self.hsqc.cur_peak - 1] - 1]
-        h1_picked = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].h1_picked[self.hsqc.cur_peak -1]
-        c13_picked = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1]
-        if len(c13_picked) > 0:
-            h1_centre = np.mean(h1_picked)
-            c13_centre = np.mean(c13_picked)
-        else:
-            h1_centre = h1_shift
-            c13_centre = c13_shift
-
+        c13_centre = np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1])
         if self.hsqc.autoscale_j == True:
             scale = self.hsqc.j_scale
         else:
             scale = 1.0
 
-        c13_beg = c13_centre + self.hsqc.range_c * scale
-        c13_end = c13_centre - self.hsqc.range_c * scale
+        c13_beg = self.proc.n_points[1] - self.ppm2points(c13_centre + self.hsqc.range_c*scale) - 1
+        c13_end = self.proc.n_points[1] - self.ppm2points(c13_centre - self.hsqc.range_c*scale) - 1
+        n_points = 2 ** math.ceil(math.log2(abs(c13_beg - c13_end)) + 1)
+        c13_centre_points = self.proc.n_points[1] - self.ppm2points(c13_centre, 1) - 1
+        c13_beg = c13_centre_points - n_points - 1
+        c13_end = c13_centre_points + n_points - 1
+        c13_range = range(c13_centre_points - int(n_points/2), c13_centre_points + int(n_points/2))
+        c13_beg_ppm = self.points2ppm(self.proc.n_points[1] - np.min([c13_range[0], c13_range[-1]]) - 1, 1)
+        c13_end_ppm = self.points2ppm(self.proc.n_points[1] - np.max([c13_range[0], c13_range[-1]]) - 1, 1)
+        #c13_midpoint = self.points2ppm(self.proc.n_points[1] - int(np.round(np.mean([c13_range[0], c13_range[-1]]))) - 1, 1)
+        c13_nc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_nc']
+        n_spin_sys = len(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_shifts'])
+        ref_shift2 = self.ppm2[c13_range[0]] #np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1])
+        ref_point2 = 0 #n_points - self.ppm2points(ref_shift2, 1) - 1
+        sw = abs(c13_beg_ppm - c13_end_ppm)
+        offset = (ref_point2 * sw / (2*n_points) + ref_shift2 - sw) * self.acq.sfo2
+        sim_spc.resize(1,n_points)
+        for k in range(n_spin_sys):
+            sys = self.make_hsqc_spin_sys(c13_offset, k)
+            sys.offsetShifts(offset)
+            sim_spc[0] += intensity * self.c13spc1d(sys, perc[k], angle=90.0, dly_n=0.0, c13_range=[c13_range[0], c13_range[-1]], c13_sw=[c13_beg_ppm, c13_end_ppm]) / sum(c13_nc[k])
+
+        spin_number = self.hsqc.cur_peak
         h1_picked = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].h1_picked
         if len(h1_picked[spin_number - 1]) > 0:
             h1_pos = np.mean(h1_picked[spin_number - 1])
@@ -1479,31 +1579,31 @@ class NmrData:
             h1_pos = h1_shift
 
         h1_pts = len(self.spc[0]) - self.ppm2points(h1_pos, 0) - 1
-        spc_max.resize(len(sim_spc[0]))
-        for dd in range(len(sim_spc[0])):
-            spc_max[dd] = self.spc[dd][h1_pts]
+        spc2 = np.array([])
+        spc2.resize(2*n_points)
+        #print(c13_range)
+        for k in range(len(c13_range)):
+            spc2[k] = self.spc[c13_range[k]][h1_pts].real
 
-        intensity = spc_max[max_idx].real / sim_spc[0][max_idx].real
-        #self.hsqc.hsqc_data[self.hsqc.cur_metabolite].intensities[self.hsqc.cur_peak - 1] = intensity
-        #self.hsqc.hsqc_data[self.hsqc.cur_metabolite].sim_spc[self.hsqc.cur_peak - 1] = sim_spc[0].real
-        c13_pts = len(self.spc)
-        c13_pts1 = c13_pts - self.ppm2points(c13_beg, 1) - 1
-        c13_pts2 = c13_pts - self.ppm2points(c13_end, 1) - 1
-        c13_range = range(c13_pts1, c13_pts2)
-        #print("h1_pts: {}, c13_range: {}".format(h1_pts, c13_range))
-        h1_picked = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].h1_picked[self.hsqc.cur_peak - 1]
-        h1_pos = np.mean(h1_picked)
-        h1_pts = len(self.spc[0]) - self.ppm2points(h1_pos, 0) - 1
         err = []
-        for k in c13_range:
-            err.append((sim_spc[0][k].real * intensity - self.spc[k][h1_pts.real]) ** 2)
-            #err.append((sim_spc[0][k].real/sim_spc[0][k].real.max() - self.spc[k][h1_pts].real/self.spc[k][h1_pts].real.max()) ** 2)
+        for k in range(len(c13_range)):
+            err.append((sim_spc[0][k].real * intensity - self.spc[c13_range[k]][h1_pts].real) ** 2)
 
         return np.array(err).sum()
         # end fct_hsqc_1d
 
-    def c13spc1d(self, sys, perc=100.0, angle=90.0, dly_n=0.0):
+    def c13spc1d(self, sys, perc=100.0, angle=90.0, dly_n=0.0, c13_range=[], c13_sw=[]):
         jres = self.acq.cnst[18]
+        if len(c13_range) == 0:
+            sw = self.acq.sw_h[1]
+            td = int(self.acq.n_data_points[1] * 2)
+            npts = self.proc.n_points[1]
+        else:
+            npts = np.max(c13_range) - np.min(c13_range) + 1
+            sw = (np.max(c13_sw) - np.min(c13_sw))*self.acq.sfo2
+            td = int(npts / (2 * jres))
+            #print("npts: {}, sw: {}, td: {}".format(npts, sw, td))
+
         jres_n = 1.0
         for k in range(0, sys.spins() - 1):
             for l in range(k + 1, sys.spins()):
@@ -1513,9 +1613,6 @@ class NmrData:
                 else:
                     sys.J(k, l, sys.J(k, l) * jres)
 
-        sw = self.acq.sw_h[1]
-        td = int(self.acq.n_data_points[1] * 2)
-        npts = self.proc.n_points[1]
         r2 = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].r2[self.hsqc.cur_peak - 1]
         echo_time = self.hsqc.echo_time / 1000.0
         dt = 1.0 / sw
@@ -1539,21 +1636,21 @@ class NmrData:
         spc2 = np.array([], dtype=complex)
         spc2.resize(1, npts)
         for k in range(td):
-            spc1[0][k] = fid.getRe(k) - 1j*fid.getIm(k)
+            spc1[0][k] = fid.getRe(k) - 1j * fid.getIm(k)
             spc1[0][k] *= np.exp(-r2 * dt * k)
 
-        #print("maxFID: {}".format(np.max(spc1[0])))
+        # print("maxFID: {}".format(np.max(spc1[0])))
         spc1 = self.wdwf_qsin(spc1, angle)
         for k in range(td):
             spc[0][k] = spc1[0][k]
 
         spc = np.fft.fft(spc[0])
-        #print("mmax: {}!".format(np.max(spc3.real)))
+        # print("mmax: {}!".format(np.max(spc3.real)))
         for k in range(npts):
             spc2[0][k] = spc[k] - spc[0]
 
         spc2[0] = perc * spc2[0].real / 100.0
-        #print("len(spc2): {}, len(spc2[0]): {}".format(len(spc2), len(spc2[0])))
+        # print("len(spc2): {}, len(spc2[0]): {}".format(len(spc2), len(spc2[0])))
         return spc2[0].real
         # end c13spc1d
 

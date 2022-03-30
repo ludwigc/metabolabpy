@@ -146,13 +146,17 @@ class NmrHsqc:
                             c13_idx2.append(used2[k][l + 1])
                             c13_nc2.append(self.hsqc_data[self.cur_metabolite].c13_nc[l + 1])
                             j_cc2.append(self.hsqc_data[self.cur_metabolite].j_cc[idx0])
-                            c13_shifts2.append(self.hsqc_data[self.cur_metabolite].c13_shifts[self.hsqc_data[self.cur_metabolite].h1_index[self.cur_peak - 1] - 1])
+                            c13_shifts2.append(self.hsqc_data[self.cur_metabolite].c13_shifts[c13_idx2[l + 1] - 1])
 
                 if len(c13_idx2) > 0 and len(j_cc2) > 0 and c13_idx2 not in c13_idx:
                     c13_idx.append(c13_idx2)
                     j_cc.append(j_cc2)
                     c13_nc0.append(c13_nc2)
                     c13_shifts.append(c13_shifts2)
+
+        if len(self.hsqc_data[self.cur_metabolite].c13_picked[self.cur_peak - 1]) > 0:
+            for k in range(len(c13_shifts)):
+                c13_shifts[k][0] = np.mean(self.hsqc_data[self.cur_metabolite].c13_picked[self.cur_peak - 1])
 
         self.hsqc_data[self.cur_metabolite].spin_systems[self.cur_peak - 1]['c13_idx'] = c13_idx
         self.hsqc_data[self.cur_metabolite].spin_systems[self.cur_peak - 1]['j_cc'] = j_cc
