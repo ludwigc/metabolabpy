@@ -131,7 +131,7 @@ class NmrHsqc:
                             if ddd1[m] == True and ddd2[m] == True:
                                 if abs(self.hsqc_data[self.cur_metabolite].j_nuc1[m] - self.hsqc_data[self.cur_metabolite].j_nuc2[m]) <= self.hsqc_data[self.cur_metabolite].n_bonds:
                                     has_j = True
-                                    idx0 = m
+                                    idx0 = min(m, len(self.hsqc_data[self.cur_metabolite].c13_nc) - 1)
 
                         if has_j:
                             if len(c13_idx2) == 0:

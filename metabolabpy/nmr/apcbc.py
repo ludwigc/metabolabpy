@@ -70,11 +70,11 @@ class Apcbc:
 
     def calc_line(self, spc, xaxis):
         x1 = np.mean(xaxis[self.start_pts:self.end_pts])
-        x2 = np.mean(xaxis[-self.end_pts:-self.start_pts])
+        x2 = np.mean(xaxis[-(self.end_pts + 1):-(self.start_pts + 1)])
         y1r = np.mean(spc.real[self.start_pts:self.end_pts])
-        y2r = np.mean(spc.real[-self.end_pts:-self.start_pts])
+        y2r = np.mean(spc.real[-(self.end_pts + 1):-(self.start_pts + 1)])
         y1i = np.mean(spc.imag[self.start_pts:self.end_pts])
-        y2i = np.mean(spc.imag[-self.end_pts:-self.start_pts])
+        y2i = np.mean(spc.imag[-(self.end_pts + 1):-(self.start_pts + 1)])
         slope_r = (y2r - y1r) / (x2 - x1)
         slope_i = (y2i - y1i) / (x2 - x1)
         line_r = slope_r * (xaxis - x1) + y1r

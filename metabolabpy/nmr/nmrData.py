@@ -273,6 +273,7 @@ class NmrData:
         spc /= scale_fact
         xaxis = np.linspace(-self.apc.n_max, self.apc.n_max, self.apc.npts)
         par_eval = self.apc.fit_baseline(spc, xaxis)
+        print("n_max: {}, par_eval: {}, xaxis: {}".format(self.apc.n_max, par_eval, xaxis))
         spc2 = self.apc.baseline_fit_func_eval(par_eval, spc, xaxis)  # , False)
         self.apc.pars = par_eval
         self.apc.r_spc = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
@@ -284,6 +285,27 @@ class NmrData:
         self.proc_spc1d()
         self.baseline1d()
         # end autobaseline1d
+
+    def autobaseline2d(self, poly_order=[16, 16]):
+        mat = np.copy(self.spc.real)
+        for k in range(len(mat)):
+            spc = np.copy(mat[k])
+            xaxis = np.linspace(-10, 10, len(spc))
+            spc[np.where(np.abs(spc) > 0.05*np.max(np.abs(spc)))] = 0
+            poly_bas = np.polynomial.polynomial.Polynomial.fit(xaxis, spc, poly_order[0])
+            mat[k] -= poly_bas(xaxis)
+
+        mat = np.ndarray.transpose(mat)
+        for k in range(len(mat)):
+            spc = np.copy(mat[k])
+            xaxis = np.linspace(-10, 10, len(spc))
+            spc[np.where(np.abs(spc) > 0.05*np.max(np.abs(spc)))] = 0
+            poly_bas = np.polynomial.polynomial.Polynomial.fit(xaxis, spc, poly_order[1])
+            mat[k] -= poly_bas(xaxis)
+
+        mat = np.ndarray.transpose(mat)
+        self.spc = np.copy(mat)
+        # end autobaseline2d
 
     def autophase1d(self):
         spc = self.spc[0]

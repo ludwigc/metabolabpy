@@ -360,7 +360,7 @@ class main_w(object):  # pragma: no cover
         self.w.actionChange_to_previous_DS.triggered.connect(self.change_to_previous_ds)
         self.w.exampleScripts.view().pressed.connect(self.load_example_script)
         self.w.actionAutomatic_Phase_Correction.triggered.connect(self.autophase1d)
-        self.w.actionAutomatic_Baseline_Correction.triggered.connect(self.autobaseline1d)
+        self.w.actionAutomatic_Baseline_Correction.triggered.connect(self.autobaseline)
         self.w.actionScale_2D_Spectrum_Up.triggered.connect(self.scale_2d_spectrum_up)
         self.w.actionScale_2D_Spectrum_Down.triggered.connect(self.scale_2d_spectrum_down)
         self.w.actionScale_all_2D_Spectra_Up.triggered.connect(self.scale_all_2d_spectra_up)
@@ -638,6 +638,15 @@ class main_w(object):  # pragma: no cover
         self.show_nmr_spectrum()
         # end apply_2d_ph_corr
 
+    def autobaseline(self):
+        if self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1:
+            self.autobaseline1d()
+
+        elif self.nd.nmrdat[self.nd.s][self.nd.e].dim == 2:
+            self.autobaseline2d()
+
+        # end autobaseline
+
     def autobaseline1d(self):
         code_out = io.StringIO()
         code_err = io.StringIO()
@@ -672,6 +681,34 @@ class main_w(object):  # pragma: no cover
         code_out.close()
         code_err.close()
         # end autobaseline1d
+
+    def autobaseline2d(self, poly_order=[16, 16]):
+        code_out = io.StringIO()
+        code_err = io.StringIO()
+        sys.stdout = code_out
+        sys.stderr = code_err
+        self.show_auto_baseline()
+        self.nd.nmrdat[self.nd.s][self.nd.e].autobaseline2d(poly_order)
+        self.show_version()
+        self.w.nmrSpectrum.setCurrentIndex(0)
+        self.change_data_set_exp()
+        self.plot_spc()
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
+        if self.cf.mode == 'dark':
+            txt_col = QColor.fromRgbF(1.0, 1.0, 1.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.5, 0.5, 1.0)
+        else:
+            txt_col = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
+            err_col = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
+
+        self.w.console.setTextColor(txt_col)
+        self.w.console.append(code_out.getvalue())
+        self.w.console.setTextColor(err_col)
+        self.w.console.append(code_err.getvalue())
+        code_out.close()
+        code_err.close()
+        # end autobaseline2d
 
     def autobaseline1d_all(self):
         code_out = io.StringIO()
@@ -5700,7 +5737,7 @@ class main_w(object):  # pragma: no cover
             #self.w.hsqcSpinSys.item(k, 2).setText(' '.join(str(e) for e in spin_sys['j_cc'][k]))
             #self.w.hsqcSpinSys.item(k, 3).setText(str(spin_sys['contribution'][k]))
 
-        # end set_hsqc_spin_sys XXXX
+        # end set_hsqc_spin_sys
 
     def set_invert(self):
         s = self.nd.s
