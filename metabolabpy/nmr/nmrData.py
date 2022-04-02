@@ -286,12 +286,12 @@ class NmrData:
         self.baseline1d()
         # end autobaseline1d
 
-    def autobaseline2d(self, poly_order=[16, 16]):
+    def autobaseline2d(self, poly_order=[16, 16], threshold=0.05):
         mat = np.copy(self.spc.real)
         for k in range(len(mat)):
             spc = np.copy(mat[k])
             xaxis = np.linspace(-10, 10, len(spc))
-            spc[np.where(np.abs(spc) > 0.05*np.max(np.abs(spc)))] = 0
+            spc[np.where(np.abs(spc) > threshold*np.max(np.abs(spc)))] = 0
             poly_bas = np.polynomial.polynomial.Polynomial.fit(xaxis, spc, poly_order[0])
             mat[k] -= poly_bas(xaxis)
 
@@ -299,7 +299,7 @@ class NmrData:
         for k in range(len(mat)):
             spc = np.copy(mat[k])
             xaxis = np.linspace(-10, 10, len(spc))
-            spc[np.where(np.abs(spc) > 0.05*np.max(np.abs(spc)))] = 0
+            spc[np.where(np.abs(spc) > threshold*np.max(np.abs(spc)))] = 0
             poly_bas = np.polynomial.polynomial.Polynomial.fit(xaxis, spc, poly_order[1])
             mat[k] -= poly_bas(xaxis)
 

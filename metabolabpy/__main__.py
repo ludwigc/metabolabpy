@@ -325,6 +325,7 @@ class main_w(object):  # pragma: no cover
         self.w.actionCorrect_Phase.triggered.connect(self.start_stop_ph_corr)
         self.w.actionUpdate_MetaboLabPy_requires_restart.triggered.connect(self.update_metabolabpy)
         # self.w.actionZoomCorrect_Phase.triggered.connect(self.zoom_ph_corr)
+        self.w.maResetButton.clicked.connect(self.hsqc_spin_sys_reset)
         self.w.zoomPhCorr1d.clicked.connect(self.zoom_ph_corr)
         self.w.exitZoomPhCorr1d.clicked.connect(self.zoom_ph_corr)
         self.w.exitPhCorr1d.clicked.connect(self.start_stop_ph_corr)
@@ -682,13 +683,13 @@ class main_w(object):  # pragma: no cover
         code_err.close()
         # end autobaseline1d
 
-    def autobaseline2d(self, poly_order=[16, 16]):
+    def autobaseline2d(self, poly_order=[16, 16], threshold=0.05):
         code_out = io.StringIO()
         code_err = io.StringIO()
         sys.stdout = code_out
         sys.stderr = code_err
         self.show_auto_baseline()
-        self.nd.nmrdat[self.nd.s][self.nd.e].autobaseline2d(poly_order)
+        self.nd.nmrdat[self.nd.s][self.nd.e].autobaseline2d(poly_order, threshold)
         self.show_version()
         self.w.nmrSpectrum.setCurrentIndex(0)
         self.change_data_set_exp()
@@ -3175,6 +3176,21 @@ class main_w(object):  # pragma: no cover
         self.show_nmr_spectrum()
         # end horz_ph_corr_2d
 
+    def hsqc_spin_sys_reset(self):
+        hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        c13_picked = hsqc.hsqc_data[hsqc.cur_metabolite].c13_picked
+        h1_picked = hsqc.hsqc_data[hsqc.cur_metabolite].h1_picked
+        c13_picked_lib = hsqc.hsqc_data[hsqc.cur_metabolite].c13_picked_lib
+        h1_picked_lib = hsqc.hsqc_data[hsqc.cur_metabolite].h1_picked_lib
+        hsqc.hsqc_data[hsqc.cur_metabolite].init_data(hsqc.metabolite_information)
+        hsqc.hsqc_data[hsqc.cur_metabolite].c13_picked = c13_picked
+        hsqc.hsqc_data[hsqc.cur_metabolite].c13_picked_lib = c13_picked_lib
+        hsqc.hsqc_data[hsqc.cur_metabolite].h1_picked = h1_picked
+        hsqc.hsqc_data[hsqc.cur_metabolite].h1_picked_lib = h1_picked_lib
+        hsqc.hsqc_data[hsqc.cur_metabolite].c13_offset = {}
+        self.plot_metabolite_peak(hsqc.cur_peak)
+        # end hsqc_spin_sys_reset
+
     def hsqc_spin_sys_change(self):
         if self.nd.hsqc_spin_sys_connected == True:
             self.w.hsqcSpinSys.cellChanged.disconnect()
@@ -3183,7 +3199,31 @@ class main_w(object):  # pragma: no cover
         hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
         spin_sys = hsqc.hsqc_data[hsqc.cur_metabolite].spin_systems[hsqc.cur_peak - 1]
         perc_sum = 0
+        jcc_list = []
         for k in range(len(spin_sys['c13_idx'])):
+            if hasattr(self.w.hsqcSpinSys.item(k, 2), 'text'):
+                if len(self.w.hsqcSpinSys.item(k, 2).text()) > 0:
+                    jcc_list = self.w.hsqcSpinSys.item(k, 2).text().split(' ')
+                    for m in range(len(jcc_list)):
+                        jcc_list[m] = float(jcc_list[m])
+
+                    spin_sys['j_cc'][k] = jcc_list
+
+            idx = spin_sys['c13_idx'][k]
+            nuc1 = idx[0]
+            if len(idx) < 3:
+                for l in range(len(idx) - 1):
+                    idx2 = -1
+                    nuc2 = idx[l + 1]
+                    nuc1_list = np.where(hsqc.hsqc_data[hsqc.cur_metabolite].j_nuc1 == min(nuc1, nuc2))[0]
+                    nuc2_list = np.where(hsqc.hsqc_data[hsqc.cur_metabolite].j_nuc2 == max(nuc1, nuc2))[0]
+                    for m in range(len(nuc1_list)):
+                        if len(np.where(nuc2_list == nuc1_list[m])[0]) > 0:
+                            idx2 = np.where(nuc2_list == nuc1_list[m])[0][0]
+                            idx2 = nuc2_list[idx2]
+                            if len(jcc_list) > l:
+                                hsqc.hsqc_data[hsqc.cur_metabolite].j_cc[idx2] = jcc_list[l]
+
             idx = QTableWidgetItem(' '.join(str(e) for e in spin_sys['c13_idx'][k]))
             self.w.hsqcSpinSys.setItem(k, 0, idx)
             if self.w.hsqcSpinSys.item(k,1) != None:
@@ -3196,14 +3236,15 @@ class main_w(object):  # pragma: no cover
                 else:
                     hsqc.hsqc_data[hsqc.cur_metabolite].c13_offset[idx.text()] = 0.0
 
-            if hasattr(self.w.hsqcSpinSys.item(k,3), 'text'):
-                if len(self.w.hsqcSpinSys.item(k,3).text()) > 0:
-                    perc_sum += float(self.w.hsqcSpinSys.item(k,3).text())
+            if hasattr(self.w.hsqcSpinSys.item(k, 3), 'text'):
+                if len(self.w.hsqcSpinSys.item(k, 3).text()) > 0:
+                    perc_sum += float(self.w.hsqcSpinSys.item(k, 3).text())
+
 
         for k in range(len(spin_sys['c13_idx'])):
             if self.w.hsqcSpinSys.item(k,3) != None:
                 if len(self.w.hsqcSpinSys.item(k, 3).text()) > 0:
-                    perc = round(float(self.w.hsqcSpinSys.item(k,3).text()) * 100.0 / perc_sum, 3)
+                    perc = round(float(self.w.hsqcSpinSys.item(k, 3).text()) * 100.0 / perc_sum, 3)
                 else:
                     if k > 0:
                         perc = 0.0
@@ -3254,6 +3295,11 @@ class main_w(object):  # pragma: no cover
             for k in range(len(self.nd.nmrdat)):
                 for l in range(len(self.nd.nmrdat[k])):
                     self.nd.nmrdat[k][l].has_pg = False
+
+        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim:
+            self.w.maAutoSim.setChecked(True)
+        else:
+            self.w.maAutoSim.setChecked(False)
 
         # end save_button
 
@@ -5766,15 +5812,10 @@ class main_w(object):  # pragma: no cover
             echo_time = float(self.w.multipletAnalysisEchoTime.text())
             if self.w.maApplyToAll.isChecked():
                 for k in range(len(self.nd.nmrdat[self.nd.s])):
-                    hsqc = self.nd.nmrdat[self.nd.s][k].hsqc
+                    self.nd.nmrdat[self.nd.s][k].hsqc.echo_time = echo_time
                     hsqc.echo_time = echo_time
 
-            else:
-                hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
-                hsqc.echo_time = echo_time
-
-        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim:
-            self.plot_metabolite_peak(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak)
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.echo_time = echo_time
 
     # end set_ma_echo_time
 
