@@ -640,9 +640,9 @@ class main_w(object):  # pragma: no cover
         # end apply_2d_ph_corr
 
     def autobaseline(self):
+        print(self.nd.nmrdat[self.nd.s][self.nd.e].dim)
         if self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1:
             self.autobaseline1d()
-
         elif self.nd.nmrdat[self.nd.s][self.nd.e].dim == 2:
             self.autobaseline2d()
 
@@ -684,11 +684,17 @@ class main_w(object):  # pragma: no cover
         # end autobaseline1d
 
     def autobaseline2d(self, poly_order=[16, 16], threshold=0.05):
+        print("aaaaaaa")
         code_out = io.StringIO()
+        print("bbbbbb")
         code_err = io.StringIO()
+        print("cccccccc")
         sys.stdout = code_out
+        print("dddddddd")
         sys.stderr = code_err
+        print("eeeeeeee")
         self.show_auto_baseline()
+        print("========================")
         self.nd.nmrdat[self.nd.s][self.nd.e].autobaseline2d(poly_order, threshold)
         self.show_version()
         self.w.nmrSpectrum.setCurrentIndex(0)
@@ -3226,15 +3232,15 @@ class main_w(object):  # pragma: no cover
 
             idx = QTableWidgetItem(' '.join(str(e) for e in spin_sys['c13_idx'][k]))
             self.w.hsqcSpinSys.setItem(k, 0, idx)
-            if self.w.hsqcSpinSys.item(k,1) != None:
-                if hasattr(self.w.hsqcSpinSys.item(k,1), 'text'):
-                    #print("k: {}, self.w.hsqcSpinSys.item(k,1).text(): {}".format(k, self.w.hsqcSpinSys.item(k, 1).text()))
-                    if len(self.w.hsqcSpinSys.item(k,1).text()) > 0:
-                        hsqc.hsqc_data[hsqc.cur_metabolite].c13_offset[idx.text()] = float(self.w.hsqcSpinSys.item(k, 1).text())
-                    else:
-                        hsqc.hsqc_data[hsqc.cur_metabolite].c13_offset[idx.text()] = 0.0
+            #if self.w.hsqcSpinSys.item(k,1) != None:
+            if hasattr(self.w.hsqcSpinSys.item(k,1), 'text'):
+                #print("k: {}, self.w.hsqcSpinSys.item(k,1).text(): {}".format(k, self.w.hsqcSpinSys.item(k, 1).text()))
+                if len(self.w.hsqcSpinSys.item(k,1).text()) > 0:
+                    hsqc.hsqc_data[hsqc.cur_metabolite].c13_offset[idx.text()] = float(self.w.hsqcSpinSys.item(k, 1).text())
                 else:
                     hsqc.hsqc_data[hsqc.cur_metabolite].c13_offset[idx.text()] = 0.0
+            else:
+                hsqc.hsqc_data[hsqc.cur_metabolite].c13_offset[idx.text()] = 0.0
 
             if hasattr(self.w.hsqcSpinSys.item(k, 3), 'text'):
                 if len(self.w.hsqcSpinSys.item(k, 3).text()) > 0:
@@ -3242,7 +3248,8 @@ class main_w(object):  # pragma: no cover
 
 
         for k in range(len(spin_sys['c13_idx'])):
-            if self.w.hsqcSpinSys.item(k,3) != None:
+            #if self.w.hsqcSpinSys.item(k,3) != None:
+            try:
                 if len(self.w.hsqcSpinSys.item(k, 3).text()) > 0:
                     perc = round(float(self.w.hsqcSpinSys.item(k, 3).text()) * 100.0 / perc_sum, 3)
                 else:
@@ -3251,7 +3258,8 @@ class main_w(object):  # pragma: no cover
                     else:
                         perc = 100.0
 
-            else:
+            #else:
+            except:
                 if k > 0:
                     perc = 0.0
                 else:

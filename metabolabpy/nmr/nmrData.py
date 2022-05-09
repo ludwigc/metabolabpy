@@ -15,6 +15,7 @@ from metabolabpy.nmr import apcbc
 import metabolabpy.__init__ as ml_version
 from metabolabpy.nmr import nmrHsqc
 import sys
+import multiprocessing as mp
 
 try:
     import pygamma as pg
