@@ -2443,7 +2443,7 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>250</width>
+                <width>400</width>
                 <height>0</height>
                </size>
               </property>
