@@ -205,7 +205,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.7.11'
+        self.__version__ = '0.7.12'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -761,10 +761,10 @@ class main_w(object):  # pragma: no cover
         self.nd.ft()
         self.nd.auto_ref()
         self.nd.autophase1d()
-        self.w.baselineCorrection.setCurrentIndex(1)
-        self.nd.ft()
-        self.nd.baseline1d()
-        self.plot_spc()
+        #self.w.baselineCorrection.setCurrentIndex(1)
+        #self.nd.ft()
+        #self.nd.baseline1d()
+        #self.plot_spc()
         self.set_proc_pars()
         self.show_version()
         self.w.nmrSpectrum.setCurrentIndex(0)
@@ -839,6 +839,13 @@ class main_w(object):  # pragma: no cover
 
     def baseline1d(self):
         self.nd.baseline1d()
+        self.w.nmrSpectrum.setCurrentIndex(0)
+        self.change_data_set_exp()
+        self.plot_spc()
+        # end baseline1d
+
+    def baseline1d_all(self):
+        self.nd.baseline1d_all()
         self.w.nmrSpectrum.setCurrentIndex(0)
         self.change_data_set_exp()
         self.plot_spc()
@@ -7101,6 +7108,8 @@ def main():  # pragma: no cover
     ap.add_argument("-ns", "--noSplash", required=False, help="turn splash screen off", action="store_true")
     ap.add_argument("-fs", "--FullScreen", required=False, help="open applicatin in full screen mode",
                     action="store_true")
+    ap.add_argument("-k", "--KioskMode", required=False, help="open applicatin in full screen mode without windowed mode available",
+                    action="store_true")
     ap.add_argument("fileName", metavar="fileName", type=str, help="load MetaboLabPy DataSet File")
     dd = ap.parse_known_args()
     # dd = ap.parse_known_intermixed_args()
@@ -7120,8 +7129,11 @@ def main():  # pragma: no cover
     app.setWindowIcon(icon)
     app.setApplicationDisplayName("MetaboLabPy")
     w = main_w()
-    if args["FullScreen"] == True:
+    if args["FullScreen"] == True or args["KioskMode"] == True:
         w.w.showFullScreen()
+
+    if args["KioskMode"] == True:
+        w.w.actionToggle_FullScreen.triggered.disconnect()
 
     if args["noSplash"] == False:
         ##

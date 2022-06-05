@@ -15,6 +15,8 @@ from metabolabpy.nmr import apcbc
 import metabolabpy.__init__ as ml_version
 from metabolabpy.nmr import nmrHsqc
 import sys
+from numba import jit
+#from numba import vectorize
 import multiprocessing as mp
 
 try:
@@ -306,9 +308,48 @@ class NmrData:
 
         mat = np.ndarray.transpose(mat)
         self.spc = np.copy(mat)
+        return 1.0
         # end autobaseline2d
 
-    def autophase1d(self):
+    def autophase1d(self, gamma_factor=1.0):
+        self.proc.ph0[0] = 0
+        self.proc.ph1[0] = 0
+        self.proc_spc1d()
+        fit_parameters = [0.0, 0.0]
+        spc = np.copy(self.spc[0])
+        eval_parameters = optimize.minimize(self.autophase1d_fct, fit_parameters, method='Powell')
+        e_pars = np.array(eval_parameters.x).tolist()
+        self.proc.ph0[0] = e_pars[0]
+        self.proc.ph1[0] = e_pars[1]
+        self.proc_spc1d()
+        # end autophase1d
+
+
+    def autophase1d_fct(self, fit_parameters):
+        # implementation based on entropy minimization developed by Chen et al. JMR, 158 (2002) 164-168
+        spc = np.copy(self.spc[0])
+        npts = len(spc)
+        sw = self.acq.sw[0]
+        start_pts = int(npts/2 - npts * 0.3 / sw)
+        end_pts = int(npts/2 + npts * 0.3 / sw)
+        x_axis = range(npts)
+        ph0 = fit_parameters[0]
+        ph1 = fit_parameters[1]
+        spc = np.copy(self.phase3(spc, ph0, ph1))
+        spc_1 = np.copy(np.gradient(spc.real))
+        gamma = 1.0 / np.sum(np.abs(spc.real))
+        h_i = np.abs(spc_1.real) / np.sum(np.abs(spc_1.real))
+        penalty = 0
+        penalty += gamma * np.sum((1 - np.heaviside(spc.real[:start_pts], 1)) * spc.real[:start_pts] ** 2)
+        penalty += gamma * np.sum((1 - np.heaviside(spc.real[end_pts:], 1)) * spc.real[end_pts:] ** 2)
+        entropy = penalty
+        entropy -= np.sum(h_i[:start_pts] * np.log(h_i[:start_pts]))
+        entropy -= np.sum(h_i[end_pts:] * np.log(h_i[end_pts:]))
+        entropy = -np.sum(h_i * np.log(h_i)) + penalty
+        return entropy
+        # end autophase1d_fct
+
+    def autophase1d1(self):
         spc = self.spc[0]
         self.apc.npts = len(spc)
         scale_fact = np.max(np.abs(spc))
@@ -333,7 +374,7 @@ class NmrData:
         self.auto_ref()
         self.proc_spc1d()
         self.baseline1d()
-        # end autophase1d
+        # end autophase1d1
 
     def auto_ref(self, tmsp=True):
         if self.acq.o1 == 0:
@@ -720,6 +761,7 @@ class NmrData:
         self.spc = np.copy(mat.real)
         # end phase2d
 
+    @jit
     def phase3(self, mat, ph0, ph1):
         npts = len(mat)
         ph0 = -ph0 * math.pi / 180.0

@@ -1,0 +1,3 @@
+3
+noesypr1d.jk H2O+D2O /opt/topspin3.0 byrnej {2  C1 - 203}
+TopShimResult: 0.16

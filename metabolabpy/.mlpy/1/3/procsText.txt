@@ -1,16 +1,16 @@
 ##TITLE= Parameter file, TOPSPIN		Version 3.0
 ##JCAMPDX= 5.0
 ##DATATYPE= Parameter Values
-##NPOINTS= 7	$$ modification sequence number
+##NPOINTS= 3	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= jinkang
-$$ 2012-05-29 11:06:26.662 +0100  byrnej@CZC8290D4T
-$$ /opt/topspin3.0/data/byrnej/nmr/29022012-byrnej/1/pdata/1/procs
-$$ process /opt/topspin3.0/prog/mod/proc1d
-##$ABSF1= 0
+$$ 2012-02-29 15:06:53.268 +0000  jinkang@CZC8290D4T
+$$ /opt/topspin3.0/data/byrnej/nmr/29022012-byrnej/5/pdata/1/procs
+$$ process /opt/topspin3.0/prog/mod/xwish3
+##$ABSF1= 10
 ##$ABSF2= 0
-##$ABSG= 0
-##$ABSL= 0
+##$ABSG= 5
+##$ABSL= 3
 ##$ALPHA= 0
 ##$AQORDER= 0
 ##$ASSFAC= 0
@@ -20,19 +20,19 @@ $$ process /opt/topspin3.0/prog/mod/proc1d
 ##$AUNMP= <proc_1dglp>
 ##$AXLEFT= 0
 ##$AXNAME= <>
-##$AXNUC= <1H>
+##$AXNUC= <off>
 ##$AXRIGHT= 0
 ##$AXTYPE= 0
 ##$AXUNIT= <>
 ##$AZFE= 0.1
 ##$AZFW= 0.1
-##$BCFW= 0
-##$BC_mod= 0
+##$BCFW= 1
+##$BC_mod= 2
 ##$BYTORDP= 0
 ##$COROFFS= 0
 ##$CY= 15
 ##$DATMOD= 1
-##$DC= 0
+##$DC= 2
 ##$DFILT= <>
 ##$DTYPP= 0
 ##$ERETIC= no
@@ -40,8 +40,8 @@ $$ process /opt/topspin3.0/prog/mod/proc1d
 ##$F2P= 0
 ##$FCOR= 0.5
 ##$FTSIZE= 32768
-##$FT_mod= 6
-##$GAMMA= 0
+##$FT_mod= 0
+##$GAMMA= 1
 ##$GB= 0
 ##$INTBC= 1
 ##$INTSCL= 1
@@ -55,18 +55,18 @@ $$ process /opt/topspin3.0/prog/mod/proc1d
 ##$ME_mod= 0
 ##$MI= 0
 ##$NCOEF= 0
-##$NC_proc= -2
+##$NC_proc= 0
 ##$NLEV= 6
 ##$NOISF1= 8.362494
 ##$NOISF2= 6.862502
-##$NSP= 0
+##$NSP= 1
 ##$NTH_PI= 0
 ##$NZP= 0
 ##$OFFSET= 10.80087
 ##$PC= 1
-##$PHC0= -85.94556
-##$PHC1= 6.64201
-##$PH_mod= 1
+##$PHC0= -63.22538
+##$PHC1= 8.65076
+##$PH_mod= 0
 ##$PKNL= yes
 ##$PPARMOD= 0
 ##$PPDIAG= 0
@@ -86,12 +86,12 @@ $$ process /opt/topspin3.0/prog/mod/proc1d
 ##$SPECTYP= <>
 ##$SREGLST= <1H.H2O+D2O>
 ##$SSB= 0
-##$STSI= 32768
+##$STSI= 0
 ##$STSR= 0
 ##$SW_p= 7194.24460431656
 ##$SYMM= 0
 ##$S_DEV= 0
-##$TDeff= 32768
+##$TDeff= 0
 ##$TDoff= 0
 ##$TI= <blank
 noesypr1d.jjb H2O+D2O /opt/topspin3.0 byrnej {4  A11 - 481}
@@ -108,6 +108,6 @@ noesypr1d.jjb H2O+D2O /opt/topspin3.0 byrnej {4  A11 - 481}
 ##$USERP5= <user>
 ##$WDW= 1
 ##$XDIM= 8192
-##$YMAX_p= 466450223
-##$YMIN_p= -61634
+##$YMAX_p= 0
+##$YMIN_p= 0
 ##END=
