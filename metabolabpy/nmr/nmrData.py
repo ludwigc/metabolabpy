@@ -11,9 +11,12 @@ from scipy import signal
 import time
 from metabolabpy.nmr import nmrpipeData
 from scipy import optimize
+import scipy as sp
 from metabolabpy.nmr import apcbc
 import metabolabpy.__init__ as ml_version
 from metabolabpy.nmr import nmrHsqc
+from sklearn.decomposition import FastICA, PCA
+from metabolabpy.nmr import hsqcData
 import sys
 from numba import jit
 #from numba import vectorize
@@ -92,6 +95,8 @@ class NmrData:
         self.library_text = []
         self.metabolite_text = []
         self.fit_hsqc_again = False
+        self.exclude_water = False
+        self.delta_sw = 0.5
         if 'pygamma' in sys.modules:
             self.has_pg = True
         else:
@@ -324,14 +329,19 @@ class NmrData:
         self.proc_spc1d()
         # end autophase1d
 
+    def autophase1d_exclude_water(self, delta_sw=-1):
+        self.exclude_water = True
+        if delta_sw > 0.0:
+            self.delta_sw = delta_sw
+        # end autophase1d_exclude_water
 
     def autophase1d_fct(self, fit_parameters):
         # implementation based on entropy minimization developed by Chen et al. JMR, 158 (2002) 164-168
         spc = np.copy(self.spc[0])
         npts = len(spc)
         sw = self.acq.sw[0]
-        start_pts = int(npts/2 - npts * 0.3 / sw)
-        end_pts = int(npts/2 + npts * 0.3 / sw)
+        start_pts = int(npts/2 - npts * self.delta_sw / sw)
+        end_pts = int(npts/2 + npts * self.delta_sw / sw)
         x_axis = range(npts)
         ph0 = fit_parameters[0]
         ph1 = fit_parameters[1]
@@ -339,15 +349,23 @@ class NmrData:
         spc_1 = np.copy(np.gradient(spc.real))
         gamma = 1.0 / np.sum(np.abs(spc.real))
         h_i = np.abs(spc_1.real) / np.sum(np.abs(spc_1.real))
-        penalty = 0
-        penalty += gamma * np.sum((1 - np.heaviside(spc.real[:start_pts], 1)) * spc.real[:start_pts] ** 2)
-        penalty += gamma * np.sum((1 - np.heaviside(spc.real[end_pts:], 1)) * spc.real[end_pts:] ** 2)
-        entropy = penalty
-        entropy -= np.sum(h_i[:start_pts] * np.log(h_i[:start_pts]))
-        entropy -= np.sum(h_i[end_pts:] * np.log(h_i[end_pts:]))
-        entropy = -np.sum(h_i * np.log(h_i)) + penalty
-        return entropy
+        if self.exclude_water == True:
+            penalty = 0
+            penalty += gamma * np.sum((1 - np.heaviside(spc.real[:start_pts], 1)) * spc.real[:start_pts] ** 2)
+            penalty += gamma * np.sum((1 - np.heaviside(spc.real[end_pts:], 1)) * spc.real[end_pts:] ** 2)
+            entropy = 0  # penalty
+            entropy -= np.sum(h_i[:start_pts] * np.log(h_i[:start_pts]))
+            entropy -= np.sum(h_i[end_pts:] * np.log(h_i[end_pts:]))
+        else:
+            penalty = gamma * np.sum((1 - np.heaviside(spc.real, 1)) * spc.real ** 2)
+            entropy = -np.sum(h_i * np.log(h_i))
+
+        return penalty - entropy
         # end autophase1d_fct
+
+    def autophase1d_include_water(self):
+        self.exclude_water = False
+        # end autophase1d_exclude_water
 
     def autophase1d1(self):
         spc = self.spc[0]
@@ -375,6 +393,109 @@ class NmrData:
         self.proc_spc1d()
         self.baseline1d()
         # end autophase1d1
+
+    def autopick_hsqc(self, metabolite_list=[]):
+        if len(metabolite_list) == 0:
+            metabolite_list = [self.hsqc.cur_metabolite]
+
+        # set basic variables
+        range_h = 0.07
+        range_c = 0.7
+        for m in metabolite_list:
+            cur_peak = 1
+            metabolite_name = m
+            self.hsqc.hsqc_data[metabolite_name] = hsqcData.HsqcData()  # empty hsqc_data for chosen metabolite
+            self.hsqc.read_metabolite_information(metabolite_name)
+            self.hsqc.hsqc_data[metabolite_name].init_data(self.hsqc.metabolite_information)
+            self.hsqc.cur_metabolite = metabolite_name
+            self.hsqc.read_metabolite_information(metabolite_name)
+            self.hsqc.set_metabolite_information(metabolite_name, self.hsqc.metabolite_information)
+            self.hsqc.cur_peak = cur_peak
+            self.hsqc.set_peak_information()
+            for kk in range(len(self.hsqc.hsqc_data[metabolite_name].h1_shifts)):
+                cur_peak = kk + 1
+                self.hsqc.cur_peak = cur_peak
+                self.hsqc.set_metabolite_information(metabolite_name, self.hsqc.metabolite_information)
+                self.hsqc.set_peak_information()
+                self.hsqc.hsqc_data[metabolite_name].c13_picked[cur_peak - 1] = \
+                self.hsqc.hsqc_data[metabolite_name].spin_systems[cur_peak - 1]['c13_shifts'][0]
+                # 25% contribution for every multiplet component
+                cont = np.copy(self.hsqc.hsqc_data[metabolite_name].spin_systems[cur_peak - 1]['contribution'])
+                cnt = np.array([80, 100, 100, 50])  # [100, 50, 50, 25])
+                cnt = np.copy(cnt[range(len(cont))])
+                cnt = cnt / np.sum(cnt)
+                cnt *= 100
+                self.hsqc.hsqc_data[metabolite_name].spin_systems[cur_peak - 1]['contribution'] = cnt
+                # sim 1d 13C spectrum in library shift position
+                self.sim_hsqc_1d()
+                # determine spectral area to be used
+                hd = self.hsqc.hsqc_data[metabolite_name]
+                h1_centre = hd.h1_shifts[cur_peak - 1]
+                c13_centre = hd.c13_shifts[hd.h1_index[cur_peak - 1] - 1]
+                h1_suffix = hd.h1_suffix[cur_peak - 1]
+                scale = self.hsqc.j_scale
+                hsqc_idx = np.where(hd.hsqc == 1)[0]
+                h1_index = hd.h1_index[cur_peak - 1]
+                c13_index = hd.c13_index[hd.h1_index[cur_peak - 1] - 1]
+                h1_beg = h1_centre + range_h
+                h1_end = h1_centre - range_h
+                c13_beg = c13_centre + range_c * scale
+                c13_end = c13_centre - range_c * scale
+                h1_pts = len(self.spc[0])
+                c13_pts = len(self.spc)
+                h1_pts1 = h1_pts - self.ppm2points(h1_beg, 0) - 1
+                h1_pts2 = h1_pts - self.ppm2points(h1_end, 0) - 1
+                c13_pts1 = c13_pts - self.ppm2points(c13_beg, 1) - 1
+                c13_pts2 = c13_pts - self.ppm2points(c13_end, 1) - 1
+                spc = self.spc[c13_pts1:c13_pts2, h1_pts1:h1_pts2].real
+                c13_centre_pts = round(np.median(np.linspace(c13_pts1, c13_pts2, c13_pts2 - c13_pts1 + 1, dtype=int)))
+                h1_centre_pts = round(np.median(np.linspace(h1_pts1, h1_pts2, h1_pts2 - h1_pts1 + 1, dtype=int)))
+                # set FastICA parameters, execute ICA and get estimated mixing matrix (A_)
+                n_comp = 9
+                ica = FastICA(n_components=n_comp, algorithm='deflation', whiten='arbitrary-variance',
+                              fun=self.my_g)
+                S_ = ica.fit_transform(np.transpose(spc / np.max(spc)))  # Reconstruct signals
+                A_ = ica.mixing_
+                ica = np.transpose(A_)
+                data = np.transpose(spc / np.max(spc))
+                spc2 = self.hsqc.hsqc_data[metabolite_name].sim_spc[cur_peak - 1][c13_pts1:c13_pts2]
+                spc2 /= np.linalg.norm(spc2)
+                max_shift = int(len(spc2) / 2) - 1
+                corr2 = np.zeros((len(ica), 2 * max_shift + 1))
+                shift2 = np.zeros((len(ica), 2 * max_shift + 1), dtype=int)
+                corr_max = np.zeros(len(ica))
+                idx_max = np.zeros(len(ica), dtype=int)
+                shift_max = np.zeros(len(ica), dtype=int)
+                for l in range(len(ica)):
+                    for k in range(2 * max_shift + 1):
+                        corr2[l][k] = np.corrcoef(ica[l], np.roll(spc2, k - max_shift))[0][1]
+                        shift2[l][k] = int(k - max_shift)
+
+                    idx_max[l] = int(np.where(corr2[l] == np.max(corr2[l]))[0][0])
+                    corr_max[l] = np.max(corr2[l])
+                    shift_max[l] = shift2[l][idx_max[l]]
+
+                spc2_idx = np.where(corr_max == np.max(corr_max))[0][0]
+                spc3 = np.roll(spc2, shift_max[spc2_idx])
+                # correlate 13C shifted, simulated spectrum across different 1H shift area
+                corr3 = np.zeros(len(data))
+                for l in range(len(data)):
+                    corr3[l] = np.corrcoef(data[l], spc3)[0][1]
+
+                max_idx3 = np.where(corr3 == np.max(corr3))[0][0]
+                h1_pts_f = h1_pts1 + max_idx3 - 1
+                c13_pts_f = c13_pts1 + max_shift + shift_max[spc2_idx] + 1
+                h1_shift = self.points2ppm(len(self.spc[0]) - h1_pts_f, 0)
+                c13_shift = self.points2ppm(len(self.spc) - c13_pts_f, 1)
+                local_opt = self.pick_local_opt([h1_shift, c13_shift])
+                self.hsqc.hsqc_data[metabolite_name].c13_picked[cur_peak - 1] = [local_opt[1]]
+                self.hsqc.hsqc_data[metabolite_name].h1_picked[cur_peak - 1] = [local_opt[0]]
+                cont = np.copy(self.hsqc.hsqc_data[metabolite_name].spin_systems[cur_peak - 1]['contribution'])
+                self.hsqc.hsqc_data[metabolite_name].spin_systems[cur_peak - 1]['contribution'] = np.zeros(len(cont))
+                self.hsqc.hsqc_data[metabolite_name].spin_systems[cur_peak - 1]['contribution'][0] = 100
+                self.hsqc.hsqc_data[metabolite_name].sim_spc[cur_peak - 1] = []
+
+        # end autopick_hsqc
 
     def auto_ref(self, tmsp=True):
         if self.acq.o1 == 0:
@@ -704,6 +825,12 @@ class NmrData:
 
     def multiply(self, factor=1.0):
         self.spc = factor * self.spc
+
+    def my_g(self, x):
+        # define custom G function used in the approximation to neg entropy
+        # used in independent component analysis
+        return x ** 2, 2 * x
+        # end my_g
 
     def phase(self, ph0, ph1, npts):
         ph0 = -ph0 * math.pi / 180.0

@@ -205,7 +205,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.7.12'
+        self.__version__ = '0.7.13'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -528,6 +528,7 @@ class main_w(object):  # pragma: no cover
         self.w.hsqcAddPeak.clicked.connect(lambda: self.ginput_hsqc(0))
         self.w.hsqcRemovePeak.clicked.connect(lambda: self.ginput_hsqc2(0))
         self.w.metaboliteResetButton.clicked.connect(self.metabolite_reset)
+        self.w.metaboliteAutoButton.clicked.connect(self.autopick_hsqc)
         self.w.maSimButton.clicked.connect(self.ma_sim_hsqc_1d)
         self.buttons = {}
         # print(sys.platform)
@@ -575,6 +576,33 @@ class main_w(object):  # pragma: no cover
     def add_peak(self):
         self.ginput_add_peak(2)
         # end add_peak
+
+    def autopick_hsqc(self, metabolite_list=False):
+        if metabolite_list is False:
+            metabolite_list = [self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite]
+        elif len(metabolite_list[0]) == 0:
+            metabolite_list = [self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite]
+
+        if len(metabolite_list[0]) == 0:
+            return
+
+        no_peak_selected = False
+        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak == -1:
+            no_peak_selected = True
+            cur_peak = 1
+        else:
+            cur_peak = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak
+
+        self.nd.nmrdat[self.nd.s][self.nd.e].autopick_hsqc(metabolite_list)
+        if no_peak_selected:
+            self.w.hsqcAnalysis.setChecked(False)
+            self.w.hsqcAnalysis.setChecked(True)
+            idx1 = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.metabolite_list.index(metabolite_list[0])
+            self.w.hsqcMetabolites.setCurrentIndex(self.w.hsqcMetabolites.model().index(idx1, 0))
+
+        self.set_hsqc_metabolite()
+        self.plot_metabolite_peak(cur_peak)
+        # end autopick_hsqc
 
     def clear_peak(self):
         self.nd.clear_peak()
@@ -684,17 +712,11 @@ class main_w(object):  # pragma: no cover
         # end autobaseline1d
 
     def autobaseline2d(self, poly_order=[16, 16], threshold=0.05):
-        print("aaaaaaa")
         code_out = io.StringIO()
-        print("bbbbbb")
         code_err = io.StringIO()
-        print("cccccccc")
         sys.stdout = code_out
-        print("dddddddd")
         sys.stderr = code_err
-        print("eeeeeeee")
         self.show_auto_baseline()
-        print("========================")
         self.nd.nmrdat[self.nd.s][self.nd.e].autobaseline2d(poly_order, threshold)
         self.show_version()
         self.w.nmrSpectrum.setCurrentIndex(0)
@@ -821,6 +843,14 @@ class main_w(object):  # pragma: no cover
         code_out.close()
         code_err.close()
         # end autophase1d_all
+
+    def autophase1d_exclude_water(self, delta_sw=-1):
+        self.nd.autophase1d_exclude_water(delta_sw)
+    # end autophase1d_exclude_water
+
+    def autophase1d_include_water(self):
+        self.nd.autophase1d_include_water()
+    # end autophase1d_include_water
 
     def autoref(self, tmsp=True):
         self.nd.auto_ref(tmsp)
@@ -3530,7 +3560,6 @@ class main_w(object):  # pragma: no cover
         # end ma_sim_hsqc_1d
 
     def metabolite_reset(self):
-        print("metabolite_reset")
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite].h1_picked[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak - 1] = []
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite].c13_picked[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak - 1] = []
         self.plot_metabolite_peak(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak)
@@ -6126,7 +6155,7 @@ class main_w(object):  # pragma: no cover
         except:
             pass
 
-        # end set_hsqc_metabolite
+        # end set_hsqc_assigned_metabolite
 
     def set_hsqc_metabolite(self):
         my_autosim = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim

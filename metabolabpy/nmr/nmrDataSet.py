@@ -157,6 +157,20 @@ class NmrDataSet:
         return "Finished autophase1d_all"
         # end autophase1d_all
 
+    def autophase1d_exclude_water(self, delta_sw=-1):
+        n_exps = len(self.nmrdat[self.s])
+        for k in range(n_exps):
+            self.nmrdat[self.s][k].autophase1d_exclude_water(delta_sw)
+
+        # end autophase1d_exclude_water
+
+    def autophase1d_include_water(self):
+        n_exps = len(self.nmrdat[self.s])
+        for k in range(n_exps):
+            self.nmrdat[self.s][k].autophase1d_include_water()
+
+        # end autophase1d_include_water
+
     def auto_ref(self, tmsp=True):
         if self.nmrdat[self.s][self.e].dim == 1:
             self.nmrdat[self.s][self.e].auto_ref(tmsp)
