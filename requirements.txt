@@ -7,3 +7,5 @@ pyautogui
 qtmodern
 xlsxwriter
 pandas
+sklearn
+numba
