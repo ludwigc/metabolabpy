@@ -400,7 +400,7 @@ class NmrData:
 
         # set basic variables
         range_h = 0.07
-        range_c = 0.7
+        range_c = 0.8
         for m in metabolite_list:
             cur_peak = 1
             metabolite_name = m

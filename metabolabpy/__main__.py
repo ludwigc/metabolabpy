@@ -205,7 +205,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.7.13'
+        self.__version__ = '0.7.14'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -529,6 +529,7 @@ class main_w(object):  # pragma: no cover
         self.w.hsqcRemovePeak.clicked.connect(lambda: self.ginput_hsqc2(0))
         self.w.metaboliteResetButton.clicked.connect(self.metabolite_reset)
         self.w.metaboliteAutoButton.clicked.connect(self.autopick_hsqc)
+        self.w.metaboliteAutofitButton.clicked.connect(self.autofit_hsqc)
         self.w.maSimButton.clicked.connect(self.ma_sim_hsqc_1d)
         self.buttons = {}
         # print(sys.platform)
@@ -577,6 +578,51 @@ class main_w(object):  # pragma: no cover
         self.ginput_add_peak(2)
         # end add_peak
 
+    def autofit_hsqc(self, metabolite_list=False):
+        if metabolite_list is False:
+            metabolite_list = [self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite]
+        elif len(metabolite_list[0]) == 0:
+            metabolite_list = [self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite]
+
+        if len(metabolite_list[0]) == 0:
+            return
+
+
+        no_peak_selected = False
+        if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak == -1:
+            no_peak_selected = True
+            cur_peak = 1
+        else:
+            cur_peak = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak
+
+        if self.w.hsqcAnalysis.isChecked() == False:
+            self.w.hsqcAnalysis.setChecked(True)
+            self.w.hsqcAnalysis.setChecked(False)
+
+        self.nd.nmrdat[self.nd.s][self.nd.e].autopick_hsqc(metabolite_list)
+        for metabolite_name in metabolite_list:
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite = metabolite_name
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak = cur_peak
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.read_metabolite_information(metabolite_name)
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.set_metabolite_information(metabolite_name, self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.metabolite_information)
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.set_peak_information()
+            for k in range(len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].h1_shifts)):
+                self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak = k + 1
+                self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_1d()
+                self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].intensities[k] = 1
+                self.nd.nmrdat[self.nd.s][self.nd.e].sim_hsqc_1d()
+                self.nd.nmrdat[self.nd.s][self.nd.e].sim_hsqc_1d()
+
+        if no_peak_selected:
+            self.w.hsqcAnalysis.setChecked(False)
+            self.w.hsqcAnalysis.setChecked(True)
+            idx1 = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.metabolite_list.index(metabolite_list[0])
+            self.w.hsqcMetabolites.setCurrentIndex(self.w.hsqcMetabolites.model().index(idx1, 0))
+
+        self.set_hsqc_metabolite()
+        self.plot_metabolite_peak(cur_peak)
+        # end autofit_hsqc
+
     def autopick_hsqc(self, metabolite_list=False):
         if metabolite_list is False:
             metabolite_list = [self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite]
@@ -585,6 +631,10 @@ class main_w(object):  # pragma: no cover
 
         if len(metabolite_list[0]) == 0:
             return
+
+        if self.w.hsqcAnalysis.isChecked() == False:
+            self.w.hsqcAnalysis.setChecked(True)
+            self.w.hsqcAnalysis.setChecked(False)
 
         no_peak_selected = False
         if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak == -1:
