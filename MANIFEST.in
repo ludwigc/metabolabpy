@@ -17,3 +17,7 @@ include metabolabpy/mlStarter/Contents/Resources/*
 include metabolabpy/nmr/metabolites/*
 include metabolabpy/nmr/reset_metabolites/*
 include metabolabpy/nmr/metabolites_png/*
+include metabolabpy/nmr/jupyter/*
+include metabolabpy/nmr/jupyter/*/*
+include metabolabpy/nmr/jupyter/*/*/*
+include metabolabpy/nmr/jupyter/*/*/*/*

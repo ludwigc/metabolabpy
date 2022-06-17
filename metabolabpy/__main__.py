@@ -59,16 +59,6 @@ except:
 
 from matplotlib.figure import Figure  # pragma: no cover
 import argparse  # pragma: no cover
-# from PySide2.QtUiTools import QUiLoader  # pragma: no cover
-# from PySide2.QtCore import QFile  # pragma: no cover
-# from PySide2.QtCore import QCoreApplication  # pragma: no cover
-# from PySide2.QtWidgets import *  # pragma: no cover
-# from PySide2 import QtWidgets  # pragma: no cover
-# from PySide2.QtGui import *  # pragma: no cover
-# from PySide2 import QtGui  # pragma: no cover
-# from PySide2 import QtCore  # pragma: no cover
-# from PySide2.QtWidgets import QFileDialog # pragma: no cover
-# from PySide2.QtCore import SIGNAL  # pragma: no cover
 from time import sleep  # pragma: no cover
 
 try:  # pragma: no cover
@@ -94,10 +84,10 @@ from io import StringIO
 import contextlib
 import zipfile
 from collections import defaultdict
-# from notebook import notebookapp
-# import multiprocess
+from notebook import notebookapp
+import multiprocess
 import subprocess
-# import jupyterthemes
+import jupyterthemes
 import itertools
 import xlsxwriter
 from string import ascii_uppercase
@@ -205,7 +195,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.7.15'
+        self.__version__ = '0.7.17'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -266,6 +256,8 @@ class main_w(object):  # pragma: no cover
         self.w.titleFile.textChanged.connect(self.change_title_file)
         self.w.samplesInComboBox.currentIndexChanged.connect(self.set_samples_in_combo_box)
         self.w.openWeb.activated.connect(self.open_metabolite_web)
+        self.w.startNotebookButton.clicked.connect(self.start_notebook)
+        self.w.stopNotebookButton.clicked.connect(self.stop_notebook)
         self.w.runPreProcessingButton.clicked.connect(self.data_pre_processing)
         self.w.resetPreProcessingButton.clicked.connect(self.reset_data_pre_processing)
         self.w.avoidNegValues.stateChanged.connect(self.set_avoid_neg_values)
@@ -6703,32 +6695,37 @@ class main_w(object):  # pragma: no cover
         splash.close()
         # end splash
 
-    # def startNotebook(self):
-    #    try:
-    #        self.p.terminate()
-    #        sleep(2)
-    #    except:
-    #        pass
-    #
-    #    if self.cf.mode == 'dark':
-    #        jupyterthemes.install_theme('chesterish')
-    #        #subprocess.run(["jt", "-tchesterish"])
-    #    else:
-    #        jupyterthemes.install_theme('grade3')
-    #        #subprocess.run(["jt", "-r"])
-    #
-    #    jobs = []
-    #    self.p = multiprocess.Process(target=notebookapp.main, args=(['/Users/ludwigc/jupyter', '--no-browser', '--ip=127.0.0.1', '--port=9997'],))
-    #    jobs.append(self.p)
-    #    self.p.start()
-    #    sleep(2)
-    #    if self.cf.mode == 'dark':
-    #        self.w.helpView.setUrl("http://127.0.0.1:9997/notebooks/test2d_dark.ipynb")
-    #    else:
-    #        self.w.helpView.setUrl("http://127.0.0.1:9997/notebooks/test2d_light.ipynb")
-    #
-    #   self.w.nmrSpectrum.setCurrentIndex(12)
-    #    # end startNotebook
+    def start_notebook(self):
+        try:
+            self.p.terminate()
+            sleep(2)
+        except:
+            pass
+
+        if self.cf.mode == 'dark':
+            jupyterthemes.install_theme('chesterish')
+        else:
+            jupyterthemes.install_theme('grade3')
+
+        jupyter_path = os.path.join(os.path.dirname(__file__), "nmr", "jupyter")
+        jobs = []
+        self.p = multiprocess.Process(target=notebookapp.main, args=([jupyter_path, '--no-browser', '--ip=127.0.0.1', '--port=9997'],))
+        jobs.append(self.p)
+        self.p.start()
+        sleep(2)
+        self.w.helpView.setUrl("http://127.0.0.1:9997")
+        self.w.nmrSpectrum.setCurrentIndex(12)
+        # end startNotebook
+
+    def stop_notebook(self):
+        try:
+            self.p.terminate()
+            sleep(2)
+        except:
+            pass
+
+        self.reset_help()
+        # end stop_notebook
 
     def start_stop_ph_corr(self):
         s = self.nd.s
