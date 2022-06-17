@@ -1,0 +1,2 @@
+1
+noesypr1d.jk H2O+D2O /opt/topspin3.0 byrnej {2  A1 - 201}
