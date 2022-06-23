@@ -2430,7 +2430,7 @@
           </property>
           <widget class="QWidget" name="hsqcNMRTab">
            <attribute name="title">
-            <string>NMR</string>
+            <string>Multiplet Analysis</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_31">
             <item row="0" column="0" rowspan="2">
@@ -3363,6 +3363,11 @@
              </layout>
             </item>
            </layout>
+          </widget>
+          <widget class="QWidget" name="isotopomerAnalysisTab">
+           <attribute name="title">
+            <string>Isotopomer Analysis</string>
+           </attribute>
           </widget>
           <widget class="QWidget" name="mlInfoTab">
            <attribute name="title">

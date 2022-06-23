@@ -9,3 +9,6 @@ xlsxwriter
 pandas
 sklearn
 numba
+jupyter
+jupyterthemes
+multiprocess
