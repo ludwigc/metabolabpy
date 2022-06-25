@@ -399,8 +399,8 @@ class NmrData:
             metabolite_list = [self.hsqc.cur_metabolite]
 
         # set basic variables
-        range_h = 0.07
-        range_c = 0.8
+        range_h = self.hsqc.autopick_range_h
+        range_c = self.hsqc.autopick_range_c
         for m in metabolite_list:
             cur_peak = 1
             metabolite_name = m
@@ -1530,7 +1530,68 @@ class NmrData:
             self.hsqc.hsqc_data[self.hsqc.cur_metabolite].intensities[self.hsqc.cur_peak - 1] = intensity
 
         self.hsqc.hsqc_data[self.hsqc.cur_metabolite].sim_spc[self.hsqc.cur_peak - 1] = sim_spc[0].real
+        self.sim_hsqc_1d_calc_cod()
         # end sim_hsqc_1d
+
+    def sim_hsqc_1d_calc_cod(self):
+        if len(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].sim_spc[self.hsqc.cur_peak - 1]) == 0:
+            self.hsqc.hsqc_data[self.hsqc.cur_metabolite].cod[self.hsqc.cur_peak - 1] = - 1
+            return
+
+        gamma_adjust = 20.0*42.577 / 10.7084 # 20 times gamma_H / gamma_C
+        h1_shift = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].h1_shifts[self.hsqc.cur_peak - 1]
+        c13_idx = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].h1_index[self.hsqc.cur_peak - 1] - 1
+        c13_shift = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_shifts[c13_idx]
+        if len(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].h1_picked[self.hsqc.cur_peak - 1]) == 0:
+            h1_exp = h1_shift
+        else:
+            h1_exp = np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].h1_picked[self.hsqc.cur_peak - 1])
+
+        if len(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1]) == 0:
+            c13_exp = c13_shift
+        else:
+            c13_exp = np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1])
+
+        h1_pts = len(self.spc[0]) - self.ppm2points(h1_exp, 0) - 1
+        if self.hsqc.autoscale_j == True:
+            scale = self.hsqc.j_scale
+        else:
+            scale = 1.0
+
+        c13_beg = self.proc.n_points[1] - self.ppm2points(c13_exp + self.hsqc.range_c*scale) - 1
+        c13_end = self.proc.n_points[1] - self.ppm2points(c13_exp - self.hsqc.range_c*scale) - 1
+        n_points = 2 ** math.ceil(math.log2(abs(c13_beg - c13_end)) + 1)
+        #print("c13_beg: {}, c13_end: {}, n_points: {}".format(c13_beg, c13_end, n_points))
+        c13_centre_points = self.proc.n_points[1] - self.ppm2points(c13_exp, 1) - 1
+        c13_beg = c13_centre_points - n_points - 1
+        c13_end = c13_centre_points + n_points - 1
+        c13_range = range(c13_centre_points - int(n_points/2), c13_centre_points + int(n_points/2))
+        spc2 = np.array([])
+        spc2.resize(2*n_points)
+        spc2_sim = np.array([])
+        spc2_sim.resize(2*n_points)
+        #print(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].sim_spc)
+        #print(c13_range)
+        for k in range(len(c13_range)):
+            spc2[k] = self.spc[c13_range[k]][h1_pts].real
+            spc2_sim[k] = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].sim_spc[self.hsqc.cur_peak - 1][c13_range[k]]
+
+        spc2 /= np.linalg.norm(spc2)
+        spc2_sim /= np.linalg.norm(spc2_sim)
+        #print("yAdjust: {}, 13c(idx): {}\n1h(lib): {}, 13c(lib): {}\n1h(exp): {}, 13c(exp): {}".format(gamma_adjust, c13_idx, h1_shift, c13_shift, h1_exp, c13_exp))
+        #print("len(spc2): {}, len(spc2_sim): {}".format(len(spc2), len(spc2_sim)))
+        max_dist = math.sqrt(self.hsqc.range_h**2 + (self.hsqc.range_c / gamma_adjust)**2)
+        dist_2d = math.sqrt((h1_exp - h1_shift)**2 + ((c13_exp - c13_shift) / gamma_adjust)**2)
+        if dist_2d > max_dist:
+            weighted_distance = 1 - (dist_2d / max_dist - 1)
+        else:
+            weighted_distance = 1
+
+        res = spc2 - spc2_sim
+        cod1 = 1.0 - np.sum(res**2) / np.sum((spc2 - np.mean(spc2))**2)
+        self.hsqc.hsqc_data[self.hsqc.cur_metabolite].cod[self.hsqc.cur_peak - 1] = np.max([cod1 * weighted_distance * 100.0, 0.0])
+        #print("max_dist: {}, dist_2d: {}, cod1: {}, cod: {}".format(max_dist, dist_2d, cod1, self.hsqc.hsqc_data[self.hsqc.cur_metabolite].cod[self.hsqc.cur_peak - 1]))
+        # end sim_hsqc_1d_calc_cod
 
     def fit_hsqc_1d(self):
         autosim = self.hsqc.autosim

@@ -53,6 +53,7 @@ class HsqcData:
         self.n_bonds = 1
         self.intensities = []
         self.r2 = []
+        self.cod = []
         # end __init__
 
     def __str__(self):  # pragma: no cover
@@ -251,6 +252,7 @@ class HsqcData:
             suffix = suffix.replace('l', 'ab')
             suffix = suffix.replace('Û', 'abc')
             self.h1_suffix.append(suffix)
+            self.cod.append(-1)
 
         idx1 = metabolite_information.find('C13Offset')
         mi = metabolite_information[idx1:]

@@ -1274,6 +1274,22 @@ class main_w(object):  # pragma: no cover
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite = ''
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak = -1
         self.w.hsqcSpinSys.setRowCount(0)
+        if self.cf.mode == 'dark':
+            colour = [180, 180, 180]
+        else:
+            colour = [0, 0, 0]
+
+        self.w.coefficientOfDetermination.display(-1)
+        palette = self.w.coefficientOfDetermination.palette()
+        # foreground color
+        palette.setColor(palette.WindowText, QtGui.QColor(colour[0], colour[1], colour[2]))
+        # background color
+        #palette.setColor(palette.Background, QtGui.QColor(colour[0], colour[1], colour[2]))
+        # "light" border
+        palette.setColor(palette.Light, QtGui.QColor(colour[0], colour[1], colour[2]))
+        # "dark" border
+        palette.setColor(palette.Dark, QtGui.QColor(colour[0], colour[1], colour[2]))
+        self.w.coefficientOfDetermination.setPalette(palette)
         # end clear_assigned_hsqc
 
     def cnst(self, index=0):
@@ -2469,6 +2485,42 @@ class main_w(object):  # pragma: no cover
 
         # end get_hsqc_pars15
 
+    def get_hsqc_pars16(self):
+        h = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        h.autopick_range_h = float(self.w.h1RangeAutopick.text())
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.autopick_range_h = h.autopick_range_h
+
+        # end get_hsqc_pars16
+
+    def get_hsqc_pars17(self):
+        h = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        h.autopick_range_c = float(self.w.c13RangeAutopick.text())
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.autopick_range_c = h.autopick_range_c
+
+        # end get_hsqc_pars17
+
+    def get_hsqc_pars18(self):
+        h = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        h.cod_high = float(self.w.codHigh.text())
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.cod_high = h.cod_high
+
+        # end get_hsqc_pars18
+
+    def get_hsqc_pars19(self):
+        h = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        h.cod_low = float(self.w.codLow.text())
+        for k in range(len(self.nd.nmrdat)):
+            for l in range(len(self.nd.nmrdat[k])):
+                self.nd.nmrdat[k][l].hsqc.cod_low = h.cod_low
+
+        # end get_hsqc_pars19
+
     def get_proc_pars1(self):
         p = self.nd.nmrdat[self.nd.s][self.nd.e].proc
         p.window_type[0] = self.w.windowFunction.currentIndex()
@@ -3273,6 +3325,10 @@ class main_w(object):  # pragma: no cover
         hsqc.hsqc_data[hsqc.cur_metabolite].h1_picked = h1_picked
         hsqc.hsqc_data[hsqc.cur_metabolite].h1_picked_lib = h1_picked_lib
         hsqc.hsqc_data[hsqc.cur_metabolite].c13_offset = {}
+        hsqc.hsqc_data[hsqc.cur_metabolite].cod = []
+        for k in range(len(hsqc.hsqc_data[hsqc.cur_metabolite].h1_shifts)):
+            hsqc.hsqc_data[hsqc.cur_metabolite].cod.append(-1)
+
         self.plot_metabolite_peak(hsqc.cur_peak)
         # end hsqc_spin_sys_reset
 
@@ -4273,6 +4329,35 @@ class main_w(object):  # pragma: no cover
             self.nd.hsqc_spin_sys_connected = True
 
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim = my_autosim
+        if self.cf.mode == 'dark':
+            n_colour = [180, 180, 180]
+        else:
+            n_colour = [0, 0, 0]
+
+        hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
+        if len(hsqc.hsqc_data[hsqc.cur_metabolite].sim_spc[hsqc.cur_peak - 1]) == 0:
+            hsqc.hsqc_data[hsqc.cur_metabolite].cod[hsqc.cur_peak - 1] = -1
+
+        if hsqc.hsqc_data[hsqc.cur_metabolite].cod[hsqc.cur_peak - 1] > hsqc.cod_high:
+            colour =[0, 255, 0]
+        elif hsqc.hsqc_data[hsqc.cur_metabolite].cod[hsqc.cur_peak - 1] == -1:
+            colour = n_colour
+        elif hsqc.hsqc_data[hsqc.cur_metabolite].cod[hsqc.cur_peak - 1] < hsqc.cod_low:
+            colour = [255, 0, 0]
+        else:
+            colour = [255, 170, 0]
+
+        self.w.coefficientOfDetermination.display(hsqc.hsqc_data[hsqc.cur_metabolite].cod[hsqc.cur_peak - 1])
+        palette = self.w.coefficientOfDetermination.palette()
+        # foreground color
+        palette.setColor(palette.WindowText, QtGui.QColor(colour[0], colour[1], colour[2]))
+        # background color
+        #palette.setColor(palette.Background, QtGui.QColor(colour[0], colour[1], colour[2]))
+        # "light" border
+        palette.setColor(palette.Light, QtGui.QColor(colour[0], colour[1], colour[2]))
+        # "dark" border
+        palette.setColor(palette.Dark, QtGui.QColor(colour[0], colour[1], colour[2]))
+        self.w.coefficientOfDetermination.setPalette(palette)
         # end
 
     def plot_spc(self, hide_pre_processing=False):
@@ -4732,6 +4817,22 @@ class main_w(object):  # pragma: no cover
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite = ''
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak = -1
         self.w.hsqcSpinSys.setRowCount(0)
+        if self.cf.mode == 'dark':
+            colour = [180, 180, 180]
+        else:
+            colour = [0, 0, 0]
+
+        self.w.coefficientOfDetermination.display(-1)
+        palette = self.w.coefficientOfDetermination.palette()
+        # foreground color
+        palette.setColor(palette.WindowText, QtGui.QColor(colour[0], colour[1], colour[2]))
+        # background color
+        #palette.setColor(palette.Background, QtGui.QColor(colour[0], colour[1], colour[2]))
+        # "light" border
+        palette.setColor(palette.Light, QtGui.QColor(colour[0], colour[1], colour[2]))
+        # "dark" border
+        palette.setColor(palette.Dark, QtGui.QColor(colour[0], colour[1], colour[2]))
+        self.w.coefficientOfDetermination.setPalette(palette)
         # end remove_asssigned_metabolite
 
     def remove_last_col_row(self):
@@ -5393,6 +5494,10 @@ class main_w(object):  # pragma: no cover
         self.set_hsqc_pars13()
         self.set_hsqc_pars14()
         self.set_hsqc_pars15()
+        self.set_hsqc_pars16()
+        self.set_hsqc_pars17()
+        self.set_hsqc_pars18()
+        self.set_hsqc_pars19()
         # end set_hsqc
 
     def set_add_peak(self):
@@ -5840,6 +5945,22 @@ class main_w(object):  # pragma: no cover
         self.w.autoscaleCB.setCurrentIndex(idx)
         # end set_hsqc_pars15
 
+    def set_hsqc_pars16(self):
+        self.w.h1RangeAutopick.setText(str(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autopick_range_h))
+        # end set_hsqc_pars16
+
+    def set_hsqc_pars17(self):
+        self.w.c13RangeAutopick.setText(str(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autopick_range_c))
+        # end set_hsqc_pars17
+
+    def set_hsqc_pars18(self):
+        self.w.codHigh.setText(str(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cod_high))
+        # end set_hsqc_pars18
+
+    def set_hsqc_pars19(self):
+        self.w.codLow.setText(str(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cod_low))
+        # end set_hsqc_pars19
+
     def set_hsqc_spin_sys(self):
         hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
         spin_sys = hsqc.hsqc_data[hsqc.cur_metabolite].spin_systems[hsqc.cur_peak - 1]
@@ -6139,8 +6260,28 @@ class main_w(object):  # pragma: no cover
             self.w.coHsqcCB.currentIndexChanged.connect(self.get_hsqc_pars13)
             self.w.pickLocalOptCB.currentIndexChanged.connect(self.get_hsqc_pars14)
             self.w.autoscaleCB.currentIndexChanged.connect(self.get_hsqc_pars15)
+            self.w.h1RangeAutopick.textChanged.connect(self.get_hsqc_pars16)
+            self.w.c13RangeAutopick.textChanged.connect(self.get_hsqc_pars17)
+            self.w.codHigh.textChanged.connect(self.get_hsqc_pars18)
+            self.w.codLow.textChanged.connect(self.get_hsqc_pars19)
             self.w.nmrSpectrum.setCurrentIndex(1)
             self.activate_command_line()
+            if self.cf.mode == 'dark':
+                colour = [180, 180, 180]
+            else:
+                colour = [0, 0, 0]
+
+            self.w.coefficientOfDetermination.display(-1)
+            palette = self.w.coefficientOfDetermination.palette()
+            # foreground color
+            palette.setColor(palette.WindowText, QtGui.QColor(colour[0], colour[1], colour[2]))
+            # background color
+            #palette.setColor(palette.Background, QtGui.QColor(colour[0], colour[1], colour[2]))
+            # "light" border
+            palette.setColor(palette.Light, QtGui.QColor(colour[0], colour[1], colour[2]))
+            # "dark" border
+            palette.setColor(palette.Dark, QtGui.QColor(colour[0], colour[1], colour[2]))
+            self.w.coefficientOfDetermination.setPalette(palette)
         else:
             self.w.displayAssignedMetabolites.setChecked(False)
             self.w.displayAssignedMetabolites.setVisible(False)

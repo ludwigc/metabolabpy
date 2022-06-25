@@ -2458,6 +2458,216 @@
               </property>
              </widget>
             </item>
+            <item row="0" column="1" rowspan="2">
+             <layout class="QGridLayout" name="gridLayout_30">
+              <property name="horizontalSpacing">
+               <number>10</number>
+              </property>
+              <item row="2" column="0">
+               <widget class="QSplitter" name="splitter">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <widget class="QLabel" name="label_76">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>3</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Fit up to # bonds</string>
+                 </property>
+                </widget>
+                <widget class="QComboBox" name="fitUpToBonds">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>10</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="currentIndex">
+                  <number>1</number>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>0</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>1</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>2</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>3</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>4</string>
+                  </property>
+                 </item>
+                </widget>
+                <widget class="QLabel" name="label_93">
+                 <property name="text">
+                  <string>    Coefficient of Determination </string>
+                 </property>
+                </widget>
+                <widget class="QLCDNumber" name="coefficientOfDetermination">
+                 <property name="value" stdset="0">
+                  <double>-1.000000000000000</double>
+                 </property>
+                </widget>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="MplWidget2" name="hsqcPeak" native="true">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>45</horstretch>
+                  <verstretch>40</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>50</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>600</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QFrame" name="peakSelection">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>40</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>100</height>
+                 </size>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item row="1" column="2">
+             <layout class="QGridLayout" name="gridLayout_14">
+              <item row="1" column="0" colspan="5">
+               <widget class="QLineEdit" name="searchAssignedHsqcMetabolites">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_73">
+                <property name="text">
+                 <string>Search</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="4">
+               <widget class="QLabel" name="label_75">
+                <property name="text">
+                 <string>Assigned Metabolites</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QPushButton" name="deleteAssignedHsqc">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Delete</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="3">
+               <spacer name="horizontalSpacer_43">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="2">
+               <widget class="QPushButton" name="clearAssignedHsqc">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Clear</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0" colspan="5">
+               <widget class="QListView" name="hsqcAssignedMetabolites">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>10</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
             <item row="0" column="2">
              <widget class="QTabWidget" name="hsqcTab">
               <property name="minimumSize">
@@ -2927,14 +3137,14 @@
                 <string>Setup</string>
                </attribute>
                <layout class="QGridLayout" name="gridLayout_25">
-                <item row="0" column="0">
+                <item row="0" column="0" colspan="2">
                  <widget class="QLabel" name="label_81">
                   <property name="text">
                    <string>Pick local optimum</string>
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="2">
+                <item row="0" column="4">
                  <widget class="QComboBox" name="pickLocalOptCB">
                   <item>
                    <property name="text">
@@ -2948,14 +3158,14 @@
                   </item>
                  </widget>
                 </item>
-                <item row="1" column="0">
+                <item row="1" column="0" colspan="2">
                  <widget class="QLabel" name="label_79">
                   <property name="text">
                    <string>Display picked metabolite peaks</string>
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="2">
+                <item row="1" column="4">
                  <widget class="QComboBox" name="displayPickedCB">
                   <item>
                    <property name="text">
@@ -2969,14 +3179,14 @@
                   </item>
                  </widget>
                 </item>
-                <item row="2" column="0">
+                <item row="2" column="0" colspan="2">
                  <widget class="QLabel" name="label_80">
                   <property name="text">
                    <string>Display library shift</string>
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="2">
+                <item row="2" column="4">
                  <widget class="QComboBox" name="displayLibraryCB">
                   <item>
                    <property name="text">
@@ -2990,14 +3200,14 @@
                   </item>
                  </widget>
                 </item>
-                <item row="3" column="0">
+                <item row="3" column="0" colspan="2">
                  <widget class="QLabel" name="label_91">
                   <property name="text">
                    <string>Carbonyl HSQC</string>
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="2">
+                <item row="3" column="4">
                  <widget class="QComboBox" name="coHsqcCB">
                   <item>
                    <property name="text">
@@ -3018,7 +3228,7 @@
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="2">
+                <item row="4" column="4">
                  <widget class="QComboBox" name="tiltHsqcCB">
                   <property name="currentIndex">
                    <number>1</number>
@@ -3035,14 +3245,14 @@
                   </item>
                  </widget>
                 </item>
-                <item row="5" column="0" colspan="2">
+                <item row="5" column="0" colspan="3">
                  <widget class="QLabel" name="label_92">
                   <property name="text">
                    <string>Autoscale 13C range with J-scale (cnst18)</string>
                   </property>
                  </widget>
                 </item>
-                <item row="5" column="2">
+                <item row="5" column="4">
                  <widget class="QComboBox" name="autoscaleCB">
                   <item>
                    <property name="text">
@@ -3063,8 +3273,25 @@
                   </property>
                  </widget>
                 </item>
-                <item row="6" column="1" colspan="2">
+                <item row="6" column="1">
                  <widget class="QLineEdit" name="h1Range">
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="2">
+                 <widget class="QLabel" name="label_94">
+                  <property name="text">
+                   <string>1H Range (autoPick)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="4">
+                 <widget class="QLineEdit" name="h1RangeAutopick">
                   <property name="text">
                    <string/>
                   </property>
@@ -3080,8 +3307,25 @@
                   </property>
                  </widget>
                 </item>
-                <item row="7" column="1" colspan="2">
+                <item row="7" column="1">
                  <widget class="QLineEdit" name="c13Range">
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="7" column="2" colspan="2">
+                 <widget class="QLabel" name="label_95">
+                  <property name="text">
+                   <string>13C Range (autoPick)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="7" column="4">
+                 <widget class="QLineEdit" name="c13RangeAutopick">
                   <property name="text">
                    <string/>
                   </property>
@@ -3097,8 +3341,25 @@
                   </property>
                  </widget>
                 </item>
-                <item row="8" column="1" colspan="2">
+                <item row="8" column="1">
                  <widget class="QLineEdit" name="jCH">
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="8" column="2" colspan="2">
+                 <widget class="QLabel" name="label_96">
+                  <property name="text">
+                   <string>CoD (high)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="8" column="4">
+                 <widget class="QLineEdit" name="codHigh">
                   <property name="text">
                    <string/>
                   </property>
@@ -3114,8 +3375,25 @@
                   </property>
                  </widget>
                 </item>
-                <item row="9" column="1" colspan="2">
+                <item row="9" column="1">
                  <widget class="QLineEdit" name="jCC">
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="9" column="2" colspan="2">
+                 <widget class="QLabel" name="label_97">
+                  <property name="text">
+                   <string>CoD (low)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="9" column="4">
+                 <widget class="QLineEdit" name="codLow">
                   <property name="text">
                    <string/>
                   </property>
@@ -3131,7 +3409,7 @@
                   </property>
                  </widget>
                 </item>
-                <item row="10" column="1" colspan="2">
+                <item row="10" column="1">
                  <widget class="QLineEdit" name="nMax">
                   <property name="text">
                    <string/>
@@ -3141,14 +3419,14 @@
                   </property>
                  </widget>
                 </item>
-                <item row="11" column="0">
+                <item row="10" column="2">
                  <widget class="QLabel" name="label_90">
                   <property name="text">
                    <string>Threshold</string>
                   </property>
                  </widget>
                 </item>
-                <item row="11" column="1" colspan="2">
+                <item row="10" column="4">
                  <widget class="QLineEdit" name="threshold">
                   <property name="text">
                    <string/>
@@ -3161,206 +3439,6 @@
                </layout>
               </widget>
              </widget>
-            </item>
-            <item row="0" column="1" rowspan="2">
-             <layout class="QGridLayout" name="gridLayout_30">
-              <property name="horizontalSpacing">
-               <number>10</number>
-              </property>
-              <item row="1" column="0">
-               <widget class="QFrame" name="peakSelection">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>40</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QSplitter" name="splitter">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <widget class="QLabel" name="label_76">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>3</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>Fit up to # bonds</string>
-                 </property>
-                </widget>
-                <widget class="QComboBox" name="fitUpToBonds">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>10</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="currentIndex">
-                  <number>1</number>
-                 </property>
-                 <item>
-                  <property name="text">
-                   <string>0</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>1</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>2</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>3</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>4</string>
-                  </property>
-                 </item>
-                </widget>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="MplWidget2" name="hsqcPeak" native="true">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                  <horstretch>45</horstretch>
-                  <verstretch>40</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>50</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>600</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item row="1" column="2">
-             <layout class="QGridLayout" name="gridLayout_14">
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_73">
-                <property name="text">
-                 <string>Search</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0" colspan="5">
-               <widget class="QLineEdit" name="searchAssignedHsqcMetabolites">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QPushButton" name="deleteAssignedHsqc">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string>Delete</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="4">
-               <widget class="QLabel" name="label_75">
-                <property name="text">
-                 <string>Assigned Metabolites</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0" colspan="5">
-               <widget class="QListView" name="hsqcAssignedMetabolites">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                  <horstretch>10</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
-               <widget class="QPushButton" name="clearAssignedHsqc">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string>Clear</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="3">
-               <spacer name="horizontalSpacer_43">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
             </item>
            </layout>
           </widget>

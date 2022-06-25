@@ -13,6 +13,8 @@ class NmrHsqc:
     def __init__(self):
         self.range_h = 0.1           # [ppm]
         self.range_c = 0.7           # [ppm]
+        self.autopick_range_h = 0.07
+        self.autopick_range_c = 0.6
         self.threshold = 0.05        # [%]
         self.j_cc = 60               # [Hz]
         self.j_ch = 145              # [Hz]
@@ -39,6 +41,12 @@ class NmrHsqc:
         self.fit_percentages = True
         self.fit_zero_percentages = True
         self.autosim = False
+        self.cod_high = 80.0
+        self.cod_low = 70.0
+        self.delta_h1_low = 0.15
+        self.delta_h1_high = 0.3
+        self.delta_c13_low = 0.5
+        self.delta_c13_high = 1.0
         # end __init__
 
     def __str__(self):  # pragma: no cover
