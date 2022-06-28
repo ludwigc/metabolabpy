@@ -11,13 +11,13 @@ import os
 class NmrHsqc:
 
     def __init__(self):
-        self.range_h = 0.1           # [ppm]
-        self.range_c = 0.7           # [ppm]
-        self.autopick_range_h = 0.07
-        self.autopick_range_c = 0.6
-        self.threshold = 0.05        # [%]
-        self.j_cc = 60               # [Hz]
-        self.j_ch = 145              # [Hz]
+        self.range_h = 0.1            # [ppm]
+        self.range_c = 0.7            # [ppm]
+        self.autopick_range_h = 0.07  # [ppm]
+        self.autopick_range_c = 0.6   # [ppm]
+        self.threshold = 0.05         # [%]
+        self.j_cc = 60                # [Hz]
+        self.j_ch = 145               # [Hz]
         self.n_max = 4
         self.use_splitting = True
         self.tilt_hsqc = False

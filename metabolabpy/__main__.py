@@ -181,6 +181,62 @@ try:
 
 
     # ------------------ MplWidget3 ------------------
+    # ------------------ MplWidget4 ------------------
+    class MplWidget4(QWidget):  # pragma: no cover
+
+        def __init__(self, parent=None):
+            QWidget.__init__(self, parent)
+            fig = Figure()
+            self.canvas = FigureCanvas(fig)
+            vertical_layout = QVBoxLayout()
+            vertical_layout.addWidget(self.canvas)
+            home = NavigationToolbar.home
+            def new_home(self, *args, **kwargs):
+                self.canvas.axes.autoscale()
+                self.canvas.draw()
+                self.canvas.toolbar.update()
+                home(self, *args, **kwargs)
+
+            NavigationToolbar.home = new_home
+            self.toolbar = NavigationToolbar(self.canvas, self)
+            #self.toolbar._actions['back'].setEnabled(False)
+            vertical_layout.addWidget(self.toolbar)
+
+            self.canvas.axes = self.canvas.figure.add_subplot(111)
+            self.setLayout(vertical_layout)
+            self.ph_corr = phCorr.PhCorr()
+            # end __init__
+
+
+    # ------------------ MplWidget4 ------------------
+    # ------------------ MplWidget5 ------------------
+    class MplWidget5(QWidget):  # pragma: no cover
+
+        def __init__(self, parent=None):
+            QWidget.__init__(self, parent)
+            fig = Figure()
+            self.canvas = FigureCanvas(fig)
+            vertical_layout = QVBoxLayout()
+            vertical_layout.addWidget(self.canvas)
+            home = NavigationToolbar.home
+            def new_home(self, *args, **kwargs):
+                self.canvas.axes.autoscale()
+                self.canvas.draw()
+                self.canvas.toolbar.update()
+                home(self, *args, **kwargs)
+
+            NavigationToolbar.home = new_home
+            self.toolbar = NavigationToolbar(self.canvas, self)
+            #self.toolbar._actions['back'].setEnabled(False)
+            vertical_layout.addWidget(self.toolbar)
+
+            self.canvas.axes = self.canvas.figure.add_subplot(111)
+            self.setLayout(vertical_layout)
+            self.ph_corr = phCorr.PhCorr()
+            # end __init__
+
+
+    # ------------------ MplWidget5 ------------------
 
     # ------------------ MplWidget ------------------
     class QWebEngineView2(QWebEngineView):
@@ -218,6 +274,8 @@ class main_w(object):  # pragma: no cover
         self.loader.registerCustomWidget(MplWidget)
         self.loader.registerCustomWidget(MplWidget2)
         self.loader.registerCustomWidget(MplWidget3)
+        self.loader.registerCustomWidget(MplWidget4)
+        self.loader.registerCustomWidget(MplWidget5)
         # self.loader.registerCustomWidget(hsqcMultiplet)
         self.w = self.loader.load(self.file)
         self.zoom = False
@@ -484,6 +542,8 @@ class main_w(object):  # pragma: no cover
         self.w.MplWidget.toolbar.setVisible(False)
         self.w.hsqcMultiplet.toolbar.setVisible(False)
         self.w.hsqcPeak.toolbar.setVisible(False)
+        self.w.isotopomerHsqcPeak.toolbar.setVisible(False)
+        self.w.isotopomerMultiplet.toolbar.setVisible(False)
         self.w.MplWidget.setFocus()
         self.set_zoom()
         self.w.pickRowColPhCorr2d.clicked.connect(self.pick_col_row)
@@ -2127,7 +2187,7 @@ class main_w(object):  # pragma: no cover
         self.w.selectClassTW.selectAll()
         sel_it = self.w.selectClassTW.selectedItems()
         for k in np.arange(len(sel_it) - 1, -1, -1):
-            if (self.w.selectClassTW.selectedItems()[k].column() == 1):
+            if self.w.selectClassTW.selectedItems()[k].column() == 1:
                 self.w.selectClassTW.selectedItems()[k].setSelected(False)
 
         sel_it = self.w.selectClassTW.selectedItems()
@@ -3535,6 +3595,26 @@ class main_w(object):  # pragma: no cover
         self.w.hsqcPeak.canvas.axes.spines['top'].set_color(fg)
         self.w.hsqcPeak.canvas.axes.spines['left'].set_color(fg)
         self.w.hsqcPeak.canvas.axes.spines['right'].set_color(fg)
+        self.w.isotopomerHsqcPeak.canvas.figure.set_facecolor(bg)
+        self.w.isotopomerHsqcPeak.canvas.axes.set_facecolor(bg)
+        self.w.isotopomerHsqcPeak.canvas.axes.xaxis.label.set_color(fg)
+        self.w.isotopomerHsqcPeak.canvas.axes.yaxis.label.set_color(fg)
+        self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='x', colors=fg)
+        self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='y', colors=fg)
+        self.w.isotopomerHsqcPeak.canvas.axes.spines['bottom'].set_color(fg)
+        self.w.isotopomerHsqcPeak.canvas.axes.spines['top'].set_color(fg)
+        self.w.isotopomerHsqcPeak.canvas.axes.spines['left'].set_color(fg)
+        self.w.isotopomerHsqcPeak.canvas.axes.spines['right'].set_color(fg)
+        self.w.isotopomerMultiplet.canvas.figure.set_facecolor(bg)
+        self.w.isotopomerMultiplet.canvas.axes.set_facecolor(bg)
+        self.w.isotopomerMultiplet.canvas.axes.xaxis.label.set_color(fg)
+        self.w.isotopomerMultiplet.canvas.axes.yaxis.label.set_color(fg)
+        self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='x', colors=fg)
+        self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='y', colors=fg)
+        self.w.isotopomerMultiplet.canvas.axes.spines['bottom'].set_color(fg)
+        self.w.isotopomerMultiplet.canvas.axes.spines['top'].set_color(fg)
+        self.w.isotopomerMultiplet.canvas.axes.spines['left'].set_color(fg)
+        self.w.isotopomerMultiplet.canvas.axes.spines['right'].set_color(fg)
         # end load_dark_mode
 
     def set_standard_plot_colours(self):
@@ -3608,6 +3688,26 @@ class main_w(object):  # pragma: no cover
         self.w.hsqcPeak.canvas.axes.spines['top'].set_color(fg)
         self.w.hsqcPeak.canvas.axes.spines['left'].set_color(fg)
         self.w.hsqcPeak.canvas.axes.spines['right'].set_color(fg)
+        self.w.isotopomerHsqcPeak.canvas.figure.set_facecolor(bg)
+        self.w.isotopomerHsqcPeak.canvas.axes.set_facecolor(bg)
+        self.w.isotopomerHsqcPeak.canvas.axes.xaxis.label.set_color(fg)
+        self.w.isotopomerHsqcPeak.canvas.axes.yaxis.label.set_color(fg)
+        self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='x', colors=fg)
+        self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='y', colors=fg)
+        self.w.isotopomerHsqcPeak.canvas.axes.spines['bottom'].set_color(fg)
+        self.w.isotopomerHsqcPeak.canvas.axes.spines['top'].set_color(fg)
+        self.w.isotopomerHsqcPeak.canvas.axes.spines['left'].set_color(fg)
+        self.w.isotopomerHsqcPeak.canvas.axes.spines['right'].set_color(fg)
+        self.w.isotopomerMultiplet.canvas.figure.set_facecolor(bg)
+        self.w.isotopomerMultiplet.canvas.axes.set_facecolor(bg)
+        self.w.isotopomerMultiplet.canvas.axes.xaxis.label.set_color(fg)
+        self.w.isotopomerMultiplet.canvas.axes.yaxis.label.set_color(fg)
+        self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='x', colors=fg)
+        self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='y', colors=fg)
+        self.w.isotopomerMultiplet.canvas.axes.spines['bottom'].set_color(fg)
+        self.w.isotopomerMultiplet.canvas.axes.spines['top'].set_color(fg)
+        self.w.isotopomerMultiplet.canvas.axes.spines['left'].set_color(fg)
+        self.w.isotopomerMultiplet.canvas.axes.spines['right'].set_color(fg)
         # end load_light_mode
 
     def ma_fit_hsqc_1d(self):
@@ -4338,14 +4438,25 @@ class main_w(object):  # pragma: no cover
         if len(hsqc.hsqc_data[hsqc.cur_metabolite].sim_spc[hsqc.cur_peak - 1]) == 0:
             hsqc.hsqc_data[hsqc.cur_metabolite].cod[hsqc.cur_peak - 1] = -1
 
-        if hsqc.hsqc_data[hsqc.cur_metabolite].cod[hsqc.cur_peak - 1] > hsqc.cod_high:
-            colour =[0, 255, 0]
-        elif hsqc.hsqc_data[hsqc.cur_metabolite].cod[hsqc.cur_peak - 1] == -1:
-            colour = n_colour
-        elif hsqc.hsqc_data[hsqc.cur_metabolite].cod[hsqc.cur_peak - 1] < hsqc.cod_low:
-            colour = [255, 0, 0]
+        if self.cf.mode == 'dark':
+            if hsqc.hsqc_data[hsqc.cur_metabolite].cod[hsqc.cur_peak - 1] > hsqc.cod_high:
+                colour =[0, 255, 0]
+            elif hsqc.hsqc_data[hsqc.cur_metabolite].cod[hsqc.cur_peak - 1] == -1:
+                colour = n_colour
+            elif hsqc.hsqc_data[hsqc.cur_metabolite].cod[hsqc.cur_peak - 1] < hsqc.cod_low:
+                colour = [255, 0, 0]
+            else:
+                colour = [255, 170, 0]
+
         else:
-            colour = [255, 170, 0]
+            if hsqc.hsqc_data[hsqc.cur_metabolite].cod[hsqc.cur_peak - 1] > hsqc.cod_high:
+                colour = [0, 200, 0]
+            elif hsqc.hsqc_data[hsqc.cur_metabolite].cod[hsqc.cur_peak - 1] == -1:
+                colour = n_colour
+            elif hsqc.hsqc_data[hsqc.cur_metabolite].cod[hsqc.cur_peak - 1] < hsqc.cod_low:
+                colour = [200, 0, 0]
+            else:
+                colour = [200, 150, 0]
 
         self.w.coefficientOfDetermination.display(hsqc.hsqc_data[hsqc.cur_metabolite].cod[hsqc.cur_peak - 1])
         palette = self.w.coefficientOfDetermination.palette()
