@@ -418,10 +418,14 @@ class NmrData:
                 self.hsqc.set_metabolite_information(metabolite_name, self.hsqc.metabolite_information)
                 self.hsqc.set_peak_information()
                 self.hsqc.hsqc_data[metabolite_name].c13_picked[cur_peak - 1] = \
-                self.hsqc.hsqc_data[metabolite_name].spin_systems[cur_peak - 1]['c13_shifts'][0]
-                # 25% contribution for every multiplet component
+                    self.hsqc.hsqc_data[metabolite_name].spin_systems[cur_peak - 1]['c13_shifts'][0]
+                # 24.24, 30.30, 30.30, 15.15% contribution for multiplet components
                 cont = np.copy(self.hsqc.hsqc_data[metabolite_name].spin_systems[cur_peak - 1]['contribution'])
-                cnt = np.array([80, 100, 100, 50])  # [100, 50, 50, 25])
+                if len(cont) > 2:
+                    cnt = np.array([80, 100, 100, 50])  # [100, 50, 50, 25])
+                else:
+                    cnt = np.array([100, 100])
+
                 cnt = np.copy(cnt[range(len(cont))])
                 cnt = cnt / np.sum(cnt)
                 cnt *= 100
@@ -481,7 +485,12 @@ class NmrData:
                 corr3 = np.zeros(len(data))
                 for l in range(len(data)):
                     corr3[l] = np.corrcoef(data[l], spc3)[0][1]
+                    #print("weight: {}, corr3[l]: {}, corr3[l] * np.max(data[l]) / np.max(data): {}".format(np.max(data[l]) / np.max(data), corr3[l], corr3[l] * np.max(data[l]) / np.max(data)))
 
+                #max_idx3 = np.where(corr3 == np.max(corr3))[0][0]
+                #for l in range(len(data)):
+                #    corr3[l] *= data[l][max_idx3] / np.max(data)
+                #
                 max_idx3 = np.where(corr3 == np.max(corr3))[0][0]
                 h1_pts_f = h1_pts1 + max_idx3 - 1
                 c13_pts_f = c13_pts1 + max_shift + shift_max[spc2_idx] + 1
@@ -1578,6 +1587,8 @@ class NmrData:
 
         spc2 /= np.linalg.norm(spc2)
         spc2_sim /= np.linalg.norm(spc2_sim)
+        #spc2_sim *= self.hsqc.hsqc_data[self.hsqc.cur_metabolite].intensities[self.hsqc.cur_peak - 1]
+        #print("max(spc2) = {}, max(spc2_sim) = {}, intensity = {}".format(np.max(spc2), np.max(spc2_sim), self.hsqc.hsqc_data[self.hsqc.cur_metabolite].intensities[self.hsqc.cur_peak - 1]))
         #print("yAdjust: {}, 13c(idx): {}\n1h(lib): {}, 13c(lib): {}\n1h(exp): {}, 13c(exp): {}".format(gamma_adjust, c13_idx, h1_shift, c13_shift, h1_exp, c13_exp))
         #print("len(spc2): {}, len(spc2_sim): {}".format(len(spc2), len(spc2_sim)))
         max_dist = math.sqrt(self.hsqc.range_h**2 + (self.hsqc.range_c / gamma_adjust)**2)

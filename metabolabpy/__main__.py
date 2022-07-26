@@ -251,7 +251,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.7.18'
+        self.__version__ = '0.7.19'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -279,7 +279,6 @@ class main_w(object):  # pragma: no cover
         # self.loader.registerCustomWidget(hsqcMultiplet)
         self.w = self.loader.load(self.file)
         self.zoom = False
-
         self.hide_pre_processing()
         self.hide_peak_picking()
         self.w.preprocessing.setVisible(False)
@@ -542,8 +541,8 @@ class main_w(object):  # pragma: no cover
         self.w.MplWidget.toolbar.setVisible(False)
         self.w.hsqcMultiplet.toolbar.setVisible(False)
         self.w.hsqcPeak.toolbar.setVisible(False)
-        self.w.isotopomerHsqcPeak.toolbar.setVisible(False)
-        self.w.isotopomerMultiplet.toolbar.setVisible(False)
+        #self.w.isotopomerHsqcPeak.toolbar.setVisible(False)
+        #self.w.isotopomerMultiplet.toolbar.setVisible(False)
         self.w.MplWidget.setFocus()
         self.set_zoom()
         self.w.pickRowColPhCorr2d.clicked.connect(self.pick_col_row)
@@ -2303,14 +2302,46 @@ class main_w(object):  # pragma: no cover
 
     def get_disp_pars3(self):
         d = self.nd.nmrdat[self.nd.s][self.nd.e].display
-        pos_r = float(self.w.posColR.text())
-        pos_g = float(self.w.posColG.text())
-        pos_b = float(self.w.posColB.text())
-        neg_r = float(self.w.negColR.text())
-        neg_g = float(self.w.negColG.text())
-        neg_b = float(self.w.negColB.text())
-        d.pos_col_rgb = (pos_r, pos_g, pos_b)
-        d.neg_col_rgb = (neg_r, neg_g, neg_b)
+        try:
+            pos_r = float(self.w.posColR.text())
+        except:
+            pass
+
+        try:
+            pos_g = float(self.w.posColG.text())
+        except:
+            pass
+
+        try:
+            pos_b = float(self.w.posColB.text())
+        except:
+            pass
+
+        try:
+            neg_r = float(self.w.negColR.text())
+        except:
+            pass
+
+        try:
+            neg_g = float(self.w.negColG.text())
+        except:
+            pass
+
+        try:
+            neg_b = float(self.w.negColB.text())
+        except:
+            pass
+
+        try:
+            d.pos_col_rgb = (pos_r, pos_g, pos_b)
+        except:
+            pass
+
+        try:
+            d.neg_col_rgb = (neg_r, neg_g, neg_b)
+        except:
+            pass
+
         self.nd.nmrdat[self.nd.s][self.nd.e].display = d
         # end get_disp_pars3
 
@@ -3595,26 +3626,26 @@ class main_w(object):  # pragma: no cover
         self.w.hsqcPeak.canvas.axes.spines['top'].set_color(fg)
         self.w.hsqcPeak.canvas.axes.spines['left'].set_color(fg)
         self.w.hsqcPeak.canvas.axes.spines['right'].set_color(fg)
-        self.w.isotopomerHsqcPeak.canvas.figure.set_facecolor(bg)
-        self.w.isotopomerHsqcPeak.canvas.axes.set_facecolor(bg)
-        self.w.isotopomerHsqcPeak.canvas.axes.xaxis.label.set_color(fg)
-        self.w.isotopomerHsqcPeak.canvas.axes.yaxis.label.set_color(fg)
-        self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='x', colors=fg)
-        self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='y', colors=fg)
-        self.w.isotopomerHsqcPeak.canvas.axes.spines['bottom'].set_color(fg)
-        self.w.isotopomerHsqcPeak.canvas.axes.spines['top'].set_color(fg)
-        self.w.isotopomerHsqcPeak.canvas.axes.spines['left'].set_color(fg)
-        self.w.isotopomerHsqcPeak.canvas.axes.spines['right'].set_color(fg)
-        self.w.isotopomerMultiplet.canvas.figure.set_facecolor(bg)
-        self.w.isotopomerMultiplet.canvas.axes.set_facecolor(bg)
-        self.w.isotopomerMultiplet.canvas.axes.xaxis.label.set_color(fg)
-        self.w.isotopomerMultiplet.canvas.axes.yaxis.label.set_color(fg)
-        self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='x', colors=fg)
-        self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='y', colors=fg)
-        self.w.isotopomerMultiplet.canvas.axes.spines['bottom'].set_color(fg)
-        self.w.isotopomerMultiplet.canvas.axes.spines['top'].set_color(fg)
-        self.w.isotopomerMultiplet.canvas.axes.spines['left'].set_color(fg)
-        self.w.isotopomerMultiplet.canvas.axes.spines['right'].set_color(fg)
+        #self.w.isotopomerHsqcPeak.canvas.figure.set_facecolor(bg)
+        #self.w.isotopomerHsqcPeak.canvas.axes.set_facecolor(bg)
+        #self.w.isotopomerHsqcPeak.canvas.axes.xaxis.label.set_color(fg)
+        #self.w.isotopomerHsqcPeak.canvas.axes.yaxis.label.set_color(fg)
+        #self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='x', colors=fg)
+        #self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='y', colors=fg)
+        #self.w.isotopomerHsqcPeak.canvas.axes.spines['bottom'].set_color(fg)
+        #self.w.isotopomerHsqcPeak.canvas.axes.spines['top'].set_color(fg)
+        #self.w.isotopomerHsqcPeak.canvas.axes.spines['left'].set_color(fg)
+        #self.w.isotopomerHsqcPeak.canvas.axes.spines['right'].set_color(fg)
+        #self.w.isotopomerMultiplet.canvas.figure.set_facecolor(bg)
+        #self.w.isotopomerMultiplet.canvas.axes.set_facecolor(bg)
+        #self.w.isotopomerMultiplet.canvas.axes.xaxis.label.set_color(fg)
+        #self.w.isotopomerMultiplet.canvas.axes.yaxis.label.set_color(fg)
+        #self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='x', colors=fg)
+        #self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='y', colors=fg)
+        #self.w.isotopomerMultiplet.canvas.axes.spines['bottom'].set_color(fg)
+        #self.w.isotopomerMultiplet.canvas.axes.spines['top'].set_color(fg)
+        #self.w.isotopomerMultiplet.canvas.axes.spines['left'].set_color(fg)
+        #self.w.isotopomerMultiplet.canvas.axes.spines['right'].set_color(fg)
         # end load_dark_mode
 
     def set_standard_plot_colours(self):
@@ -3688,26 +3719,26 @@ class main_w(object):  # pragma: no cover
         self.w.hsqcPeak.canvas.axes.spines['top'].set_color(fg)
         self.w.hsqcPeak.canvas.axes.spines['left'].set_color(fg)
         self.w.hsqcPeak.canvas.axes.spines['right'].set_color(fg)
-        self.w.isotopomerHsqcPeak.canvas.figure.set_facecolor(bg)
-        self.w.isotopomerHsqcPeak.canvas.axes.set_facecolor(bg)
-        self.w.isotopomerHsqcPeak.canvas.axes.xaxis.label.set_color(fg)
-        self.w.isotopomerHsqcPeak.canvas.axes.yaxis.label.set_color(fg)
-        self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='x', colors=fg)
-        self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='y', colors=fg)
-        self.w.isotopomerHsqcPeak.canvas.axes.spines['bottom'].set_color(fg)
-        self.w.isotopomerHsqcPeak.canvas.axes.spines['top'].set_color(fg)
-        self.w.isotopomerHsqcPeak.canvas.axes.spines['left'].set_color(fg)
-        self.w.isotopomerHsqcPeak.canvas.axes.spines['right'].set_color(fg)
-        self.w.isotopomerMultiplet.canvas.figure.set_facecolor(bg)
-        self.w.isotopomerMultiplet.canvas.axes.set_facecolor(bg)
-        self.w.isotopomerMultiplet.canvas.axes.xaxis.label.set_color(fg)
-        self.w.isotopomerMultiplet.canvas.axes.yaxis.label.set_color(fg)
-        self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='x', colors=fg)
-        self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='y', colors=fg)
-        self.w.isotopomerMultiplet.canvas.axes.spines['bottom'].set_color(fg)
-        self.w.isotopomerMultiplet.canvas.axes.spines['top'].set_color(fg)
-        self.w.isotopomerMultiplet.canvas.axes.spines['left'].set_color(fg)
-        self.w.isotopomerMultiplet.canvas.axes.spines['right'].set_color(fg)
+        #self.w.isotopomerHsqcPeak.canvas.figure.set_facecolor(bg)
+        #self.w.isotopomerHsqcPeak.canvas.axes.set_facecolor(bg)
+        #self.w.isotopomerHsqcPeak.canvas.axes.xaxis.label.set_color(fg)
+        #self.w.isotopomerHsqcPeak.canvas.axes.yaxis.label.set_color(fg)
+        #self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='x', colors=fg)
+        #self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='y', colors=fg)
+        #self.w.isotopomerHsqcPeak.canvas.axes.spines['bottom'].set_color(fg)
+        #self.w.isotopomerHsqcPeak.canvas.axes.spines['top'].set_color(fg)
+        #self.w.isotopomerHsqcPeak.canvas.axes.spines['left'].set_color(fg)
+        #self.w.isotopomerHsqcPeak.canvas.axes.spines['right'].set_color(fg)
+        #self.w.isotopomerMultiplet.canvas.figure.set_facecolor(bg)
+        #self.w.isotopomerMultiplet.canvas.axes.set_facecolor(bg)
+        #self.w.isotopomerMultiplet.canvas.axes.xaxis.label.set_color(fg)
+        #self.w.isotopomerMultiplet.canvas.axes.yaxis.label.set_color(fg)
+        #self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='x', colors=fg)
+        #self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='y', colors=fg)
+        #self.w.isotopomerMultiplet.canvas.axes.spines['bottom'].set_color(fg)
+        #self.w.isotopomerMultiplet.canvas.axes.spines['top'].set_color(fg)
+        #self.w.isotopomerMultiplet.canvas.axes.spines['left'].set_color(fg)
+        #self.w.isotopomerMultiplet.canvas.axes.spines['right'].set_color(fg)
         # end load_light_mode
 
     def ma_fit_hsqc_1d(self):
