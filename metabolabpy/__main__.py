@@ -238,12 +238,12 @@ try:
 
     # ------------------ MplWidget5 ------------------
 
-    # ------------------ MplWidget ------------------
+    # ------------------ QWebEngineView2 -------------
     class QWebEngineView2(QWebEngineView):
         def print_cmd(self):
             print("QWebEngineView2")
 
-    # ------------------ hsqcMultiplet ------------------
+    # ------------------ QWebEngineView2 -------------
 except:
     pass
 
