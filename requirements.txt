@@ -1,14 +1,19 @@
+#apt install python3-...
+#on arm: sudo apt install python3-pyside2*
+#then the rest with sudo apt install python3-...
 numpy
 scipy
 matplotlib
-openpyxl
 pyside2
+pandas
+numba
+sklearn
+#install on arm with: pip3 install ...
+openpyxl
 pyautogui
 qtmodern
 xlsxwriter
-pandas
-sklearn
-numba
 jupyter
 jupyterthemes
 multiprocess
+#on arm: then install with : pip3 install metabolabpy --no-deps
