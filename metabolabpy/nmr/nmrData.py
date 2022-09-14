@@ -464,7 +464,10 @@ class NmrData:
                 data = np.transpose(spc / np.max(spc))
                 spc2 = self.hsqc.hsqc_data[metabolite_name].sim_spc[cur_peak - 1][c13_pts1:c13_pts2]
                 spc2 /= np.linalg.norm(spc2)
+                ppp = len(self.spc) / self.acq.sw[1]
                 max_shift = int(len(spc2) / 2) - 1
+                #max_shift = min(int(ppp * self.hsqc.range_c), int(len(spc2) / 2) - 1)
+                #print("max_shift[13C]: {}, {} | ppp: {}".format(max_shift,int(len(spc2) / 2) - 1, ppp))
                 corr2 = np.zeros((len(ica), 2 * max_shift + 1))
                 shift2 = np.zeros((len(ica), 2 * max_shift + 1), dtype=int)
                 corr_max = np.zeros(len(ica))
@@ -472,7 +475,7 @@ class NmrData:
                 shift_max = np.zeros(len(ica), dtype=int)
                 for l in range(len(ica)):
                     for k in range(2 * max_shift + 1):
-                        corr2[l][k] = np.corrcoef(ica[l], np.roll(spc2, k - max_shift))[0][1]
+                        corr2[l][k] = np.corrcoef(ica[l], np.roll(spc2, k - max_shift))[0][1] / np.std(spc2)
                         shift2[l][k] = int(k - max_shift)
 
                     idx_max[l] = int(np.where(corr2[l] == np.max(corr2[l]))[0][0])
@@ -483,8 +486,13 @@ class NmrData:
                 spc3 = np.roll(spc2, shift_max[spc2_idx])
                 # correlate 13C shifted, simulated spectrum across different 1H shift area
                 corr3 = np.zeros(len(data))
+                mid_point = int(len(data) / 2)
+                #ppp = len(self.spc[0]) / self.acq.sw[0]
+                #max_shift = min(int(ppp * self.hsqc.range_h), int(len(data) / 2) - 1)
+                #print("max_shift[ 1H]: {}, {}".format(max_shift,int(len(data) / 2) - 1))
+                #for l in range(mid_point - max_shift, mid_point + max_shift + 1):  # range(len(data)):
                 for l in range(len(data)):
-                    corr3[l] = np.corrcoef(data[l], spc3)[0][1]
+                        corr3[l] = np.corrcoef(data[l], spc3)[0][1] * np.max(data[l])
                     #print("weight: {}, corr3[l]: {}, corr3[l] * np.max(data[l]) / np.max(data): {}".format(np.max(data[l]) / np.max(data), corr3[l], corr3[l] * np.max(data[l]) / np.max(data)))
 
                 #max_idx3 = np.where(corr3 == np.max(corr3))[0][0]
