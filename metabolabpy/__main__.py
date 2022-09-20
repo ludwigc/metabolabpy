@@ -251,7 +251,7 @@ except:
 class main_w(object):  # pragma: no cover
     def __init__(self):
         self.exited_peak_picking = False
-        self.__version__ = '0.7.19'
+        self.__version__ = '0.7.20'
         self.zoom_was_on = True
         self.pan_was_on = False
         self.std_pos_col1 = (0.0, 0.0, 1.0)
@@ -580,7 +580,7 @@ class main_w(object):  # pragma: no cover
         self.w.hsqcRemovePeak.clicked.connect(lambda: self.ginput_hsqc2(0))
         self.w.metaboliteResetButton.clicked.connect(self.metabolite_reset)
         self.w.metaboliteAutoButton.clicked.connect(self.autopick_hsqc)
-        self.w.metaboliteAutofitButton.clicked.connect(self.autofit_hsqc)
+        self.w.metaboliteAutofitButton.clicked.connect(self.ma_fit_hsqc_1d)
         self.w.maSimButton.clicked.connect(self.ma_sim_hsqc_1d)
         self.buttons = {}
         # print(sys.platform)
