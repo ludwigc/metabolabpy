@@ -6009,6 +6009,7 @@
     <addaction name="actionSelect_All"/>
     <addaction name="actionClear_All"/>
     <addaction name="actionVertical_AutoScale"/>
+    <addaction name="actionHorizontal_AutoScale"/>
     <addaction name="separator"/>
     <addaction name="actionScale_2D_Spectrum_Up"/>
     <addaction name="actionScale_2D_Spectrum_Down"/>
@@ -6657,6 +6658,14 @@
   <action name="actionUpdate_MetaboLabPy_requires_restart">
    <property name="text">
     <string>Update MetaboLabPy (requires restart)</string>
+   </property>
+  </action>
+  <action name="actionHorizontal_AutoScale">
+   <property name="text">
+    <string>Horizontal AutoScale</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+H</string>
    </property>
   </action>
  </widget>

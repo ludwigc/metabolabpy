@@ -3,9 +3,9 @@ import sys  # pragma: no cover
 import matplotlib  # pragma: no cover
 
 matplotlib.use("Agg")
-matplotlib.rcParams['agg.path.chunksize'] = 64000 #64_000_000_000
-#matplotlib.rc('xtick', labelsize=8)
-#matplotlib.rc('ytick', labelsize=8)
+matplotlib.rcParams['agg.path.chunksize'] = 64000  # 64_000_000_000
+# matplotlib.rc('xtick', labelsize=8)
+# matplotlib.rc('ytick', labelsize=8)
 
 try:
     from PySide2.QtUiTools import QUiLoader  # pragma: no cover
@@ -19,7 +19,7 @@ try:
     from PySide2.QtWidgets import QFileDialog  # pragma: no cover
     from PySide2 import QtWidgets  # pragma: no cover
     from PySide2.QtCore import SIGNAL  # pragma: no cover
-    from PySide2.QtWebEngineWidgets import QWebEngineView #, QWebEngineProfile, QWebEnginePage, \
+    from PySide2.QtWebEngineWidgets import QWebEngineView  # , QWebEngineProfile, QWebEnginePage, \
     #    QWebEngineSettings  # pragma: no cover
     from PySide2.QtCore import QUrl, Qt  # pragma: no cover
     from PySide2.QtWebEngineCore import QWebEngineUrlSchemeHandler  # pragma: no cover
@@ -70,7 +70,7 @@ import numpy as np  # pragma: no cover
 import io  # pragma: no cover
 from metabolabpy.nmr import nmrDataSet  # pragma: no cover
 from metabolabpy.GUI import phCorr  # pragma: no cover
-from metabolabpy.nmr import nmrHsqc # pragma: no cover
+from metabolabpy.nmr import nmrHsqc  # pragma: no cover
 import time  # pragma: no cover
 ##import platform  # pragma: no cover
 import math  # pragma: no cover
@@ -107,6 +107,7 @@ try:
             vertical_layout = QVBoxLayout()
             vertical_layout.addWidget(self.canvas)
             home = NavigationToolbar.home
+
             def new_home(self, *args, **kwargs):
                 self.canvas.axes.autoscale()
                 self.canvas.draw()
@@ -115,7 +116,7 @@ try:
 
             NavigationToolbar.home = new_home
             self.toolbar = NavigationToolbar(self.canvas, self)
-            #self.toolbar._actions['back'].setEnabled(False)
+            # self.toolbar._actions['back'].setEnabled(False)
             vertical_layout.addWidget(self.toolbar)
 
             self.canvas.axes = self.canvas.figure.add_subplot(111)
@@ -135,6 +136,7 @@ try:
             vertical_layout = QVBoxLayout()
             vertical_layout.addWidget(self.canvas)
             home = NavigationToolbar.home
+
             def new_home(self, *args, **kwargs):
                 self.canvas.axes.autoscale()
                 self.canvas.draw()
@@ -143,7 +145,7 @@ try:
 
             NavigationToolbar.home = new_home
             self.toolbar = NavigationToolbar(self.canvas, self)
-            #self.toolbar._actions['back'].setEnabled(False)
+            # self.toolbar._actions['back'].setEnabled(False)
             vertical_layout.addWidget(self.toolbar)
 
             self.canvas.axes = self.canvas.figure.add_subplot(111)
@@ -163,6 +165,7 @@ try:
             vertical_layout = QVBoxLayout()
             vertical_layout.addWidget(self.canvas)
             home = NavigationToolbar.home
+
             def new_home(self, *args, **kwargs):
                 self.canvas.axes.autoscale()
                 self.canvas.draw()
@@ -171,7 +174,7 @@ try:
 
             NavigationToolbar.home = new_home
             self.toolbar = NavigationToolbar(self.canvas, self)
-            #self.toolbar._actions['back'].setEnabled(False)
+            # self.toolbar._actions['back'].setEnabled(False)
             vertical_layout.addWidget(self.toolbar)
 
             self.canvas.axes = self.canvas.figure.add_subplot(111)
@@ -191,6 +194,7 @@ try:
             vertical_layout = QVBoxLayout()
             vertical_layout.addWidget(self.canvas)
             home = NavigationToolbar.home
+
             def new_home(self, *args, **kwargs):
                 self.canvas.axes.autoscale()
                 self.canvas.draw()
@@ -199,7 +203,7 @@ try:
 
             NavigationToolbar.home = new_home
             self.toolbar = NavigationToolbar(self.canvas, self)
-            #self.toolbar._actions['back'].setEnabled(False)
+            # self.toolbar._actions['back'].setEnabled(False)
             vertical_layout.addWidget(self.toolbar)
 
             self.canvas.axes = self.canvas.figure.add_subplot(111)
@@ -219,6 +223,7 @@ try:
             vertical_layout = QVBoxLayout()
             vertical_layout.addWidget(self.canvas)
             home = NavigationToolbar.home
+
             def new_home(self, *args, **kwargs):
                 self.canvas.axes.autoscale()
                 self.canvas.draw()
@@ -227,7 +232,7 @@ try:
 
             NavigationToolbar.home = new_home
             self.toolbar = NavigationToolbar(self.canvas, self)
-            #self.toolbar._actions['back'].setEnabled(False)
+            # self.toolbar._actions['back'].setEnabled(False)
             vertical_layout.addWidget(self.toolbar)
 
             self.canvas.axes = self.canvas.figure.add_subplot(111)
@@ -360,6 +365,7 @@ class main_w(object):  # pragma: no cover
         self.w.bucketDataPointsLE.textChanged.connect(self.set_bucket_points_pre_proc)
         self.w.actionAutomatic_Referencing.triggered.connect(self.automatic_referencing)
         self.w.actionVertical_AutoScale.triggered.connect(self.vertical_auto_scale)
+        self.w.actionHorizontal_AutoScale.triggered.connect(self.horizontal_auto_scale)
         self.w.actionZoom.triggered.connect(self.set_zoom)
         self.w.actionPan.triggered.connect(self.set_pan)
         self.w.actionShow_Next_Tab.triggered.connect(self.next_tab)
@@ -541,8 +547,8 @@ class main_w(object):  # pragma: no cover
         self.w.MplWidget.toolbar.setVisible(False)
         self.w.hsqcMultiplet.toolbar.setVisible(False)
         self.w.hsqcPeak.toolbar.setVisible(False)
-        #self.w.isotopomerHsqcPeak.toolbar.setVisible(False)
-        #self.w.isotopomerMultiplet.toolbar.setVisible(False)
+        # self.w.isotopomerHsqcPeak.toolbar.setVisible(False)
+        # self.w.isotopomerMultiplet.toolbar.setVisible(False)
         self.w.MplWidget.setFocus()
         self.set_zoom()
         self.w.pickRowColPhCorr2d.clicked.connect(self.pick_col_row)
@@ -607,14 +613,14 @@ class main_w(object):  # pragma: no cover
         self.w.helpView.page().profile().downloadRequested.connect(self._download_requested)
         self.w.peakWidget.setColumnWidth(2, 182)
         self.layout = QGridLayout(self.w.peakSelection)
-        #self.w.h1Range.textChanged.connect(self.get_hsqc_pars1())
-        #self.w.c13Range.textChanged.connect(self.get_hsqc_pars2())
-        #self.w.threshold.textChanged.connect(self.get_hsqc_pars3())
-        #self.w.jCC.textChanged.connect(self.get_hsqc_pars4())
-        #self.w.jCH.textChanged.connect(self.get_hsqc_pars5())
-        #self.w.nMax.textChanged.connect(self.get_hsqc_pars6())
-        #self.w..textChanged.connect(self.get_hsqc_pars())
-        #self.set_hsqc()
+        # self.w.h1Range.textChanged.connect(self.get_hsqc_pars1())
+        # self.w.c13Range.textChanged.connect(self.get_hsqc_pars2())
+        # self.w.threshold.textChanged.connect(self.get_hsqc_pars3())
+        # self.w.jCC.textChanged.connect(self.get_hsqc_pars4())
+        # self.w.jCH.textChanged.connect(self.get_hsqc_pars5())
+        # self.w.nMax.textChanged.connect(self.get_hsqc_pars6())
+        # self.w..textChanged.connect(self.get_hsqc_pars())
+        # self.set_hsqc()
         # end __init__
 
     def activate_command_line(self):
@@ -638,7 +644,6 @@ class main_w(object):  # pragma: no cover
         if len(metabolite_list[0]) == 0:
             return
 
-
         no_peak_selected = False
         if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak == -1:
             no_peak_selected = True
@@ -655,7 +660,9 @@ class main_w(object):  # pragma: no cover
             self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite = metabolite_name
             self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak = cur_peak
             self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.read_metabolite_information(metabolite_name)
-            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.set_metabolite_information(metabolite_name, self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.metabolite_information)
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.set_metabolite_information(metabolite_name,
+                                                                                 self.nd.nmrdat[self.nd.s][
+                                                                                     self.nd.e].hsqc.metabolite_information)
             self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.set_peak_information()
             for k in range(len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].h1_shifts)):
                 self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak = k + 1
@@ -884,10 +891,10 @@ class main_w(object):  # pragma: no cover
         self.nd.ft()
         self.nd.auto_ref()
         self.nd.autophase1d()
-        #self.w.baselineCorrection.setCurrentIndex(1)
-        #self.nd.ft()
-        #self.nd.baseline1d()
-        #self.plot_spc()
+        # self.w.baselineCorrection.setCurrentIndex(1)
+        # self.nd.ft()
+        # self.nd.baseline1d()
+        # self.plot_spc()
         self.set_proc_pars()
         self.show_version()
         self.w.nmrSpectrum.setCurrentIndex(0)
@@ -947,10 +954,12 @@ class main_w(object):  # pragma: no cover
 
     def autophase1d_exclude_water(self, delta_sw=-1):
         self.nd.autophase1d_exclude_water(delta_sw)
+
     # end autophase1d_exclude_water
 
     def autophase1d_include_water(self):
         self.nd.autophase1d_include_water()
+
     # end autophase1d_include_water
 
     def autoref(self, tmsp=True):
@@ -1045,10 +1054,10 @@ class main_w(object):  # pragma: no cover
             hac = True
             self.w.hsqcAnalysis.setChecked(False)
 
-        #if self.w.hsqcAnalysis.isChecked() == True:
+        # if self.w.hsqcAnalysis.isChecked() == True:
         #    hsqc_analysis_checked = True
         #    self.w.hsqcAnalysis.setChecked(False)
-        #else:
+        # else:
         #    hsqc_analysis_checked = False
 
         if (len(self.nd.nmrdat) > 0):
@@ -1098,7 +1107,7 @@ class main_w(object):  # pragma: no cover
 
                     self.keep_zoom = keep_zoom
                     self.w.keepZoom.setChecked(keep_zoom)
-                    #if
+                    # if
                 # else:
                 #    if (self.ph_corr_active == False):
                 #        if (self.w.autoPlot.isChecked()):
@@ -1128,7 +1137,6 @@ class main_w(object):  # pragma: no cover
             self.w.setBox.setValue(0)
             self.w.setBox.valueChanged.connect(lambda: self.change_data_set_exp())
             self.w.expBox.valueChanged.connect(lambda: self.change_data_set_exp())
-
 
         if self.nd.nmrdat[self.nd.s][self.nd.e].dim == 2 and hac == True:
             self.w.hsqcAnalysis.setChecked(True)
@@ -1304,10 +1312,10 @@ class main_w(object):  # pragma: no cover
         self.w.expBox.valueChanged.connect(lambda: self.change_data_set_exp())
         code_out = io.StringIO()
         code_err = io.StringIO()
-        #try:
+        # try:
         #    sys.stdout = code_out
         #    sys.stderr = code_err
-        #except:
+        # except:
         #    pass
         #
         return "Workspace cleared"
@@ -1343,7 +1351,7 @@ class main_w(object):  # pragma: no cover
         # foreground color
         palette.setColor(palette.WindowText, QtGui.QColor(colour[0], colour[1], colour[2]))
         # background color
-        #palette.setColor(palette.Background, QtGui.QColor(colour[0], colour[1], colour[2]))
+        # palette.setColor(palette.Background, QtGui.QColor(colour[0], colour[1], colour[2]))
         # "light" border
         palette.setColor(palette.Light, QtGui.QColor(colour[0], colour[1], colour[2]))
         # "dark" border
@@ -1402,7 +1410,7 @@ class main_w(object):  # pragma: no cover
         f.write('Name=MetaboLabPy\n')
         f.write('GenericName=MetaboLabPy\n')
         f.write('Comment=Process NMR spectra\n')
-        f.write('Exec="' + mlpy_file  + '"\n')
+        f.write('Exec="' + mlpy_file + '"\n')
         f.write('Icon=' + icon_file + '\n')
         f.write('Terminal=false\n')
         f.write('NoDisplay=true\n')
@@ -1470,8 +1478,12 @@ class main_w(object):  # pragma: no cover
                 col2 = 'r'
 
             deltax = 0.01
-            delta_h1 = self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(len(self.nd.nmrdat[self.nd.s][self.nd.e].spc[0]) - 1, 0) - self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(0, 0)
-            delta_c13 = self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(len(self.nd.nmrdat[self.nd.s][self.nd.e].spc) - 1, 1) - self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(0, 1)
+            delta_h1 = self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(
+                len(self.nd.nmrdat[self.nd.s][self.nd.e].spc[0]) - 1, 0) - self.nd.nmrdat[self.nd.s][
+                           self.nd.e].points2ppm(0, 0)
+            delta_c13 = self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(
+                len(self.nd.nmrdat[self.nd.s][self.nd.e].spc) - 1, 1) - self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(
+                0, 1)
             deltay = deltax * delta_c13 * 2 / delta_h1
             for k in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data.keys():
                 display_metabolite = True
@@ -1483,9 +1495,15 @@ class main_w(object):  # pragma: no cover
                     for l in range(len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked)):
                         x = np.mean(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked[l])
                         y = np.mean(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].c13_picked[l])
-                        self.nd.nmrdat[self.nd.s][self.nd.e].xsa.append(self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col1, linewidth=2))
-                        self.nd.nmrdat[self.nd.s][self.nd.e].ysa.append(self.w.MplWidget.canvas.axes.plot([x, x], [y - deltay, y + deltay], color=col1, linewidth=2))
-                        self.nd.nmrdat[self.nd.s][self.nd.e].assigned_text.append(self.w.MplWidget.canvas.axes.text(x - 0.5 * deltax, y - 0.5 * deltay, k, color=col1, fontweight='bold'))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].xsa.append(
+                            self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col1,
+                                                              linewidth=2))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].ysa.append(
+                            self.w.MplWidget.canvas.axes.plot([x, x], [y - deltay, y + deltay], color=col1,
+                                                              linewidth=2))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].assigned_text.append(
+                            self.w.MplWidget.canvas.axes.text(x - 0.5 * deltax, y - 0.5 * deltay, k, color=col1,
+                                                              fontweight='bold'))
 
             self.w.MplWidget.canvas.draw()
 
@@ -1529,22 +1547,35 @@ class main_w(object):  # pragma: no cover
                 col2 = 'gray'
 
             deltax = 0.01
-            delta_h1 = self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(len(self.nd.nmrdat[self.nd.s][self.nd.e].spc[0]) - 1, 0) - self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(0, 0)
-            delta_c13 = self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(len(self.nd.nmrdat[self.nd.s][self.nd.e].spc) - 1, 1) - self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(0, 1)
+            delta_h1 = self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(
+                len(self.nd.nmrdat[self.nd.s][self.nd.e].spc[0]) - 1, 0) - self.nd.nmrdat[self.nd.s][
+                           self.nd.e].points2ppm(0, 0)
+            delta_c13 = self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(
+                len(self.nd.nmrdat[self.nd.s][self.nd.e].spc) - 1, 1) - self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(
+                0, 1)
             deltay = deltax * delta_c13 * 2 / delta_h1
             for k in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.metabolite_list:
                 if k in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data.keys():
                     display_metabolite = True
-                    if k == self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite and self.w.displaySelectedMetabolite.isChecked() == True:
+                    if k == self.nd.nmrdat[self.nd.s][
+                        self.nd.e].hsqc.cur_metabolite and self.w.displaySelectedMetabolite.isChecked() == True:
                         display_metabolite = False
 
                     for l in range(len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked)):
-                        if len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked[l]) == 0 and display_metabolite:
+                        if len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked[
+                                   l]) == 0 and display_metabolite:
                             x = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_shifts[l]
-                            y = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].c13_shifts[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_index[l] - 1]
-                            self.nd.nmrdat[self.nd.s][self.nd.e].xst.append(self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col2, linewidth=2))
-                            self.nd.nmrdat[self.nd.s][self.nd.e].yst.append(self.w.MplWidget.canvas.axes.plot([x, x], [y - deltay, y + deltay], color=col2, linewidth=2))
-                            self.nd.nmrdat[self.nd.s][self.nd.e].library_text.append(self.w.MplWidget.canvas.axes.text(x - 0.5 * deltax, y - 0.5 * deltay, k, color=col2, fontweight='bold'))
+                            y = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].c13_shifts[
+                                self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_index[l] - 1]
+                            self.nd.nmrdat[self.nd.s][self.nd.e].xst.append(
+                                self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col2,
+                                                                  linewidth=2))
+                            self.nd.nmrdat[self.nd.s][self.nd.e].yst.append(
+                                self.w.MplWidget.canvas.axes.plot([x, x], [y - deltay, y + deltay], color=col2,
+                                                                  linewidth=2))
+                            self.nd.nmrdat[self.nd.s][self.nd.e].library_text.append(
+                                self.w.MplWidget.canvas.axes.text(x - 0.5 * deltax, y - 0.5 * deltay, k, color=col2,
+                                                                  fontweight='bold'))
 
                 else:
                     hsqc = nmrHsqc.NmrHsqc()
@@ -1554,9 +1585,15 @@ class main_w(object):  # pragma: no cover
                     for l in range(len(hsqc.hsqc_data[k].h1_shifts)):
                         x = hsqc.hsqc_data[k].h1_shifts[l]
                         y = hsqc.hsqc_data[k].c13_shifts[hsqc.hsqc_data[k].h1_index[l] - 1]
-                        self.nd.nmrdat[self.nd.s][self.nd.e].xst.append(self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col2, linewidth=2))
-                        self.nd.nmrdat[self.nd.s][self.nd.e].yst.append(self.w.MplWidget.canvas.axes.plot([x, x], [y - deltay, y + deltay], color=col2, linewidth=2))
-                        self.nd.nmrdat[self.nd.s][self.nd.e].library_text.append(self.w.MplWidget.canvas.axes.text(x - 0.5 * deltax, y - 0.5 * deltay, k, color=col2, fontweight='bold'))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].xst.append(
+                            self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col2,
+                                                              linewidth=2))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].yst.append(
+                            self.w.MplWidget.canvas.axes.plot([x, x], [y - deltay, y + deltay], color=col2,
+                                                              linewidth=2))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].library_text.append(
+                            self.w.MplWidget.canvas.axes.text(x - 0.5 * deltax, y - 0.5 * deltay, k, color=col2,
+                                                              fontweight='bold'))
 
             self.w.MplWidget.canvas.draw()
 
@@ -1592,10 +1629,14 @@ class main_w(object):  # pragma: no cover
                 col2 = 'gray'
 
             deltax = 0.01
-            delta_h1 = self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(len(self.nd.nmrdat[self.nd.s][self.nd.e].spc[0]) - 1, 0) - self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(0, 0)
-            delta_c13 = self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(len(self.nd.nmrdat[self.nd.s][self.nd.e].spc) - 1, 1) - self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(0, 1)
+            delta_h1 = self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(
+                len(self.nd.nmrdat[self.nd.s][self.nd.e].spc[0]) - 1, 0) - self.nd.nmrdat[self.nd.s][
+                           self.nd.e].points2ppm(0, 0)
+            delta_c13 = self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(
+                len(self.nd.nmrdat[self.nd.s][self.nd.e].spc) - 1, 1) - self.nd.nmrdat[self.nd.s][self.nd.e].points2ppm(
+                0, 1)
             deltay = deltax * delta_c13 * 2 / delta_h1
-            #for k in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.metabolite_list:
+            # for k in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.metabolite_list:
             k = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite
             if k in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data.keys():
                 hsqc = nmrHsqc.NmrHsqc()
@@ -1604,18 +1645,30 @@ class main_w(object):  # pragma: no cover
                 hsqc.hsqc_data[k].init_data(hsqc.metabolite_information)
                 for l in range(len(hsqc.hsqc_data[k].h1_shifts)):
                     if len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked[l]) > 0:
-                        #print("picked: {}".format(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked[l]))
+                        # print("picked: {}".format(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked[l]))
                         x = np.mean(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].h1_picked[l])
                         y = np.mean(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[k].c13_picked[l])
-                        self.nd.nmrdat[self.nd.s][self.nd.e].xss.append(self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col1, linewidth=2))
-                        self.nd.nmrdat[self.nd.s][self.nd.e].yss.append(self.w.MplWidget.canvas.axes.plot([x, x], [y - deltay, y + deltay], color=col1, linewidth=2))
-                        self.nd.nmrdat[self.nd.s][self.nd.e].metabolite_text.append(self.w.MplWidget.canvas.axes.text(x - 0.5 * deltax, y - 0.5 * deltay, k, color=col1, fontweight='bold'))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].xss.append(
+                            self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col1,
+                                                              linewidth=2))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].yss.append(
+                            self.w.MplWidget.canvas.axes.plot([x, x], [y - deltay, y + deltay], color=col1,
+                                                              linewidth=2))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].metabolite_text.append(
+                            self.w.MplWidget.canvas.axes.text(x - 0.5 * deltax, y - 0.5 * deltay, k, color=col1,
+                                                              fontweight='bold'))
                     else:
                         x = hsqc.hsqc_data[k].h1_shifts[l]
                         y = hsqc.hsqc_data[k].c13_shifts[hsqc.hsqc_data[k].h1_index[l] - 1]
-                        self.nd.nmrdat[self.nd.s][self.nd.e].xss.append(self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col1, linewidth=2))
-                        self.nd.nmrdat[self.nd.s][self.nd.e].yss.append(self.w.MplWidget.canvas.axes.plot([x, x], [y - deltay, y + deltay], color=col1, linewidth=2))
-                        self.nd.nmrdat[self.nd.s][self.nd.e].metabolite_text.append(self.w.MplWidget.canvas.axes.text(x - 0.5 * deltax, y - 0.5 * deltay, k, color=col1, fontweight='bold'))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].xss.append(
+                            self.w.MplWidget.canvas.axes.plot([x - deltax, x + deltax], [y, y], color=col1,
+                                                              linewidth=2))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].yss.append(
+                            self.w.MplWidget.canvas.axes.plot([x, x], [y - deltay, y + deltay], color=col1,
+                                                              linewidth=2))
+                        self.nd.nmrdat[self.nd.s][self.nd.e].metabolite_text.append(
+                            self.w.MplWidget.canvas.axes.text(x - 0.5 * deltax, y - 0.5 * deltay, k, color=col1,
+                                                              fontweight='bold'))
 
             self.w.MplWidget.canvas.draw()
 
@@ -1668,8 +1721,8 @@ class main_w(object):  # pragma: no cover
     def delete_buttons(self, n_buttons=0):
         n_entries = len(self.w.peakSelection.children())
         for k in range(n_entries):
-            if hasattr( self.w.peakSelection.children()[k], 'text'):
-                if int(self.w.peakSelection.children()[k].text())  > n_buttons:
+            if hasattr(self.w.peakSelection.children()[k], 'text'):
+                if int(self.w.peakSelection.children()[k].text()) > n_buttons:
                     self.w.peakSelection.children()[k].deleteLater()
 
         # end delete_buttons
@@ -1862,7 +1915,7 @@ class main_w(object):  # pragma: no cover
             self.button37.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
             self.button37.clicked.connect(lambda: self.plot_metabolite_peak(37))
 
-        if n_buttons >37 and existing_buttons < 38:
+        if n_buttons > 37 and existing_buttons < 38:
             self.button38 = QPushButton("38", self.w.peakSelection)
             self.button38.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
             self.button38.clicked.connect(lambda: self.plot_metabolite_peak(38))
@@ -1938,8 +1991,8 @@ class main_w(object):  # pragma: no cover
         for k in range(n_buttons):
             col = k % n_cols
             row = math.floor((k + 0.1) / n_cols)
-            #print("n_rows: {}, n_cols: {}, row: {}, col: {}".format(n_rows, n_cols, row, col))
-            exec("self.layout.addWidget(self.button" + str(k+1) + ", " + str(row) + " , " + str(col) + ")")
+            # print("n_rows: {}, n_cols: {}, row: {}, col: {}".format(n_rows, n_cols, row, col))
+            exec("self.layout.addWidget(self.button" + str(k + 1) + ", " + str(row) + " , " + str(col) + ")")
 
     # end make_buttons
 
@@ -2963,7 +3016,7 @@ class main_w(object):  # pragma: no cover
                 dist[k] = (h1_picked[k] - self.xdata[0]) ** 2 + (c13_picked[k] - self.ydata[0]) ** 2
 
             idx = np.where(dist == dist.min())[0][0]
-            #print("h1_picked: {}, c13_picked: {}, idx: {}".format(h1_picked, c13_picked, idx))
+            # print("h1_picked: {}, c13_picked: {}, idx: {}".format(h1_picked, c13_picked, idx))
             h1_picked.remove(h1_picked[idx])
             c13_picked.remove(c13_picked[idx])
             self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[
@@ -3458,11 +3511,12 @@ class main_w(object):  # pragma: no cover
 
             idx = QTableWidgetItem(' '.join(str(e) for e in spin_sys['c13_idx'][k]))
             self.w.hsqcSpinSys.setItem(k, 0, idx)
-            #if self.w.hsqcSpinSys.item(k,1) != None:
-            if hasattr(self.w.hsqcSpinSys.item(k,1), 'text'):
-                #print("k: {}, self.w.hsqcSpinSys.item(k,1).text(): {}".format(k, self.w.hsqcSpinSys.item(k, 1).text()))
-                if len(self.w.hsqcSpinSys.item(k,1).text()) > 0:
-                    hsqc.hsqc_data[hsqc.cur_metabolite].c13_offset[idx.text()] = float(self.w.hsqcSpinSys.item(k, 1).text())
+            # if self.w.hsqcSpinSys.item(k,1) != None:
+            if hasattr(self.w.hsqcSpinSys.item(k, 1), 'text'):
+                # print("k: {}, self.w.hsqcSpinSys.item(k,1).text(): {}".format(k, self.w.hsqcSpinSys.item(k, 1).text()))
+                if len(self.w.hsqcSpinSys.item(k, 1).text()) > 0:
+                    hsqc.hsqc_data[hsqc.cur_metabolite].c13_offset[idx.text()] = float(
+                        self.w.hsqcSpinSys.item(k, 1).text())
                 else:
                     hsqc.hsqc_data[hsqc.cur_metabolite].c13_offset[idx.text()] = 0.0
             else:
@@ -3472,9 +3526,8 @@ class main_w(object):  # pragma: no cover
                 if len(self.w.hsqcSpinSys.item(k, 3).text()) > 0:
                     perc_sum += float(self.w.hsqcSpinSys.item(k, 3).text())
 
-
         for k in range(len(spin_sys['c13_idx'])):
-            #if self.w.hsqcSpinSys.item(k,3) != None:
+            # if self.w.hsqcSpinSys.item(k,3) != None:
             try:
                 if len(self.w.hsqcSpinSys.item(k, 3).text()) > 0:
                     perc = round(float(self.w.hsqcSpinSys.item(k, 3).text()) * 100.0 / perc_sum, 3)
@@ -3484,13 +3537,12 @@ class main_w(object):  # pragma: no cover
                     else:
                         perc = 100.0
 
-            #else:
+            # else:
             except:
                 if k > 0:
                     perc = 0.0
                 else:
                     perc = 100.0
-
 
             spin_sys['contribution'][k] = perc
 
@@ -3626,26 +3678,26 @@ class main_w(object):  # pragma: no cover
         self.w.hsqcPeak.canvas.axes.spines['top'].set_color(fg)
         self.w.hsqcPeak.canvas.axes.spines['left'].set_color(fg)
         self.w.hsqcPeak.canvas.axes.spines['right'].set_color(fg)
-        #self.w.isotopomerHsqcPeak.canvas.figure.set_facecolor(bg)
-        #self.w.isotopomerHsqcPeak.canvas.axes.set_facecolor(bg)
-        #self.w.isotopomerHsqcPeak.canvas.axes.xaxis.label.set_color(fg)
-        #self.w.isotopomerHsqcPeak.canvas.axes.yaxis.label.set_color(fg)
-        #self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='x', colors=fg)
-        #self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='y', colors=fg)
-        #self.w.isotopomerHsqcPeak.canvas.axes.spines['bottom'].set_color(fg)
-        #self.w.isotopomerHsqcPeak.canvas.axes.spines['top'].set_color(fg)
-        #self.w.isotopomerHsqcPeak.canvas.axes.spines['left'].set_color(fg)
-        #self.w.isotopomerHsqcPeak.canvas.axes.spines['right'].set_color(fg)
-        #self.w.isotopomerMultiplet.canvas.figure.set_facecolor(bg)
-        #self.w.isotopomerMultiplet.canvas.axes.set_facecolor(bg)
-        #self.w.isotopomerMultiplet.canvas.axes.xaxis.label.set_color(fg)
-        #self.w.isotopomerMultiplet.canvas.axes.yaxis.label.set_color(fg)
-        #self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='x', colors=fg)
-        #self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='y', colors=fg)
-        #self.w.isotopomerMultiplet.canvas.axes.spines['bottom'].set_color(fg)
-        #self.w.isotopomerMultiplet.canvas.axes.spines['top'].set_color(fg)
-        #self.w.isotopomerMultiplet.canvas.axes.spines['left'].set_color(fg)
-        #self.w.isotopomerMultiplet.canvas.axes.spines['right'].set_color(fg)
+        # self.w.isotopomerHsqcPeak.canvas.figure.set_facecolor(bg)
+        # self.w.isotopomerHsqcPeak.canvas.axes.set_facecolor(bg)
+        # self.w.isotopomerHsqcPeak.canvas.axes.xaxis.label.set_color(fg)
+        # self.w.isotopomerHsqcPeak.canvas.axes.yaxis.label.set_color(fg)
+        # self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='x', colors=fg)
+        # self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='y', colors=fg)
+        # self.w.isotopomerHsqcPeak.canvas.axes.spines['bottom'].set_color(fg)
+        # self.w.isotopomerHsqcPeak.canvas.axes.spines['top'].set_color(fg)
+        # self.w.isotopomerHsqcPeak.canvas.axes.spines['left'].set_color(fg)
+        # self.w.isotopomerHsqcPeak.canvas.axes.spines['right'].set_color(fg)
+        # self.w.isotopomerMultiplet.canvas.figure.set_facecolor(bg)
+        # self.w.isotopomerMultiplet.canvas.axes.set_facecolor(bg)
+        # self.w.isotopomerMultiplet.canvas.axes.xaxis.label.set_color(fg)
+        # self.w.isotopomerMultiplet.canvas.axes.yaxis.label.set_color(fg)
+        # self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='x', colors=fg)
+        # self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='y', colors=fg)
+        # self.w.isotopomerMultiplet.canvas.axes.spines['bottom'].set_color(fg)
+        # self.w.isotopomerMultiplet.canvas.axes.spines['top'].set_color(fg)
+        # self.w.isotopomerMultiplet.canvas.axes.spines['left'].set_color(fg)
+        # self.w.isotopomerMultiplet.canvas.axes.spines['right'].set_color(fg)
         # end load_dark_mode
 
     def set_standard_plot_colours(self):
@@ -3719,26 +3771,26 @@ class main_w(object):  # pragma: no cover
         self.w.hsqcPeak.canvas.axes.spines['top'].set_color(fg)
         self.w.hsqcPeak.canvas.axes.spines['left'].set_color(fg)
         self.w.hsqcPeak.canvas.axes.spines['right'].set_color(fg)
-        #self.w.isotopomerHsqcPeak.canvas.figure.set_facecolor(bg)
-        #self.w.isotopomerHsqcPeak.canvas.axes.set_facecolor(bg)
-        #self.w.isotopomerHsqcPeak.canvas.axes.xaxis.label.set_color(fg)
-        #self.w.isotopomerHsqcPeak.canvas.axes.yaxis.label.set_color(fg)
-        #self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='x', colors=fg)
-        #self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='y', colors=fg)
-        #self.w.isotopomerHsqcPeak.canvas.axes.spines['bottom'].set_color(fg)
-        #self.w.isotopomerHsqcPeak.canvas.axes.spines['top'].set_color(fg)
-        #self.w.isotopomerHsqcPeak.canvas.axes.spines['left'].set_color(fg)
-        #self.w.isotopomerHsqcPeak.canvas.axes.spines['right'].set_color(fg)
-        #self.w.isotopomerMultiplet.canvas.figure.set_facecolor(bg)
-        #self.w.isotopomerMultiplet.canvas.axes.set_facecolor(bg)
-        #self.w.isotopomerMultiplet.canvas.axes.xaxis.label.set_color(fg)
-        #self.w.isotopomerMultiplet.canvas.axes.yaxis.label.set_color(fg)
-        #self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='x', colors=fg)
-        #self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='y', colors=fg)
-        #self.w.isotopomerMultiplet.canvas.axes.spines['bottom'].set_color(fg)
-        #self.w.isotopomerMultiplet.canvas.axes.spines['top'].set_color(fg)
-        #self.w.isotopomerMultiplet.canvas.axes.spines['left'].set_color(fg)
-        #self.w.isotopomerMultiplet.canvas.axes.spines['right'].set_color(fg)
+        # self.w.isotopomerHsqcPeak.canvas.figure.set_facecolor(bg)
+        # self.w.isotopomerHsqcPeak.canvas.axes.set_facecolor(bg)
+        # self.w.isotopomerHsqcPeak.canvas.axes.xaxis.label.set_color(fg)
+        # self.w.isotopomerHsqcPeak.canvas.axes.yaxis.label.set_color(fg)
+        # self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='x', colors=fg)
+        # self.w.isotopomerHsqcPeak.canvas.axes.tick_params(axis='y', colors=fg)
+        # self.w.isotopomerHsqcPeak.canvas.axes.spines['bottom'].set_color(fg)
+        # self.w.isotopomerHsqcPeak.canvas.axes.spines['top'].set_color(fg)
+        # self.w.isotopomerHsqcPeak.canvas.axes.spines['left'].set_color(fg)
+        # self.w.isotopomerHsqcPeak.canvas.axes.spines['right'].set_color(fg)
+        # self.w.isotopomerMultiplet.canvas.figure.set_facecolor(bg)
+        # self.w.isotopomerMultiplet.canvas.axes.set_facecolor(bg)
+        # self.w.isotopomerMultiplet.canvas.axes.xaxis.label.set_color(fg)
+        # self.w.isotopomerMultiplet.canvas.axes.yaxis.label.set_color(fg)
+        # self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='x', colors=fg)
+        # self.w.isotopomerMultiplet.canvas.axes.tick_params(axis='y', colors=fg)
+        # self.w.isotopomerMultiplet.canvas.axes.spines['bottom'].set_color(fg)
+        # self.w.isotopomerMultiplet.canvas.axes.spines['top'].set_color(fg)
+        # self.w.isotopomerMultiplet.canvas.axes.spines['left'].set_color(fg)
+        # self.w.isotopomerMultiplet.canvas.axes.spines['right'].set_color(fg)
         # end load_light_mode
 
     def ma_fit_hsqc_1d(self):
@@ -3755,13 +3807,16 @@ class main_w(object):  # pragma: no cover
         while self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_again:
             if fit_again_counter < 3:
                 fit_again_counter += 1
-                print("self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_again[iteration: {}]: {}".format(fit_again_counter, self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_again))
+                print("self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_again[iteration: {}]: {}".format(fit_again_counter,
+                                                                                                      self.nd.nmrdat[
+                                                                                                          self.nd.s][
+                                                                                                          self.nd.e].fit_hsqc_again))
                 self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_again = False
                 self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_1d()
             else:
                 self.nd.nmrdat[self.nd.s][self.nd.e].fit_hsqc_again = False
 
-        #self.hsqc_spin_sys_change()
+        # self.hsqc_spin_sys_change()
         self.w.maAutoScale.setChecked(auto_scale)
         self.ma_sim_hsqc_1d()
         # end ma_fit_hsqc_1d
@@ -3777,7 +3832,8 @@ class main_w(object):  # pragma: no cover
 
         intensities = hsqc.hsqc_data[hsqc.cur_metabolite].intensities[hsqc.cur_peak - 1]
         self.nd.nmrdat[self.nd.s][self.nd.e].sim_hsqc_1d()
-        self.w.multipletAnalysisIntensity.setText(str(hsqc.hsqc_data[hsqc.cur_metabolite].intensities[hsqc.cur_peak - 1]))
+        self.w.multipletAnalysisIntensity.setText(
+            str(hsqc.hsqc_data[hsqc.cur_metabolite].intensities[hsqc.cur_peak - 1]))
         if intensities == 1:
             self.nd.nmrdat[self.nd.s][self.nd.e].sim_hsqc_1d()
 
@@ -3789,8 +3845,12 @@ class main_w(object):  # pragma: no cover
         # end ma_sim_hsqc_1d
 
     def metabolite_reset(self):
-        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite].h1_picked[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak - 1] = []
-        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite].c13_picked[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak - 1] = []
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite].h1_picked[
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak - 1] = []
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite].c13_picked[
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak - 1] = []
         self.plot_metabolite_peak(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_peak)
         # end metabolite_reset
 
@@ -4325,19 +4385,23 @@ class main_w(object):  # pragma: no cover
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite = metabolite_name
         my_autosim = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim
         if metabolite_name in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data.keys():
-            if len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].c13_picked[spin_number - 1]) == 0:
+            if len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].c13_picked[
+                       spin_number - 1]) == 0:
                 self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim = False
 
-        self.w.fitUpToBonds.setCurrentIndex(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].n_bonds)
-        self.w.multipletAnalysisIntensity.setText(str(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].intensities[spin_number - 1]))
-        self.w.multipletAnalysisR2.setText(str(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].r2[spin_number - 1]))
+        self.w.fitUpToBonds.setCurrentIndex(
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].n_bonds)
+        self.w.multipletAnalysisIntensity.setText(
+            str(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].intensities[spin_number - 1]))
+        self.w.multipletAnalysisR2.setText(
+            str(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].r2[spin_number - 1]))
         self.w.multipletAnalysisEchoTime.setText(str(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.echo_time))
         hd = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name]
-        h1_shift = hd.h1_shifts[spin_number -1]
-        #print(hd.c13_shifts[np.where(hd.hsqc == 1)[0]])
-        #c13_shifts = hd.c13_shifts[np.where(hd.hsqc == 1)[0]]
+        h1_shift = hd.h1_shifts[spin_number - 1]
+        # print(hd.c13_shifts[np.where(hd.hsqc == 1)[0]])
+        # c13_shifts = hd.c13_shifts[np.where(hd.hsqc == 1)[0]]
         c13_shift = hd.c13_shifts[hd.h1_index[spin_number - 1] - 1]
-        h1_picked = hd.h1_picked[spin_number -1]
+        h1_picked = hd.h1_picked[spin_number - 1]
         c13_picked = hd.c13_picked[spin_number - 1]
         if len(c13_picked) > 0:
             h1_centre = np.mean(h1_picked)
@@ -4353,12 +4417,13 @@ class main_w(object):  # pragma: no cover
 
         hsqc_idx = np.where(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].hsqc == 1)[0]
         h1_index = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].h1_index[spin_number - 1]
-        c13_index = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].c13_index[hd.h1_index[spin_number - 1] - 1]
+        c13_index = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].c13_index[
+            hd.h1_index[spin_number - 1] - 1]
         h1_suffix = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].h1_suffix[spin_number - 1]
         h1_beg = h1_centre + self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.range_h
         h1_end = h1_centre - self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.range_h
-        c13_beg = c13_centre + self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.range_c*scale
-        c13_end = c13_centre - self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.range_c*scale
+        c13_beg = c13_centre + self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.range_c * scale
+        c13_end = c13_centre - self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.range_c * scale
         h1_pts = len(self.nd.nmrdat[self.nd.s][self.nd.e].spc[0])
         c13_pts = len(self.nd.nmrdat[self.nd.s][self.nd.e].spc)
         h1_pts1 = h1_pts - self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(h1_beg, 0) - 1
@@ -4386,11 +4451,13 @@ class main_w(object):  # pragma: no cover
         self.w.hsqcPeak.canvas.axes.clear()
         self.w.hsqcPeak.canvas.axes.contour(self.nd.nmrdat[self.nd.s][self.nd.e].ppm1[h1_pts1:h1_pts2],
                                             self.nd.nmrdat[self.nd.s][self.nd.e].ppm2[c13_pts1:c13_pts2],
-                                            self.nd.nmrdat[self.nd.s][self.nd.e].spc[c13_pts1:c13_pts2, h1_pts1:h1_pts2].real, pos_lev, colors=pos_col,
+                                            self.nd.nmrdat[self.nd.s][self.nd.e].spc[c13_pts1:c13_pts2,
+                                            h1_pts1:h1_pts2].real, pos_lev, colors=pos_col,
                                             linestyles='solid', antialiased=True)
         self.w.hsqcPeak.canvas.axes.contour(self.nd.nmrdat[self.nd.s][self.nd.e].ppm1[h1_pts1:h1_pts2],
                                             self.nd.nmrdat[self.nd.s][self.nd.e].ppm2[c13_pts1:c13_pts2],
-                                            self.nd.nmrdat[self.nd.s][self.nd.e].spc.real[c13_pts1:c13_pts2, h1_pts1:h1_pts2], neg_lev, colors=neg_col,
+                                            self.nd.nmrdat[self.nd.s][self.nd.e].spc.real[c13_pts1:c13_pts2,
+                                            h1_pts1:h1_pts2], neg_lev, colors=neg_col,
                                             linestyles='solid', antialiased=True)
         self.w.hsqcPeak.canvas.axes.autoscale()
         self.w.hsqcPeak.canvas.axes.invert_xaxis()
@@ -4417,12 +4484,14 @@ class main_w(object):  # pragma: no cover
                 xdata = h1_picked[spin_number - 1]
                 ydata = c13_picked[spin_number - 1]
                 delta_x = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.range_h
-                delta_y = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.range_c*scale
+                delta_y = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.range_c * scale
                 factor = 0.05
                 for k in range(len(xdata)):
-                    self.w.hsqcPeak.canvas.axes.plot([xdata[k] - factor*delta_x, xdata[k] + factor*delta_x], [ydata[k], ydata[k]], color=col2, linewidth=4)
-                    self.w.hsqcPeak.canvas.axes.plot([xdata[k], xdata[k]], [ydata[k] - factor*delta_y, ydata[k] + factor*delta_y], color=col2, linewidth=4)
-
+                    self.w.hsqcPeak.canvas.axes.plot([xdata[k] - factor * delta_x, xdata[k] + factor * delta_x],
+                                                     [ydata[k], ydata[k]], color=col2, linewidth=4)
+                    self.w.hsqcPeak.canvas.axes.plot([xdata[k], xdata[k]],
+                                                     [ydata[k] - factor * delta_y, ydata[k] + factor * delta_y],
+                                                     color=col2, linewidth=4)
 
         if len(h1_picked[spin_number - 1]) == 1:
             xlabel += " (Peak {}, {} signal picked)".format(spin_number, len(h1_picked[spin_number - 1]))
@@ -4438,17 +4507,22 @@ class main_w(object):  # pragma: no cover
         else:
             h1_pos = h1_shift
 
-        h1_pts = len(self.nd.nmrdat[self.nd.s][self.nd.e].spc[0]) - self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(h1_pos, 0) - 1
-        self.w.hsqcMultiplet.canvas.axes.plot(self.nd.nmrdat[self.nd.s][self.nd.e].ppm2[c13_pts1:c13_pts2], self.nd.nmrdat[self.nd.s][self.nd.e].spc.real[c13_pts1:c13_pts2, h1_pts], color=col1, linewidth=2)
+        h1_pts = len(self.nd.nmrdat[self.nd.s][self.nd.e].spc[0]) - self.nd.nmrdat[self.nd.s][self.nd.e].ppm2points(
+            h1_pos, 0) - 1
+        self.w.hsqcMultiplet.canvas.axes.plot(self.nd.nmrdat[self.nd.s][self.nd.e].ppm2[c13_pts1:c13_pts2],
+                                              self.nd.nmrdat[self.nd.s][self.nd.e].spc.real[c13_pts1:c13_pts2, h1_pts],
+                                              color=col1, linewidth=2)
         if len(hd.sim_spc[spin_number - 1]) > 0:
-            self.w.hsqcMultiplet.canvas.axes.plot(self.nd.nmrdat[self.nd.s][self.nd.e].ppm2[c13_pts1:c13_pts2], hd.sim_spc[spin_number - 1][c13_pts1:c13_pts2], color=col2, linewidth=2)
+            self.w.hsqcMultiplet.canvas.axes.plot(self.nd.nmrdat[self.nd.s][self.nd.e].ppm2[c13_pts1:c13_pts2],
+                                                  hd.sim_spc[spin_number - 1][c13_pts1:c13_pts2], color=col2,
+                                                  linewidth=2)
 
         self.w.hsqcMultiplet.canvas.axes.set_xlabel(ylabel)
         self.w.hsqcMultiplet.canvas.axes.autoscale()
         self.w.hsqcMultiplet.canvas.axes.invert_xaxis()
         self.w.hsqcMultiplet.canvas.draw()
         self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.set_peak_information()
-        #self.clear_hsqc_spin_sys()
+        # self.clear_hsqc_spin_sys()
         self.set_hsqc_spin_sys()
         if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim:
             self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autosim = False
@@ -4471,7 +4545,7 @@ class main_w(object):  # pragma: no cover
 
         if self.cf.mode == 'dark':
             if hsqc.hsqc_data[hsqc.cur_metabolite].cod[hsqc.cur_peak - 1] > hsqc.cod_high:
-                colour =[0, 255, 0]
+                colour = [0, 255, 0]
             elif hsqc.hsqc_data[hsqc.cur_metabolite].cod[hsqc.cur_peak - 1] == -1:
                 colour = n_colour
             elif hsqc.hsqc_data[hsqc.cur_metabolite].cod[hsqc.cur_peak - 1] < hsqc.cod_low:
@@ -4494,7 +4568,7 @@ class main_w(object):  # pragma: no cover
         # foreground color
         palette.setColor(palette.WindowText, QtGui.QColor(colour[0], colour[1], colour[2]))
         # background color
-        #palette.setColor(palette.Background, QtGui.QColor(colour[0], colour[1], colour[2]))
+        # palette.setColor(palette.Background, QtGui.QColor(colour[0], colour[1], colour[2]))
         # "light" border
         palette.setColor(palette.Light, QtGui.QColor(colour[0], colour[1], colour[2]))
         # "dark" border
@@ -4635,7 +4709,7 @@ class main_w(object):  # pragma: no cover
         self.keep_zoom = False
         if hide_pre_processing == False and self.w.peakPicking.isChecked() == False:
             if self.exited_peak_picking == False:
-                #a = 3
+                # a = 3
                 pyautogui.click(clicks=1)
             else:
                 self.exited_peak_picking = True
@@ -4969,7 +5043,7 @@ class main_w(object):  # pragma: no cover
         # foreground color
         palette.setColor(palette.WindowText, QtGui.QColor(colour[0], colour[1], colour[2]))
         # background color
-        #palette.setColor(palette.Background, QtGui.QColor(colour[0], colour[1], colour[2]))
+        # palette.setColor(palette.Background, QtGui.QColor(colour[0], colour[1], colour[2]))
         # "light" border
         palette.setColor(palette.Light, QtGui.QColor(colour[0], colour[1], colour[2]))
         # "dark" border
@@ -5095,7 +5169,7 @@ class main_w(object):  # pragma: no cover
         fid = open(file_name, 'w')
         fid.write(self.w.metaboliteInformation.toPlainText())
         fid.close()
-        #end save_ml_info
+        # end save_ml_info
 
     def save_script(self, f_name=""):
         if (f_name == False):
@@ -5177,16 +5251,19 @@ class main_w(object):  # pragma: no cover
     def set_fit_ma_chem_shifts(self):
         hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
         hsqc.fit_chemical_shifts = self.w.maFitChemShifts.isChecked()
+
     # end set_fit_ma_chem_shifts
 
     def set_ma_autosim(self):
         hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
         hsqc.autosim = self.w.maAutoSim.isChecked()
+
     # end set_ma_autosim
 
     def set_fit_ma_percentages(self):
         hsqc = self.nd.nmrdat[self.nd.s][self.nd.e].hsqc
         hsqc.fit_percentages = self.w.maFitContributions.isChecked()
+
     # end set_fit_ma_percentages
 
     def set_fit_zero_percentages(self):
@@ -5667,7 +5744,7 @@ class main_w(object):  # pragma: no cover
                 except:
                     p_label = np.append(p_label, '')
 
-            #print("s: {}, e: {}, l: {}".format(s_peak, e_peak, p_label))
+            # print("s: {}, e: {}, l: {}".format(s_peak, e_peak, p_label))
             self.w.peakWidget.setRowCount(0)
             self.w.peakWidget.setRowCount(n_rows)
             self.nd.peak_fill = True
@@ -5681,7 +5758,7 @@ class main_w(object):  # pragma: no cover
                 p_label1 = QTableWidgetItem(3 * k + 2)
                 p_label1.setTextAlignment(QtCore.Qt.AlignHCenter)
                 self.w.peakWidget.setItem(k, 3, p_label1)
-                #print("k: {}, s_peak[k]: {}, s_peak: {}".format(k, s_peak[k], s_peak))
+                # print("k: {}, s_peak[k]: {}, s_peak: {}".format(k, s_peak[k], s_peak))
                 if ((s_peak[k] > -10000.0) & (e_peak[k] > -10000.0)):
                     p_min = min(s_peak[k], e_peak[k])
                     e_peak[k] = max(s_peak[k], e_peak[k])
@@ -6012,7 +6089,7 @@ class main_w(object):  # pragma: no cover
         else:
             idx = 1
 
-        #self.w.useSplittingCB.setCurrentIndex(idx)
+        # self.w.useSplittingCB.setCurrentIndex(idx)
         # end set_hsqc_pars7
 
     def set_hsqc_pars8(self):
@@ -6048,7 +6125,7 @@ class main_w(object):  # pragma: no cover
         else:
             idx = 1
 
-        #self.w.highlightDoubleCB.setCurrentIndex(idx)
+        # self.w.highlightDoubleCB.setCurrentIndex(idx)
         # end set_hsqc_pars11
 
     def set_hsqc_pars12(self):
@@ -6057,7 +6134,7 @@ class main_w(object):  # pragma: no cover
         else:
             idx = 1
 
-        #self.w.displayOverlayShiftsCB.setCurrentIndex(idx)
+        # self.w.displayOverlayShiftsCB.setCurrentIndex(idx)
         # end set_hsqc_pars12
 
     def set_hsqc_pars13(self):
@@ -6127,10 +6204,10 @@ class main_w(object):  # pragma: no cover
             self.w.hsqcSpinSys.setItem(k, 1, offset)
             self.w.hsqcSpinSys.setItem(k, 2, j_cc)
             self.w.hsqcSpinSys.setItem(k, 3, perc)
-            #self.w.hsqcSpinSys.item(k, 0).setText(' '.join(str(e) for e in spin_sys['c13_shifts'][k]))
-            #self.w.hsqcSpinSys.item(k, 1).setText('0') # '.join(str(e) for e in spin_sys['c13_shifts'][k]))
-            #self.w.hsqcSpinSys.item(k, 2).setText(' '.join(str(e) for e in spin_sys['j_cc'][k]))
-            #self.w.hsqcSpinSys.item(k, 3).setText(str(spin_sys['contribution'][k]))
+            # self.w.hsqcSpinSys.item(k, 0).setText(' '.join(str(e) for e in spin_sys['c13_shifts'][k]))
+            # self.w.hsqcSpinSys.item(k, 1).setText('0') # '.join(str(e) for e in spin_sys['c13_shifts'][k]))
+            # self.w.hsqcSpinSys.item(k, 2).setText(' '.join(str(e) for e in spin_sys['j_cc'][k]))
+            # self.w.hsqcSpinSys.item(k, 3).setText(str(spin_sys['contribution'][k]))
 
         # end set_hsqc_spin_sys
 
@@ -6347,14 +6424,14 @@ class main_w(object):  # pragma: no cover
                     self.nd.nmrdat[k][l].hsqc.cur_metabolite = ''
                     self.nd.nmrdat[k][l].hsqc.cur_peak = -1
 
-            #self.w.fitUpToBonds.setCurrentIndex(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.n_bonds)
+            # self.w.fitUpToBonds.setCurrentIndex(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.n_bonds)
             self.w.hsqcSpinSys.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
             self.w.hsqcSpinSys.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
             self.w.hsqcSpinSys.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
-            #self.w.hsqcSpinSys.setResizeMode()
-            #header = table.horizontalHeader()
-            #header.setResizeMode(QHeaderView.ResizeToContents)
-            #header.setStretchLastSection(True)
+            # self.w.hsqcSpinSys.setResizeMode()
+            # header = table.horizontalHeader()
+            # header.setResizeMode(QHeaderView.ResizeToContents)
+            # header.setStretchLastSection(True)
             self.w.displayAssignedMetabolites.setVisible(True)
             self.w.displayLibraryShifts.setVisible(True)
             self.w.displaySelectedMetabolite.setVisible(True)
@@ -6363,12 +6440,13 @@ class main_w(object):  # pragma: no cover
             self.w.multipletAnalysis.setVisible(False)
             self.w.isotopomerAnalysis.setVisible(False)
             self.w.nmrSpectrum.setTabEnabled(1, True)
-            #self.w.nmrSpectrum.setTabEnabled(2, True)
+            # self.w.nmrSpectrum.setTabEnabled(2, True)
             self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.set_metabolite_list()
             model = QtGui.QStandardItemModel()
             if self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.autoscale_j == True:
                 if len(self.nd.nmrdat[self.nd.s][self.nd.e].acq.cnst) > 0:
-                    self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.j_scale = self.nd.nmrdat[self.nd.s][self.nd.e].acq.cnst[18]
+                    self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.j_scale = self.nd.nmrdat[self.nd.s][self.nd.e].acq.cnst[
+                        18]
 
             for l in self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.metabolite_list:
                 it = QtGui.QStandardItem(l)
@@ -6385,20 +6463,20 @@ class main_w(object):  # pragma: no cover
             self.w.jCC.textChanged.connect(self.get_hsqc_pars4)
             self.w.jCH.textChanged.connect(self.get_hsqc_pars5)
             self.w.nMax.textChanged.connect(self.get_hsqc_pars6)
-            #self.w.useSplittingCB.currentIndexChanged.connect(self.get_hsqc_pars7)
-            #self.w.useSplittingCB.setVisible(False)
-            #self.w.label_82.setVisible(False)
+            # self.w.useSplittingCB.currentIndexChanged.connect(self.get_hsqc_pars7)
+            # self.w.useSplittingCB.setVisible(False)
+            # self.w.label_82.setVisible(False)
             self.w.tiltHsqcCB.currentIndexChanged.connect(self.get_hsqc_pars8)
             self.w.tiltHsqcCB.setVisible(False)
             self.w.label_78.setVisible(False)
             self.w.displayLibraryCB.currentIndexChanged.connect(self.get_hsqc_pars9)
             self.w.displayPickedCB.currentIndexChanged.connect(self.get_hsqc_pars10)
-            #self.w.highlightDoubleCB.currentIndexChanged.connect(self.get_hsqc_pars11)
-            #self.w.highlightDoubleCB.setVisible(False)
-            #self.w.label_84.setVisible(False)
-            #self.w.displayOverlayShiftsCB.currentIndexChanged.connect(self.get_hsqc_pars12)
-            #self.w.displayOverlayShiftsCB.setVisible(False)
-            #self.w.label_83.setVisible(False)
+            # self.w.highlightDoubleCB.currentIndexChanged.connect(self.get_hsqc_pars11)
+            # self.w.highlightDoubleCB.setVisible(False)
+            # self.w.label_84.setVisible(False)
+            # self.w.displayOverlayShiftsCB.currentIndexChanged.connect(self.get_hsqc_pars12)
+            # self.w.displayOverlayShiftsCB.setVisible(False)
+            # self.w.label_83.setVisible(False)
             self.w.coHsqcCB.currentIndexChanged.connect(self.get_hsqc_pars13)
             self.w.pickLocalOptCB.currentIndexChanged.connect(self.get_hsqc_pars14)
             self.w.autoscaleCB.currentIndexChanged.connect(self.get_hsqc_pars15)
@@ -6418,7 +6496,7 @@ class main_w(object):  # pragma: no cover
             # foreground color
             palette.setColor(palette.WindowText, QtGui.QColor(colour[0], colour[1], colour[2]))
             # background color
-            #palette.setColor(palette.Background, QtGui.QColor(colour[0], colour[1], colour[2]))
+            # palette.setColor(palette.Background, QtGui.QColor(colour[0], colour[1], colour[2]))
             # "light" border
             palette.setColor(palette.Light, QtGui.QColor(colour[0], colour[1], colour[2]))
             # "dark" border
@@ -6514,7 +6592,8 @@ class main_w(object):  # pragma: no cover
         scene.addItem(item)
         self.w.metaboliteImage.setScene(scene)
         self.w.metaboliteImage.fitInView(scene.sceneRect(), QtCore.Qt.KeepAspectRatio)
-        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.set_metabolite_information(metabolite_name, self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.metabolite_information)
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.set_metabolite_information(metabolite_name, self.nd.nmrdat[self.nd.s][
+            self.nd.e].hsqc.metabolite_information)
         self.update_assigned_metabolites()
         n_peaks = len(self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[metabolite_name].h1_shifts)
         self.make_buttons(n_peaks)
@@ -6758,7 +6837,8 @@ class main_w(object):  # pragma: no cover
             self.w.fitUpToBonds.setCurrentIndex(1)
             return
 
-        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite].n_bonds = \
+        self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.hsqc_data[
+            self.nd.nmrdat[self.nd.s][self.nd.e].hsqc.cur_metabolite].n_bonds = \
             int(self.w.fitUpToBonds.currentText())
 
         # end set_up_to_bonds
@@ -6835,8 +6915,7 @@ class main_w(object):  # pragma: no cover
                 pass
 
             pyautogui.click(clicks=1)
-            #self.w.MplWidget.setFocus()
-
+            # self.w.MplWidget.setFocus()
 
     def show(self):
         self.w.show()
@@ -6992,7 +7071,8 @@ class main_w(object):  # pragma: no cover
 
         jupyter_path = os.path.join(os.path.dirname(__file__), "nmr", "jupyter")
         jobs = []
-        self.p = multiprocess.Process(target=notebookapp.main, args=([jupyter_path, '--no-browser', '--ip=127.0.0.1', '--port=9997'],))
+        self.p = multiprocess.Process(target=notebookapp.main,
+                                      args=([jupyter_path, '--no-browser', '--ip=127.0.0.1', '--port=9997'],))
         jobs.append(self.p)
         self.p.start()
         sleep(2)
@@ -7163,7 +7243,7 @@ class main_w(object):  # pragma: no cover
 
         if self.nd.nmrdat[self.nd.s][self.nd.e].dim > 1:
             if self.nd.nmrdat[self.nd.s][self.nd.e].acq.pul_prog_name.find("hsqc") > 0 or self.nd.nmrdat[self.nd.s][
-            self.nd.e].acq.pul_prog_name.find("hmqc") > 0:
+                self.nd.e].acq.pul_prog_name.find("hmqc") > 0:
                 self.w.hsqcAnalysis.setVisible(True)  # develop set true
 
             else:
@@ -7191,7 +7271,8 @@ class main_w(object):  # pragma: no cover
             txt_col = QColor.fromRgbF(0.0, 0.0, 0.0, 1.0)
             err_col = QColor.fromRgbF(1.0, 0.0, 0.0, 1.0)
 
-        cmd_msg = subprocess.run([sys.executable, '-m', 'pip', 'install', '--upgrade', 'metabolabpy'], stdout=subprocess.PIPE)
+        cmd_msg = subprocess.run([sys.executable, '-m', 'pip', 'install', '--upgrade', 'metabolabpy'],
+                                 stdout=subprocess.PIPE)
         print(cmd_msg.stdout.decode('utf-8'))
         print("Update finished.\nPlease restart MetaboLabPy to use the new version.")
         sys.stdout = sys.__stdout__
@@ -7210,16 +7291,31 @@ class main_w(object):  # pragma: no cover
             lines = self.w.MplWidget.canvas.axes.get_lines()
             bottom, top = np.inf, -np.inf
             for line in lines:
-                newBottom, newTop = self.get_bottom_top(line)
-                if (newBottom < bottom): bottom = newBottom
-                if (newTop > top): top = newTop
+                new_bottom, new_top = self.get_bottom_top(line)
+                if new_bottom < bottom:
+                    bottom = new_bottom
 
-            if bottom != np.inf and top != -np.inf:
-                self.w.MplWidget.canvas.axes.set_ylim(bottom, top)
+                if new_top > top:
+                    top = new_top
 
-            self.w.MplWidget.canvas.draw()
+        else:
+            bottom = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2[0]
+            top = self.nd.nmrdat[self.nd.s][self.nd.e].ppm2[-1]
+
+        if bottom != np.inf and top != -np.inf:
+            self.w.MplWidget.canvas.axes.set_ylim(bottom, top)
+
+        self.w.MplWidget.canvas.draw()
 
         # end vertical_auto_scale
+
+    def horizontal_auto_scale(self):
+        left = self.nd.nmrdat[self.nd.s][self.nd.e].ppm1[0]
+        right = self.nd.nmrdat[self.nd.s][self.nd.e].ppm1[-1]
+        self.w.MplWidget.canvas.axes.set_xlim(left, right)
+        self.w.MplWidget.canvas.draw()
+
+        # end horizontal_auto_scale
 
     def vert_ph_corr_2d(self):
         s = self.nd.s
@@ -7467,7 +7563,8 @@ def main():  # pragma: no cover
     ap.add_argument("-ns", "--noSplash", required=False, help="turn splash screen off", action="store_true")
     ap.add_argument("-fs", "--FullScreen", required=False, help="open applicatin in full screen mode",
                     action="store_true")
-    ap.add_argument("-k", "--KioskMode", required=False, help="open applicatin in full screen mode without windowed mode available",
+    ap.add_argument("-k", "--KioskMode", required=False,
+                    help="open applicatin in full screen mode without windowed mode available",
                     action="store_true")
     ap.add_argument("fileName", metavar="fileName", type=str, help="load MetaboLabPy DataSet File")
     dd = ap.parse_known_args()
