@@ -271,5 +271,9 @@ class HsqcData:
 
         # end init_data
 
+    def set_r2(self, new_r2=4.0):
+        for k in range(len(self.r2)):
+            self.r2[k] = new_r2
 
+        # end set_r2
 

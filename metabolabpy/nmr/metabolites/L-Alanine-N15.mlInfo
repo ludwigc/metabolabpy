@@ -1,0 +1,29 @@
+Name                   : L-Alanine-N15
+AltName                : alanine
+Source                 : HMDB
+IUPAC                  : (2S)-2-aminopropanoic acid
+InChI_Identifier       : InChI=1S/C3H7NO2/c1-2(4)3(5)6/h2H,4H2,1H3,(H,5,6)/t2-/m0/s1
+InChI_Key              : QNAYBMKLOCPYGJ-REOHCLBHSA-N
+SMILES                 : C[C@H](N)C(O)=O
+Formula                : C3H7NO2
+Mass                   : 89.0932
+pKa                    : 
+HMDB                   : HMDB00161
+SMPDB                  : SMP00055 SMP00004 SMP00029 SMP00059 SMP00127
+KEGG                   : map00250 map00260 map00330 map00450
+CHEBI                  : 16977
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003
+C13HSQC                : 1  0  0
+CO_HSQC                : 0  0  0
+C13Intensities         : 1  0  0
+H1Index                : 1;1;000
+N15Index               : 
+C13chemicalShift       : 40.83 0.0 0.0
+H1chemicalShift        :  1.46
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 
+C13Offset              : 

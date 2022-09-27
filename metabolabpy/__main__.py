@@ -784,6 +784,20 @@ class main_w(object):  # pragma: no cover
 
         # end autobaseline
 
+    def autobaseline_all(self):
+        ce = self.nd.e
+        n_exp = len(self.nd.nmrdat[self.nd.s])
+        for k in range(n_exp):
+            self.nd.e = k
+            if self.nd.nmrdat[self.nd.s][self.nd.e].dim == 1:
+                self.autobaseline1d()
+            elif self.nd.nmrdat[self.nd.s][self.nd.e].dim == 2:
+                self.autobaseline2d()
+
+        self.nd.e = ce
+        self.plot_spc()
+        # end autobaseline
+
     def autobaseline1d(self):
         code_out = io.StringIO()
         code_err = io.StringIO()
@@ -960,7 +974,7 @@ class main_w(object):  # pragma: no cover
     def autophase1d_include_water(self):
         self.nd.autophase1d_include_water()
 
-    # end autophase1d_include_water
+    # end autophase1d_hsqcinclude_water
 
     def autoref(self, tmsp=True):
         self.nd.auto_ref(tmsp)
