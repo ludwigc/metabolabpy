@@ -86,11 +86,11 @@ def main():
           "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
           "Operating System :: OS Independent",
         ],
-        entry_points={
-         'console_scripts': [
-             'metabolabpy = metabolabpy.__main__:main'
-         ]
-        }
+        #entry_points={
+        # 'console_scripts': [
+        #     'metabolabpy = metabolabpy.__main__:main'
+        # ]
+        #}
     )
 
 
