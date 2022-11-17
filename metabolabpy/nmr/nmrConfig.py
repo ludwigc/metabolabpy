@@ -25,7 +25,7 @@ class NmrConfig:
         self.neg_col20 = 1.0
         self.neg_col21 = 0.8
         self.neg_col22 = 0.8
-        self.mode = 'light'
+        self.mode = 'system'
 
     def make_config(self):
         config = configparser.ConfigParser()

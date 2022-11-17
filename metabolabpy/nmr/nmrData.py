@@ -345,7 +345,7 @@ class NmrData:
         x_axis = range(npts)
         ph0 = fit_parameters[0]
         ph1 = fit_parameters[1]
-        spc = np.copy(self.phase3(spc, ph0, ph1))
+        spc = np.copy(self.phase3(spc, float(ph0), float(ph1), len(spc)))
         spc_1 = np.copy(np.gradient(spc.real))
         gamma = 1.0 / np.sum(np.abs(spc.real))
         h_i = np.abs(spc_1.real) / np.sum(np.abs(spc_1.real))
@@ -906,14 +906,13 @@ class NmrData:
         # end phase2d
 
     @jit
-    def phase3(self, mat, ph0, ph1):
-        npts = len(mat)
-        ph0 = -ph0 * math.pi / 180.0
-        ph1 = -ph1 * math.pi / 180.0
+    def phase3(self, mat, ph0, ph1, npts):
+        ph0_1 = -ph0 * math.pi / 180.0
+        ph1_1 = -ph1 * math.pi / 180.0
         t = complex()
         for k in range(int(npts)):
             frac = float(k) / float(npts)
-            ph = ph0 + frac * ph1
+            ph = ph0_1 + frac * ph1_1
             t = complex(math.cos(ph) * mat[k].real + math.sin(ph) * mat[k].imag,
                         -math.sin(ph) * mat[k].real + math.cos(ph) * mat[k].imag)
             mat[k] = t

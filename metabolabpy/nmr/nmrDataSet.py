@@ -20,7 +20,7 @@ import pandas as pd  # pragma: no cover
 class NmrDataSet:
 
     def __init__(self):
-        self.__version__ = '0.7.22'
+        self.__version__ = '0.7.23'
         self.nmrdat = [[]]
         self.s = 0
         self.e = -1

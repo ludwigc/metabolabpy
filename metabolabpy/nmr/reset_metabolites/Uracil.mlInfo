@@ -1,0 +1,28 @@
+Name                   : Uracil
+AltName                : uracil
+Source                 : HMDB
+IUPAC                  : 1,3-diazinane-2,4-dione
+InChI_Identifier       : InChI=1S/C4H6N2O2/c7-3-1-2-5-4(8)6-3/h1-2H2,(H2,5,6,7,8)
+InChI_Key              : OIVLITBTBDPEFK-UHFFFAOYSA-N
+SMILES                 : O=C1CCNC(=O)N1
+Formula                : C4H6N2O2
+Mass                   : 114.1026
+pKa                    : 
+HMDB                   : HMDB00076
+SMPDB                  : SMP00007 SMP00046
+KEGG                   : map00240 map00410
+CHEBI                  : 15901
+CID                    : 
+C13Index               : 
+C13HSQC                : 0 0 0 0 0 0 0 0 0 0 1 1 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 11;1;000 12;1;000 12;1;000
+N15Index               : 
+C13chemicalShift       : 0 0 0 0 0 0 0 0 0 0 103.718 146.254
+H1chemicalShift        : 5.793 7.56 7.483
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 
