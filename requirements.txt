@@ -6,6 +6,7 @@ matplotlib
 pandas
 numba
 sklearn
+scikit-learn
 #install on arm with: pip3 install ...
 openpyxl
 xlsxwriter
