@@ -6,6 +6,7 @@ NMR data pre-processing
 import numpy as np
 from metabolabpy.nmr import nmrConfig  # pragma: no cover
 import os
+import darkdetect
 
 
 class NmrPreProc:
@@ -96,7 +97,7 @@ class NmrPreProc:
 
     def init_plot_colours(self):
         self.cf.read_config()
-        if self.cf.mode == 'dark':
+        if self.cf.mode == 'dark' or (self.cf.mode == 'system' and darkdetect.isDark()):
             self.int1 = 1.0
             self.int2 = 0.6
             self.int3 = 0.3
@@ -108,7 +109,7 @@ class NmrPreProc:
         int1 = self.int1
         int2 = self.int2
         int3 = self.int3
-        if self.cf.mode == 'dark':
+        if self.cf.mode == 'dark' or (self.cf.mode == 'system' and darkdetect.isDark()):
             self.plot_colours = [(int1, int1, 0.0),
                                  (0.0, int1, int1),
                                  (int1, 0.0, int1),

@@ -3,6 +3,7 @@ import numpy as np
 from metabolabpy.nmr import acqPars
 from metabolabpy.nmr import procPars
 from metabolabpy.nmr import dispPars
+from metabolabpy.nmr import splineBaseline
 import os
 from scipy.fftpack import fft, ifft, fftshift
 import math
@@ -53,6 +54,7 @@ class NmrData:
         self.acq = acqPars.AcqPars()
         self.proc = procPars.ProcPars()
         self.display = dispPars.DispPars()
+        self.spline_baseline = splineBaseline.SplineBaseline()
         self.fid_offset_corr = 0
         self.data_set_name = ''
         self.data_set_number = ''

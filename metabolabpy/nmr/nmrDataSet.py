@@ -20,7 +20,7 @@ import pandas as pd  # pragma: no cover
 class NmrDataSet:
 
     def __init__(self):
-        self.__version__ = '0.7.24'
+        self.__version__ = '0.7.25'
         self.nmrdat = [[]]
         self.s = 0
         self.e = -1
@@ -1196,6 +1196,28 @@ class NmrDataSet:
                 self.read_nmrpipe_spc(data_path[k], str(data_exp[0]), proc_data_name)
 
     # end read_spcs
+
+    def reference1d_all(self, old_ppm=0.0, new_ppm=0.0):
+        s = self.s
+        for k in range(len(self.nmrdat[s])):
+            if self.nmrdat[s][k].dim != 1:
+                break
+
+            ref_point = len(self.nmrdat[s][k].spc[0]) - self.nmrdat[s][k].ppm2points(old_ppm) - 1
+            diff_pts = np.linspace(-1, 1, 3, dtype=int)
+            ref_pts = ref_point*np.ones(3, dtype=int) + diff_pts
+            found_maximum = False
+            while not found_maximum:
+                max_idx = np.where(self.nmrdat[s][k].spc[0][ref_pts] == np.max(self.nmrdat[s][k].spc[0][ref_pts]))[0][0]
+                ref_point += diff_pts[max_idx]
+                ref_pts = ref_point * np.ones(3, dtype=int) + diff_pts
+                if max_idx == 1:
+                    found_maximum = True
+
+            self.nmrdat[s][k].ref_point[0] = len(self.nmrdat[s][k].spc[0]) - ref_point - 1
+            self.nmrdat[s][k].ref_shift[0] = new_ppm
+            self.nmrdat[s][k].calc_ppm()
+        # end reference1d_all
 
     def reset_data_pre_processing(self):
         if not self.nmrdat[self.s][0].projected_j_res:
