@@ -1448,6 +1448,10 @@ class NmrData:
 
         # end read_spc
 
+    def set_spline_baseline(self):
+        
+        # end set_spline_baseline
+
     def set_ref(self, ref_shift, ref_point):
         for k in range(len(ref_shift)):
             self.ref_shift[k] = ref_shift[k]
