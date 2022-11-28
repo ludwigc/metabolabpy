@@ -186,12 +186,12 @@ class NmrDataSet:
         return "Finished auto_ref"
         # end auto_ref
 
-    def auto_ref_all(self):
+    def auto_ref_all(self, tmsp=True):
         n_exp = len(self.nmrdat[self.s])
         orig_exp = self.e
         for k in range(n_exp):
             self.e = k
-            self.auto_ref()
+            self.auto_ref(tmsp)
 
         self.e = orig_exp
         return "Finished auto_ref_all"
