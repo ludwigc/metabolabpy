@@ -160,6 +160,33 @@ class NmrData:
 
     # end add_hsqc_peak
 
+    def add_baseline_points(self):
+        if len(self.spline_baseline.baseline_points) == 0:
+            return
+
+        baseline_points = set(self.spline_baseline.baseline_points)
+        self.spline_baseline.baseline_points = list(baseline_points)
+        self.spline_baseline.baseline_points_pts = len(self.spc[0]) - self.ppm2points(self.spline_baseline.baseline_points)
+        outside_left = np.where(self.spline_baseline.baseline_points_pts < self.spline_baseline.average_points + 1)[0]
+        outside_right = np.where(self.spline_baseline.baseline_points_pts > len(self.spc[0]) - self.spline_baseline.average_points  - 1)[0]
+        for k in outside_left:
+            self.spline_baseline.baseline_points_pts[k] = self.spline_baseline.average_points + 1
+
+        for k in outside_right:
+            self.spline_baseline.baseline_points_pts[k] = len(self.spc[0]) - self.spline_baseline.average_points - 1
+
+        baseline_points = set(self.spline_baseline.baseline_points_pts)
+        self.spline_baseline.baseline_points_pts = list(baseline_points)
+        self.spline_baseline.baseline_points_pts.sort()
+        baseline_points = list(len(self.spc[0]) - np.array(self.spline_baseline.baseline_points_pts))
+        self.spline_baseline.baseline_points = self.points2ppm(baseline_points)
+        self.spline_baseline.baseline_values = []
+        for k in self.spline_baseline.baseline_points_pts:
+            spc_points = np.linspace(k - self.spline_baseline.average_points, k + self.spline_baseline.average_points, 2*self.spline_baseline.average_points + 1, dtype=int)
+            self.spline_baseline.baseline_values.append(np.mean(self.spc[0][spc_points].real))
+
+        # end add_baseline_points
+
     def add_peak(self, start_end=np.array([], dtype='float64'), peak_label=''):
         if len(start_end) > 0:
             start_peak = int(1e4 * self.points2ppm(self.ppm2points(max(start_end), 0), 0)) / 1e4
