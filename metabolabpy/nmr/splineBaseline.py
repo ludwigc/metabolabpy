@@ -13,7 +13,6 @@ class SplineBaseline:
         self.baseline_points = []
         self.baseline_points_pts = []
         self.baseline_values = []
-        self.baseline = []
         # end __init__
 
     def __str__(self):  # pragma: no cover

@@ -20,7 +20,7 @@ import pandas as pd  # pragma: no cover
 class NmrDataSet:
 
     def __init__(self):
-        self.__version__ = '0.7.25'
+        self.__version__ = '0.8.01'
         self.nmrdat = [[]]
         self.s = 0
         self.e = -1
@@ -263,6 +263,7 @@ class NmrDataSet:
             self.baseline1d_all()
             self.auto_ref_all()
             self.shift_ref()
+            self.spline_correct()
 
         else:
             s = self.s
@@ -1225,6 +1226,12 @@ class NmrDataSet:
             self.baseline1d_all()
             self.auto_ref_all()
             self.shift_ref()
+            if len(self.nmrdat[self.s][self.e].spline_baseline.baseline_points) > 0:
+                for k in range(len(self.nmrdat[self.s])):
+                    self.nmrdat[self.s][k].spline_baseline = self.nmrdat[self.s][self.e].spline_baseline
+                    self.nmrdat[self.s][k].add_baseline_points()
+                    self.nmrdat[self.s][k].corr_spline_baseline()
+
         else:
             s = self.s
             e = self.e
@@ -1610,6 +1617,12 @@ class NmrDataSet:
             self.nmrdat[self.s][k].ref_shift = self.nmrdat[self.s][0].ref_shift
 
     # end shift_ref
+
+    def spline_correct(self):
+        if len(self.nmrdat[self.s][self.e].spline_baseline.baseline_points) > 0:
+            for k in range(len(self.nmrdat[self.s])):
+                self.nmrdat[self.s][k].spline_baseline.baseline_points = self.nmrdat[self.s][self.e].spline_baseline.baseline_points
+                self.nmrdat[self.s][k].corr_spline_baseline()
 
     def variance_stabilisation(self):
         if self.pp.auto_scaling:

@@ -6,6 +6,8 @@ from metabolabpy.nmr import dispPars
 from metabolabpy.nmr import splineBaseline
 import os
 from scipy.fftpack import fft, ifft, fftshift
+from scipy.interpolate import CubicSpline
+from scipy.interpolate import Rbf, InterpolatedUnivariateSpline
 import math
 import matplotlib.pyplot as pl
 from scipy import signal
@@ -180,6 +182,9 @@ class NmrData:
         self.spline_baseline.baseline_points_pts.sort()
         baseline_points = list(len(self.spc[0]) - np.array(self.spline_baseline.baseline_points_pts))
         self.spline_baseline.baseline_points = self.points2ppm(baseline_points)
+        for k in range(len(self.spline_baseline.baseline_points)):
+            self.spline_baseline.baseline_points[k] = np.round( 1e4 * self.spline_baseline.baseline_points[k] ) / 1e4
+
         self.spline_baseline.baseline_values = []
         for k in self.spline_baseline.baseline_points_pts:
             spc_points = np.linspace(k - self.spline_baseline.average_points, k + self.spline_baseline.average_points, 2*self.spline_baseline.average_points + 1, dtype=int)
@@ -1643,6 +1648,49 @@ class NmrData:
         self.hsqc.hsqc_data[self.hsqc.cur_metabolite].cod[self.hsqc.cur_peak - 1] = np.max([cod1 * weighted_distance * 100.0, 0.0])
         #print("max_dist: {}, dist_2d: {}, cod1: {}, cod: {}".format(max_dist, dist_2d, cod1, self.hsqc.hsqc_data[self.hsqc.cur_metabolite].cod[self.hsqc.cur_peak - 1]))
         # end sim_hsqc_1d_calc_cod
+
+    def calc_spline_baseline(self):
+        baseline_points = []
+        baseline_points_pts = []
+        baseline_values = []
+        baseline_points.append(self.spline_baseline.baseline_points[0])
+        baseline_points_pts.append(self.spline_baseline.baseline_points_pts[0])
+        baseline_values.append(self.spline_baseline.baseline_values[0])
+        for k in range(len(self.spline_baseline.baseline_points_pts) - 1):
+            diff_pts = self.spline_baseline.baseline_points_pts[k+1] - self.spline_baseline.baseline_points_pts[k]
+            if diff_pts > self.spline_baseline.linear_spline:
+                n_pts = int(diff_pts / self.spline_baseline.linear_spline)
+                new_bsl = np.linspace(self.spline_baseline.baseline_points[k], self.spline_baseline.baseline_points[k+1], n_pts + 2)
+                new_bsl_pts = self.ppm2points(new_bsl)
+                new_bsl_vals = np.linspace(self.spline_baseline.baseline_values[k], self.spline_baseline.baseline_values[k+1], n_pts + 2)
+                for l in range(len(new_bsl) - 2):
+                    baseline_points.append(new_bsl[l + 1])
+                    baseline_points_pts.append(len(self.spc[0]) - new_bsl_pts[l+1])
+                    baseline_values.append(new_bsl_vals[l+1])
+
+            baseline_points.append(self.spline_baseline.baseline_points[k+1])
+            baseline_points_pts.append(self.spline_baseline.baseline_points_pts[k+1])
+            baseline_values.append(self.spline_baseline.baseline_values[k+1])
+
+        baseline_points.reverse()
+        baseline_values.reverse()
+        cs = CubicSpline(baseline_points, baseline_values,bc_type='natural')
+        #rbf = Rbf(baseline_points, baseline_values)
+        #ius = InterpolatedUnivariateSpline(baseline_points, baseline_values)
+        #baseline = ius(self.ppm1) #rbf(self.ppm1)
+        #baseline = rbf(self.ppm1)
+        baseline = cs(self.ppm1)
+        return baseline #baseline_points, baseline_values
+        # end calc_spline_baseline
+
+    def corr_spline_baseline(self):
+        self.add_baseline_points()
+        baseline = self.calc_spline_baseline()
+        spc1 = np.copy(self.spc[0])
+        spc1 -= baseline
+        self.spc[0] = np.copy(spc1)
+        self.add_baseline_points()
+        # end corr_spline_baseline
 
     def fit_hsqc_1d(self):
         autosim = self.hsqc.autosim
