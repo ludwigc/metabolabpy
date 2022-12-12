@@ -20,7 +20,7 @@ import pandas as pd  # pragma: no cover
 class NmrDataSet:
 
     def __init__(self):
-        self.__version__ = '0.8.01'
+        self.__version__ = '0.8.2'
         self.nmrdat = [[]]
         self.s = 0
         self.e = -1
@@ -349,6 +349,39 @@ class NmrDataSet:
             self.deselect[idx] = np.ones(len(idx))
 
         # end exclude_region
+
+    def export_hsqc_data(self, excel_name=''):
+        if len(excel_name) == 0:
+            return
+
+        n_exp = len(self.nmrdat[self.s])
+        wb = Workbook()
+        wb.remove(wb.active)
+        for k in self.nmrdat[self.s][self.e].hsqc.hsqc_data.keys():
+            wb.create_sheet(k)
+            letters = []
+            for s in itertools.islice(self.iter_all_strings(), 6*n_exp):
+                letters.append(s)
+
+            for l in range(n_exp):
+                wb[k][letters[0 + l*6] + "1"] = "Dataset." + str(l)
+                wb[k][letters[1 + l*6] + "1"] = "Experiment." + str(l)
+                wb[k][letters[2 + l*6] + "1"] = "Multiplet." + str(l)
+                wb[k][letters[3 + l*6] + "1"] = "Percentages." + str(l)
+                wb[k][letters[4 + l*6] + "1"] = "Intensity." + str(l)
+                wb[k][letters[5 + l*6] + "1"] = "HSQC." + str(l)
+                wb[k][letters[0 + l*6] + "2"] = str(self.s + 1)
+                wb[k][letters[1 + l*6] + "2"] = str(l + 1)
+                wb[k][letters[5 + l*6] + "2"] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].hsqc).replace('[', '').replace(']', '')
+                offset = 0
+                for m in range(len(self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems)):
+                    wb[k][letters[4 + l*6] + str(offset + 2)] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].intensities[m])
+                    for n in range(len(self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems[m]['contribution'])):
+                        wb[k][letters[2 + l*6] + str(offset + 2)] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems[m]['c13_idx'][n]).replace('[', '').replace(']', '')
+                        wb[k][letters[3 + l*6] + str(offset + 2)] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems[m]['contribution'][n])
+                        offset += 1
+
+        wb.save(excel_name)
 
     def export_data_set(self, cmd_name='finish'):
         if self.pp.export_method == 0:
@@ -1174,6 +1207,13 @@ class NmrDataSet:
 
     # end read_spcs
 
+    def read_title_file_information_excel(self, file_name = ''):
+        if len(file_name) == 0:
+            return
+
+        xls = pd.read_excel(fName).fillna('')
+        return xls
+
     def read_nmrpipe_spc(self, data_set_name, data_set_number, proc_data_name='test.dat'):
         self.e = len(self.nmrdat[self.s])
         nd1 = nd.NmrData()
@@ -1588,6 +1628,22 @@ class NmrDataSet:
                 else:
                     self.nmrdat[k][l].display.pos_col_rgb = std_pos_col1
                     self.nmrdat[k][l].display.neg_col_rgb = std_neg_col1
+
+    def set_title_information(self, rack_label='', pos_label='', data_path='', excel_name='', replace_orig_title=False):
+        if len(rack_label) == 0 or len(pos_label) == 0 or len(data_path) == 0 or len(excel_name) == 0:
+            return
+
+        f_name = os.path.join(data_path, excel_name)
+        xls = pd.read_excel(f_name)
+        c_dict = {}
+        for k in range(len(xls[pos_label])):
+            if str(xls[pos_label][k]) != 'nan':
+                c_dict[str(xls[rack_label][k]) + " " + str(xls[pos_label][k])] = k
+
+        for k in range(len(self.nmrdat[self.s])):
+            self.nmrdat[self.s][k].set_title_information(xls=xls, excel_name=excel_name, pos_label=pos_label, rack_label=rack_label, c_dict=c_dict, replace_orig_title=replace_orig_title)
+
+        # end set_title_information
 
     def set_window_type(self, wt):
         n_exp = len(self.nmrdat[self.s])

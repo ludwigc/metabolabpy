@@ -21,9 +21,11 @@ from metabolabpy.nmr import nmrHsqc
 from sklearn.decomposition import FastICA, PCA
 from metabolabpy.nmr import hsqcData
 import sys
+import pandas as pd
 from numba import jit
 #from numba import vectorize
 import multiprocessing as mp
+import re
 
 try:
     import pygamma as pg
@@ -101,6 +103,8 @@ class NmrData:
         self.fit_hsqc_again = False
         self.exclude_water = False
         self.delta_sw = 0.5
+        self.auto_pos_re = re.compile(r'[A-Z]\d+')
+        self.rack_num_re = re.compile(r'<\d+')
         if 'pygamma' in sys.modules:
             self.has_pg = True
         else:
@@ -1483,6 +1487,39 @@ class NmrData:
     def set_spline_baseline(self):
         print(a)
         # end set_spline_baseline
+
+    def set_title_information(self, xls=pd.DataFrame(), excel_name='', pos_label='', rack_label='', replace_orig_title=False, c_dict=[]):
+        if len(xls) == 0 or len(pos_label) == 0 or len(rack_label) == 0 or len(excel_name) == 0:
+             return
+
+        if replace_orig_title:
+            orig_title = ''
+        else:
+            orig_title = self.title
+
+        pos = self.auto_pos_re.findall(self.acq.autopos)[0]
+        rack = self.rack_num_re.findall(self.acq.autopos)[0][1:]
+        if len(c_dict) == 0:
+            c_dict = {}
+            for k in range(len(xls[pos_label])):
+                if str(xls[pos_label][k]) != 'nan':
+                    c_dict[str(xls[rack_label][k]) + " " + str(xls[pos_label][k])] = k
+
+        line_number = c_dict[rack + " " + pos]
+        title = ''
+        title += f'Excel File : {excel_name}\n'
+        title += f'Excel Line Number : {line_number + 2}\n'
+        title += f'acqus AUTOPOS : {rack} {pos}\n'
+        for col in xls.columns:
+            if col == 'number':
+                title += f'{col} : {int(xls[col][line_numer])}\n'
+            else:
+                title += f'{col} : {xls[col][line_number]}\n'
+
+        title += '\n'
+        title += orig_title
+        self.title = title
+        # end set_title_information
 
     def set_ref(self, ref_shift, ref_point):
         for k in range(len(ref_shift)):
