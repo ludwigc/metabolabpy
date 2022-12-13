@@ -20,7 +20,7 @@ import pandas as pd  # pragma: no cover
 class NmrDataSet:
 
     def __init__(self):
-        self.__version__ = '0.8.2'
+        self.__version__ = ml_version.__version__
         self.nmrdat = [[]]
         self.s = 0
         self.e = -1
@@ -199,7 +199,8 @@ class NmrDataSet:
 
     def baseline1d(self):
         if self.nmrdat[self.s][self.e].dim == 1:
-            self.nmrdat[self.s][self.e].baseline1d()
+            if len(self.nmrdat[self.s][self.e].spline_baseline.baseline_points) == 0:
+                self.nmrdat[self.s][self.e].baseline1d()
 
         # end baseline1d
 
@@ -263,7 +264,6 @@ class NmrDataSet:
             self.baseline1d_all()
             self.auto_ref_all()
             self.shift_ref()
-            self.spline_correct()
 
         else:
             s = self.s

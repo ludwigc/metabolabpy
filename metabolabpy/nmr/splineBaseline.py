@@ -9,7 +9,7 @@ class SplineBaseline:
 
     def __init__(self):
         self.linear_spline = 200
-        self.average_points = 20
+        self.average_points = 50
         self.baseline_points = []
         self.baseline_points_pts = []
         self.baseline_values = []

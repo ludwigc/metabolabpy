@@ -1,5 +1,4 @@
 import numpy as np
-# from metabolabpy.nmr import wdwf
 from metabolabpy.nmr import acqPars
 from metabolabpy.nmr import procPars
 from metabolabpy.nmr import dispPars
@@ -23,7 +22,6 @@ from metabolabpy.nmr import hsqcData
 import sys
 import pandas as pd
 from numba import jit
-#from numba import vectorize
 import multiprocessing as mp
 import re
 
@@ -504,8 +502,6 @@ class NmrData:
                 spc2 /= np.linalg.norm(spc2)
                 ppp = len(self.spc) / self.acq.sw[1]
                 max_shift = int(len(spc2) / 2) - 1
-                #max_shift = min(int(ppp * self.hsqc.range_c), int(len(spc2) / 2) - 1)
-                #print("max_shift[13C]: {}, {} | ppp: {}".format(max_shift,int(len(spc2) / 2) - 1, ppp))
                 corr2 = np.zeros((len(ica), 2 * max_shift + 1))
                 shift2 = np.zeros((len(ica), 2 * max_shift + 1), dtype=int)
                 corr_max = np.zeros(len(ica))
@@ -524,19 +520,9 @@ class NmrData:
                 spc3 = np.roll(spc2, shift_max[spc2_idx])
                 # correlate 13C shifted, simulated spectrum across different 1H shift area
                 corr3 = np.zeros(len(data))
-                mid_point = int(len(data) / 2)
-                #ppp = len(self.spc[0]) / self.acq.sw[0]
-                #max_shift = min(int(ppp * self.hsqc.range_h), int(len(data) / 2) - 1)
-                #print("max_shift[ 1H]: {}, {}".format(max_shift,int(len(data) / 2) - 1))
-                #for l in range(mid_point - max_shift, mid_point + max_shift + 1):  # range(len(data)):
                 for l in range(len(data)):
                         corr3[l] = np.corrcoef(data[l], spc3)[0][1] * np.max(data[l])
-                    #print("weight: {}, corr3[l]: {}, corr3[l] * np.max(data[l]) / np.max(data): {}".format(np.max(data[l]) / np.max(data), corr3[l], corr3[l] * np.max(data[l]) / np.max(data)))
 
-                #max_idx3 = np.where(corr3 == np.max(corr3))[0][0]
-                #for l in range(len(data)):
-                #    corr3[l] *= data[l][max_idx3] / np.max(data)
-                #
                 max_idx3 = np.where(corr3 == np.max(corr3))[0][0]
                 h1_pts_f = h1_pts1 + max_idx3 - 1
                 c13_pts_f = c13_pts1 + max_shift + shift_max[spc2_idx] + 1
@@ -595,14 +581,11 @@ class NmrData:
     def baseline1d(self):
         spc = self.spc[0]
         self.apc.npts = len(spc)
-        # scale_fact         = np.max(np.abs(spc))
-        # spc              /= scale_fact
         xaxis = np.linspace(-self.apc.n_max, self.apc.n_max, self.apc.npts)
         par_eval = np.copy(self.apc.r_spc)
         par_eval = np.append(par_eval, self.apc.i_spc)
-        # print(par_eval)
         spc2 = self.apc.baseline_fit_func_eval(par_eval, spc, xaxis)  # , False)
-        self.spc[0] = spc2  # *scale_fact
+        self.spc[0] = spc2
         # end baseline1d
 
     def calc_ppm(self):
@@ -644,10 +627,10 @@ class NmrData:
         win = np.zeros(int(ws2 * 2 + 1))
         s_win = 0
         for k in range(int(ws2 * 2 + 1)):
-            if (wt == 0):  # Gaussian window
+            if (wt == 0):  # Gaussian Window
                 win[k] = math.exp(-4.0 * ((k - ws2) ** 2) / (ws2 ** 2))
                 s_win += win[k]
-            else:  # sine bell window
+            else:  # Sine Bell Window
                 win[k] = math.cos((math.pi * (k - ws2)) / (2 * ws2 + 2))
                 s_win += win[k]
 
@@ -665,7 +648,7 @@ class NmrData:
         fid2[idx2].imag = fid2[len(fid) - int(2 * ws2) - 1].imag - np.mean(
             np.diff(fid2[len(fid) - int(2 * ws2) - 1 - idx].imag)) * idx
         fid2 = np.delete(fid2, np.linspace(0, 2 * ws2 - 1, 2 * ws2, dtype='int'))
-        fid -= fid2  # (fidRe + 1j*fidIm)
+        fid -= fid2
         fid = np.concatenate([filt_fid, fid])
         return fid
         # end conv
@@ -819,7 +802,7 @@ class NmrData:
         # end hilbert
 
     def hilbert1(self, mat, dim):
-        if (self.dim == 1):
+        if self.dim == 1:
             npts = len(mat)
             b_mat = np.zeros(int(2 * npts), dtype='complex')
             z_mat = np.zeros(int(2 * npts), dtype='complex')
@@ -830,9 +813,8 @@ class NmrData:
             mat2[:len(mat)] = mat
             mat2 = ifft(b_mat * fft(mat2))
             mat1 = np.copy(mat2[:len(mat)])
-
-        if (self.dim == 2):
-            if (dim == 1):
+        elif self.dim == 2:
+            if dim == 1:
                 mat = np.ndarray.transpose(mat)
 
             npts = len(mat[0])
@@ -853,6 +835,9 @@ class NmrData:
             if (dim == 1):
                 mat1 = np.ndarray.transpose(mat1)
 
+        else:
+            mat1 = np.array([])
+
         return mat1
         # end hilbert1
 
@@ -869,7 +854,6 @@ class NmrData:
         sys = pg.spin_system(sum(c13_nc[idx]))
         sys.Omega(self.acq.sfo2)
         for k in range(len(c13_nc[idx])):
-            #print('chem_shift[idx][k]: {}'.format(chem_shift[idx][k]))
             sys.PPM(k, chem_shift[idx][k])
 
         for k in range(len(j_cc[idx])):
@@ -901,7 +885,6 @@ class NmrData:
         npts = len(mat)
         ph0 = -ph0 * math.pi / 180.0
         ph1 = -ph1 * math.pi / 180.0
-        t = complex()
         frac = np.linspace(0, 1, npts)
         ph = ph0 + frac * ph1
         mat = np.cos(ph) * mat.real + np.sin(ph) * mat.imag + 1j * (-np.sin(ph) * mat.real + np.cos(ph) * mat.imag)
@@ -997,11 +980,11 @@ class NmrData:
 
     def points2ppm(self, points, dim=0):
         sw = self.acq.sw_h[dim]
+        sfo = self.acq.sfo1
         if dim == 0:
-            sfo = self.acq.sfo1
             npts = self.proc.n_points[0]  # int(len(self.spc[0]))
 
-        if dim == 1:
+        elif dim == 1:
             if self.acq.manufacturer == 'Bruker':
                 sfo = self.proc.sf[1]
                 if sfo == 0.0:
@@ -1010,6 +993,9 @@ class NmrData:
             else:
                 sfo = self.acq.sfo2
 
+            npts = int(len(self.spc))
+
+        else:
             npts = int(len(self.spc))
 
         ppm = (sw / sfo) * (points / (npts - 1) - self.ref_point[dim] / (npts - 1)) + self.ref_shift[dim]
@@ -1030,7 +1016,6 @@ class NmrData:
 
             npts = int(len(self.spc))
 
-        # points = np.round(((ppm - self.ref_shift[dim]) * (sfo / sw) + self.ref_point[dim] / (npts - 1)) * (npts - 1))
         points = np.round(((ppm - self.ref_shift[dim]) * (sfo / sw) + self.ref_point[dim] / (npts - 1)) * (npts - 1))
         return points.astype(int)
         # end ppm2points
@@ -1051,7 +1036,6 @@ class NmrData:
         if self.dim == 2:
             self.proc_spc2d()
 
-        # self.auto_ref()
         self.calc_ppm()
         # end proc_spc
 
@@ -1071,6 +1055,9 @@ class NmrData:
             self.spc[0] = np.copy(np.flip(self.spc[0]))
 
         self.phase(self.proc.ph0[0], self.proc.ph1[0], self.proc.n_points[0])
+        if len(self.spline_baseline.baseline_points) > 0:
+            self.auto_ref()
+            self.corr_spline_baseline()
         # end proc_spc1d
 
     def proc_spc2d(self, test_quad_2d=False, no_abs=False):
@@ -1084,14 +1071,9 @@ class NmrData:
         npts2 = len(self.spc)
         npts1 = len(self.spc[0])
         if npts1 > 0:
-            if self.proc.strip_start < 1:
-                stsr = 1
-            else:
-                stsr = self.proc.strip_start
-
             if self.proc.n_points[0] != npts1:
                 self.ref_point[0] = int((self.proc.ref_point[0]) * self.proc.n_points[0] / (
-                        self.proc.mult_factor[0] * len(self.fid[0])))  # - stsr + 1
+                        self.proc.mult_factor[0] * len(self.fid[0])))
 
         if npts2 > 1:
             if self.proc.n_points[1] != npts2:
@@ -1236,7 +1218,6 @@ class NmrData:
     def read_spc(self):
         self.acq.read(self.data_set_name + os.sep + self.data_set_number)
         self.proc.read(self.data_set_name + os.sep + self.data_set_number)
-        # self.proc.sw_h = self.acq.sw_h
         self.orig_data_set = self.data_set_name + os.sep + self.data_set_number
         if self.acq.manufacturer == 'Bruker':
             title_file = self.data_set_name + os.sep + self.data_set_number + os.sep + 'pdata' + os.sep + '1' + os.sep + 'title'
@@ -1374,6 +1355,12 @@ class NmrData:
                                 fid = np.fromfile(f, dtype=np.float32)
 
                 f.close()
+                print(f'len(self.fid[0]): {len(self.fid[0])}, len(fid)/2: {len(fid)/2}')
+                if len(self.fid[0]) != len(fid)/2:
+                    npts = int(len(fid) / 2)
+                    self.fid = np.resize(self.fid, (1, npts))
+                    self.acq.n_data_points[0] = npts
+
                 self.fid[0].real = fid[0::2]
                 self.fid[0].imag = -fid[1::2]
                 self.dim = 1
