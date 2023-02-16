@@ -653,6 +653,32 @@ class NmrData:
         return fid
         # end conv
 
+    def create_title(self, xls=[], dataset_label='', pos_label='', rack_label='', replace_title=False, c_dict={}, excel_name=''):
+        if len(xls) == 0 or len(dataset_label) == 0 or len(pos_label) == 0 or len(rack_label) == 0 or len(c_dict) == 0 or len(excel_name) == 0:
+            return
+
+        get_auto_pos = re.compile(r'[A-Z]\d+')
+        get_rack_num = re.compile(r'<\d+')
+        pos = get_auto_pos.findall(self.acq.autopos)[0]
+        rack = get_rack_num.findall(self.acq.autopos)[0][1:]
+        if not replace_title:
+            title = self.title
+        else:
+            title = ''
+            
+        line_no = c_dict[rack + " " + pos]
+        title += f'Excel file : {excel_name}\n'
+        title += f'Excel line number : {line_no + 2}\n'
+        title += f'acqus AUTOPOS : {rack} {pos}\n'
+        for col in xls.columns:
+            if col == 'number':
+                title += f'{col} : {int(xls[col][line_no])}\n'
+            else:
+                title += f'{col} : {xls[col][line_no]}\n'
+
+        self.title = title
+        # end create_titles
+
     def export_bruker_1d(self, path_name, exp_name, scale_factor=-1):
         if self.acq.manufacturer != 'Bruker':
             return
@@ -1039,7 +1065,7 @@ class NmrData:
         self.calc_ppm()
         # end proc_spc
 
-    def proc_spc1d(self):
+    def proc_spc1d(self, reset_spline=False):
         fid = np.copy(self.fid[0])
         fid = self.water_supp(fid)
         fid = self.fid_offset_correction(fid)
@@ -1055,7 +1081,7 @@ class NmrData:
             self.spc[0] = np.copy(np.flip(self.spc[0]))
 
         self.phase(self.proc.ph0[0], self.proc.ph1[0], self.proc.n_points[0])
-        if len(self.spline_baseline.baseline_points) > 0:
+        if len(self.spline_baseline.baseline_points) > 0 and not reset_spline:
             self.auto_ref()
             self.corr_spline_baseline()
         # end proc_spc1d
@@ -1604,7 +1630,10 @@ class NmrData:
             # for dd in range(len(sim_spc[0])):
             #    spc_max[dd] = self.spc[dd][h1_pts]
             #
-            intensity = abs(self.spc[c13_pts][h1_pts].real / sim_spc[0][c13_pts].real)
+            #intensity = abs(self.spc[c13_pts][h1_pts].real / sim_spc[0][c13_pts].real)
+            #print(f'c13_range = {c13_range}, h1_pts = {h1_pts}, c13_pts = {c13_pts}, max(spc) = {np.max(self.spc[c13_pts].real)}, max(sim_spc) = {np.max(sim_spc[0].real)}')
+            #print(self.spc[c13_range])
+            intensity = abs(np.max(np.transpose(self.spc)[h1_pts][c13_range]) / np.max(sim_spc[0].real))
             self.hsqc.hsqc_data[self.hsqc.cur_metabolite].intensities[self.hsqc.cur_peak - 1] = intensity
 
         self.hsqc.hsqc_data[self.hsqc.cur_metabolite].sim_spc[self.hsqc.cur_peak - 1] = sim_spc[0].real

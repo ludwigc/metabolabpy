@@ -26,6 +26,7 @@ class NmrConfig:
         self.neg_col21 = 0.8
         self.neg_col22 = 0.8
         self.mode = 'system'
+        self.current_directory = ''
 
     def make_config(self):
         config = configparser.ConfigParser()
@@ -48,6 +49,7 @@ class NmrConfig:
                           'neg_col20': self.neg_col20,
                           'neg_col21': self.neg_col21,
                           'neg_col22': self.neg_col22}
+        config['System'] = {'current_directory': self.current_directory}
         return config
 
     def save_config(self):
@@ -77,6 +79,9 @@ class NmrConfig:
 
     def set_auto_plot(self, value):
         self.auto_plot = True if value == "yes" else False
+
+    def set_current_directory(self, value):
+        self.current_directory = value
 
     def set_keep_zoom(self, value):
         self.keep_zoom = True if value == "yes" else False

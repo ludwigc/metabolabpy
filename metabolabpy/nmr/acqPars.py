@@ -210,11 +210,224 @@ class AcqPars:
             pass
 
         try:
+            dd = self.reg_ex.cpd_prog0.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.cpd_prog[0] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.cpd_prog1.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.cpd_prog[1] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.cpd_prog2.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.cpd_prog[2] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.cpd_prog3.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.cpd_prog[3] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.cpd_prog4.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.cpd_prog[4] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.cpd_prog5.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.cpd_prog[5] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.cpd_prog6.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.cpd_prog[6] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.cpd_prog7.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.cpd_prog[7] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.cpd_prog8.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.cpd_prog[8] = np.array(dd.split(), dtype='str')
+        except:
+            pass
+
+        try:
             dd = self.reg_ex.gp_name.search(self.acqus_text)
             dd = self.acqus_text[dd.span()[0]:]
             dd = dd[dd.find('\n') + 1:]
             dd = dd[:dd.find('##$')]
             self.gp_name = np.array(dd.split(), dtype='str')
+        except:
+            pass
+
+        try:
+            dd = self.reg_ex.gp_name0.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[0] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name1.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[1] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name2.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[2] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name3.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[3] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name4.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[4] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name5.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[5] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name6.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[6] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name7.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[7] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name8.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[8] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name9.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[9] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name10.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[10] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name11.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[11] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name12.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[12] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name13.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[13] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name14.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[14] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name15.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[15] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name16.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[16] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name17.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[17] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name18.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[18] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name19.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[19] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name20.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[20] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name21.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[21] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name22.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[22] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name23.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[23] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name24.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[24] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name25.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[25] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name26.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[26] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name27.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[27] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name28.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[28] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name29.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[29] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name30.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[30] = np.array(dd.split(), dtype='str')
+            dd = self.reg_ex.gp_name31.search(self.acqus_text)
+            dd = self.acqus_text[dd.span()[0]:]
+            dd = dd[dd.find('\n') + 1:]
+            dd = dd[:dd.find('##$')]
+            self.gp_name[31] = np.array(dd.split(), dtype='str')
         except:
             pass
 

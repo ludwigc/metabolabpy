@@ -257,6 +257,23 @@ class NmrDataSet:
 
         # end compress_buckets
 
+    def create_titles(self, xls=[], dataset_label='', pos_label='', rack_label='', replace_title=False, excel_name=''):
+        if len(xls) == 0 or len(dataset_label) == 0 or len(pos_label) == 0 or len(rack_label) == 0 or len(excel_name) == 0:
+            return
+
+        if len(self.nmrdat[self.s]) == 0:
+            return
+
+        c_dict = {}
+        for k in range(len(xls[pos_label])):
+            if str(xls[pos_label][k]) != 'nan':
+                c_dict[str(xls[rack_label][k]) + " " + str(xls[pos_label][k])] = k
+
+        for k in range(len(self.nmrdat[self.s])):
+            self.nmrdat[self.s][k].create_title(xls, dataset_label, pos_label, rack_label, replace_title, c_dict, excel_name)
+
+        # end create_titles
+    
     def data_pre_processing(self):
         self.pp.spc_scale = np.ones(len(self.nmrdat[self.s]))
         if not self.nmrdat[self.s][0].projected_j_res:
@@ -1021,6 +1038,8 @@ class NmrDataSet:
                 self.nmrdat[k][l].proc.proc3s_text = f.read()
                 f.close()
 
+        self.cf.current_directory = data_set_name
+        self.cf.save_config()
         # end load
 
     def noise_filtering(self):
@@ -1344,6 +1363,9 @@ class NmrDataSet:
                 f = open(f_name, 'w')
                 f.write(self.nmrdat[k][l].acq.acqu3s_text)
                 f.close()
+
+        self.cf.current_directory = data_set_name
+        self.cf.save_config()
         # end save
 
     def scale_spectra(self):

@@ -59,7 +59,7 @@ class NmrHsqc:
             self.metabolite_information = ''
             return
 
-        print(os.path.dirname(__file__))
+        #print(os.path.dirname(__file__))
         file_name = os.path.join(os.path.dirname(__file__), 'metabolites', metabolite_name + '.mlInfo')
         fid = open(file_name, 'r')
         self.metabolite_information = fid.read()
