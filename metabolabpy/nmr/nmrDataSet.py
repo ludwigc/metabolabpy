@@ -368,6 +368,7 @@ class NmrDataSet:
         # end exclude_region
 
     def export_hsqc_data(self, excel_name=''):
+        n_cols = 7
         if len(excel_name) == 0:
             return
 
@@ -377,25 +378,27 @@ class NmrDataSet:
         for k in self.nmrdat[self.s][self.e].hsqc.hsqc_data.keys():
             wb.create_sheet(k)
             letters = []
-            for s in itertools.islice(self.iter_all_strings(), 6*n_exp):
+            for s in itertools.islice(self.iter_all_strings(), n_cols*n_exp):
                 letters.append(s)
 
             for l in range(n_exp):
-                wb[k][letters[0 + l*6] + "1"] = "Dataset." + str(l)
-                wb[k][letters[1 + l*6] + "1"] = "Experiment." + str(l)
-                wb[k][letters[2 + l*6] + "1"] = "Multiplet." + str(l)
-                wb[k][letters[3 + l*6] + "1"] = "Percentages." + str(l)
-                wb[k][letters[4 + l*6] + "1"] = "Intensity." + str(l)
-                wb[k][letters[5 + l*6] + "1"] = "HSQC." + str(l)
-                wb[k][letters[0 + l*6] + "2"] = str(self.s + 1)
-                wb[k][letters[1 + l*6] + "2"] = str(l + 1)
-                wb[k][letters[5 + l*6] + "2"] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].hsqc).replace('[', '').replace(']', '')
+                wb[k][letters[0 + l*n_cols] + "1"] = "Dataset." + str(l)
+                wb[k][letters[1 + l*n_cols] + "1"] = "Experiment." + str(l)
+                wb[k][letters[2 + l*n_cols] + "1"] = "Remote." + str(l)
+                wb[k][letters[3 + l*n_cols] + "1"] = "Multiplet." + str(l)
+                wb[k][letters[4 + l*n_cols] + "1"] = "Percentages." + str(l)
+                wb[k][letters[5 + l*n_cols] + "1"] = "Intensity." + str(l)
+                wb[k][letters[6 + l*n_cols] + "1"] = "HSQC." + str(l)
+                wb[k][letters[0 + l*n_cols] + "2"] = str(self.s + 1)
+                wb[k][letters[1 + l*n_cols] + "2"] = str(l + 1)
+                wb[k][letters[6 + l*n_cols] + "2"] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].hsqc).replace('[', '').replace(']', '')
                 offset = 0
                 for m in range(len(self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems)):
-                    wb[k][letters[4 + l*6] + str(offset + 2)] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].intensities[m])
+                    wb[k][letters[5 + l*n_cols] + str(offset + 2)] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].intensities[m])
                     for n in range(len(self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems[m]['contribution'])):
-                        wb[k][letters[2 + l*6] + str(offset + 2)] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems[m]['c13_idx'][n]).replace('[', '').replace(']', '')
-                        wb[k][letters[3 + l*6] + str(offset + 2)] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems[m]['contribution'][n])
+                        wb[k][letters[2 + l*n_cols] + str(offset + 2)] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems[m]['c13_idx'][0]).replace('[', '').replace(']', '')
+                        wb[k][letters[3 + l*n_cols] + str(offset + 2)] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems[m]['c13_idx'][n]).replace('[', '').replace(']', '')
+                        wb[k][letters[4 + l*n_cols] + str(offset + 2)] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems[m]['contribution'][n])
                         offset += 1
 
         wb.save(excel_name)
