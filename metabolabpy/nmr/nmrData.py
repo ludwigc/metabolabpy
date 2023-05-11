@@ -952,7 +952,7 @@ class NmrData:
         self.spc = np.copy(mat.real)
         # end phase2d
 
-    @jit
+    @jit(nopython=True)
     def phase3(self, mat, ph0, ph1, npts):
         ph0_1 = -ph0 * math.pi / 180.0
         ph1_1 = -ph1 * math.pi / 180.0

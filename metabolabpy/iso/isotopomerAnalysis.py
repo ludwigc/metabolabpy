@@ -26,6 +26,6 @@ class IsotopomerAnalysis:
         if len(file_name) == 0:
             return
 
-        self.nmr_multiplets = pd.read_excel(file_name, None)
+        self.nmr_multiplets = pd.read_excel(file_name, sheet_name=None, keep_default_na=False)
         return
     # end read_hsqc_multiplets
