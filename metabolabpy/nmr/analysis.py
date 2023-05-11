@@ -9,6 +9,17 @@ def sat_rec(time_vector=[], intensity=0.0, rate=1.0):
     return data_vector
     # end sat_rec
 
+def sat_rec2(time_vector=[], parameters=[1.0, 1.0]):
+    if len(time_vector) == 0:
+        return []
+
+    intensity = parameters[0]
+    rate = parameters[1]
+    time_vector = np.array(time_vector)
+    data_vector = np.copy(intensity*(1.0 - np.exp(-time_vector*rate)))
+    return data_vector
+    # end sat_rec
+
 def fct_sat_rec(fit_parameters=[], time_data=[], intensity_data=[]):
     if len(fit_parameters) != 2 or len(time_data) == 0 or len(intensity_data) == 0 or len(time_data) != len(intensity_data):
         return []
