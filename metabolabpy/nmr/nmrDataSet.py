@@ -1260,7 +1260,7 @@ class NmrDataSet:
 
     # end read_spcs
 
-    def reference1d_all(self, old_ppm=0.0, new_ppm=0.0):
+    def reference1d_all(self, old_ppm=0.0, new_ppm=0.0, find_maximum=True):
         s = self.s
         for k in range(len(self.nmrdat[s])):
             if self.nmrdat[s][k].dim != 1:
@@ -1271,7 +1271,11 @@ class NmrDataSet:
             ref_pts = ref_point*np.ones(3, dtype=int) + diff_pts
             found_maximum = False
             while not found_maximum:
-                max_idx = np.where(self.nmrdat[s][k].spc[0][ref_pts] == np.max(self.nmrdat[s][k].spc[0][ref_pts]))[0][0]
+                if find_maximum:
+                    max_idx = np.where(self.nmrdat[s][k].spc[0][ref_pts] == np.max(self.nmrdat[s][k].spc[0][ref_pts]))[0][0]
+                else:
+                    max_idx = np.where(self.nmrdat[s][k].spc[0][ref_pts] == np.min(self.nmrdat[s][k].spc[0][ref_pts]))[0][0]
+                    
                 ref_point += diff_pts[max_idx]
                 ref_pts = ref_point * np.ones(3, dtype=int) + diff_pts
                 if max_idx == 1:

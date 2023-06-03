@@ -666,6 +666,7 @@ class NmrData:
         else:
             title = ''
             
+        print(c_dict)
         line_no = c_dict[rack + " " + pos]
         title += f'Excel file : {excel_name}\n'
         title += f'Excel line number : {line_no + 2}\n'
