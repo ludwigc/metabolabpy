@@ -447,11 +447,22 @@ class NmrData:
             self.hsqc.cur_peak = cur_peak
             self.hsqc.set_peak_information()
             for kk in range(len(self.hsqc.hsqc_data[metabolite_name].h1_shifts)):
+                self.fit_hsqc_again = True
                 cur_peak = kk + 1
                 self.hsqc.cur_peak = cur_peak
                 self.hsqc.set_metabolite_information(metabolite_name, self.hsqc.metabolite_information)
                 self.hsqc.set_peak_information()
-                self.fit_hsqc_1d()
+                fit_again_counter = 0
+                while self.fit_hsqc_again:
+                    if fit_again_counter < 10:
+                        fit_again_counter += 1
+                        self.fit_hsqc_again = False
+                        self.fit_hsqc_1d()
+                        self.fit_hsqc_1d()
+                        #self.fit_hsqc_1d()
+                    else:
+                        self.fit_hsqc_again = False
+
                 cont = np.copy(self.hsqc.hsqc_data[metabolite_name].spin_systems[cur_peak - 1]['contribution'])
                 self.hsqc.hsqc_data[self.hsqc.cur_metabolite].intensities[self.hsqc.cur_peak - 1] = 1.0
                 self.sim_hsqc_1d()
