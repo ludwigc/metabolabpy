@@ -430,6 +430,35 @@ class NmrData:
         self.baseline1d()
         # end autophase1d1
 
+    def autofit_hsqc(self, metabolite_list=[]):
+        if len(metabolite_list) == 0:
+            metabolite_list = [self.hsqc.cur_metabolite]
+
+        # set basic variables
+        range_h = self.hsqc.autopick_range_h
+        range_c = self.hsqc.autopick_range_c
+        for m in metabolite_list:
+            cur_peak = 1
+            metabolite_name = m
+            self.hsqc.read_metabolite_information(metabolite_name)
+            self.hsqc.cur_metabolite = metabolite_name
+            self.hsqc.read_metabolite_information(metabolite_name)
+            self.hsqc.set_metabolite_information(metabolite_name, self.hsqc.metabolite_information)
+            self.hsqc.cur_peak = cur_peak
+            self.hsqc.set_peak_information()
+            for kk in range(len(self.hsqc.hsqc_data[metabolite_name].h1_shifts)):
+                cur_peak = kk + 1
+                self.hsqc.cur_peak = cur_peak
+                self.hsqc.set_metabolite_information(metabolite_name, self.hsqc.metabolite_information)
+                self.hsqc.set_peak_information()
+                self.fit_hsqc_1d()
+                cont = np.copy(self.hsqc.hsqc_data[metabolite_name].spin_systems[cur_peak - 1]['contribution'])
+                self.hsqc.hsqc_data[self.hsqc.cur_metabolite].intensities[self.hsqc.cur_peak - 1] = 1.0
+                self.sim_hsqc_1d()
+                self.sim_hsqc_1d()
+
+        # end autofit_hsqc
+
     def autopick_hsqc(self, metabolite_list=[]):
         if len(metabolite_list) == 0:
             metabolite_list = [self.hsqc.cur_metabolite]
