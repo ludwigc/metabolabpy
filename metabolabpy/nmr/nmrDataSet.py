@@ -122,10 +122,10 @@ class NmrDataSet:
         return r_string
         # end __str__
 
-    def autobaseline1d(self):
+    def autobaseline1d(self, alg='jbcd', lam=1000000, max_iter=50,alpha=0.1, beta=10, gamma=15, beta_mult=0.98, gamma_mult=0.94, half_window=None):
         if len(self.nmrdat) > 0:
             if len(self.nmrdat[self.s]) > 0:
-                self.nmrdat[self.s][self.e].autobaseline1d()
+                self.nmrdat[self.s][self.e].autobaseline1d(lam=lam, alg=alg, max_iter=max_iter, alpha=alpha, beta=beta, gamma=gamma, beta_mult=beta_mult, gamma_mult=gamma_mult, half_window=half_window)
 
         # end autobaseline1d
 
@@ -278,7 +278,11 @@ class NmrDataSet:
         self.pp.spc_scale = np.ones(len(self.nmrdat[self.s]))
         if not self.nmrdat[self.s][0].projected_j_res:
             self.ft_all()
-            self.baseline1d_all()
+            if self.nmrdat[self.s][0].proc.autobaseline:
+                self.autobaseline1d_all()
+            else:
+                self.baseline1d_all()
+
             self.auto_ref_all()
             self.shift_ref()
 
@@ -1289,7 +1293,11 @@ class NmrDataSet:
     def reset_data_pre_processing(self):
         if not self.nmrdat[self.s][0].projected_j_res:
             self.ft_all()
-            self.baseline1d_all()
+            if self.nmrdat[self.s][0].proc.autobaseline:
+                self.autobaseline1d_all()
+            else:
+                self.baseline1d_all()
+
             self.auto_ref_all()
             self.shift_ref()
             if len(self.nmrdat[self.s][self.e].spline_baseline.baseline_points) > 0:

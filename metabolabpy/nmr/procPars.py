@@ -12,6 +12,7 @@ import math
 class ProcPars:
 
     def __init__(self):
+        self.autobaseline = False
         self.procs_text = str('')
         self.proc2s_text = str('')
         self.proc3s_text = str('')

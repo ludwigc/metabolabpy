@@ -24,6 +24,12 @@ import pandas as pd
 from numba import jit
 import multiprocessing as mp
 import re
+from pybaselines.whittaker import airpls, arpls, asls, aspls, derpsalsa, drpls, iarpls, iasls, psalsa
+from pybaselines.morphological import mpls, mor, imor, mormol, amormol, rolling_ball, mwmv, tophat, mpspline, jbcd
+from pybaselines.smooth import noise_median, snip, swima, ipsa, ria
+from pybaselines.classification import dietrich, golotvin, std_distribution, fastchrom, cwt_br, fabc
+from pybaselines.misc import interp_pts, beads
+from pybaselines.polynomial import poly, modpoly, imodpoly, penalized_poly, loess, quant_reg, goldindec
 
 try:
     import pygamma as pg
@@ -100,7 +106,7 @@ class NmrData:
         self.metabolite_text = []
         self.fit_hsqc_again = False
         self.exclude_water = False
-        self.delta_sw = 0.5
+        self.delta_sw = 1.0
         self.auto_pos_re = re.compile(r'[A-Z]\d+')
         self.rack_num_re = re.compile(r'<\d+')
         if 'pygamma' in sys.modules:
@@ -310,7 +316,94 @@ class NmrData:
         return fid
         # end apodise
 
-    def autobaseline1d(self):
+    def autobaseline1d(self, lam=1e6, alg='jbcd', max_iter=50, alpha=0.1, beta=10, gamma=15, beta_mult=0.98, gamma_mult=0.94, half_window=None):
+        spc = self.spc[0].real
+        if alg == 'airpls':
+            baseline = airpls(spc, lam=lam, max_iter=max_iter)
+        elif alg == 'arpls':
+            baseline = arpls(spc, lam=lam, max_iter=max_iter)
+        elif alg == 'asls':
+            baseline = asls(spc, lam=lam, max_iter=max_iter)
+        elif alg == 'aspls':
+            baseline = aspls(spc, lam=lam, max_iter=max_iter)
+        elif alg == 'derpsalsa':
+            baseline = derpsalsa(spc, lam=lam, max_iter=max_iter)
+        elif alg == 'drpls':
+            baseline = drpls(spc, lam=lam, max_iter=max_iter)
+        elif alg == 'iarpls':
+            baseline = iarpls(spc, lam=lam, max_iter=max_iter)
+        elif alg == 'iasls':
+            baseline = iasls(spc, lam=lam, max_iter=max_iter)
+        elif alg == 'psalsa':
+            baseline = psalsa(spc, lam=lam, max_iter=max_iter)
+        elif alg == 'mpls':
+            baseline = mpls(spc)
+        elif alg == 'mor':
+            baseline = mor(spc)
+        elif alg == 'imor':
+            baseline = imor(spc)
+        elif alg == 'mormol':
+            baseline = mormol(spc)
+        elif alg == 'amormol':
+            baseline = amormol(spc)
+        elif alg == 'rolling_ball':
+            baseline = rolling_ball(spc)
+        elif alg == 'mwmv':
+            baseline = mwmv(spc)
+        elif alg == 'tophat':
+            baseline = tophat(spc)
+        elif alg == 'mpspline':
+            baseline = mpspline(spc)
+        elif alg == 'jbcd':
+            baseline = jbcd(spc, alpha=alpha, beta=beta, gamma=gamma, beta_mult=beta_mult, gamma_mult=gamma_mult, half_window=half_window)
+        elif alg == 'noise_median':
+            baseline = noise_median(spc)
+        elif alg == 'snip':
+            baseline = snip(spc)
+        elif alg == 'swima':
+            baseline = swima(spc)
+        elif alg == 'ipsa':
+            baseline = ipsa(spc)
+        elif alg == 'ria':
+            baseline = ria(spc)
+        elif alg == 'dietrich':
+            baseline = dietrich(spc)
+        elif alg == 'golotvin':
+            baseline = golotvin(spc)
+        elif alg == 'std_distribution':
+            baseline = std_distribution(spc)
+        elif alg == 'fastchrom':
+            baseline = fastchrom(spc)
+        elif alg == 'cwt_br':
+            baseline = cwt_br(spc)
+        elif alg == 'fabc':
+            baseline = fabc(spc)
+        elif alg == 'interp_pts':
+            baseline = interp_pts(spc)
+        elif alg == 'beads':
+            baseline = beads(spc)
+        elif alg == 'poly':
+            baseline = poly(spc)
+        elif alg == 'modpoly':
+            baseline = modpoly(spc)
+        elif alg == 'imodpoly':
+            baseline = imodpoly(spc)
+        elif alg == 'penalized_poly':
+            baseline = penalized_poly(spc)
+        elif alg == 'loess':
+            baseline = loess(spc)
+        elif alg == 'quant_reg':
+            baseline = quant_reg(spc)
+        elif alg == 'goldindec':
+            baseline = goldindec(spc)
+        else:
+            baseline = iarpls(spc, lam=lam, max_iter=max_iter)
+
+        self.spc[0] = spc - baseline[0]
+        self.baseline1d()
+        # end autobaseline1d
+
+    def autobaseline1d_old(self):
         spc = self.spc[0]
         self.apc.npts = len(spc)
         scale_fact = np.max(np.abs(spc))
@@ -328,7 +421,7 @@ class NmrData:
         self.apc.correct_baseline = 1
         self.proc_spc1d()
         self.baseline1d()
-        # end autobaseline1d
+        # end autobaseline1d_old
 
     def autobaseline2d(self, poly_order=[16, 16], threshold=0.05):
         mat = np.copy(self.spc.real)
@@ -382,6 +475,7 @@ class NmrData:
         ph0 = fit_parameters[0]
         ph1 = fit_parameters[1]
         spc = np.copy(self.phase3(spc, float(ph0), float(ph1), len(spc)))
+        spc = np.copy(spc.real) - jbcd(spc.real, alpha=0.1, beta=10, gamma=15, beta_mult=0.98, gamma_mult=0.94)[0]
         spc_1 = np.copy(np.gradient(spc.real))
         gamma = 1.0 / np.sum(np.abs(spc.real))
         h_i = np.abs(spc_1.real) / np.sum(np.abs(spc_1.real))
@@ -993,7 +1087,7 @@ class NmrData:
         self.spc = np.copy(mat.real)
         # end phase2d
 
-    @jit(nopython=True)
+    #@jit(nopython=True)
     def phase3(self, mat, ph0, ph1, npts):
         ph0_1 = -ph0 * math.pi / 180.0
         ph1_1 = -ph1 * math.pi / 180.0
