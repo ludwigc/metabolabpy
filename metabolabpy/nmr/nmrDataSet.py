@@ -396,6 +396,7 @@ class NmrDataSet:
                 wb[k][letters[0 + l*n_cols] + "2"] = str(self.s + 1)
                 wb[k][letters[1 + l*n_cols] + "2"] = str(l + 1)
                 wb[k][letters[6 + l*n_cols] + "2"] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].hsqc).replace('[', '').replace(']', '')
+                wb[k][letters[6 + l*n_cols] + "3"] = "n_bonds: " + str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].n_bonds)
                 offset = 0
                 for m in range(len(self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems)):
                     wb[k][letters[5 + l*n_cols] + str(offset + 2)] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].intensities[m])
