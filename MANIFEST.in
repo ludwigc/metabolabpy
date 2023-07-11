@@ -2,6 +2,8 @@ include README.rst
 include LICENSE
 include requirements.txt
 include README.md
+include metabolabpy/GUI/*
+include metabolabpy/nmr/*
 include metabolabpy/icon/*
 include metabolabpy/png/*
 include metabolabpy/exampleScripts/*

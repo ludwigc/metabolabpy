@@ -10,4 +10,5 @@ scikit-learn
 openpyxl
 xlsxwriter
 multiprocess
+pybaselines
 #on arm: then install with : pip3 install metabolabpy --no-deps
