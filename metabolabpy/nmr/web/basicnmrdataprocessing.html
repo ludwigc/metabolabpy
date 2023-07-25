@@ -3,50 +3,310 @@
 <head>
 <meta charset="UTF-8">
 <title>BasicNMRDataProcessing</title>
-<meta name="referrer" content="same-origin">
+<meta name="referrer" content="origin-when-cross-origin">
 <link rel="canonical" href="https://ludwigc.github.io/metabolabpy/index.html/basicnmrdataprocessing.html">
 <meta name="robots" content="max-image-preview:large">
 <meta name="viewport" content="width=1200">
 <style>.anim{visibility:hidden}</style>
-<link rel="stylesheet" href="css/site.c93295.css" type="text/css">
+<script>!function(){var A=new Image;A.onload=A.onerror=function(){1!=A.height&&document.body.classList.remove("webp")},A.src="data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAD8D+JaQAA3AA/ua1AAA"}();
+</script>
+<link rel="stylesheet" href="css/site.13602c.css" type="text/css">
 </head>
-<body id="b1">
+<body class="webp" id="b1">
 <script>var p=document.createElement("P");p.innerHTML="&nbsp;",p.style.cssText="position:fixed;visible:hidden;font-size:100px;zoom:1",document.body.appendChild(p);var rsz=function(e){return function(){var r=Math.trunc(1e3/parseFloat(window.getComputedStyle(e).getPropertyValue("font-size")))/10,t=document.body;r!=t.style.getPropertyValue("--f")&&t.style.setProperty("--f",r)}}(p);if("ResizeObserver"in window){var ro=new ResizeObserver(rsz);ro.observe(p)}else if("requestAnimationFrame"in window){var raf=function(){rsz(),requestAnimationFrame(raf)};requestAnimationFrame(raf)}else setInterval(rsz,100);</script>
 
+<div data-ffbk class="fbk v1 ps1 s1 c43 z1 fx18" data-fbk="fx18">
+<div class="c44 s2">
+</div>
 <a name="top" class="v1 ps2 s3"></a>
-<div class="ps3 v2 s4 z7">
-<div class="v1 ps2 s5">
-<div class="anim fadeIn un58 v1 ps2 s6 c3 z118">
+<div class="ps3 v2 s4">
+<div class="v1 ps2 s140">
+<div class="anim fadeIn un58 v1 ps2 s6 c3 z2">
 <picture>
 <source srcset="images/metabolabpy_dark_transparency-294.webp 1x, images/metabolabpy_dark_transparency-588.webp 2x" type="image/webp">
 <source srcset="images/metabolabpy_dark_transparency-294.png 1x, images/metabolabpy_dark_transparency-588.png 2x">
 <img src="images/metabolabpy_dark_transparency-588.png" class="i1">
 </picture>
 </div>
-<div class="v1 ps26 s114">
-<div class="anim fadeIn un59 v1 ps27 s28 c3 z3">
+<div class="v1 ps28 s141">
+<div class="anim fadeIn un59 v1 ps29 s31 c3 z5">
 <p class="p1"><a href="index.html#top" class="f1">MetaboLabPy - Home</a></p>
 </div>
-<div class="anim fadeIn un60 v1 ps2 s29 c3 z2">
+<div class="anim fadeIn un60 v1 ps2 s32 c3 z6">
 <p class="p1"><a href="index.html#documentation" class="f1">MetaboLabPy - Documentation</a></p>
 </div>
+<div class="anim fadeIn un61 v1 ps2 s32 c3 z21">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'processing1\']', 2.50, 'easeInOutQuad')" style="cursor:pointer;" href="#processing1" class="f1">Introduction</a></p>
+</div>
+<div class="anim fadeIn un62 v1 ps2 s32 c3 z4">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'phasecorrection\']', 5.00, 'easeInOutQuad')" style="cursor:pointer;" href="#phasecorrection" class="f1">Phase Correction</a></p>
 </div>
 </div>
-<div class="v1 ps6 s10">
+</div>
+<div class="anim fadeIn un63 v1 ps131 s32 c3 z47">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'preprocessing\']', 5.00, 'easeInOutQuad')" style="cursor:pointer;" href="#preprocessing" class="f1">Data pre-Processing </a></p>
+</div>
+<div class="v1 ps132 s10">
 <div class="v1 ps2 s11">
-<div class="anim fadeInLeft un61 v1 ps2 s12 c3 z5">
+<div class="anim fadeInLeft un64 v1 ps2 s12 c3 z20">
 <p class="p2 f2">MetaboLabPy</p>
 </div>
-<div class="anim fadeInLeft un62 v1 ps7 s13 c3 z6">
-<p class="p2 f3">Basic NMR Data Processing</p>
+<div class="anim fadeInLeft un65 v1 ps7 s13 c3 z155">
+<p class="p2 f3">Basic 1D-NMR Data Processing</p>
 </div>
 </div>
 </div>
 </div>
-<div class="c6">
+<a name="processing1" class="v2 ps133 s3"></a>
+</div>
+<div data-ffbk class="fbk v1 ps1 s142 c45 z156 fx19" data-fbk="fx19">
+<div class="c46 s2">
+</div>
+<div class="ps134 v2 s143">
+<div class="v1 ps135 s144">
+<div class="v1 ps136 s17 c6 z157"></div>
+<div class="anim slideInDown un66 v1 ps137 s18 c3 z12">
+<p class="p2 f4">Introduction</p>
+</div>
+<div class="v1 ps138 s145 c3 z17">
+<p class="p3 f5">To demonstrate basic 1D NMR data processing in MetaboLabPy, we are using two&nbsp;&nbsp;metabolite standard NMR datasets available at the BMRB NMR database (<a href="https://bmrb.io/metabolomics/" class="f6">https://bmrb.io/metabolomics/</a>). The metabolites we are going to use for this demonstration are <a href="https://bmrb.io/metabolomics/mol_summary/zip_entry_directory.php?experiment=2&id=bmse000208" class="f6">L-Lactate</a> and <a href="https://bmrb.io/metabolomics/mol_summary/zip_entry_directory.php?experiment=2&id=bmse000037" class="f6">L-Glutamate</a>.</p>
+<p class="p3 f5">We load the NMR data into MetaboLabPy by clicking on &ldquo;Open NMR Spectrum&rdquo; in the file menu or by using the keyboard shortcut Ctrl + O in windows or <span class="f5">&#x2318;</span><span class="f5"> +</span><span class="f5"> O in macOS to load in the data for L-Lactate and then repeat the same procedure to read in the data for L-Glutamate. In order to plot each spectrum in a different colour, we select the Display Parameters tab and select a colour for each of the spectra. </span></p>
+<p class="p3 f5">There are a few steps as part of every basic NMR data processing protocol. This includes the following steps:</p>
+<p class="p3 f5"><br></p>
+<ul class="ps35">
+<li data-marker="1." class="p4 f5"><span class="f5">Define the apodisation function with associated parameters. For 1D-NMR metabolomics data processing this is usually an exponential line-broadening of 0.3 Hz.</span></li>
+<li data-marker="2." class="p4 f5"><span class="f5">Select the post-acquisition water suppression if necessary.</span></li>
+<li data-marker="3." class="p4 f5"><span class="f5">Select the amount of zero-filling. In the example figure below we are using 131072 data points, the experimental data have a length of 32768 data points.</span></li>
+<li data-marker="4." class="p4 f5"><span class="f5">Fourier Transform the NMR spectrum.</span></li>
+<li data-marker="5." class="p4 f5"><span class="f5">Phase correction of the NMR spectrum. These NMR spectra were already phase corrected and had the TopSpin phase value stored inside the raw NMR dataset. MetaboLabPy reads in and uses these phase values, which is why these spectra are well phase corrected. To exercise interactive phase correction, we change the indicated values for ph0 and ph1 to be zero prior to Fourier Transform as indicated in the figure below.</span></li>
+<li data-marker="6." class="p4 f5"><span class="f5">Finally, we need to check whether the spectra are referenced. The samples used to acquire these spectra did contain TMSP, which resonated at 0 ppm. If the singlet resonance close to 0 ppm is not sitting at precisely 0 ppm, we enter autoref() into the MetaboLabPy command line to perform an automatic spectrum reference.</span></li>
+</ul>
+</div>
+<div class="v1 ps139 s146">
+<div class="anim fadeIn un67 v1 ps29 s31 c3 z9">
+<p class="p1"><a href="index.html#top" class="f1">MetaboLabPy - Home</a></p>
+</div>
+<div class="anim fadeIn un68 v1 ps2 s32 c3 z158">
+<p class="p1"><a href="index.html#documentation" class="f1">MetaboLabPy - Documentation</a></p>
+</div>
+<div class="anim fadeIn un69 v1 ps2 s32 c3 z53">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'top\']', 2.50, 'easeInOutQuad')" style="cursor:pointer;" href="#top" class="f1">Basic 1D-NMR Data Processing</a></p>
+</div>
+<div class="anim fadeIn un70 v1 ps2 s32 c3 z159">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'phasecorrection\']', 2.50, 'easeInOutQuad')" style="cursor:pointer;" href="#phasecorrection" class="f1">Phase Correction</a></p>
+</div>
+<div class="anim fadeIn un71 v1 ps2 s32 c3 z15">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'preprocessing\']', 5.00, 'easeInOutQuad')" style="cursor:pointer;" href="#preprocessing" class="f1">Data pre-Processing </a></p>
+</div>
+</div>
+</div>
+<div class="v1 ps140 s147 c3 z160">
+<picture>
+<source srcset="images/screenshot-2023-07-22-at-18.16.12-980.webp 1x, images/screenshot-2023-07-22-at-18.16.12-1960.webp 2x" type="image/webp">
+<source srcset="images/screenshot-2023-07-22-at-18.16.12-980.png 1x, images/screenshot-2023-07-22-at-18.16.12-1960.png 2x">
+<img src="images/screenshot-2023-07-22-at-18.16.12-1960.png" loading="lazy" class="i29">
+</picture>
+</div>
+</div>
+<a name="phasecorrection" class="v2 ps141 s3"></a>
+</div>
+<div data-ffbk class="fbk v1 ps1 s148 c47 z13 fx20" data-fbk="fx20">
+<div class="c48 s2">
+</div>
+<div class="ps3 v2 s149">
+<div class="v1 ps135 s150">
+<div class="v1 ps11 s17 c6 z161"></div>
+<div class="anim slideInDown un72 v1 ps12 s151 c3 z24">
+<p class="p2 f4">Phase Correction</p>
+</div>
+<div class="v1 ps142 s152 c3 z28">
+<p class="p3 f5">To enter into the interactive phase correction mode, we click on Phase/Baseline Correction and then on Interactive Phase Correction in the Data menu. Alternatively, we can also use the keyboard shortcut Alt + p (<span class="f5">&#x2325;</span> + p). However, before we enter into interactive phase correction mode, we select the first NMR spectrum as phaseReference experiment in the Display Parameters tab of the first NMR spectrum.</p>
+<p class="p3 f5"><br></p>
+<p class="p3 f5"><br></p>
+<p class="p3 f5"><br></p>
+<p class="p3 f5">When the interactive phase correction mode is active, the status line on the bottom of the main window changes and indicates mouse actions to perform an interactive phase correction on the current spectrum. In addition to the spectrum, a red line appears, which indicates the position of the pivot, i.e. the position in the NMR spectrum at which first order phase correction has no effect. Please also note that in order to zoom in and out of the spectrum, we need to click on zoom to switch into zoom mode. Once we adjusted the view, we need to exit zoom mode to return to the phase correction mode.</p>
+</div>
+<div class="v1 ps143 s153 c3 z37">
+<picture>
+<source srcset="images/screenshot-2023-07-22-at-18.37.53-767.webp 1x" type="image/webp">
+<source srcset="images/screenshot-2023-07-22-at-18.37.53-767.png 1x">
+<img src="images/screenshot-2023-07-22-at-18.37.53-767.png" loading="lazy" class="i30">
+</picture>
+</div>
+<div class="v1 ps144 s146">
+<div class="anim fadeIn un73 v1 ps29 s31 c3 z54">
+<p class="p1"><a href="index.html#top" class="f1">MetaboLabPy - Home</a></p>
+</div>
+<div class="anim fadeIn un74 v1 ps2 s32 c3 z60">
+<p class="p1"><a href="index.html#documentation" class="f1">MetaboLabPy - Documentation</a></p>
+</div>
+<div class="anim fadeIn un75 v1 ps2 s32 c3 z31">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'top\']', 2.50, 'easeInOutQuad')" style="cursor:pointer;" href="#top" class="f1">Basic 1D-NMR Data Processing</a></p>
+</div>
+<div class="anim fadeIn un76 v1 ps2 s32 c3 z29">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'processing1\']', 2.50, 'easeInOutQuad')" style="cursor:pointer;" href="#processing1" class="f1">Introduction</a></p>
+</div>
+<div class="anim fadeIn un77 v1 ps2 s32 c3 z30">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'preprocessing\']', 2.50, 'easeInOutQuad')" style="cursor:pointer;" href="#preprocessing" class="f1">Data pre-Processing </a></p>
+</div>
+</div>
+</div>
+<div class="v1 ps145 s154 c3 z162">
+<picture>
+<source srcset="images/screenshot-2023-07-22-at-18.33.10-984.webp 1x, images/screenshot-2023-07-22-at-18.33.10-1968.webp 2x" type="image/webp">
+<source srcset="images/screenshot-2023-07-22-at-18.33.10-984.png 1x, images/screenshot-2023-07-22-at-18.33.10-1968.png 2x">
+<img src="images/screenshot-2023-07-22-at-18.33.10-1968.png" loading="lazy" class="i31">
+</picture>
+</div>
+<div class="v1 ps146 s155 c3 z39">
+<p class="p3 f5">To enter into the interactive phase correction mode, we click on Phase/Baseline Correction and then on Interactive Phase Correction in the Data menu. Alternatively, we can also use the keyboard shortcut Alt + p (<span class="f5">&#x2325;</span><span class="f5"> + p). When the interactive phase correction mode is active, the status line on the bottom of the main window changes and indicates mouse actions to perform an interactive phase correction on the current spectrum. In addition to the spectrum, a red line appears, which indicates the position of the pivot, i.e. the position in the NMR spectrum at which first order phase correction has no effect. Please also note that in order to zoom in and out of the spectrum, we need to click on zoom to switch into zoom mode. Once we adjusted the view, we need to exit zoom mode to return to the phase correction mode.</span></p>
+<p class="p3 f31"><span class="f5">Once the first NMR spectrum is sufficiently phase corrected, we can change to the next NMR spectrum but either clicking the up-arrow in the Exp counter, enter the number 2 into the text field followed by pressing enter, or&nbsp;&nbsp;by using the keyboard shortcut Alt + cursor key up (</span><span class="f5">&#x2325;</span><span class="f5"> + </span><span class="f32"><x-svg class="s156"><svg style='fill:currentColor' height='100%' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512' role='graphics-object'><title>Arrow up</title><path d='M374.6 246.6C368.4 252.9 360.2 256 352 256s-16.38-3.125-22.62-9.375L224 141.3V448c0 17.69-14.33 31.1-31.1 31.1S160 465.7 160 448V141.3L54.63 246.6c-12.5 12.5-32.75 12.5-45.25 0s-12.5-32.75 0-45.25l160-160c12.5-12.5 32.75-12.5 45.25 0l160 160C387.1 213.9 387.1 234.1 374.6 246.6z'/></svg></x-svg></span><span class="f5">). The next spectrum will be displayed together with the previously selected phase reference spectrum, although phase correction will only be executed for the current NMR experiment. This allows for a consistent phase correction across series of NMR spectra.</span></p>
+<p class="p3 f5">Once the last spectrum has been phase corrected, interactive phase correction mode can be left by clicking on Exit or through the keyboard shortcut Alt + p (<span class="f5">&#x2325;</span> + p).</p>
+</div>
+<div class="v1 ps147 s157 c3 z35">
+<picture>
+<source srcset="images/screenshot-2023-07-22-at-18.39.05-981.webp 1x, images/screenshot-2023-07-22-at-18.39.05-1962.webp 2x" type="image/webp">
+<source srcset="images/screenshot-2023-07-22-at-18.39.05-981.png 1x, images/screenshot-2023-07-22-at-18.39.05-1962.png 2x">
+<img src="images/screenshot-2023-07-22-at-18.39.05-1962.png" loading="lazy" class="i32">
+</picture>
+</div>
+<div class="v1 ps148 s158 c3 z163">
+<p class="p3 f5">A video showing another interactive demonstration of basic 1D NMR data processing in MetaboLabPy can be found below:</p>
+</div>
+<div class="v1 ps149 s159 c3 z164">
+<div class="vd2">
+<div id="pl2" class="iwr1">
+</div>
+</div>
+</div>
+</div>
+<a name="preprocessing" class="v2 ps150 s3"></a>
+</div>
+<div class="fbk v1 ps1 s160 c49 z165 fx21" data-fbk="fx21"></div>
+<div class="fbk v1 ps151 s160 c50 z166 fx22" data-fbk="fx22"></div>
+<div class="ps152 v2 s161 z126">
+<div class="v1 ps135 s162">
+<div class="v1 ps2 s163">
+<div class="v1 ps2 s164">
+<div class="v1 ps11 s17 c6 z167"></div>
+<div class="v1 ps12 s165">
+<div class="anim slideInDown un78 v1 ps2 s166 c3 z64">
+<p class="p2 f4">Data Pre-Processing</p>
+</div>
+<div class="v1 ps153 s167 c3 z168">
+<p class="p3 f5">In order to prepare a set of 1D NMR spectra for statistical data analysis, several steps have to be performed. MetaboLabPy provides GUI elements to facilitate this process, which is also known as data pre-processing. The data pre-processing GUI is made available by clicking on the &ldquo;Data Pre-Processing&rdquo; checkbox. Data to follow this tutorial can be downloaded <a href="https://tinyurl.com/nmrDataPreProcessing" class="f6">here</a>.</p>
+</div>
+</div>
+</div>
+<div class="v1 ps154 s168 c3 z78">
+<picture>
+<source srcset="images/screenshot-2023-07-22-at-22.23.11-833.webp 1x, images/screenshot-2023-07-22-at-22.23.11-1666.webp 2x" type="image/webp">
+<source srcset="images/screenshot-2023-07-22-at-22.23.11-833.png 1x, images/screenshot-2023-07-22-at-22.23.11-1666.png 2x">
+<img src="images/screenshot-2023-07-22-at-22.23.11-1666.png" loading="lazy" class="i33">
+</picture>
+</div>
+</div>
+<div class="v1 ps155 s146">
+<div class="anim fadeIn un79 v1 ps29 s31 c3 z63">
+<p class="p1"><a href="index.html#top" class="f1">MetaboLabPy - Home</a></p>
+</div>
+<div class="anim fadeIn un80 v1 ps2 s32 c3 z69">
+<p class="p1"><a href="index.html#documentation" class="f1">MetaboLabPy - Documentation</a></p>
+</div>
+<div class="anim fadeIn un81 v1 ps2 s32 c3 z72">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'top\']', 2.50, 'easeInOutQuad')" style="cursor:pointer;" href="#top" class="f1">Basic 1D-NMR Data Processing</a></p>
+</div>
+<div class="anim fadeIn un82 v1 ps2 s32 c3 z44">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'processing1\']', 5.00, 'easeInOutQuad')" style="cursor:pointer;" href="#processing1" class="f1">Introduction</a></p>
+</div>
+<div class="anim fadeIn un83 v1 ps2 s32 c3 z73">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'phasecorrection\']', 2.50, 'easeInOutQuad')" style="cursor:pointer;" href="#phasecorrection" class="f1">Phase Correction</a></p>
+</div>
+</div>
+</div>
+<div class="v1 ps156 s169 c3 z169">
+<p class="p3 f5">In the following paragraphs we will systematically go through all different steps of NMR data pre-processing in the order they are performed during data pre-processing.</p>
+<p class="p3 f5"><br></p>
+<p class="p3 f5">Normally 1D NMR spectra for metabolomics studies are acquired with a few ppm worthwhile of empty spectrum at the edges of the NMR spectrum. This is done deliberately to achieve a flat baseline in all peak-containing regions of the spectrum. Because those areas of the NMR spectra do not contain any signals and only noise, this spectral noise can negatively impact statistical data analysis. Therefore, these regions are excluded from analysis. Because most metabolomics samples are in aqueous environments, the middle of the spectrum is usually centred on the water signal. This signal is suppressed. However, there will still be a residual water signal left and therefore this spectral region is excluded from the analysis as well. Finally, we need to exclude the TMSP signal, because we are only interested in differences of endogenous metabolites. Because the TMSP signal is usually the rightmost signal in these NMR spectra, the exclusion area on the right-hand side of the spectrum is usually extended to include the TMSP signal.</p>
+</div>
+<div class="v1 ps135 s170 c3 z81">
+<picture>
+<source srcset="images/screenshot-2023-07-22-at-22.28.36-831.webp 1x, images/screenshot-2023-07-22-at-22.28.36-1662.webp 2x" type="image/webp">
+<source srcset="images/screenshot-2023-07-22-at-22.28.36-831.png 1x, images/screenshot-2023-07-22-at-22.28.36-1662.png 2x">
+<img src="images/screenshot-2023-07-22-at-22.28.36-1662.png" loading="lazy" class="i34">
+</picture>
+</div>
+<div class="v1 ps157 s171 c3 z82">
+<p class="p3 f5">Because different samples may have small differences in their pH values, we may find some areas in the NMR spectra where NMR peaks move from sample to sample. To facilitate statistical analysis, we can align those areas independent of the rest of the NMR spectra through segmental alignment. </p>
+</div>
+<div class="v1 ps2 s172">
+<div class="v1 ps2 s173 c3 z89">
+<picture>
+<source srcset="images/screenshot-2023-07-22-at-22.31.38-349.webp 1x, images/screenshot-2023-07-22-at-22.31.38-698.webp 2x" type="image/webp">
+<source srcset="images/screenshot-2023-07-22-at-22.31.38-349.png 1x, images/screenshot-2023-07-22-at-22.31.38-698.png 2x">
+<img src="images/screenshot-2023-07-22-at-22.31.38-698.png" loading="lazy" class="i35">
+</picture>
+</div>
+<div class="v1 ps158 s170 c3 z86">
+<picture>
+<source srcset="images/screenshot-2023-07-22-at-22.31.10-831.webp 1x, images/screenshot-2023-07-22-at-22.31.10-1662.webp 2x" type="image/webp">
+<source srcset="images/screenshot-2023-07-22-at-22.31.10-831.png 1x, images/screenshot-2023-07-22-at-22.31.10-1662.png 2x">
+<img src="images/screenshot-2023-07-22-at-22.31.10-1662.png" loading="lazy" class="i36">
+</picture>
+</div>
+</div>
+<div class="v1 ps159 s174 c3 z170">
+<p class="p3 f5">Furthermore, any area in the NMR spectra below a certain noise threshold can be removed from the data matrix to minimise noise. NMR spectra are then bucketed so that each individual data point represents a width of 0.005 ppm. After that, especially for urine and blood samples, it is important to scale the different NMR spectra to minimise effects from different sample dilutions. This is usually achieved using probabilistic quotient normalisation. </p>
+</div>
+<div class="v1 ps160 s175">
+<div class="v1 ps2 s176 c3 z95">
+<picture>
+<source srcset="images/screenshot-2023-07-22-at-22.34.14-600.webp 1x, images/screenshot-2023-07-22-at-22.34.14-1200.webp 2x" type="image/webp">
+<source srcset="images/screenshot-2023-07-22-at-22.34.14-600.png 1x, images/screenshot-2023-07-22-at-22.34.14-1200.png 2x">
+<img src="images/screenshot-2023-07-22-at-22.34.14-1200.png" loading="lazy" class="i37">
+</picture>
+</div>
+<div class="v1 ps161 s177 c3 z91">
+<picture>
+<source srcset="images/screenshot-2023-07-22-at-22.36.09-599.webp 1x, images/screenshot-2023-07-22-at-22.36.09-1198.webp 2x" type="image/webp">
+<source srcset="images/screenshot-2023-07-22-at-22.36.09-599.png 1x, images/screenshot-2023-07-22-at-22.36.09-1198.png 2x">
+<img src="images/screenshot-2023-07-22-at-22.36.09-1198.png" loading="lazy" class="i38">
+</picture>
+</div>
+</div>
+<div class="v1 ps162 s178 c3 z171">
+<p class="p3 f5">The final step of data pre-processing, before export to a useful data format, is then variance stabilisation, which is usually achieved using Pareto scaling of the data. The exact data format for export depends which platform should then be used for statistical data analysis. The Phenome Centre Birmingham (PCB) uses an Excel spreadsheet format, which e.g. MetaboAnalyst uses a csv-based format. Please have a look at the video to see a practical demonstration of all these steps.</p>
+</div>
+<div class="v1 ps163 s179 c3 z98">
+<div class="vd3">
+<div id="pl3" class="iwr1">
+</div>
+</div>
+</div>
+<div class="anim fadeIn un84 v1 ps164 s31 c3 z99">
+<p class="p1"><a href="index.html#top" class="f1">MetaboLabPy - Home</a></p>
+</div>
+<div class="anim fadeIn un85 v1 ps131 s32 c3 z45">
+<p class="p1"><a href="index.html#documentation" class="f1">MetaboLabPy - Documentation</a></p>
+</div>
+<div class="anim fadeIn un86 v1 ps131 s32 c3 z103">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'top\']', 2.50, 'easeInOutQuad')" style="cursor:pointer;" href="#top" class="f1">Basic 1D-NMR Data Processing</a></p>
+</div>
+<div class="anim fadeIn un87 v1 ps131 s32 c3 z106">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'processing1\']', 5.00, 'easeInOutQuad')" style="cursor:pointer;" href="#processing1" class="f1">Introduction</a></p>
+</div>
+<div class="anim fadeIn un88 v1 ps131 s32 c3 z172">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'phasecorrection\']', 2.50, 'easeInOutQuad')" style="cursor:pointer;" href="#phasecorrection" class="f1">Phase Correction</a></p>
+</div>
+<div class="anim fadeIn un89 v1 ps131 s32 c3 z26">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'preprocessing\']', 2.50, 'easeInOutQuad')" style="cursor:pointer;" href="#preprocessing" class="f1">Data pre-Processing </a></p>
+</div>
+</div>
+<div class="c51">
 </div>
 <script>dpth="/"</script>
+<script type="text/javascript" src="js/fixed.f3b8c4.js"></script>
 <script type="text/javascript" src="js/woolite.f3b8c4.js"></script>
-<script type="text/javascript" src="js/basicnmrdataprocessing.c93295.js"></script>
+<script type="text/javascript" src="js/basicnmrdataprocessing.13602c.js"></script>
 </body>
 </html>

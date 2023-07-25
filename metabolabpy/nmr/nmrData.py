@@ -1201,6 +1201,9 @@ class NmrData:
         # end proc_spc
 
     def proc_spc1d(self, reset_spline=False):
+        needs_referencing = False
+        if self.proc.n_points[0] != len(self.spc[0]):
+            needs_referencing = True
         fid = np.copy(self.fid[0])
         fid = self.water_supp(fid)
         fid = self.fid_offset_correction(fid)
@@ -1219,6 +1222,8 @@ class NmrData:
         if len(self.spline_baseline.baseline_points) > 0 and not reset_spline:
             self.auto_ref()
             self.corr_spline_baseline()
+        elif needs_referencing:
+            self.auto_ref()
         # end proc_spc1d
 
     def proc_spc2d(self, test_quad_2d=False, no_abs=False):

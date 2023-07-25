@@ -174,7 +174,11 @@ class AcqPars:
         self.spin_rate = int(self.reg_ex.spin_rate.findall(self.acqus_text)[0])
         self.pul_prog_name = self.reg_ex.pul_prog.findall(self.acqus_text)[0]
         self.aunm = self.reg_ex.aunm.findall(self.acqus_text)[0]
-        self.autopos = self.reg_ex.autopos.findall(self.acqus_text)[0]
+        try:
+            self.autopos = self.reg_ex.autopos.findall(self.acqus_text)[0]
+        except:
+            self.autopos = 'N/A'
+
         self.instrument = self.reg_ex.instrument.findall(self.acqus_text)[0]
         self.data_type = int(self.reg_ex.data_type.findall(self.acqus_text)[0])
         self.solvent = self.reg_ex.solvent.findall(self.acqus_text)[0]

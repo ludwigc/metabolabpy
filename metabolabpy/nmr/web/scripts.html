@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>scripts</title>
+<meta name="referrer" content="same-origin">
+<link rel="canonical" href="https://ludwigc.github.io/metabolabpy/index.html/scripts.html">
+<meta name="robots" content="max-image-preview:large">
+<meta name="viewport" content="width=1200">
+<style>.anim{visibility:hidden}</style>
+<script>!function(){var A=new Image;A.onload=A.onerror=function(){1!=A.height&&document.body.classList.remove("webp")},A.src="data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAD8D+JaQAA3AA/ua1AAA"}();
+</script>
+<link rel="stylesheet" href="css/site.13602c.css" type="text/css">
+</head>
+<body class="webp" id="b1">
+<script>var p=document.createElement("P");p.innerHTML="&nbsp;",p.style.cssText="position:fixed;visible:hidden;font-size:100px;zoom:1",document.body.appendChild(p);var rsz=function(e){return function(){var r=Math.trunc(1e3/parseFloat(window.getComputedStyle(e).getPropertyValue("font-size")))/10,t=document.body;r!=t.style.getPropertyValue("--f")&&t.style.setProperty("--f",r)}}(p);if("ResizeObserver"in window){var ro=new ResizeObserver(rsz);ro.observe(p)}else if("requestAnimationFrame"in window){var raf=function(){rsz(),requestAnimationFrame(raf)};requestAnimationFrame(raf)}else setInterval(rsz,100);</script>
+
+<div data-ffbk class="fbk v1 ps1 s1 c58 z1 fx26" data-fbk="fx26">
+<div class="c59 s2">
+</div>
+<a name="top" class="v1 ps2 s3"></a>
+<div class="ps3 v2 s4">
+<div class="v1 ps2 s225">
+<div class="anim fadeIn un112 v1 ps2 s6 c3 z19">
+<picture>
+<source srcset="images/metabolabpy_dark_transparency-294.webp 1x, images/metabolabpy_dark_transparency-588.webp 2x" type="image/webp">
+<source srcset="images/metabolabpy_dark_transparency-294.png 1x, images/metabolabpy_dark_transparency-588.png 2x">
+<img src="images/metabolabpy_dark_transparency-588.png" class="i1">
+</picture>
+</div>
+<div class="v1 ps165 s226">
+<div class="anim fadeIn un113 v1 ps135 s31 c3 z3">
+<p class="p1"><a href="index.html#top" class="f1">MetaboLabPy - Home</a></p>
+</div>
+<div class="anim fadeIn un114 v1 ps166 s32 c3 z2">
+<p class="p1"><a href="index.html#documentation" class="f1">MetaboLabPy - Documentation</a></p>
+</div>
+<div class="anim fadeIn un115 v1 ps2 s182 c3 z5">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'introduction\']', 2.50, 'easeInOutQuad')" style="cursor:pointer;" href="#introduction" class="f1">Introduction</a></p>
+</div>
+<div class="anim fadeIn un116 v1 ps198 s32 c3 z20">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'scripts\']', 3.75, 'easeInOutQuad')" style="cursor:pointer;" href="#scripts" class="f1">Scripts</a></p>
+</div>
+</div>
+</div>
+<div class="anim fadeIn un117 v1 ps131 s32 c3 z35">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'jupyter\']', 5.00, 'easeInOutQuad')" style="cursor:pointer;" href="#jupyter" class="f1">Jupyter Notebooks</a></p>
+</div>
+<div class="v1 ps199 s10">
+<div class="v1 ps2 s11">
+<div class="anim fadeInLeft un118 v1 ps2 s12 c3 z6">
+<p class="p2 f2">MetaboLabPy</p>
+</div>
+<div class="anim fadeInLeft un119 v1 ps7 s13 c3 z44">
+<p class="p2 f3">Scripts &amp; Jupyter Notebooks</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div data-ffbk class="fbk v1 ps200 s227 c60 z173 fx27" data-fbk="fx27">
+<div class="c61 s2">
+</div>
+<a name="introduction" class="v1 ps96 s3"></a>
+<div class="ps201 v2 s228">
+<div class="v1 ps135 s229">
+<div class="v1 ps202 s17 c6 z174"></div>
+<div class="anim slideInDown un120 v1 ps203 s18 c3 z10">
+<p class="p2 f4">Introduction</p>
+</div>
+<div class="v1 ps142 s230 c3 z159">
+<p class="p3 f5">While most everyday data analysis options can be easily set and executed via the MetaboLabPy GUI, at least partially automated tasks can make data analysis quicker and more reproducible. Reading in a series of 1D-NMR spectra is such an example. While we could click the <span class="f35">Open NMR Spectrum</span> for each spectrum separately, this procedure is not very efficient. Because MetaboLabPy is built as a set of python classes, computational actions can be easily scripted in MetaboLabPy. The <span class="f35">Script</span> tab in the GUI is a good example for this. To facilitate standard actions such as reading in NMR spectra or setting processing parameters, a set of example scripts is included in MetaboLabPy. Each example script is well documented using comments at the end of each code line. In addition we can use non-GUI MetaboLabPy classes and methods via a Jupyter-notebook. There is a series of example Jupyter notebooks distributed with the metabolabpy package.</p>
+<p class="p3 f5">In the following we will look at two specific examples, highlighting small differences when using the scripting interface from within the MetaboLabPy GUI and when using Jupyter notebooks.</p>
+<p class="p3 f5"><br></p>
+</div>
+<div class="v1 ps204 s146">
+<div class="anim fadeIn un121 v1 ps29 s31 c3 z4">
+<p class="p1"><a href="index.html#top" class="f1">MetaboLabPy - Home</a></p>
+</div>
+<div class="anim fadeIn un122 v1 ps2 s32 c3 z9">
+<p class="p1"><a href="index.html#documentation" class="f1">MetaboLabPy - Documentation</a></p>
+</div>
+<div class="anim fadeIn un123 v1 ps2 s32 c3 z12">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'top\']', 2.50, 'easeInOutQuad')" style="cursor:pointer;" href="#top" class="f1">Scripts &amp; Jupyter Notebooks</a></p>
+</div>
+<div class="anim fadeIn un124 v1 ps2 s32 c3 z53">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'scripts\']', 2.50, 'easeInOutQuad')" style="cursor:pointer;" href="#scripts" class="f1">Scripts</a></p>
+</div>
+<div class="anim fadeIn un125 v1 ps2 s32 c3 z15">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'jupyter\']', 5.00, 'easeInOutQuad')" style="cursor:pointer;" href="#jupyter" class="f1">Jupyter Notebooks</a></p>
+</div>
+</div>
+</div>
+<a name="scripts" class="v1 ps205 s3"></a>
+<div class="anim fadeIn un126 v1 ps206 s31 c3 z69">
+<p class="p1"><a href="index.html#top" class="f1">MetaboLabPy - Home</a></p>
+</div>
+<div class="v1 ps135 s231">
+<div class="v1 ps207 s17 c6 z161"></div>
+<div class="v1 ps208 s232">
+<div class="anim slideInDown un127 v1 ps2 s233 c3 z17">
+<p class="p2 f4">MetaboLabPy Scripts</p>
+</div>
+<div class="v1 ps187 s234 c3 z16">
+<p class="p3 f31"><span class="f5">Let&rsquo;s start</span><span class="f5"> with a script to read in a series of 1D-</span><sup class="f5">1</sup><span class="f5">H NMR data. Please download an example 1D-NMR dataset <a href="https://tinyurl.com/nmr1dSeries" class="f6">here</a></span><span class="f5">. Locate the example scripts pop-up menu located on the lower left corner of the </span><span class="f35">Script</span><span class="f5"> tab. Click on </span><span class="f36">&lsquo;1D Example Script&rsquo;</span><span class="f5">. This will load the text for the 1D example script. Now, change </span><span class="f36">&lsquo;Replace with directory containing Bruker data&rsquo;</span><span class="f5"> with </span><span class="f36">&lsquo;interactive&rsquo;</span><span class="f5"> and replace the square brackets in the line below with the expression </span><span class="f36">np.linspace(1, 4, 4, dtype=int)</span><span class="f5">. This creates a numpy array with the numbers 1, 2, 3 &amp; 4. Alternatively we could have specified each dataset number explicitly and replaced </span><span class="f36">[]</span><span class="f5"> with </span><span class="f36">[1, 2, 3, 4]</span><span class="f5">. After these modifications, we should have a script like this:</span></p>
+<p class="p3 f5"><br></p>
+</div>
+</div>
+<div class="v1 ps209 s235">
+<div class="anim fadeIn un128 v1 ps166 s32 c3 z160">
+<p class="p1"><a href="index.html#documentation" class="f1">MetaboLabPy - Documentation</a></p>
+</div>
+<div class="anim fadeIn un129 v1 ps166 s32 c3 z51">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'top\']', 5.00, 'easeInOutQuad')" style="cursor:pointer;" href="#top" class="f1">Scripts &amp; Jupyter Notebooks</a></p>
+</div>
+<div class="anim fadeIn un130 v1 ps2 s182 c3 z78">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'introduction\']', 2.50, 'easeInOutQuad')" style="cursor:pointer;" href="#introduction" class="f1">Introduction</a></p>
+</div>
+<div class="anim fadeIn un131 v1 ps210 s32 c3 z158">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'jupyter\']', 2.50, 'easeInOutQuad')" style="cursor:pointer;" href="#jupyter" class="f1">Jupyter Notebooks</a></p>
+</div>
+</div>
+</div>
+<div class="v1 ps211 s236 c3 z24">
+<p class="p3 f36">msg = self.clear()</p>
+<p class="p3 f36">data_path = 'interactive' # select directory containing bruker data, interactive for file dialog</p>
+<p class="p3 f36">data_sets = np.linspace(1, 4, 4, dtyp=int)&nbsp;&nbsp;&nbsp;&nbsp;# add comma separated list of experiment numbers </p>
+<p class="p3 f36">self.read_spcs([data_path],data_sets)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # reading Bruker spectra</p>
+<p class="p3 f36">msg = self.nd.set_zero_fill([131072])&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # zero fill to 131072 data points</p>
+<p class="p3 f36">msg = self.nd.set_lb([0.3])&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # 0.3 Hz line broadening</p>
+<p class="p3 f36">msg = self.nd.set_window_type([1])&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# exponential window function</p>
+<p class="p3 f36">msg = self.nd.ft_all()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Fourier Transform all NMR spectra</p>
+<p class="p3 f36">msg = self.nd.auto_ref_all()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# automatically reference to TMSP</p>
+<p class="p3 f36">self.nd.e = 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # make first spectrum the current experiment</p>
+<p class="p3 f36">self.set_ph_ref_exp(1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# select reference spectrum for manual phase correction</p>
+</div>
+<div class="v1 ps212 s237 c3 z31">
+<p class="p3 f5">After script execution (either clicking <span class="f35">eXecute Script</span> or via the keyboard shortcut Ctrl + x on Windows or <span class="f7">&#x2318;</span><span class="f7"> + </span><span class="f7">x on macOS) the four spectra in that dataset should have been read in, all FIDs will be exponentially line broadened by 0.3 Hz, zero-filled to 131072 data points and auto referenced to TMSP.</span></p>
+<p class="p3 f7">The other example scripts show further examples how to use the script interface.</p>
+</div>
+<a name="jupyter" class="v1 ps213 s3"></a>
+<div class="v1 ps214 s238">
+<div class="v1 ps11 s17 c6 z175"></div>
+<div class="v1 ps12 s239">
+<div class="anim slideInDown un132 v1 ps2 s233 c3 z28">
+<p class="p2 f4">Jupyter Notebooks</p>
+</div>
+<div class="v1 ps215 s240 c3 z30">
+<p class="p3 f5">MetaboLabPy ships with a few example Jupyter notebooks (in the metabolabpy/nmr/jupyter subdirectory in the site-packages directory. Please note: In order to be able to run jupyter notebooks, you must have the following to packages installed</p>
+<p class="p3 f5"><br></p>
+<p class="p3 f5">&nbsp;- jupyter</p>
+<p class="p3 f5">&nbsp;- jupyterthemes</p>
+<p class="p3 f5"><br></p>
+<p class="p3 f31"><span class="f5">These packages can be installed with the command </span><span class="f36">pip install jupyter jupyterthemes</span><span class="f5"> in an Anaconda powershelgl prompt or in a macOS Terminal, after the metabolabpy environment has been activated. For convenience, a zip archive with example notebooks can also be downloaded <a href="https://tinyurl.com/jupyterMlPy" class="f6">here</a></span><span class="f5">.&nbsp;&nbsp;For this tutorial, we are using the file mlpy_2d_spc.ipynb.</span></p>
+<p class="p3 f5">Each jupyter notebook contains several code cells. Each cell can be executed by clicking into the cell and the typing <span class="f7">&#x21e7;</span><span class="f7"> +</span><span class="f7"> Enter.</span></p>
+</div>
+</div>
+<div class="v1 ps216 s241">
+<div class="anim fadeIn un133 v1 ps135 s31 c3 z60">
+<p class="p1"><a href="index.html#top" class="f1">MetaboLabPy - Home</a></p>
+</div>
+<div class="anim fadeIn un134 v1 ps166 s32 c3 z155">
+<p class="p1"><a href="index.html#documentation" class="f1">MetaboLabPy - Documentation</a></p>
+</div>
+<div class="anim fadeIn un135 v1 ps166 s32 c3 z164">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'top\']', 5.00, 'easeInOutQuad')" style="cursor:pointer;" href="#top" class="f1">Scripts &amp; Jupyter Notebooks</a></p>
+</div>
+<div class="anim fadeIn un136 v1 ps2 s182 c3 z64">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'introduction\']', 5.00, 'easeInOutQuad')" style="cursor:pointer;" href="#introduction" class="f1">Introduction</a></p>
+</div>
+<div class="anim fadeIn un137 v1 ps210 s32 c3 z72">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'scripts\']', 2.50, 'easeInOutQuad')" style="cursor:pointer;" href="#scripts" class="f1">Scripts</a></p>
+</div>
+</div>
+</div>
+<div class="v1 ps217 s242 c3 z37">
+<picture>
+<source srcset="images/screenshot-2023-07-25-at-00.03.38-889.webp 1x" type="image/webp">
+<source srcset="images/screenshot-2023-07-25-at-00.03.38-889.jpg 1x">
+<img src="images/screenshot-2023-07-25-at-00.03.38-889.jpg" loading="lazy" class="i50">
+</picture>
+</div>
+<div class="v1 ps95 s243 c3 z162">
+<p class="p3 f5">The first cell in this notebook loads necessary modules from installed packages. The second cell then downloads the sample dataset via an installed web browser.</p>
+</div>
+<div class="v1 ps218 s244 c3 z36">
+<picture>
+<source srcset="images/screenshot-2023-07-24-at-22.46.40-889.webp 1x" type="image/webp">
+<source srcset="images/screenshot-2023-07-24-at-22.46.40-889.jpg 1x">
+<img src="images/screenshot-2023-07-24-at-22.46.40-889.jpg" loading="lazy" class="i51">
+</picture>
+</div>
+<div class="v1 ps148 s245 c3 z73">
+<p class="p3 f5">The downloaded dataset is then loaded into a MetaboLabPy nmrDataSet object, phase correction values for zero and first order phase correction are set for both dimensions, the spectrum is phase corrected, referenced and baseline corrected. Then plot parameters are set to ensure that the 2D plot does not render too much noise.</p>
+</div>
+<div class="v1 ps189 s246 c3 z39">
+<picture>
+<source srcset="images/screenshot-2023-07-24-at-22.46.53-889.webp 1x" type="image/webp">
+<source srcset="images/screenshot-2023-07-24-at-22.46.53-889.jpg 1x">
+<img src="images/screenshot-2023-07-24-at-22.46.53-889.jpg" loading="lazy" class="i52">
+</picture>
+</div>
+<div class="v1 ps217 s247 c3 z163">
+<p class="p3 f5">At the end, the resulting spectrum is plotted.</p>
+</div>
+<div class="v1 ps39 s248 c3 z168">
+<picture>
+<source srcset="images/screenshot-2023-07-24-at-22.47.04-886.webp 1x" type="image/webp">
+<source srcset="images/screenshot-2023-07-24-at-22.47.04-886.png 1x">
+<img src="images/screenshot-2023-07-24-at-22.47.04-886.png" loading="lazy" class="i53">
+</picture>
+</div>
+<div class="v1 ps219 s247 c3 z47">
+<p class="p3 f5">The spectrum is then saved as a MetaboLabPy data file.</p>
+</div>
+<div class="v1 ps39 s249 c3 z63">
+<picture>
+<source srcset="images/screenshot-2023-07-25-at-00.12.19-889.webp 1x" type="image/webp">
+<source srcset="images/screenshot-2023-07-25-at-00.12.19-889.jpg 1x">
+<img src="images/screenshot-2023-07-25-at-00.12.19-889.jpg" loading="lazy" class="i54">
+</picture>
+</div>
+<div class="anim fadeIn un138 v1 ps220 s31 c3 z82">
+<p class="p1"><a href="index.html#top" class="f1">MetaboLabPy - Home</a></p>
+</div>
+<div class="anim fadeIn un139 v1 ps131 s32 c3 z89">
+<p class="p1"><a href="index.html#documentation" class="f1">MetaboLabPy - Documentation</a></p>
+</div>
+<div class="anim fadeIn un140 v1 ps131 s32 c3 z169">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'top\']', 5.00, 'easeInOutQuad')" style="cursor:pointer;" href="#top" class="f1">Scripts &amp; Jupyter Notebooks</a></p>
+</div>
+<div class="v1 ps221 s250">
+<div class="v1 ps2 s251">
+<div class="anim fadeIn un141 v1 ps2 s182 c3 z81">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'introduction\']', 5.00, 'easeInOutQuad')" style="cursor:pointer;" href="#introduction" class="f1">Introduction</a></p>
+</div>
+<div class="anim fadeIn un142 v1 ps198 s252 c3 z170">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'scripts\']', 5.00, 'easeInOutQuad')" style="cursor:pointer;" href="#scripts" class="f1">Scripts</a></p>
+</div>
+</div>
+</div>
+<div class="anim fadeIn un143 v1 ps131 s32 c3 z86">
+<p class="p1"><a onclick="return window.smoothScroll(event, '[name=\'jupyter\']', 2.50, 'easeInOutQuad')" style="cursor:pointer;" href="#jupyter" class="f1">Jupyter Notebooks</a></p>
+</div>
+</div>
+</div>
+<div class="c10">
+</div>
+<script>dpth="/"</script>
+<script type="text/javascript" src="js/fixed.f3b8c4.js"></script>
+<script type="text/javascript" src="js/woolite.f3b8c4.js"></script>
+<script type="text/javascript" src="js/scripts.13602c.js"></script>
+</body>
+</html>
