@@ -55,3 +55,7 @@ class nmrDataTestCase(unittest.TestCase):
         hsqc.set_peak_information()
         self.assertEqual(hsqc.hsqc_data[metabolite].spin_systems[0]['c13_shifts'][0][0], 71.2399)
         # end test_set_peak_information
+
+
+if __name__ == "__main__":
+    unittest.main()
