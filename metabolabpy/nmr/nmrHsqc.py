@@ -49,7 +49,7 @@ class NmrHsqc:
         self.delta_c13_high = 1.0
         # end __init__
 
-    def __str__(self):  # pragma: no cover
+    def __str__(self):
         str_str = "NMR HSQC multiplet analysis"
         return str_str
         # end __str__
