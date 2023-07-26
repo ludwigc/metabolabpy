@@ -1,6 +1,6 @@
 MetaboLabPy
 ============
-|Version| |Py versions| |Git| |Bioconda| |Build Status (Travis)| |Build Status (AppVeyor)| |License| |RTD doc| |codecov|
+|Version| |Py versions| |Git| |Bioconda| |Build Status (Travis)| |Build Status (AppVeyor)| |License| |codecov|
 
 Python package to process 1D and 2D NMR spectroscopic data for metabolomics and tracer based metabolism analysis
 
