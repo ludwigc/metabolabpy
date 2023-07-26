@@ -1,6 +1,6 @@
 MetaboLabPy
 ============
-|Version| |Py versions| |Git| |Bioconda| |[![Workflow for Codecov Action](https://github.com/codecov/codecov-action/actions/workflows/main.yml/badge.svg)](https://github.com/codecov/codecov-action/actions/workflows/main.yml)| |Build Status (AppVeyor)| |License| |codecov|
+|Version| |Py versions| |Git| |Bioconda| |Build Status (AppVeyor)| |License| |codecov|
 
 Python package to process 1D and 2D NMR spectroscopic data for metabolomics and tracer based metabolism analysis
 
