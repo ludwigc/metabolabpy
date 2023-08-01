@@ -23,7 +23,7 @@ class nmrConfigTestCase(unittest.TestCase):
     def test_make_config(self):
         cf = nmrConfig.NmrConfig()
         c = cf.make_config()
-        self.assertEqual(c['GUI']['auto_plot'], 'yes')
+        self.assertEqual(c['GUI']['auto_plot'], 'no')
 
     def test_save_config(self):
         cf = nmrConfig.NmrConfig()

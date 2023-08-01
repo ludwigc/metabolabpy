@@ -288,7 +288,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.data_set_number = e_name
         nd.read_spc()
         s1 = np.copy(nd.spc[0].real)
-        s2 = nd.phase3(nd.spc[0], 360.0, 0.0)
+        s2 = nd.phase3(nd.spc[0], 360.0, 0.0, len(nd.spc[0]))
         s2 = s2.real
         self.assertAlmostEqual(np.sum(s1 - s2), 0.0, 4)
 

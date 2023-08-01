@@ -410,7 +410,7 @@ class NmrData:
         spc /= scale_fact
         xaxis = np.linspace(-self.apc.n_max, self.apc.n_max, self.apc.npts)
         par_eval = self.apc.fit_baseline(spc, xaxis)
-        print("n_max: {}, par_eval: {}, xaxis: {}".format(self.apc.n_max, par_eval, xaxis))
+        #print("n_max: {}, par_eval: {}, xaxis: {}".format(self.apc.n_max, par_eval, xaxis))
         spc2 = self.apc.baseline_fit_func_eval(par_eval, spc, xaxis)  # , False)
         self.apc.pars = par_eval
         self.apc.r_spc = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
@@ -800,7 +800,7 @@ class NmrData:
         else:
             title = ''
             
-        print(c_dict)
+        #print(c_dict)
         line_no = c_dict[rack + " " + pos]
         title += f'Excel file : {excel_name}\n'
         title += f'Excel line number : {line_no + 2}\n'
@@ -1521,7 +1521,7 @@ class NmrData:
                                 fid = np.fromfile(f, dtype=np.float32)
 
                 f.close()
-                print(f'len(self.fid[0]): {len(self.fid[0])}, len(fid)/2: {len(fid)/2}')
+                #print(f'len(self.fid[0]): {len(self.fid[0])}, len(fid)/2: {len(fid)/2}')
                 if len(self.fid[0]) != len(fid)/2:
                     npts = int(len(fid) / 2)
                     self.fid = np.resize(self.fid, (1, npts))

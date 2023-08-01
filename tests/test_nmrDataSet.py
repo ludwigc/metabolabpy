@@ -16,6 +16,7 @@ import metabolabpy.nmr.nmrDataSet as nmrDataSet
 import os
 import numpy as np
 import shutil
+import darkdetect
 
 
 class NrDataSetTestCase(unittest.TestCase):
@@ -366,7 +367,7 @@ class NrDataSetTestCase(unittest.TestCase):
         nd.read_spc(p_name, e_name)  # check if Bruker data can be read
         nd.pp.cf.read_config()
         nd.pp.init_plot_colours()
-        if nd.pp.cf.mode == 'dark':
+        if nd.pp.cf.mode == 'dark' or (nd.pp.cf.mode == 'system' and darkdetect.isDark()):
             self.assertEqual(nd.pp.plot_colours[0], (1.0, 1.0, 0.0))
             self.assertEqual(nd.pp.plot_colours[-1], (0.6, 0.3, 0.6))
         else:
