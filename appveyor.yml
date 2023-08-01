@@ -1,6 +1,6 @@
 environment:
   matrix:
-    - PYTHON: "C:\Python39"
+    - PYTHON: "C:\\Python39"
 
 build_script:
   - '%PYTHON%\python.exe -m pip install .'
