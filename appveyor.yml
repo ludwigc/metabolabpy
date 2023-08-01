@@ -1,16 +1,13 @@
 environment:
   matrix:
     - PYTHON: "C:\\Python39"
-    - ARCH: x86_64
+      platform: x86_64
 
 build_script:
   - '%PYTHON%\python.exe -m pip install .'
-  - ARCH: x86_64
 
 before_test:
   - '%PYTHON%\python.exe -m pip install pytest'
-  - ARCH: x86_64
 
 test_script:
   - '%PYTHON%\python.exe -m pytest'
-  - ARCH: x86_64
