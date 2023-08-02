@@ -1,6 +1,6 @@
 environment:
   matrix:
-    - PYTHON: "C:\\Python37"
+    - PYTHON: "C:\\Python376"
       platform: x86_64
 
 build_script:
