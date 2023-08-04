@@ -93,7 +93,7 @@ class acqParsTestCase(unittest.TestCase):
         nd.read_spc()
         nd.auto_ref()
         plsq = ab.fit_phase(nd.spc[0], nd.ppm1)
-        self.assertAlmosEqual(plsq[0], -5.948091860368079e-11)
+        self.assertAlmostEqual(plsq[0], -5.948091860368079e-11)
 
     def test_get_hist(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
@@ -105,7 +105,7 @@ class acqParsTestCase(unittest.TestCase):
         nd.read_spc()
         nd.auto_ref()
         hist = ab.get_hist(nd.spc[0], nd.ppm1)
-        self.assertAlmosEqual(hist[0].real, -1.499368547343163)
+        self.assertAlmostEqual(hist[0].real, -1.499368547343163)
 
     def test_hist(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
@@ -129,7 +129,7 @@ class acqParsTestCase(unittest.TestCase):
         nd.read_spc()
         nd.auto_ref()
         mat = ab.phase2(nd.spc[0], 0.0, 0.0)
-        self.assertEqual(mat[0].real, nd.spc[0].real)
+        self.assertEqual(mat[0].real, nd.spc[0][0].real)
 
     def test_phase_fit_func(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
