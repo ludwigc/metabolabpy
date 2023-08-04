@@ -1210,7 +1210,17 @@ class NmrDataSet:
         self.pp.init(len(self.nmrdat[self.s]))
         # end pre_proc_init
 
-    def read_spc(self, data_set_name, data_set_number, dataset=1):
+    def read_spc(self, data_set_name='', data_set_number='', dataset=1):
+        if len(data_set_name) == 0:
+            data_set_name = self.data_set_name
+            if len(data_set_name) == 0:
+                return
+
+        if len(data_set_number) == 0:
+            data_set_number = self.data_set_number
+            if len(data_set_number) == 0:
+                return
+
         if len(self.nmrdat) < dataset:
             self.nmrdat.append([])
 

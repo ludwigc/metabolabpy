@@ -54,17 +54,6 @@ class Apcbc:
         blr = np.polynomial.chebyshev.chebval(xaxis, cr)
         bli = np.polynomial.chebyshev.chebval(xaxis, ci)
         spc = spc - blr - 1j * bli
-        # if(plot == True):
-        #    hr  = self.hist(spc.real)
-        #    hi  = self.hist(spc.imag)
-        #    xr  = hr[1][1:nbins+1]
-        #    xi  = hi[1][1:nbins+1]
-        #    pl.subplot(2,1,1)
-        #    pl.plot(xr, hr[0])
-        #    pl.subplot(2,1,2)
-        #    pl.plot(xi, hi[0])
-        #    pl.show()
-
         return spc
         # end baseline_fit_func_eval
 
@@ -220,7 +209,6 @@ class Apcbc:
         hi = self.hist(spc.imag)
         n1 = -self.qr(hr)
         n2 = self.qi(hi)
-        # print("%4.2f & %4.2f | %4.8f & %4.8f" % (n1, n2, ph0, ph1))
         return 1.0 * n1 + 100.0 * n2
         # end phase_fit_func
 
