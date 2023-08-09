@@ -169,7 +169,7 @@ class HsqcData:
         mi = metabolite_information[idx1:]
         idx1 = mi.find(':')
         idx2 = mi.find('\n')
-        self.c13_shifts = np.matrix(mi[idx1 + 1:idx2].strip()).A[0]
+        self.c13_shifts = np.array(mi[idx1 + 1:idx2].strip().split(), dtype='float64')
         for k in range(len(self.c13_shifts)):
             self.c13_picked = np.copy(np.append(self.c13_picked, [np.array(np.array([]))]))
 
@@ -177,7 +177,7 @@ class HsqcData:
         mi = metabolite_information[idx1:]
         idx1 = mi.find(':')
         idx2 = mi.find('\n')
-        self.h1_shifts = np.matrix(mi[idx1 + 1:idx2].strip()).A[0]
+        self.h1_shifts = np.array(mi[idx1 + 1:idx2].strip().split(), dtype='float64')
         for k in range(len(self.h1_shifts)):
             self.h1_picked = np.copy(np.append(self.h1_picked, [np.array(np.array([]))]))
             self.sim_spc = np.copy(np.append(self.sim_spc, [np.array(np.array([]))]))
@@ -192,7 +192,7 @@ class HsqcData:
         mi = metabolite_information[idx1:]
         idx1 = mi.find(':')
         idx2 = mi.find('\n')
-        self.c13_intensities = np.matrix(mi[idx1 + 1:idx2].strip()).A[0]
+        self.c13_intensities = np.array(mi[idx1 + 1:idx2].strip().split(), dtype='float64')
         idx1 = metabolite_information.find('C13HSQC')
         mi = metabolite_information[idx1:]
         idx1 = mi.find(':')
@@ -201,12 +201,12 @@ class HsqcData:
         self.c13_picked = [[] for n in range(len(self.h1_shifts))]
         self.sim_spc = [[] for n in range(len(self.h1_shifts))]
         self.spin_systems = [{} for n in range(len(self.h1_shifts))]
-        self.hsqc = np.matrix(mi[idx1 + 1:idx2].strip(), dtype=int).A[0]
+        self.hsqc = np.array(mi[idx1 + 1:idx2].strip().split(), dtype=int)
         idx1 = metabolite_information.find('CO_HSQC')
         mi = metabolite_information[idx1:]
         idx1 = mi.find(':')
         idx2 = mi.find('\n')
-        self.co_hsqc = np.matrix(mi[idx1 + 1:idx2].strip(), dtype=int).A[0]
+        self.co_hsqc = np.array(mi[idx1 + 1:idx2].strip().split(), dtype=int)
         idx1 = metabolite_information.find('jCC')
         mi = metabolite_information[idx1:]
         idx1 = mi.find(':')

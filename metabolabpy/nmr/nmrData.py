@@ -158,8 +158,9 @@ class NmrData:
         acq_str += "decim                         " + "% 6d\n" % a.decim
         acq_str += "dspfvs                        " + "% 6d\n" % a.dspfvs
         acq_str += "temperature          [K]      " + "% 9.2f\n" % a.temperature
-        print(acq_str)
-        # end set_acq_pars
+        #print(acq_str)
+        return acq_str
+        # end acq_pars
 
     def add_hsqc_peak(self, xdata=[], ydata=[]):
         self.hsqc.hsqc_data[self.hsqc.cur_metabolite].h1_picked[self.hsqc.cur_peak - 1].append(xdata)
@@ -252,12 +253,16 @@ class NmrData:
         self.start_peak_points = np.array([], dtype='int')
         self.end_peak_points = np.array([], dtype='int')
         self.peak_label = np.array([], dtype='str')
+        self.peak_max = np.array([], dtype='float64')
+        self.peak_max_ppm = np.array([], dtype='float64')
+        self.peak_max_points = np.array([], dtype='int')
+        self.peak_int = np.array([], dtype='float64')
 
         # end add_peak
 
     def add_tmsp(self, m0=1, r2=1):
         npts = len(self.spc[0])
-        tsp_frq = 2 * math.pi * self.ref_point[0] / npts - math.pi
+        tsp_frq = - 2 * math.pi * self.ref_point[0] / npts + math.pi
         t = np.linspace(0, npts - 1, npts);
         tsp_fid = m0 * np.exp(t * (1j * tsp_frq - r2));
         spc = fftshift(fft(tsp_fid));
@@ -318,6 +323,15 @@ class NmrData:
 
     def autobaseline1d(self, lam=1e6, alg='jbcd', max_iter=50, alpha=0.1, beta=10, gamma=15, beta_mult=0.98, gamma_mult=0.94, half_window=None):
         spc = self.spc[0].real
+        self.proc.autobaseline_alg = alg
+        self.proc.autobaseline_lam = lam
+        self.proc.autobaseline_max_iter = max_iter
+        self.proc.autobaseline_alpha = alpha
+        self.proc.autobaseline_beta = beta
+        self.proc.autobaseline_gamma = gamma
+        self.proc.autobaseline_beta_mult = beta_mult
+        self.proc.autobaseline_gamma_mult = gamma_mult
+        self.proc.autobaseline_half_window = half_window
         if alg == 'airpls':
             baseline = airpls(spc, lam=lam, max_iter=max_iter)
         elif alg == 'arpls':
@@ -368,8 +382,6 @@ class NmrData:
             baseline = ria(spc)
         elif alg == 'dietrich':
             baseline = dietrich(spc)
-        elif alg == 'golotvin':
-            baseline = golotvin(spc)
         elif alg == 'std_distribution':
             baseline = std_distribution(spc)
         elif alg == 'fastchrom':
@@ -378,8 +390,6 @@ class NmrData:
             baseline = cwt_br(spc)
         elif alg == 'fabc':
             baseline = fabc(spc)
-        elif alg == 'interp_pts':
-            baseline = interp_pts(spc)
         elif alg == 'beads':
             baseline = beads(spc)
         elif alg == 'poly':
@@ -390,13 +400,12 @@ class NmrData:
             baseline = imodpoly(spc)
         elif alg == 'penalized_poly':
             baseline = penalized_poly(spc)
-        elif alg == 'loess':
-            baseline = loess(spc)
         elif alg == 'quant_reg':
             baseline = quant_reg(spc)
         elif alg == 'goldindec':
             baseline = goldindec(spc)
         else:
+            self.proc.autobaseline_alg = 'iarpls'
             baseline = iarpls(spc, lam=lam, max_iter=max_iter)
 
         self.spc[0] = spc - baseline[0]
@@ -621,6 +630,13 @@ class NmrData:
                 h1_pts2 = h1_pts - self.ppm2points(h1_end, 0) - 1
                 c13_pts1 = c13_pts - self.ppm2points(c13_beg, 1) - 1
                 c13_pts2 = c13_pts - self.ppm2points(c13_end, 1) - 1
+                #print(f'c13_pts1:c13_pts2: {c13_pts1}, {c13_pts2}, h1_pts1:h1_pts2: {h1_pts1}, {h1_pts2}')
+                c13_pts = min(c13_pts1, c13_pts2)
+                h1_pts = min(h1_pts1, h1_pts2)
+                c13_pts2 = max(c13_pts1, c13_pts2)
+                h1_pts2 = max(h1_pts1, h1_pts2)
+                c13_pts1 = c13_pts
+                h1_pts1 = h1_pts
                 spc = self.spc[c13_pts1:c13_pts2, h1_pts1:h1_pts2].real
                 c13_centre_pts = round(np.median(np.linspace(c13_pts1, c13_pts2, c13_pts2 - c13_pts1 + 1, dtype=int)))
                 h1_centre_pts = round(np.median(np.linspace(h1_pts1, h1_pts2, h1_pts2 - h1_pts1 + 1, dtype=int)))
@@ -802,8 +818,8 @@ class NmrData:
             
         #print(c_dict)
         line_no = c_dict[rack + " " + pos]
-        title += f'Excel file : {excel_name}\n'
-        title += f'Excel line number : {line_no + 2}\n'
+        title += f'Excel File : {excel_name}\n'
+        title += f'Excel Line Number : {line_no + 2}\n'
         title += f'acqus AUTOPOS : {rack} {pos}\n'
         for col in xls.columns:
             if col == 'number':
@@ -1224,6 +1240,13 @@ class NmrData:
             self.corr_spline_baseline()
         elif needs_referencing:
             self.auto_ref()
+
+        if self.proc.autobaseline:
+            self.autobaseline1d(lam=self.proc.autobaseline_lam, alg=self.proc.autobaseline_alg,
+                                max_iter=self.proc.autobaseline_max_iter, alpha=self.proc.autobaseline_alpha,
+                                beta=self.proc.autobaseline_beta, gamma=self.proc.autobaseline_gamma,
+                                beta_mult=self.proc.autobaseline_beta_mult, gamma_mult=self.proc.autobaseline_gamma_mult,
+                                half_window=self.proc.autobaseline_half_window)
         # end proc_spc1d
 
     def proc_spc2d(self, test_quad_2d=False, no_abs=False):
@@ -1636,10 +1659,6 @@ class NmrData:
                 f.close()
 
         # end read_spc
-
-    def set_spline_baseline(self):
-        print(a)
-        # end set_spline_baseline
 
     def set_title_information(self, xls=pd.DataFrame(), excel_name='', pos_label='', rack_label='', replace_orig_title=False, c_dict=[]):
         if len(xls) == 0 or len(pos_label) == 0 or len(rack_label) == 0 or len(excel_name) == 0:

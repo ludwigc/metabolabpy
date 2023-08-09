@@ -92,6 +92,15 @@ class ProcPars:
             "Wavewat": 3
         }
         self.data_type = ''
+        self.autobaseline_alg = 'jbcd'
+        self.autobaseline_lam = 1e6
+        self.autobaseline_max_iter = 50
+        self.autobaseline_alpha = 0.1
+        self.autobaseline_beta = 10
+        self.autobaseline_gamma = 15
+        self.autobaseline_beta_mult = 0.98
+        self.autobaseline_gamma_mult = 0.94
+        self.autobaseline_half_window = None
         # end __init__
 
     def __str__(self):  # pragma: no cover
