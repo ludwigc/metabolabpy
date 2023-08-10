@@ -1714,8 +1714,8 @@ class NmrData:
         # end set_window_function
 
     def sim_hsqc_1d(self):
-        sim_spc1 = np.zeros(self.proc.n_points[1])  # np.array([], dtype=complex)
-        sim_spc = np.zeros(self.proc.n_points[1])  #np.array([], dtype=complex)
+        sim_spc1 = np.zeros(self.proc.n_points[1], dtype=complex)  # np.array([], dtype=complex)
+        sim_spc = np.zeros(self.proc.n_points[1], dtype=complex)  #np.array([], dtype=complex)
         n_points = self.proc.n_points[1]
         c13_nc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_nc']
         perc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['contribution']
@@ -1751,7 +1751,7 @@ class NmrData:
         ref_point2 = 0  # n_points - self.ppm2points(ref_shift2, 1) - 1
         sw = abs(c13_beg_ppm - c13_end_ppm)
         offset = (ref_point2 * sw / (2 * n_points) + ref_shift2 - sw) * self.acq.sfo2
-        sim_spc1.resize(1, n_points)
+        #sim_spc1.resize(1, n_points)
         for k in range(n_spin_sys):
             sys = self.make_hsqc_spin_sys(c13_offset, k)
             sys.offsetShifts(offset)
