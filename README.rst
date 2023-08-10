@@ -1,6 +1,6 @@
 MetaboLabPy
 ============
-|Version| |Py versions| |Git| |Bioconda| |Build Status (AppVeyor)| |License| |.. image:: https://codecov.io/gh/ludwigc/metabolabpy/branch/master/graph/badge.svg?token=bi40RIuA62  :target: https://codecov.io/gh/ludwigc/metabolabpy|
+|Version| |Py versions| |Git| |Bioconda| |Build Status (AppVeyor)| |License| |codecov|
 
 Python package to process 1D and 2D NMR spectroscopic data for metabolomics and tracer based metabolism analysis
 
@@ -63,7 +63,7 @@ Released under the GNU General Public License v3.0 (see `LICENSE file <https://g
 .. |RTD doc| image:: https://img.shields.io/badge/documentation-RTD-71B360.svg?style=flat&maxAge=3600
    :target: https://metabolabpy.readthedocs.io/en/latest/
    
-.. |codecov| image:: https://codecov.io/gh/ludwigc/metabolabpy/branch/master/graph/badge.svg
+.. |codecov| image:: https://codecov.io/gh/ludwigc/metabolabpy/branch/master/graph/badge.svg?token=bi40RIuA62
    :target: https://codecov.io/gh/ludwigc/metabolabpy
 
 .. |binder| image:: https://mybinder.org/badge_logo.svg
