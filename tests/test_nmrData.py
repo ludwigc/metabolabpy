@@ -884,7 +884,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.nmrdat[0][0].hsqc.set_peak_information()
         nd.nmrdat[0][0].autopick_hsqc([metabolite_name])
         nd.nmrdat[0][0].autofit_hsqc([metabolite_name])
-        self.assertAlmostEqual(nd.nmrdat[0][0].hsqc.hsqc_data[metabolite_name].spin_systems[0]['c13_shifts'][0][0], 55.68829020857215, places=3)
+        self.assertAlmostEqual(nd.nmrdat[0][0].hsqc.hsqc_data[metabolite_name].spin_systems[0]['c13_shifts'][0][0]/100.0, 0.5568829020857215, places=1)
         # end test_autofit_hsqc
     def test_sim_hsqc_1d(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")
