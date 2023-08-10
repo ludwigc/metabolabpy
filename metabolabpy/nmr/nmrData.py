@@ -1122,8 +1122,8 @@ class NmrData:
         start_h1 = len(self.spc[0]) - self.ppm2points(start[0], 0) - 1
         start_c13 = len(self.spc) - self.ppm2points(start[1], 1) - 1
         check_matrix = np.array([[[1, 1], [0, 1], [-1, 1]], [[1, 0], [0, 0], [-1, 0]], [[1, -1], [0, -1], [-1, -1]]])
-        local_spc = np.array([[]])
-        local_spc.resize(3, 3)
+        local_spc = np.zeros((3, 3))  # np.array([[]])
+        #local_spc.resize(3, 3)
         for k in range(3):
             for l in range(3):
                 local_spc[k][l] = self.spc[start_c13 + check_matrix[k][l][0]][start_h1 + check_matrix[k][l][1]].real
@@ -1714,8 +1714,8 @@ class NmrData:
         # end set_window_function
 
     def sim_hsqc_1d(self):
-        sim_spc1 = np.zeros(self.proc.n_points[1], dtype=complex)  # np.array([], dtype=complex)
-        sim_spc = np.zeros(self.proc.n_points[1], dtype=complex)  #np.array([], dtype=complex)
+        sim_spc1 = np.zeros((1, self.proc.n_points[1]), dtype=complex)  # np.array([], dtype=complex)
+        sim_spc = np.zeros((1, self.proc.n_points[1]), dtype=complex)  #np.array([], dtype=complex)
         n_points = self.proc.n_points[1]
         c13_nc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_nc']
         perc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['contribution']
@@ -1725,7 +1725,7 @@ class NmrData:
         ref_point2 = n_points - self.ppm2points(ref_shift2, 1) - 1
         offset = (ref_point2 * (self.proc.sw_h[1] / self.acq.sfo2) / self.proc.n_points[1] + ref_shift2 - self.proc.sw_h[1] / self.acq.sfo2) * self.acq.sfo2
         #print('sim: ref_shift2: {}, ref_point2: {}, offset: {}'.format(ref_shift2, ref_point2, offset))
-        sim_spc.resize(1, self.proc.n_points[1])
+        #sim_spc.resize(1, self.proc.n_points[1])
         c13_centre = np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1])
         if self.hsqc.autoscale_j == True:
             scale = self.hsqc.j_scale
@@ -1832,10 +1832,10 @@ class NmrData:
         c13_beg = c13_centre_points - n_points - 1
         c13_end = c13_centre_points + n_points - 1
         c13_range = range(c13_centre_points - int(n_points/2), c13_centre_points + int(n_points/2))
-        spc2 = np.array([])
-        spc2.resize(2*n_points)
-        spc2_sim = np.array([])
-        spc2_sim.resize(2*n_points)
+        spc2 = np.zeros(2*n_points)  # array([])
+        #spc2.resize(2*n_points)
+        spc2_sim = np.zeros(2*n_points)  # array([])
+        #spc2_sim.resize(2*n_points)
         #print(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].sim_spc)
         #print(c13_range)
         for k in range(len(c13_range)):
@@ -2106,7 +2106,7 @@ class NmrData:
                 perc = perc.tolist()
 
         perc = np.abs(np.array(perc)).tolist()
-        sim_spc = np.array([], dtype=complex)
+        sim_spc = np.zeros((1, n_points), dtype=complex)  # np.array([], dtype=complex)
         c13_centre = np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1])
         if self.hsqc.autoscale_j == True:
             scale = self.hsqc.j_scale
@@ -2129,7 +2129,7 @@ class NmrData:
         ref_point2 = 0 #n_points - self.ppm2points(ref_shift2, 1) - 1
         sw = abs(c13_beg_ppm - c13_end_ppm)
         offset = (ref_point2 * sw / (2*n_points) + ref_shift2 - sw) * self.acq.sfo2
-        sim_spc.resize(1,n_points)
+        #sim_spc.resize(1,n_points)
         for k in range(n_spin_sys):
             sys = self.make_hsqc_spin_sys(c13_offset, k)
             sys.offsetShifts(offset)
@@ -2143,8 +2143,8 @@ class NmrData:
             h1_pos = h1_shift
 
         h1_pts = len(self.spc[0]) - self.ppm2points(h1_pos, 0) - 1
-        spc2 = np.array([])
-        spc2.resize(2*n_points)
+        spc2 = np.zeros(2*n_points)  # np.array([])
+        #spc2.resize(2*n_points)
         #print(c13_range)
         for k in range(len(c13_range)):
             spc2[k] = self.spc[c13_range[k]][h1_pts].real
@@ -2193,12 +2193,13 @@ class NmrData:
         sigma1 = pg.Ixpuls(sys, sigma1, "1H", 180.0)
         sigma1 = pg.evolve(pg.gen_op(sigma1), pg.gen_op(H), echo_time / jres)
         fid = fid + pg.FID(pg.gen_op(sigma1), pg.gen_op(D), pg.gen_op(H), dt, td)
-        spc1 = np.array([], dtype=complex)
-        spc1.resize(1, td)
-        spc = np.array([], dtype=complex)
-        spc.resize(1, npts)
-        spc2 = np.array([], dtype=complex)
-        spc2.resize(1, npts)
+        spc1 = np.zeros((1, td), dtype=complex)
+        #spc1.resize(1, td)
+        #spc = np.array([], dtype=complex)
+        spc = np.zeros((1, npts), dtype=complex)
+        #spc.resize(1, npts)
+        spc2 = np.zeros((1, npts), dtype=complex)
+        #spc2.resize(1, npts)
         for k in range(td):
             spc1[0][k] = fid.getRe(k) - 1j * fid.getIm(k)
             spc1[0][k] *= np.exp(-r2 * dt * k)
