@@ -1,0 +1,25 @@
+##TITLE= Parameter file, TopSpin 4.0.5
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= ludwigc
+$$ 2020-02-07 22:33:36.291 +0000  ludwigc@CZC7388LVT
+$$ /opt/data/ludwigc/chris_mark_nusPaper_07022020/112/acqu2
+$$ process /opt/topspin4.0.5/prog/au/bin/iexpno
+##$ACQT0= 0
+##$BF1= 201.09729745
+##$FnILOOP= 0
+##$FnMODE= 6
+##$NUC1= <13C>
+##$NusJSP= 0
+##$NusT2= 1
+##$NusTD= 0
+##$O1= 16087.783796
+##$PULPROG= <zg30>
+##$ProjAngle= 0
+##$SFO1= 201.113385233796
+##$SW= 190
+##$SW_h= 38211.5431944212
+##$TD= 16384
+##END=

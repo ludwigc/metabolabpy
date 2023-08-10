@@ -1,0 +1,41 @@
+#!/bin/csh -f 
+#
+if( $#argv < 1 ) then
+exit 1
+endif
+set ft4=$1
+set xphase=0
+
+set range=`echo | gawk 'BEGIN{printf "-x1 %gppm -xn %gppm ",'{$FST_PNT_PPM}','{$FST_PNT_PPM}'-'{$ROISW}';   }'`
+
+set fid=${FID}/ser
+if( ! -f $fid ) set fid=${FID}
+if( ! -f $fid ) then
+ exit 1
+endif
+
+# make pipe header 
+bin2pipe -noIn    \
+-xN       	1024      	-yN       	4096      	 \
+-xT       	512       	-yT       	2048      	 \
+-xMODE    	Complex   	-yMODE    	Echo-AntiEcho	 \
+-xSW	12500.000	-ySW	 \
+-xOBS	799.750	-yOBS	 \
+-xCAR	4.700	-yCAR	 \
+-xP0	-78.0	-yP0	 \
+-xP1	-4.0	-yP1	 \
+-xLAB	1H	-yLAB	 \
+  -ndim 2  -aq2D States \
+| nmrPipe -fn POLY -time                               \
+| nmrPipe -fn SP -off 0.48 -end 0.95 -pow 2 -c 0.5     \
+| nmrPipe -fn ZF -auto                                 \
+| nmrPipe -fn FT -auto                                 \
+| nmrPipe -fn PS -hdr                                  \
+| nmrPipe -fn PS -p0 28.0809 -p1 -3.1788 -di                       \
+| nmrPipe -fn POLY -auto -xn 5.0ppm -ord 1              \
+| nmrPipe  -fn EXT $range  -sw \
+# | pipe2xyz -z -out ft/data%03d.DAT -ov -nofs -verb \
+# catching pipe into file \
+> $ft4
+
+echo "$0 Warning AXIS 2 is out of range 1 ... 1 for Y,Z,[A]"

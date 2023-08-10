@@ -1,0 +1,23 @@
+##TITLE= Audit trail, TopSpin 4.0.5
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= root
+$$ /root/.topspin-BladeEpu/local_acqu/chris_mark_nusPaper_07022020/112/audita.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2020-02-09 17:14:33.074 +0000>,<root>,<BladeEpu>,<go4>,<TopSpin 4.0.5>,
+      <created by zg on 'Avance Neo 800' (CZC7388LVT) by user 'ludwigc'
+	started at 2020-02-09 09:51:21.033 +0000, POWCHK enabled, PULCHK disabled,
+	finished successfully at 2020-02-09 17:14:33.074 +0000
+       configuration hash MD5:
+       96 94 72 BB F2 F8 C3 7C B8 0A 80 0A 6C AD 1D 9F
+       double data hash MD5: 1K * 4K
+       D2 80 54 AC 2D 36 57 4D 94 90 40 60 E3 59 D6 31>)
+$$ /opt/data/ludwigc/chris_mark_nusPaper_07022020/112/audita.txt
+(   2,<2020-02-09 17:14:23.934 +0000>,<ludwigc>,<CZC7388LVT>,<sertoint>,<TopSpin 4.0.5>,
+      <sertoint
+       data hash MD5: 1K * 4K
+       BB 4E 1C 6C 25 E0 FB 2B 41 B4 60 F6 7C D5 CF 47>)
+##END=
+
+$$ hash MD5
+$$ 80 21 95 AD A6 A5 6B 8E 84 47 BB 9F FE 01 72 05

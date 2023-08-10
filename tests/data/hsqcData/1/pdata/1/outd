@@ -1,0 +1,16 @@
+##TITLE= Parameter file, TopSpin 4.0.5
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= ludwigc
+$$ 2020-02-07 22:33:36.293 +0000  ludwigc@CZC7388LVT
+$$ /opt/data/ludwigc/chris_mark_nusPaper_07022020/112/pdata/1/outd
+$$ process /opt/topspin4.0.5/prog/au/bin/iexpno
+##$CURPLOT= <>
+##$CURPRIN= <$>
+##$DFORMAT= <normdp>
+##$LAYOUT= <+/2D_inv.xwp>
+##$LFORMAT= <normlp>
+##$PFORMAT= <normpl>
+##END=

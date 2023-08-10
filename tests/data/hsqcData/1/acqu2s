@@ -1,0 +1,25 @@
+##TITLE= Parameter file, TopSpin 4.0.5
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 4099	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= ludwigc
+$$ 2020-02-09 17:14:22.937 +0000  ludwigc@CZC7388LVT
+$$ /opt/data/ludwigc/chris_mark_nusPaper_07022020/112/acqu2s
+$$ process /opt/topspin4.0.5/prog/mod/acqdataserver
+##$ACQT0= 0
+##$BF1= 201.09729745
+##$FnILOOP= 1
+##$FnMODE= 6
+##$NUC1= <13C>
+##$NusJSP= 0
+##$NusT2= 1
+##$NusTD= 16384
+##$O1= 16087.783796
+##$PULPROG= <jres_hsqcetgpsp_vrt.22.cl>
+##$ProjAngle= 0
+##$SFO1= 201.113385233796
+##$SW= 189.783185673729
+##$SW_h= 38167.9389312977
+##$TD= 4096
+##END=
