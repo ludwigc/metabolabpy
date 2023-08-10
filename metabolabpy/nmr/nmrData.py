@@ -1714,8 +1714,8 @@ class NmrData:
         # end set_window_function
 
     def sim_hsqc_1d(self):
-        sim_spc1 = np.array([], dtype=complex)
-        sim_spc = np.array([], dtype=complex)
+        sim_spc1 = np.zeros(self.proc.n_points[1])  # np.array([], dtype=complex)
+        sim_spc = np.zeros(self.proc.n_points[1])  #np.array([], dtype=complex)
         n_points = self.proc.n_points[1]
         c13_nc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_nc']
         perc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['contribution']
