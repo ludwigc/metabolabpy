@@ -13,4 +13,4 @@ multiprocess
 pybaselines
 darkdetect
 #on arm: then install with : pip3 install metabolabpy --no-deps
-pygamma
+pygamma # needs python 3.9
