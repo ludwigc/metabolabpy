@@ -12,10 +12,11 @@ origin: 26-07-2019
 """
 
 import unittest
-import metabolabpy.nmr.nmrData as nmrData
 import os
 import numpy as np
-
+from metabolabpy.nmr import nmrData
+from metabolabpy.nmr import nmrDataSet
+import pandas as pd
 
 class nmrDataTestCase(unittest.TestCase):
 
@@ -486,6 +487,17 @@ class nmrDataTestCase(unittest.TestCase):
         nd.read_spc()
         self.assertEqual(len(nd.fid[0]), 32768)  # check number of data points in fid
         self.assertEqual(len(nd.spc[0]), 65536)  # check number of data points in 1r
+        nd = [[]]
+        nd = nmrData.NmrData()
+        p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        e_name = "varianData.fid"
+        nd.data_set_name = p_name
+        nd.data_set_number = e_name
+        nd.read_spc()
+        nd.proc_spc1d()
+        self.assertEqual(len(nd.fid[0]), 16384)  # check number of data points in fid
+        self.assertEqual(len(nd.spc[0]), 32768)  # check number of data points in 1r
+        # end test_read_spc
 
     def test_set_ref(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
@@ -579,6 +591,362 @@ class nmrDataTestCase(unittest.TestCase):
         npts2 = len(f)
         self.assertEqual(npts2, 131072)
 
+    def test_acq_pars(self):
+        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
+        nd = nmrDataSet.NmrDataSet()
+        nd.load(f_name)
+        self.assertEqual(nd.nmrdat[0][0].acq.acqus_text.index('Z814601_0087'), 5005)
+        # end
+
+    def test_add_baseline_points(self):
+        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
+        nd = nmrDataSet.NmrDataSet()
+        nd.load(f_name)
+        nd.nmrdat[0][0].spline_baseline.baseline_points = [11.787481124553866, -2.2087244721275536]
+        nd.nmrdat[0][0].add_baseline_points()
+        self.assertEqual(nd.nmrdat[0][0].spline_baseline.baseline_points[0], 11.7768)
+        self.assertEqual(nd.nmrdat[0][0].spline_baseline.baseline_points[1], -2.1978    )
+    # end
+
+    def test_add_peak(self):
+        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
+        nd = nmrDataSet.NmrDataSet()
+        nd.load(f_name)
+        nd.nmrdat[0][0].add_peak(np.array([0.01, -0.01]))
+        self.assertAlmostEqual(nd.nmrdat[0][0].peak_max_ppm, 0.0)
+    # end
+
+    def test_set_peak(self):
+        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
+        nd = nmrDataSet.NmrDataSet()
+        nd.load(f_name)
+        nd.nmrdat[0][0].set_peak(np.array([0.01]), np.array([-0.01]), np.array(['TMSP']))
+        self.assertAlmostEqual(nd.nmrdat[0][0].peak_max_ppm[0], 0.0)
+    # end
+
+    def test_clear_peak(self):
+        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
+        nd = nmrDataSet.NmrDataSet()
+        nd.load(f_name)
+        nd.nmrdat[0][0].set_peak(np.array([0.01]), np.array([-0.01]), np.array(['TMSP']))
+        nd.nmrdat[0][0].clear_peak()
+        self.assertEqual(len(nd.nmrdat[0][0].peak_max_ppm), 0)
+    # end
+
+    def test_add_tmsp(self):
+        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
+        nd = nmrDataSet.NmrDataSet()
+        nd.load(f_name)
+        ppm_values = [0, 0.01, -0.01]
+        points = len(nd.nmrdat[0][0].spc[0]) - nd.nmrdat[0][0].ppm2points(ppm_values)
+        nd.nmrdat[0][0].spc[0][points[1]:points[2]] = np.zeros(points[2] - points[1])
+        nd.nmrdat[0][0].add_tmsp(1e5, 0.0001)
+        nd.nmrdat[0][0].add_peak(np.array([0.01, -0.01]))
+        self.assertAlmostEqual(nd.nmrdat[0][0].peak_max_ppm[0], 0, places=3)
+    # end
+
+    def test_autobaseline1d(self):
+        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
+        nd = nmrDataSet.NmrDataSet()
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='notThere')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='airpls')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='arpls')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='asls')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='aspls')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='derpsalsa')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='drpls')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='iarpls')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='iasls')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='psalsa')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='mpls')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='mor')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='imor')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='mormol')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='amormol')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='rolling_ball')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='mwmv')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='tophat')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='mpspline')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='jbcd')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='noise_median')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='snip')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='swima')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='ipsa')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='ria')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='dietrich')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='std_distribution')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='fastchrom')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='cwt_br')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='fabc')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='beads')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='poly')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='modpoly')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='imodpoly')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='penalized_poly')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='quant_reg')
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d(alg='goldindec')
+
+    def test_autobaseline1d_old(self):
+        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
+        nd = nmrDataSet.NmrDataSet()
+        nd.load(f_name)
+        nd.nmrdat[0][0].autobaseline1d_old()
+
+    def test_autophase1d1(self):
+        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
+        nd = nmrDataSet.NmrDataSet()
+        nd.load(f_name)
+        nd.nmrdat[0][0].autophase1d1()
+        nd.nmrdat[0][0].set_peak(np.array([0.01]), np.array([-0.01]), np.array(['TMSP']))
+        self.assertAlmostEqual(nd.nmrdat[0][0].peak_max_ppm[0], 0.0, places=4)
+
+    def test_create_title(self):
+        excel_name = os.path.join(os.path.dirname(__file__), "data", "sampleTitleSpreadSheet.xlsx")
+        xls = pd.read_excel(excel_name).fillna('')
+        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
+        nd = nmrDataSet.NmrDataSet()
+        nd.load(f_name)
+        rack_label = 'Rack'
+        pos_label = 'Position'
+        dataset_label = 'dataset'
+        replace_title = True
+        c_dict = {}
+        for k in range(len(xls[pos_label])):
+            if str(xls[pos_label][k]) != 'nan':
+                c_dict[str(xls[rack_label][k]) + " " + str(xls[pos_label][k])] = k
+
+        nd.nmrdat[0][0].create_title(xls, dataset_label, pos_label, rack_label, replace_title, c_dict, excel_name)
+        title_string = 'Excel File : /Users/ludwigc/Develop/metabolabpy/tests/data/sampleTitleSpreadSheet.xlsx\nExcel Line Number : 2\nacqus AUTOPOS : 1 A1\nRack : 1\nPosition : A1\ndataset : nmrData1\nsample : control\n'
+        self.assertEqual(nd.nmrdat[0][0].title, title_string)
+        # end test_create_title
+
+
+    def test_set_title_information(self):
+        excel_name = os.path.join(os.path.dirname(__file__), "data", "sampleTitleSpreadSheet.xlsx")
+        xls = pd.read_excel(excel_name).fillna('')
+        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
+        nd = nmrDataSet.NmrDataSet()
+        nd.load(f_name)
+        rack_label = 'Rack'
+        pos_label = 'Position'
+        replace_title = True
+        c_dict = {}
+        nd.nmrdat[0][0].set_title_information(xls, excel_name, pos_label, rack_label, replace_title, c_dict)
+        title_string = 'Excel File : /Users/ludwigc/Develop/metabolabpy/tests/data/sampleTitleSpreadSheet.xlsx\nExcel Line Number : 2\nacqus AUTOPOS : 1 A1\nRack : 1\nPosition : A1\ndataset : nmrData1\nsample : control\n\n'
+        self.assertEqual(nd.nmrdat[0][0].title, title_string)
+        # end test_create_title
+
+    def test_calc_spline_baseline(self):
+        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
+        nd = nmrDataSet.NmrDataSet()
+        nd.load(f_name)
+        nd.nmrdat[0][0].spline_baseline.baseline_points = [11.787481124553866, -2.2087244721275536]
+        nd.nmrdat[0][0].add_baseline_points()
+        baseline = nd.nmrdat[0][0].calc_spline_baseline()
+        self.assertAlmostEqual(baseline[51], 6854.771940828485, places=1)
+        self.assertAlmostEqual(baseline[65485], 4821.232145140779, places=1)
+        # end test_calc_spline_baseline
+
+    def test_corr_spline_baseline(self):
+        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
+        nd = nmrDataSet.NmrDataSet()
+        nd.load(f_name)
+        nd.nmrdat[0][0].spline_baseline.baseline_points = [11.787481124553866, -2.2087244721275536]
+        nd.nmrdat[0][0].add_baseline_points()
+        nd.nmrdat[0][0].corr_spline_baseline()
+        self.assertAlmostEqual(nd.nmrdat[0][0].spc[0][51].real / np.max(nd.nmrdat[0][0].spc[0].real), 0.0, places=3)
+        self.assertAlmostEqual(nd.nmrdat[0][0].spc[0][65485].real / np.max(nd.nmrdat[0][0].spc[0].real), 0.0, places=3)
+        # end test_corr_spline_baseline
+
+    def test_add_hsqc_peak(self):
+        p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")
+        e_name = "5"
+        nd = nmrDataSet.NmrDataSet()
+        nd.read_nmrpipe_spc(p_name, e_name, "test.dat")
+        nd.nmrdat[0][0].proc.ph0 = [153.05550133, -1.55127223, 0.0]
+        nd.nmrdat[0][0].proc.ph1 = [165.12883873, 6.06083814, 0.0]
+        nd.nmrdat[0][0].ref_shift = [1.314, 22.8972, 0.0]
+        nd.nmrdat[0][0].ref_point = [143, 2355, 0]
+        nd.nmrdat[0][0].calc_ppm()
+        nd.nmrdat[0][0].phase2d(nd.nmrdat[0][0].proc.ph0[0], nd.nmrdat[0][0].proc.ph1[0], 0)
+        nd.nmrdat[0][0].phase2d(nd.nmrdat[0][0].proc.ph0[1], nd.nmrdat[0][0].proc.ph1[1], 1)
+        nd.nmrdat[0][0].autobaseline2d()
+        metabolite_name = 'L-AsparticAcid'
+        cur_peak = 2
+        nd.nmrdat[0][0].hsqc.read_metabolite_information(metabolite_name)
+        nd.nmrdat[0][0].hsqc.set_metabolite_information(metabolite_name, nd.nmrdat[0][0].hsqc.metabolite_information)
+        nd.nmrdat[0][0].hsqc.cur_metabolite = metabolite_name
+        nd.nmrdat[0][0].hsqc.cur_peak = cur_peak
+        nd.nmrdat[0][0].hsqc.set_peak_information()
+        x_data = [3.90869]
+        y_data = [54.932118]
+        nd.nmrdat[0][0].add_hsqc_peak(x_data, y_data)
+        self.assertEqual(nd.nmrdat[0][0].hsqc.hsqc_data[metabolite_name].spin_systems[cur_peak - 1]['c13_shifts'][0][0], 54.932118)
+        # end
+
+    def test_autobaseline2d(self):
+        p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")
+        e_name = "5"
+        nd = nmrDataSet.NmrDataSet()
+        nd.read_nmrpipe_spc(p_name, e_name, "test.dat")
+        nd.nmrdat[0][0].proc.ph0 = [153.05550133, -1.55127223, 0.0]
+        nd.nmrdat[0][0].proc.ph1 = [165.12883873, 6.06083814, 0.0]
+        nd.nmrdat[0][0].ref_shift = [1.314, 22.8972, 0.0]
+        nd.nmrdat[0][0].ref_point = [143, 2355, 0]
+        nd.nmrdat[0][0].calc_ppm()
+        nd.nmrdat[0][0].phase2d(nd.nmrdat[0][0].proc.ph0[0], nd.nmrdat[0][0].proc.ph1[0], 0)
+        nd.nmrdat[0][0].phase2d(nd.nmrdat[0][0].proc.ph0[1], nd.nmrdat[0][0].proc.ph1[1], 1)
+        nd.nmrdat[0][0].autobaseline2d()
+        # end test_autobaseline2d
+
+    def test_autopick_hsqc(self):
+        p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")
+        e_name = "5"
+        nd = nmrDataSet.NmrDataSet()
+        nd.read_nmrpipe_spc(p_name, e_name, "test.dat")
+        nd.nmrdat[0][0].proc.ph0 = [153.05550133, -1.55127223, 0.0]
+        nd.nmrdat[0][0].proc.ph1 = [165.12883873, 6.06083814, 0.0]
+        nd.nmrdat[0][0].ref_shift = [1.314, 22.8972, 0.0]
+        nd.nmrdat[0][0].ref_point = [143, 2355, 0]
+        nd.nmrdat[0][0].calc_ppm()
+        nd.nmrdat[0][0].phase2d(nd.nmrdat[0][0].proc.ph0[0], nd.nmrdat[0][0].proc.ph1[0], 0)
+        nd.nmrdat[0][0].phase2d(nd.nmrdat[0][0].proc.ph0[1], nd.nmrdat[0][0].proc.ph1[1], 1)
+        nd.nmrdat[0][0].autobaseline2d()
+        metabolite_name = 'L-AsparticAcid'
+        cur_peak = 2
+        nd.nmrdat[0][0].hsqc.read_metabolite_information(metabolite_name)
+        nd.nmrdat[0][0].hsqc.set_metabolite_information(metabolite_name, nd.nmrdat[0][0].hsqc.metabolite_information)
+        nd.nmrdat[0][0].hsqc.cur_metabolite = metabolite_name
+        nd.nmrdat[0][0].hsqc.cur_peak = cur_peak
+        nd.nmrdat[0][0].hsqc.set_peak_information()
+        nd.nmrdat[0][0].autopick_hsqc([metabolite_name])
+        self.assertEqual(nd.nmrdat[0][0].hsqc.hsqc_data[metabolite_name].spin_systems[0]['c13_shifts'][0][0], 55.086)
+        # end test_autopick_hsqc
+
+    def test_autofit_hsqc(self):
+        p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")
+        #import os
+        #import numpy as np
+        #from metabolabpy.nmr import nmrDataSet
+        #p_name = "nmrData"
+        e_name = "5"
+        nd = nmrDataSet.NmrDataSet()
+        nd.read_nmrpipe_spc(p_name, e_name, "test.dat")
+        nd.nmrdat[0][0].proc.ph0 = [153.05550133, -1.55127223, 0.0]
+        nd.nmrdat[0][0].proc.ph1 = [165.12883873, 6.06083814, 0.0]
+        nd.nmrdat[0][0].ref_shift = [1.314, 22.8972, 0.0]
+        nd.nmrdat[0][0].ref_point = [143, 2355, 0]
+        nd.nmrdat[0][0].calc_ppm()
+        nd.nmrdat[0][0].phase2d(nd.nmrdat[0][0].proc.ph0[0], nd.nmrdat[0][0].proc.ph1[0], 0)
+        nd.nmrdat[0][0].phase2d(nd.nmrdat[0][0].proc.ph0[1], nd.nmrdat[0][0].proc.ph1[1], 1)
+        nd.nmrdat[0][0].autobaseline2d()
+        metabolite_name = 'L-AsparticAcid'
+        cur_peak = 2
+        nd.nmrdat[0][0].hsqc.read_metabolite_information(metabolite_name)
+        nd.nmrdat[0][0].hsqc.set_metabolite_information(metabolite_name, nd.nmrdat[0][0].hsqc.metabolite_information)
+        nd.nmrdat[0][0].hsqc.cur_metabolite = metabolite_name
+        nd.nmrdat[0][0].hsqc.cur_peak = cur_peak
+        nd.nmrdat[0][0].hsqc.set_peak_information()
+        nd.nmrdat[0][0].autopick_hsqc([metabolite_name])
+        nd.nmrdat[0][0].autofit_hsqc([metabolite_name])
+        self.assertAlmostEqual(nd.nmrdat[0][0].hsqc.hsqc_data[metabolite_name].spin_systems[0]['c13_shifts'][0][0], 55.68829020857215, places=3)
+        # end test_autofit_hsqc
+    def test_sim_hsqc_1d(self):
+        p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")
+        #import os
+        #import numpy as np
+        #from metabolabpy.nmr import nmrDataSet
+        #p_name = "nmrData"
+        e_name = "5"
+        nd = nmrDataSet.NmrDataSet()
+        nd.read_nmrpipe_spc(p_name, e_name, "test.dat")
+        nd.nmrdat[0][0].proc.ph0 = [153.05550133, -1.55127223, 0.0]
+        nd.nmrdat[0][0].proc.ph1 = [165.12883873, 6.06083814, 0.0]
+        nd.nmrdat[0][0].ref_shift = [1.314, 22.8972, 0.0]
+        nd.nmrdat[0][0].ref_point = [143, 2355, 0]
+        nd.nmrdat[0][0].calc_ppm()
+        nd.nmrdat[0][0].phase2d(nd.nmrdat[0][0].proc.ph0[0], nd.nmrdat[0][0].proc.ph1[0], 0)
+        nd.nmrdat[0][0].phase2d(nd.nmrdat[0][0].proc.ph0[1], nd.nmrdat[0][0].proc.ph1[1], 1)
+        nd.nmrdat[0][0].autobaseline2d()
+        metabolite_name = 'L-AsparticAcid'
+        cur_peak = 2
+        nd.nmrdat[0][0].hsqc.read_metabolite_information(metabolite_name)
+        nd.nmrdat[0][0].hsqc.set_metabolite_information(metabolite_name, nd.nmrdat[0][0].hsqc.metabolite_information)
+        nd.nmrdat[0][0].hsqc.cur_metabolite = metabolite_name
+        nd.nmrdat[0][0].hsqc.cur_peak = cur_peak
+        nd.nmrdat[0][0].hsqc.set_peak_information()
+        nd.nmrdat[0][0].autopick_hsqc([metabolite_name])
+        nd.nmrdat[0][0].hsqc.cur_peak = cur_peak
+        nd.nmrdat[0][0].sim_hsqc_1d()
+        self.assertEqual(len(nd.nmrdat[0][0].hsqc.hsqc_data[metabolite_name].sim_spc[cur_peak - 1]), 16384)
+        # end test_sim_hsqc_1d
+
+    def test_fit_hsqc_1d(self):
+        p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")
+        #import os
+        #import numpy as np
+        #from metabolabpy.nmr import nmrDataSet
+        #p_name = "nmrData"
+        e_name = "5"
+        nd = nmrDataSet.NmrDataSet()
+        nd.read_nmrpipe_spc(p_name, e_name, "test.dat")
+        nd.nmrdat[0][0].proc.ph0 = [153.05550133, -1.55127223, 0.0]
+        nd.nmrdat[0][0].proc.ph1 = [165.12883873, 6.06083814, 0.0]
+        nd.nmrdat[0][0].ref_shift = [1.314, 22.8972, 0.0]
+        nd.nmrdat[0][0].ref_point = [143, 2355, 0]
+        nd.nmrdat[0][0].calc_ppm()
+        nd.nmrdat[0][0].phase2d(nd.nmrdat[0][0].proc.ph0[0], nd.nmrdat[0][0].proc.ph1[0], 0)
+        nd.nmrdat[0][0].phase2d(nd.nmrdat[0][0].proc.ph0[1], nd.nmrdat[0][0].proc.ph1[1], 1)
+        nd.nmrdat[0][0].autobaseline2d()
+        metabolite_name = 'L-AsparticAcid'
+        cur_peak = 2
+        nd.nmrdat[0][0].hsqc.read_metabolite_information(metabolite_name)
+        nd.nmrdat[0][0].hsqc.set_metabolite_information(metabolite_name, nd.nmrdat[0][0].hsqc.metabolite_information)
+        nd.nmrdat[0][0].hsqc.cur_metabolite = metabolite_name
+        nd.nmrdat[0][0].hsqc.cur_peak = cur_peak
+        nd.nmrdat[0][0].hsqc.set_peak_information()
+        nd.nmrdat[0][0].autopick_hsqc([metabolite_name])
+        nd.nmrdat[0][0].hsqc.cur_peak = cur_peak
+        nd.nmrdat[0][0].fit_hsqc_1d()
+        self.assertAlmostEqual(nd.nmrdat[0][0].hsqc.hsqc_data[metabolite_name].spin_systems[cur_peak - 1]['contribution'][0], 28.973, places=1)
+        # end test_fit_hsqc_1d
 
 if __name__ == "__main__":
     unittest.main()
