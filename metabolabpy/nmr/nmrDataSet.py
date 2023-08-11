@@ -745,6 +745,7 @@ class NmrDataSet:
     # end export_data_set
 
     def ft(self):
+        print()
         if self.nmrdat[self.s][self.e].dim == 1:
             self.nmrdat[self.s][self.e].proc_spc1d()
 

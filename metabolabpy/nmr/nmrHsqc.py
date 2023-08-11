@@ -18,7 +18,7 @@ class NmrHsqc:
         self.threshold = 0.05         # [%]
         self.j_cc = 60                # [Hz]
         self.j_ch = 145               # [Hz]
-        self.n_max = 4
+        self.n_max = 3
         self.use_splitting = True
         self.tilt_hsqc = False
         self.display_library_shift = True

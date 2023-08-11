@@ -549,6 +549,7 @@ class NmrData:
             self.hsqc.set_metabolite_information(metabolite_name, self.hsqc.metabolite_information)
             self.hsqc.cur_peak = cur_peak
             self.hsqc.set_peak_information()
+            text = ''
             for kk in range(len(self.hsqc.hsqc_data[metabolite_name].h1_shifts)):
                 self.fit_hsqc_again = True
                 cur_peak = kk + 1
@@ -557,11 +558,12 @@ class NmrData:
                 self.hsqc.set_peak_information()
                 fit_again_counter = 0
                 while self.fit_hsqc_again:
-                    if fit_again_counter < 10:
+                    if fit_again_counter < self.hsqc.n_max:
                         fit_again_counter += 1
+                        text += f'fit_hsqc[{metabolite_name}, peak: {cur_peak}, iteration: {fit_again_counter}]: {self.fit_hsqc_again}\n'
                         self.fit_hsqc_again = False
                         self.fit_hsqc_1d()
-                        self.fit_hsqc_1d()
+                        #self.fit_hsqc_1d()
                         #self.fit_hsqc_1d()
                     else:
                         self.fit_hsqc_again = False
@@ -571,6 +573,7 @@ class NmrData:
                 self.sim_hsqc_1d()
                 self.sim_hsqc_1d()
 
+        return text
         # end autofit_hsqc
 
     def autopick_hsqc(self, metabolite_list=[]):
@@ -1724,8 +1727,6 @@ class NmrData:
         ref_shift2 = np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1])
         ref_point2 = n_points - self.ppm2points(ref_shift2, 1) - 1
         offset = (ref_point2 * (self.proc.sw_h[1] / self.acq.sfo2) / self.proc.n_points[1] + ref_shift2 - self.proc.sw_h[1] / self.acq.sfo2) * self.acq.sfo2
-        #print('sim: ref_shift2: {}, ref_point2: {}, offset: {}'.format(ref_shift2, ref_point2, offset))
-        #sim_spc.resize(1, self.proc.n_points[1])
         c13_centre = np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1])
         if self.hsqc.autoscale_j == True:
             scale = self.hsqc.j_scale
@@ -1759,10 +1760,6 @@ class NmrData:
                                                     c13_range=[c13_range[0], c13_range[-1]],
                                                     c13_sw=[c13_beg_ppm, c13_end_ppm]) / sum(c13_nc[k])
 
-        #for k in range(n_spin_sys):
-        #    sys = self.make_hsqc_spin_sys(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset'], k)
-        #    sys.offsetShifts(offset)
-        #    sim_spc[0] += intensity * self.c13spc1d(sys, perc[k]) / sum(c13_nc[k])
         sim_spc[0][c13_range] = sim_spc1[0]
         if intensity == 1.0:
             spc_max = np.array([], dtype=complex)
@@ -1784,14 +1781,6 @@ class NmrData:
 
             h1_pts = len(self.spc[0]) - self.ppm2points(h1_pos, 0) - 1
             c13_pts = len(self.spc) - self.ppm2points(c13_pos, 1) - 1
-            #c13_ptsa = len(self.spc) - self.ppm2points(c13_pos + self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset'][0] / 1000.0, 1) - 1
-            # spc_max.resize(len(sim_spc[0]))
-            # for dd in range(len(sim_spc[0])):
-            #    spc_max[dd] = self.spc[dd][h1_pts]
-            #
-            #intensity = abs(self.spc[c13_pts][h1_pts].real / sim_spc[0][c13_pts].real)
-            #print(f'c13_range = {c13_range}, h1_pts = {h1_pts}, c13_pts = {c13_pts}, max(spc) = {np.max(self.spc[c13_pts].real)}, max(sim_spc) = {np.max(sim_spc[0].real)}')
-            #print(self.spc[c13_range])
             intensity = abs(np.max(np.transpose(self.spc)[h1_pts][c13_range]) / np.max(sim_spc[0].real))
             self.hsqc.hsqc_data[self.hsqc.cur_metabolite].intensities[self.hsqc.cur_peak - 1] = intensity
 
