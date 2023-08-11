@@ -596,8 +596,11 @@ class nmrDataTestCase(unittest.TestCase):
         nd = nmrDataSet.NmrDataSet()
         nd.load(f_name)
         self.assertEqual(nd.nmrdat[0][0].acq.acqus_text.index('Z814601_0087'), 5005)
+        text = nd.nmrdat[0][0].acq_pars()
+        self.assertEqual(text.index('Z814601_0087'), 446)
+
         # end
-    
+
     def test_add_baseline_points(self):
         f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
         nd = nmrDataSet.NmrDataSet()
@@ -733,6 +736,9 @@ class nmrDataTestCase(unittest.TestCase):
         f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
         nd = nmrDataSet.NmrDataSet()
         nd.load(f_name)
+        nd.nmrdat[0][0].exclude_water = True
+        nd.nmrdat[0][0].autophase1d1()
+        nd.nmrdat[0][0].exclude_water = False
         nd.nmrdat[0][0].autophase1d1()
         nd.nmrdat[0][0].set_peak(np.array([0.01]), np.array([-0.01]), np.array(['TMSP']))
         self.assertAlmostEqual(nd.nmrdat[0][0].peak_max_ppm[0], 0.0, places=4)

@@ -49,6 +49,8 @@ class NmrDataSet:
         self.old_data_set = -1
         self.old_data_exp = -1
         self.hsqc_spin_sys_connected = True
+        self.data_set_name = ''
+        self.data_set_number = ''
         # end __init__
 
     def add_peak(self, start_end=np.array([], dtype='float64'), peak_label=''):
@@ -765,9 +767,8 @@ class NmrDataSet:
         return "Finished ft_all"
         # end ft_all
 
-    def help(self):
-        f_name = os.path.join(os.path.dirname(__file__), "web", "introduction", "index.html")
-        url = "file://" + f_name
+    def help(self):  # pragme: no cover
+        url = "https://ludwigc.github.io/metabolabpy"
         webbrowser.open(url, new=2)
         # end help
 

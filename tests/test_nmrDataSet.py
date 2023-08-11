@@ -76,7 +76,12 @@ class NrDataSetTestCase(unittest.TestCase):
         e_name = "1"  # 1D NMR data in exp 1
         nd = nmrDataSet.NmrDataSet()  # create nmrDataSet object
         nd.read_spc(p_name, e_name)  # check if Bruker data can be read
+        nd.nmrdat[0][0].exclude_water = True
+        nd.nmrdat[0][0].autophase1d1()
+        nd.nmrdat[0][0].exclude_water = True
         nd.autophase1d()
+        nd.nmrdat[0][0].set_peak(np.array([0.01]), np.array([-0.01]), np.array(['TMSP']))
+        self.assertAlmostEqual(nd.nmrdat[0][0].peak_max_ppm[0] / 10.0, 0.0, places=1)
 
     def test_autophase1d_all(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
@@ -397,7 +402,26 @@ class NrDataSetTestCase(unittest.TestCase):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
         nd = nmrDataSet.NmrDataSet()  # create nmrDataSet object
+        nd.read_spc()  # check if Bruker data can be read
+        self.assertEqual(len(nd.nmrdat[0]), 0)
+        nd = nmrDataSet.NmrDataSet()  # create nmrDataSet object
+        nd.data_set_name = p_name
+        nd.read_spc()  # check if Bruker data can be read
+        self.assertEqual(len(nd.nmrdat[0]), 0)
+        nd = nmrDataSet.NmrDataSet()  # create nmrDataSet object
+        nd.data_set_name = p_name
+        nd.data_set_number = e_name
+        nd.read_spc()  # check if Bruker data can be read
+        self.assertEqual(len(nd.nmrdat[0][0].fid[0]), 32768)  # check number of data points in fid
+        self.assertEqual(len(nd.nmrdat[0][0].spc[0]), 65536)  # check number of data points in 1r
+        nd = nmrDataSet.NmrDataSet()  # create nmrDataSet object
         nd.read_spc(p_name, e_name)  # check if Bruker data can be read
+        self.assertEqual(len(nd.nmrdat[0][0].fid[0]), 32768)  # check number of data points in fid
+        self.assertEqual(len(nd.nmrdat[0][0].spc[0]), 65536)  # check number of data points in 1r
+        nd = nmrDataSet.NmrDataSet()  # create nmrDataSet object
+        nd.data_set_name = p_name
+        nd.data_set_number = e_name
+        nd.read_spc()  # check if Bruker data can be read
         self.assertEqual(len(nd.nmrdat[0][0].fid[0]), 32768)  # check number of data points in fid
         self.assertEqual(len(nd.nmrdat[0][0].spc[0]), 65536)  # check number of data points in 1r
 
