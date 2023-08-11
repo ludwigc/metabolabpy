@@ -17,6 +17,7 @@ import os
 import numpy as np
 import shutil
 import darkdetect
+import pandas as pd
 
 
 class NrDataSetTestCase(unittest.TestCase):
@@ -179,6 +180,13 @@ class NrDataSetTestCase(unittest.TestCase):
         nd.pp.export_samples_in_rows_cols = 0
         nd.pp.export_method = 0
         nd.export_data_set('init')
+        nd.export_data_set('variable_meta')
+        nd.export_data_set('finish')
+        self.assertEqual(os.path.isfile(nd.pp.export_excel_path + os.sep + nd.pp.export_excel), True)
+        nd.pp.export_samples_in_rows_cols = 1
+        nd.pp.export_method = 0
+        nd.export_data_set('init')
+        nd.export_data_set('variable_meta')
         nd.export_data_set('finish')
         self.assertEqual(os.path.isfile(nd.pp.export_excel_path + os.sep + nd.pp.export_excel), True)
         os.remove(nd.pp.export_excel_path + os.sep + nd.pp.export_excel)
@@ -503,6 +511,194 @@ class NrDataSetTestCase(unittest.TestCase):
         nd.shift_ref()
         self.assertEqual(nd.nmrdat[0][0].ref_shift[0], 0.0)
 
+    def test_add_peak(self):
+        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
+        nd = nmrDataSet.NmrDataSet()
+        nd.load(f_name)
+        nd.add_peak(np.array([0.01, -0.01]), ['TMSP'])
+        self.assertAlmostEqual(nd.nmrdat[0][0].peak_max_ppm, 0.0)
+    # end
+
+    def test_set_peak(self):
+        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
+        nd = nmrDataSet.NmrDataSet()
+        nd.load(f_name)
+        nd.set_peak(np.array([0.01]), np.array([-0.01]), np.array(['TMSP']))
+        self.assertAlmostEqual(nd.nmrdat[0][0].peak_max_ppm[0], 0.0)
+    # end
+
+    def test_clear_peak(self):
+        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
+        nd = nmrDataSet.NmrDataSet()
+        nd.load(f_name)
+        nd.set_peak(np.array([0.01]), np.array([-0.01]), np.array(['TMSP']))
+        nd.clear_peak()
+        self.assertEqual(len(nd.nmrdat[0][0].peak_max_ppm), 0)
+    # end
+
+    def test_create_titles(self):
+        excel_name = os.path.join(os.path.dirname(__file__), "data", "sampleTitleSpreadSheet.xlsx")
+        xls = pd.read_excel(excel_name).fillna('')
+        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
+        nd = nmrDataSet.NmrDataSet()
+        nd.load(f_name)
+        rack_label = 'Rack'
+        pos_label = 'Position'
+        dataset_label = 'dataset'
+        replace_title = True
+        nd.create_titles(xls, dataset_label, pos_label, rack_label, replace_title, excel_name)
+        nd.nmrdat[0][0].title.index('sample : control')
+        # end test_create_title
+
+    def test_read_spc(self):
+        p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        e_name = "1"  # 1D NMR data in exp 1
+        nd = nmrDataSet.NmrDataSet()
+        nd.read_spc(p_name, e_name, 1)
+        self.assertEqual(len(nd.nmrdat[0][0].fid[0]), 32768)  # check number of data points in fid
+        self.assertEqual(len(nd.nmrdat[0][0].spc[0]), 65536)  # check number of data points in 1r
+        # end test_read_spc
+
+    def test_read_spcs(self):
+        p_name = [os.path.join(os.path.dirname(__file__), "data", "nmrData")]  # directory of test data set
+        e_name = ["1", "6"]  # 1D NMR data in exp 1
+        nd = nmrDataSet.NmrDataSet()
+        nd.read_spcs(p_name, e_name, 1)
+        self.assertEqual(len(nd.nmrdat[0][0].fid[0]), 32768)  # check number of data points in fid
+        self.assertEqual(len(nd.nmrdat[0][0].spc[0]), 65536)  # check number of data points in 1r
+        self.assertEqual(len(nd.nmrdat[0]), 2)
+        # end test_read_spc
+
+    def test_pre_proc_init(self):
+        p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        e_name = "1"  # 1D NMR data in exp 1
+        nd = nmrDataSet.NmrDataSet()
+        nd.read_spc(p_name, e_name, 1)
+        self.assertEqual(len(nd.pp.plot_select), 0)
+        nd.pre_proc_init()
+        self.assertEqual(len(nd.pp.plot_select), 1)
+        # end test_pre_proc_init
+
+    def test_read_title_file_information_excel(self):
+        excel_name = os.path.join(os.path.dirname(__file__), "data", "sampleTitleSpreadSheet.xlsx")
+        nd = nmrDataSet.NmrDataSet()
+        xls = nd.read_title_file_information_excel(excel_name)
+        self.assertEqual(xls['Rack'][0], 1)
+        # end
+
+    def test_reference1d_all(self):
+        p_name = [os.path.join(os.path.dirname(__file__), "data", "nmrData")]  # directory of test data set
+        e_name = ["1", "6"]  # 1D NMR data in exp 1
+        nd = nmrDataSet.NmrDataSet()
+        nd.read_spcs(p_name, e_name, 1)
+        nd.auto_ref_all()
+        ref_point1 = nd.nmrdat[0][0].ref_point[0]
+        ref_point2 = nd.nmrdat[0][1].ref_point[0]
+        nd.reference1d_all(0.0, 10.0)
+        self.assertEqual(nd.nmrdat[0][0].ref_shift[0], 10.0)  # check reference shift in spectrum 1
+        self.assertEqual(nd.nmrdat[0][1].ref_shift[0], 10.0)  # check reference shift in spectrum 2
+        self.assertEqual(nd.nmrdat[0][0].ref_point[0], ref_point1)  # check reference point in spectrum 1
+        self.assertEqual(nd.nmrdat[0][1].ref_point[0], ref_point2)  # check reference point in spectrum 2
+        # end test_reference1d_all
+
+    def test_set_standard_plot_colours(self):
+        p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        e_name = "1"  # 1D NMR data in exp 1
+        nd = nmrDataSet.NmrDataSet()
+        nd.read_spc(p_name, e_name, 1)
+        nd.cf.mode = 'light'
+        nd.set_standard_plot_colours()
+        self.assertEqual(nd.nmrdat[0][0].display.pos_col_rgb, (0.0, 0.0, 1.0))
+        nd.cf.mode = 'dark'
+        nd.set_standard_plot_colours()
+        self.assertEqual(nd.nmrdat[0][0].display.pos_col_rgb, (0.8, 0.8, 1.0))
+        # end test_set_standard_plot_colours
+
+    def test_set_title_information(self):
+        p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        e_name = "1"  # 1D NMR data in exp 1
+        nd = nmrDataSet.NmrDataSet()
+        nd.read_spc(p_name, e_name, 1)
+        data_path = os.path.join(os.path.dirname(__file__), "data")
+        excel_name = "sampleTitleSpreadSheet.xlsx"
+        nd.set_title_information('Rack', 'Position', data_path, excel_name, True)
+        nd.nmrdat[0][0].title.index('sample : control')
+        # end
+
+    def test_spline_correct(self):
+        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
+        nd = nmrDataSet.NmrDataSet()
+        nd.load(f_name)
+        nd.nmrdat[0][0].spline_baseline.baseline_points = [11.787481124553866, -2.2087244721275536]
+        nd.nmrdat[0][0].add_baseline_points()
+        baseline = nd.nmrdat[0][0].calc_spline_baseline()
+        nd.spline_correct()
+        # end test_calc_spline_baseline
+
+    def test_variance_stabilisation(self):
+        ds_name = os.path.join(os.path.dirname(__file__), "data", "pre_proc_test.mlpy")  # directory of test data set
+        nd = nmrDataSet.NmrDataSet()  # create nmrDataSet object
+        nd.load(ds_name)  # check if Bruker data can be read
+        nd.pp.flag_variance_stabilisation = True
+        nd.pp.auto_scaling = False
+        nd.pp.pareto_scaling = True
+        nd.pp.g_log_transform = False
+        max1 = np.max(nd.nmrdat[0][0].spc[0].real)
+        nd.data_pre_processing()
+        max2 = np.max(nd.nmrdat[0][0].spc[0].real)
+        self.assertAlmostEqual(max1, 10185302564.706278, places=1)
+        self.assertAlmostEqual(max2, 645616.1250319061, places=1)
+        nd = nmrDataSet.NmrDataSet()  # create nmrDataSet object
+        nd.load(ds_name)  # check if Bruker data can be read
+        nd.pp.flag_variance_stabilisation = True
+        nd.pp.auto_scaling = True
+        nd.pp.pareto_scaling = False
+        nd.pp.g_log_transform = False
+        max1 = np.max(nd.nmrdat[0][0].spc[0].real)
+        nd.data_pre_processing()
+        max2 = np.max(nd.nmrdat[0][0].spc[0].real)
+        self.assertAlmostEqual(max1, 10185302564.706278, places=1)
+        self.assertAlmostEqual(max2, 1.7320373446154178, places=1)
+        nd = nmrDataSet.NmrDataSet()  # create nmrDataSet object
+        nd.load(ds_name)  # check if Bruker data can be read
+        nd.pp.flag_variance_stabilisation = True
+        nd.pp.auto_scaling = False
+        nd.pp.pareto_scaling = False
+        nd.pp.g_log_transform = True
+        max1 = np.max(nd.nmrdat[0][0].spc[0].real)
+        nd.data_pre_processing()
+        max2 = np.max(nd.nmrdat[0][0].spc[0].real)
+        self.assertAlmostEqual(max1, 10185302564.706278, places=1)
+        self.assertAlmostEqual(max2, 9.54966757032018, places=1)
+
+    def test_export_hsqc_data(self):
+        p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")
+        e_name = "5"
+        export_excel_path = os.path.expanduser("~")
+        export_excel = "testHsqcExport.xlsx"
+        nd = nmrDataSet.NmrDataSet()
+        nd.read_nmrpipe_spc(p_name, e_name, "test.dat")
+        nd.nmrdat[0][0].proc.ph0 = [153.05550133, -1.55127223, 0.0]
+        nd.nmrdat[0][0].proc.ph1 = [165.12883873, 6.06083814, 0.0]
+        nd.nmrdat[0][0].ref_shift = [1.314, 22.8972, 0.0]
+        nd.nmrdat[0][0].ref_point = [143, 2355, 0]
+        nd.nmrdat[0][0].calc_ppm()
+        nd.nmrdat[0][0].phase2d(nd.nmrdat[0][0].proc.ph0[0], nd.nmrdat[0][0].proc.ph1[0], 0)
+        nd.nmrdat[0][0].phase2d(nd.nmrdat[0][0].proc.ph0[1], nd.nmrdat[0][0].proc.ph1[1], 1)
+        nd.nmrdat[0][0].autobaseline2d()
+        metabolite_name = 'L-AsparticAcid'
+        cur_peak = 2
+        nd.nmrdat[0][0].hsqc.read_metabolite_information(metabolite_name)
+        nd.nmrdat[0][0].hsqc.set_metabolite_information(metabolite_name, nd.nmrdat[0][0].hsqc.metabolite_information)
+        nd.nmrdat[0][0].hsqc.cur_metabolite = metabolite_name
+        nd.nmrdat[0][0].hsqc.cur_peak = cur_peak
+        nd.nmrdat[0][0].hsqc.set_peak_information()
+        nd.nmrdat[0][0].autopick_hsqc()
+        nd.nmrdat[0][0].autofit_hsqc()
+        nd.export_hsqc_data(os.path.join(export_excel_path, export_excel))
+        self.assertEqual(os.path.isfile(os.path.join(export_excel_path, export_excel)), True)
+        os.remove(os.path.join(export_excel_path, export_excel))
+        # end
 
 if __name__ == "__main__":
     unittest.main()

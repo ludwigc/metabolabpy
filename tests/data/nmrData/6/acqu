@@ -1,23 +1,23 @@
 ##TITLE= Parameter file, TopSpin 3.5 pl 2
 ##JCAMPDX= 5.0
 ##DATATYPE= Parameter Values
-##NPOINTS= 13	$$ modification sequence number
+##NPOINTS= 23	$$ modification sequence number
 ##ORIGIN= Bruker BioSpin GmbH
 ##OWNER= nmrsu
-$$ 2016-02-23 17:04:34.365 +0000  nmrsu@B600-4
-$$ C:/NMRData/nmrData/1/acqus
+$$ 2016-02-23 17:04:34.053 +0000  nmrsu@B600-4
+$$ C:/NMRData/nmrData/1/acqu
 $$ process C:\Bruker\TopSpin3.5pl2\prog\mod\shimcntl.exe
-##$ACQT0= -6.24522563000809
+##$ACQT0= 0
 ##$AMP= (0..31)
 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100 100
 100 100 100 100 100 100 100 100 100 100 100 100 100 100
 ##$AMPCOIL= (0..19)
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-##$ANAVPT= -1
+##$ANAVPT= 1
 ##$AQSEQ= 0
 ##$AQ_mod= 3
 ##$AUNM= <au_prof1d>
-##$AUTOPOS= <1  A1 - 101 >
+##$AUTOPOS= <19 >
 ##$BF1= 600.4
 ##$BF2= 600.4
 ##$BF3= 600.4
@@ -39,10 +39,10 @@ $$ process C:\Bruker\TopSpin3.5pl2\prog\mod\shimcntl.exe
 ##$CPDPRG= (0..8)
 <> <> <> <> <> <> <> <> <>
 ##$D= (0..63)
-0 4 0 0 0 0 0 0 0.01 0 0 0 2e-005 0 0 0 0.0002 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-##$DATE= 1456247072
-##$DE= 12.86468
+0 4 0 0 0 0 0 0 0.01 0 0 0 0 0 0 0 0.0002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+##$DATE= 0
+##$DE= 6.5
 ##$DECBNUC= <off>
 ##$DECIM= 2380
 ##$DECNUC= <off>
@@ -53,7 +53,7 @@ $$ process C:\Bruker\TopSpin3.5pl2\prog\mod\shimcntl.exe
 ##$DR= 22
 ##$DS= 4
 ##$DSPFIRM= 4
-##$DSPFVS= 21
+##$DSPFVS= 0
 ##$DTYPA= 0
 ##$EXP= <NOESYGPPR.1>
 ##$FCUCHAN= (0..9)
@@ -73,8 +73,8 @@ $$ process C:\Bruker\TopSpin3.5pl2\prog\mod\shimcntl.exe
 ##$FQ6LIST= <>
 ##$FQ7LIST= <>
 ##$FQ8LIST= <>
-##$FRQLO3= 222177.5
-##$FRQLO3N= 2
+##$FRQLO3= 0
+##$FRQLO3N= 0
 ##$FS= (0..7)
 83 83 83 83 83 83 83 83
 ##$FTLPGN= 0
@@ -91,8 +91,8 @@ $$ process C:\Bruker\TopSpin3.5pl2\prog\mod\shimcntl.exe
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 ##$GPZ= (0..31)
 0 50 -10 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-##$GRDPROG= <grad_out>
-##$GRPDLY= 76
+##$GRDPROG= <>
+##$GRPDLY= -1
 ##$HDDUTY= 20
 ##$HDRATE= 1
 ##$HGAIN= (0..3)
@@ -113,31 +113,31 @@ $$ process C:\Bruker\TopSpin3.5pl2\prog\mod\shimcntl.exe
 ##$INP= (0..63)
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-##$INSTRUM= <spect>
+##$INSTRUM= <>
 ##$INTEGFAC= (0..63)
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 ##$L= (0..31)
 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##$LFILTER= 62.5563011169434
-##$LGAIN= -7.0460000038147
+##$LFILTER= 10
+##$LGAIN= -10
 ##$LINPSTP= 0
-##$LOCKED= yes
-##$LOCKFLD= 7651
-##$LOCKGN= 109.22785949707
-##$LOCKPOW= -18
-##$LOCKPPM= 4.69999980926514
+##$LOCKED= no
+##$LOCKFLD= 0
+##$LOCKGN= 0
+##$LOCKPOW= -20
+##$LOCKPPM= 0
 ##$LOCNUC= <2H>
-##$LOCPHAS= 219.1993
-##$LOCSHFT= yes
+##$LOCPHAS= 0
+##$LOCSHFT= no
 ##$LOCSW= 0
-##$LTIME= 0.400999993085861
+##$LTIME= 0.1
 ##$MASR= 4200
 ##$MASRLST= <masrlst>
 ##$MULEXPNO= (0..15)
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 ##$NBL= 1
-##$NC= -6
+##$NC= 0
 ##$NLOGCH= 1
 ##$NOVFLW= 0
 ##$NS= 32
@@ -172,7 +172,7 @@ $$ process C:\Bruker\TopSpin3.5pl2\prog\mod\shimcntl.exe
 500 600 0 0 0 0 0 84 500 9.81 1000 2000 0 0 20000 0 0 0 0 0 0 0 4000 0
 0 0 200 0 80000 46600 10000 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 ##$PACOIL= (0..15)
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+1 2 3 0 0 0 0 0 0 0 0 0 0 0 0 0
 ##$PAPS= 0
 ##$PARMODE= 0
 ##$PCPD= (0..9)
@@ -196,14 +196,14 @@ $$ process C:\Bruker\TopSpin3.5pl2\prog\mod\shimcntl.exe
 0 0 0 0 0 0 0 0.74052 0 2.09 0 0 2.09e-006 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 ##$PLWMAX= (0..7)
-53.4 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
 ##$PQPHASE= 0
 ##$PQSCALE= 1
 ##$PR= 1
 ##$PRECHAN= (0..15)
 -1 2 -1 0 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 ##$PRGAIN= 0
-##$PROBHD= <Z814601_0087 (PA BBI 600S3 H-BB-D-05 Z)>
+##$PROBHD= <>
 ##$PULPROG= <noesygppr1d>
 ##$PW= 0
 ##$PYNM= <>
@@ -219,7 +219,7 @@ $$ process C:\Bruker\TopSpin3.5pl2\prog\mod\shimcntl.exe
 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 ##$RECSEL= (0..15)
 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0
-##$RG= 122.05
+##$RG= 128
 ##$RO= 0
 ##$RSEL= (0..15)
 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0
@@ -279,17 +279,17 @@ $$ process C:\Bruker\TopSpin3.5pl2\prog\mod\shimcntl.exe
 ##$TD0= 1
 ##$TD_INDIRECT= (0..7)
 0 2 2 2 2 2 2 2
-##$TDav= 1
-##$TE= 299.9983
-##$TE1= 300.0413
-##$TE2= 0
-##$TE3= 0
-##$TE4= 0
+##$TDav= 0
+##$TE= 300
+##$TE1= 300
+##$TE2= 300
+##$TE3= 300
+##$TE4= 300
 ##$TEG= 300
-##$TE_MAGNET= 0
-##$TE_PIDX= 1
+##$TE_MAGNET= 300
+##$TE_PIDX= 0
 ##$TE_STAB= (0..9)
-2 2 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0
 ##$TL= (0..7)
 120 120 120 120 120 120 120 120
 ##$TOTROT= (0..63)
@@ -302,7 +302,7 @@ $$ process C:\Bruker\TopSpin3.5pl2\prog\mod\shimcntl.exe
 ##$USERA4= <>
 ##$USERA5= <>
 ##$V9= 5
-##$VALIDCODE= -1
+##$VALIDCODE= 0
 ##$VALIST= <>
 ##$VCLIST= <>
 ##$VDLIST= <>
@@ -314,8 +314,8 @@ $$ process C:\Bruker\TopSpin3.5pl2\prog\mod\shimcntl.exe
 0 0 0 0
 ##$XL= 0
 ##$YL= 0
-##$YMAX_a= 1094874
-##$YMIN_a= -1557153
+##$YMAX_a= 0
+##$YMIN_a= 0
 ##$ZGOPTNS= <-DFLAG_BLK>
 ##$ZL1= 120
 ##$ZL2= 120

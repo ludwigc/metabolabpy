@@ -15,6 +15,7 @@ from metabolabpy.nmr import nmrConfig  # pragma: no cover
 import metabolabpy.__init__ as ml_version  # pragma: no cover
 import shutil  # pragma: no cover
 import pandas as pd  # pragma: no cover
+import darkdetect  # pragma: no cover
 
 
 class NmrDataSet:
@@ -745,7 +746,6 @@ class NmrDataSet:
     # end export_data_set
 
     def ft(self):
-        print()
         if self.nmrdat[self.s][self.e].dim == 1:
             self.nmrdat[self.s][self.e].proc_spc1d()
 
@@ -1102,7 +1102,7 @@ class NmrDataSet:
 
         # end jresProject
 
-    def plot_spc(self):
+    def plot_spc(self):  # pragma: no cover
         pl.plot()
         ax = pl.gca()
         xlim = ax.get_xlim()
@@ -1249,7 +1249,7 @@ class NmrDataSet:
         if len(file_name) == 0:
             return
 
-        xls = pd.read_excel(fName).fillna('')
+        xls = pd.read_excel(file_name).fillna('')
         return xls
 
     def read_nmrpipe_spc(self, data_set_name, data_set_number, proc_data_name='test.dat'):
@@ -1278,6 +1278,7 @@ class NmrDataSet:
 
     def reference1d_all(self, old_ppm=0.0, new_ppm=0.0, find_maximum=True):
         s = self.s
+        e = self.e
         for k in range(len(self.nmrdat[s])):
             if self.nmrdat[s][k].dim != 1:
                 break
@@ -1535,21 +1536,21 @@ class NmrDataSet:
 
     # end segmental_alignment
 
-    def select_plot_all(self):
+    def select_plot_all(self): # pragma: no cover
         for k in range(len(self.nmrdat[self.s])):
             self.nmrdat[self.s][k].display.display_spc = True
 
         self.plot_spc()
         # end select_plot_all
 
-    def select_plot_clear(self):
+    def select_plot_clear(self): # pragma: no cover
         for k in range(len(self.nmrdat[self.s])):
             self.nmrdat[self.s][k].display.display_spc = False
 
         self.plot_spc()
         # end select_plot_clear
 
-    def set_loadings_from_excel(self, file_name='', worksheet='', columns=['']):
+    def set_loadings_from_excel(self, file_name='', worksheet='', columns=['']): # pragma: no cover
         if len(file_name) == 0:
             return
 
@@ -1671,7 +1672,7 @@ class NmrDataSet:
         std_neg_col2 = (self.cf.neg_col20, self.cf.neg_col21, self.cf.neg_col22)
         for k in range(len(self.nmrdat)):
             for l in range(len(self.nmrdat[k])):
-                if self.cf.mode == 'dark':
+                if self.cf.mode == 'dark' or (self.cf.mode == 'system' and darkdetect.isDark()):
                     self.nmrdat[k][l].display.pos_col_rgb = std_pos_col2
                     self.nmrdat[k][l].display.neg_col_rgb = std_neg_col2
                 else:
