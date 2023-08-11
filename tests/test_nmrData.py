@@ -37,7 +37,7 @@ class nmrDataTestCase(unittest.TestCase):
             f = nd.apodise(f, 0, 0.5, 1.0, 90.0, nd.acq.group_delay, nd.acq.sw_h[0])
             v2 = f[fid_no].real
             self.assertAlmostEqual(v2 / v1, fp_multiplier[k], 8)
-
+    
     def test_autobaseline1d(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -46,7 +46,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.data_set_number = e_name
         nd.read_spc()
         nd.autobaseline1d()
-
+    
     def test_apcbc_get_hist(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -57,7 +57,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.autobaseline1d()
         h1 = nd.apc.get_hist(nd.spc[0], np.linspace(-nd.apc.n_max, nd.apc.n_max, nd.apc.npts))
         self.assertEqual(len(h1), 5001)
-
+    
     def test_apcbc_set_vars(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -67,7 +67,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.read_spc()
         nd.apc.set_vars(nd.spc[0])
         self.assertEqual(nd.apc.npts, 65536)
-
+    
     def test_autophase1d(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -124,7 +124,7 @@ class nmrDataTestCase(unittest.TestCase):
         self.assertAlmostEqual(nd.ppm1[-1], 0.0, )
         self.assertAlmostEqual(nd.ppm2[0], 0.08333, 4)
         self.assertAlmostEqual(nd.ppm2[-1], 0.0, 4)
-
+    
     def test_conv(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -140,7 +140,7 @@ class nmrDataTestCase(unittest.TestCase):
             v1 = nd.fid[0][fid_no].real
             v2 = f[fid_no].real
             self.assertAlmostEqual(v2 / v1, fp_multiplier[k], 8)
-
+    
     def test_fid_offset_correction(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -151,7 +151,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.fid_offset_corr = 128
         f = nd.fid_offset_correction(nd.fid[0])
         self.assertEqual(np.mean(f[:nd.fid_offset_corr].real), 0.0)
-
+    
     def test_gibbs(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -160,7 +160,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.data_set_number = e_name
         nd.read_spc()
         f = nd.gibbs(nd.fid[0])
-
+    
     def test_hilbert(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -179,7 +179,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.proc_spc2d()
         m = nd.hilbert(nd.spc, 1)
         self.assertTrue(np.iscomplex(m[0][0]))
-
+    
     def test_hilbert1(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -198,7 +198,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.proc_spc2d()
         m = nd.hilbert1(nd.spc, 1)
         self.assertTrue(np.iscomplex(m[0][0]))
-
+    
     def test_multiply(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -210,7 +210,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.multiply(10.0)
         int2 = nd.spc[0][nd.ref_point[0]].real
         self.assertEqual(int2 / int1, 10.0)
-
+    
     def test_phase(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -222,7 +222,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.phase(360.0, 0.0, len(nd.spc[0]))
         s2 = np.copy(nd.spc[0].real)
         self.assertAlmostEqual(np.sum(s1 - s2), 0.0, 4)
-
+    
     def test_phase2(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -234,7 +234,7 @@ class nmrDataTestCase(unittest.TestCase):
         s2 = nd.phase2(nd.spc[0], 360.0, 0.0)
         s2 = s2.real
         self.assertAlmostEqual(np.sum(s1 - s2), 0.0, 4)
-
+    
     def test_phase2a(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -262,7 +262,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.phase2a(360.0, 0.0, 1)
         spc2 = np.copy(nd.spc)
         self.assertLess(np.sum(np.sum(spc1.real - spc2.real)), 1e-5)
-
+    
     def test_phase2d(self):
         p_name = os.path.join(os.path.dirname(__file__), "data",
                               "nmrData")  # directory of test data set
@@ -280,7 +280,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.phase2d(180.0, 0.0, 1)
         int2 = nd.spc[int(pts[0][1])][int(pts[0][0])].real
         self.assertAlmostEqual(int1, -int2)
-
+    
     def test_phase3(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -292,7 +292,7 @@ class nmrDataTestCase(unittest.TestCase):
         s2 = nd.phase3(nd.spc[0], 360.0, 0.0, len(nd.spc[0]))
         s2 = s2.real
         self.assertAlmostEqual(np.sum(s1 - s2), 0.0, 4)
-
+    
     def test_points2hz(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -303,7 +303,7 @@ class nmrDataTestCase(unittest.TestCase):
         hz1 = nd.points2hz(0, 0)
         hz2 = nd.points2hz(1, 0)
         self.assertAlmostEqual(hz2 - hz1, 0.128, 3)
-
+    
     def test_points2ppm(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -314,7 +314,7 @@ class nmrDataTestCase(unittest.TestCase):
         ppm1 = nd.points2ppm(0, 0)
         ppm2 = nd.points2ppm(1, 0)
         self.assertAlmostEqual(ppm2 - ppm1, 0.0002135684)
-
+    
     def test_ppm2points(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -340,7 +340,7 @@ class nmrDataTestCase(unittest.TestCase):
         pts4 = nd.ppm2points(10, 1)
         self.assertEqual(pts2 - pts1, 79)
         self.assertEqual(pts4 - pts3, 223)
-
+    
     def test_ppm2points2d(self):
         p_name = os.path.join(os.path.dirname(__file__), "data",
                               "nmrData")  # directory of test data set
@@ -356,7 +356,7 @@ class nmrDataTestCase(unittest.TestCase):
         pts = nd.ppm2points2d(ppm)
         self.assertEqual(int(pts[0][0]), 129)
         self.assertEqual(int(pts[0][1]), 462)
-
+    
     def test_proc_spc(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -378,7 +378,7 @@ class nmrDataTestCase(unittest.TestCase):
                          128)  # check number of data points in Fourier transformed spectrum  (indirect dimension)
         self.assertEqual(len(nd.spc[0]),
                          8192)  # check number of data points in Fourier transformed spectrum (direct dimension)
-
+    
     def test_proc_spc1d(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -388,7 +388,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.read_spc()
         nd.proc_spc1d()
         self.assertEqual(len(nd.spc[0]), 65536)  # check number of data points in Fourier transformed spectrum
-
+    
     def test_proc_spc2d(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "2"  # 2D Jres NMR data in exp 2
@@ -429,7 +429,7 @@ class nmrDataTestCase(unittest.TestCase):
                          1024)  # check number of data points in Fourier transformed spectrum  (indirect dimension)
         self.assertEqual(len(nd.spc[0]),
                          1024)  # check number of data points in Fourier transformed spectrum (direct dimension)
-
+    
     def test_quad2d(self):
         # test QF data (FnMODE = 1)
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
@@ -465,7 +465,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.proc_spc2d(True)
         f = np.copy(nd.quad_2d(nd.fid))
         self.assertEqual(f[0][100].real, -9689.0)
-
+    
     def test_read_pipe_2d(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "5"  # 2D HSQC NMR data processed with NMRPipe in exp 15
@@ -477,7 +477,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.read_pipe_2d(p_name + os.sep + e_name + '.proc', d_name)
         self.assertEqual(len(nd.spc), 16384)
         self.assertEqual(len(nd.spc[0]), 922)
-
+    
     def test_read_spc(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -498,7 +498,7 @@ class nmrDataTestCase(unittest.TestCase):
         self.assertEqual(len(nd.fid[0]), 16384)  # check number of data points in fid
         self.assertEqual(len(nd.spc[0]), 32768)  # check number of data points in 1r
         # end test_read_spc
-
+    
     def test_set_ref(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -509,7 +509,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.set_ref([-10.0], [2048])
         self.assertEqual(nd.ref_shift[0], -10.0)
         self.assertEqual(nd.ref_point[0], 2048)
-
+    
     def test_set_window_function(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -529,7 +529,7 @@ class nmrDataTestCase(unittest.TestCase):
         self.assertEqual(nd.proc.window_type[0], 4)
         nd.set_window_function(0, 'sem')
         self.assertEqual(nd.proc.window_type[0], 5)
-
+    
     def test_smo(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -538,7 +538,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.data_set_number = e_name
         nd.read_spc()
         f = nd.smo(nd.fid[0])
-
+    
     def test_sym_jres(self):
         p_name = os.path.join(os.path.dirname(__file__), "data",
                               "nmrData")  # directory of test data set
@@ -552,7 +552,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.proc_spc2d()
         pt = np.where(np.transpose(nd.spc)[1406].real == np.amax(np.transpose(nd.spc)[1406].real))[0][0]
         self.assertEqual(pt, 23)
-
+    
     def test_tilt_jres(self):
         p_name = os.path.join(os.path.dirname(__file__), "data",
                               "nmrData")  # directory of test data set
@@ -566,7 +566,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.proc_spc2d()
         pt = np.where(np.transpose(nd.spc)[1406].real == np.amax(np.transpose(nd.spc)[1406].real))[0][0]
         self.assertEqual(pt, 78)
-
+    
     def test_water_supp(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -578,7 +578,7 @@ class nmrDataTestCase(unittest.TestCase):
         f = nd.water_supp(nd.spc[0])
         nd.proc.water_suppression = 2
         f = nd.water_supp(nd.spc[0])
-
+    
     def test_zero_fill(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "1"  # 1D NMR data in exp 1
@@ -590,14 +590,14 @@ class nmrDataTestCase(unittest.TestCase):
         f = nd.zero_fill(nd.fid[0], 0)
         npts2 = len(f)
         self.assertEqual(npts2, 131072)
-
+    
     def test_acq_pars(self):
         f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
         nd = nmrDataSet.NmrDataSet()
         nd.load(f_name)
         self.assertEqual(nd.nmrdat[0][0].acq.acqus_text.index('Z814601_0087'), 5005)
         # end
-
+    
     def test_add_baseline_points(self):
         f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
         nd = nmrDataSet.NmrDataSet()
@@ -607,7 +607,7 @@ class nmrDataTestCase(unittest.TestCase):
         self.assertEqual(nd.nmrdat[0][0].spline_baseline.baseline_points[0], 11.7768)
         self.assertEqual(nd.nmrdat[0][0].spline_baseline.baseline_points[1], -2.1978    )
     # end
-
+    
     def test_add_peak(self):
         f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
         nd = nmrDataSet.NmrDataSet()
@@ -615,7 +615,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.nmrdat[0][0].add_peak(np.array([0.01, -0.01]))
         self.assertAlmostEqual(nd.nmrdat[0][0].peak_max_ppm, 0.0)
     # end
-
+    
     def test_set_peak(self):
         f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
         nd = nmrDataSet.NmrDataSet()
@@ -623,7 +623,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.nmrdat[0][0].set_peak(np.array([0.01]), np.array([-0.01]), np.array(['TMSP']))
         self.assertAlmostEqual(nd.nmrdat[0][0].peak_max_ppm[0], 0.0)
     # end
-
+    
     def test_clear_peak(self):
         f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
         nd = nmrDataSet.NmrDataSet()
@@ -632,7 +632,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.nmrdat[0][0].clear_peak()
         self.assertEqual(len(nd.nmrdat[0][0].peak_max_ppm), 0)
     # end
-
+    
     def test_add_tmsp(self):
         f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
         nd = nmrDataSet.NmrDataSet()
@@ -644,7 +644,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.nmrdat[0][0].add_peak(np.array([0.01, -0.01]))
         self.assertAlmostEqual(nd.nmrdat[0][0].peak_max_ppm[0], 0, places=3)
     # end
-
+    
     def test_autobaseline1d(self):
         f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
         nd = nmrDataSet.NmrDataSet()
@@ -722,13 +722,13 @@ class nmrDataTestCase(unittest.TestCase):
         nd.nmrdat[0][0].autobaseline1d(alg='quant_reg')
         nd.load(f_name)
         nd.nmrdat[0][0].autobaseline1d(alg='goldindec')
-
+    
     def test_autobaseline1d_old(self):
         f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
         nd = nmrDataSet.NmrDataSet()
         nd.load(f_name)
         nd.nmrdat[0][0].autobaseline1d_old()
-
+    
     def test_autophase1d1(self):
         f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
         nd = nmrDataSet.NmrDataSet()
@@ -736,7 +736,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.nmrdat[0][0].autophase1d1()
         nd.nmrdat[0][0].set_peak(np.array([0.01]), np.array([-0.01]), np.array(['TMSP']))
         self.assertAlmostEqual(nd.nmrdat[0][0].peak_max_ppm[0], 0.0, places=4)
-
+    
     def test_create_title(self):
         excel_name = os.path.join(os.path.dirname(__file__), "data", "sampleTitleSpreadSheet.xlsx")
         xls = pd.read_excel(excel_name).fillna('')
@@ -751,12 +751,12 @@ class nmrDataTestCase(unittest.TestCase):
         for k in range(len(xls[pos_label])):
             if str(xls[pos_label][k]) != 'nan':
                 c_dict[str(xls[rack_label][k]) + " " + str(xls[pos_label][k])] = k
-
+    
         nd.nmrdat[0][0].create_title(xls, dataset_label, pos_label, rack_label, replace_title, c_dict, excel_name)
         nd.nmrdat[0][0].title.index('sample : control')
         # end test_create_title
-
-
+    
+    
     def test_set_title_information(self):
         excel_name = os.path.join(os.path.dirname(__file__), "data", "sampleTitleSpreadSheet.xlsx")
         xls = pd.read_excel(excel_name).fillna('')
@@ -770,7 +770,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.nmrdat[0][0].set_title_information(xls, excel_name, pos_label, rack_label, replace_title, c_dict)
         nd.nmrdat[0][0].title.index('sample : control')
         # end test_create_title
-
+    
     def test_calc_spline_baseline(self):
         f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
         nd = nmrDataSet.NmrDataSet()
@@ -781,7 +781,7 @@ class nmrDataTestCase(unittest.TestCase):
         self.assertAlmostEqual(baseline[51], 6854.771940828485, places=1)
         self.assertAlmostEqual(baseline[65485], 4821.232145140779, places=1)
         # end test_calc_spline_baseline
-
+    
     def test_corr_spline_baseline(self):
         f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
         nd = nmrDataSet.NmrDataSet()
@@ -792,7 +792,7 @@ class nmrDataTestCase(unittest.TestCase):
         self.assertAlmostEqual(nd.nmrdat[0][0].spc[0][51].real / np.max(nd.nmrdat[0][0].spc[0].real), 0.0, places=3)
         self.assertAlmostEqual(nd.nmrdat[0][0].spc[0][65485].real / np.max(nd.nmrdat[0][0].spc[0].real), 0.0, places=3)
         # end test_corr_spline_baseline
-
+    
     def test_add_hsqc_peak(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")
         e_name = "5"
@@ -818,7 +818,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.nmrdat[0][0].add_hsqc_peak(x_data, y_data)
         self.assertEqual(nd.nmrdat[0][0].hsqc.hsqc_data[metabolite_name].spin_systems[cur_peak - 1]['c13_shifts'][0][0], 54.932118)
         # end
-
+    
     def test_autobaseline2d(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")
         e_name = "5"
@@ -833,7 +833,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.nmrdat[0][0].phase2d(nd.nmrdat[0][0].proc.ph0[1], nd.nmrdat[0][0].proc.ph1[1], 1)
         nd.nmrdat[0][0].autobaseline2d()
         # end test_autobaseline2d
-
+    
     def test_autopick_hsqc(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")
         e_name = "5"
@@ -857,7 +857,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.nmrdat[0][0].autopick_hsqc([metabolite_name])
         self.assertEqual(nd.nmrdat[0][0].hsqc.hsqc_data[metabolite_name].spin_systems[0]['c13_shifts'][0][0], 55.086)
         # end test_autopick_hsqc
-
+    
     def test_autofit_hsqc(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")
         #import os
@@ -915,7 +915,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.nmrdat[0][0].sim_hsqc_1d()
         self.assertEqual(len(nd.nmrdat[0][0].hsqc.hsqc_data[metabolite_name].sim_spc[cur_peak - 1]), 16384)
         # end test_sim_hsqc_1d
-
+    
     def test_fit_hsqc_1d(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")
         #import os
