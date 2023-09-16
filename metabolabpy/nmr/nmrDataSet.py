@@ -217,6 +217,7 @@ class NmrDataSet:
         # end baseline1d_all
 
     def bucket_spectra(self):
+        self.pp.bucket_points = np.diff(self.nmrdat[self.s][self.e].ppm2points([0.0, self.pp.bucket_ppm]))
         idx1 = np.arange(len(self.nmrdat[self.s][0].ppm1))
         idx2 = idx1[::int(self.pp.bucket_points)]
         idx2 = np.append(idx2, len(idx1))
@@ -234,6 +235,7 @@ class NmrDataSet:
             self.nmrdat[self.s][k].spc = np.resize(self.nmrdat[self.s][k].spc, (1, len(spc)))
             self.nmrdat[self.s][k].spc[0] = np.copy(spc)
 
+        self.pp.bucket_points = 1
         # end bucket_spectra
 
     def clear(self):
@@ -1695,6 +1697,15 @@ class NmrDataSet:
             self.nmrdat[self.s][k].set_title_information(xls=xls, excel_name=excel_name, pos_label=pos_label, rack_label=rack_label, c_dict=c_dict, replace_orig_title=replace_orig_title)
 
         # end set_title_information
+
+    def set_water_suppression(self, ws='None'):
+        n_exp = len(self.nmrdat[self.s])
+        for k in range(n_exp):
+            self.nmrdat[self.s][k].proc.water_suppression = self.nmrdat[self.s][k].proc.water_supp[ws]
+
+        return "set_water_suppression"
+
+    # end set_ater_suppression
 
     def set_window_type(self, wt):
         n_exp = len(self.nmrdat[self.s])

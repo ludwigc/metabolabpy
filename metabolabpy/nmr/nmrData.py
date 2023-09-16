@@ -21,7 +21,7 @@ from sklearn.decomposition import FastICA, PCA
 from metabolabpy.nmr import hsqcData
 import sys
 import pandas as pd
-from numba import jit
+from numba import njit
 import multiprocessing as mp
 import re
 from pybaselines.whittaker import airpls, arpls, asls, aspls, derpsalsa, drpls, iarpls, iasls, psalsa
@@ -30,6 +30,7 @@ from pybaselines.smooth import noise_median, snip, swima, ipsa, ria
 from pybaselines.classification import dietrich, golotvin, std_distribution, fastchrom, cwt_br, fabc
 from pybaselines.misc import interp_pts, beads
 from pybaselines.polynomial import poly, modpoly, imodpoly, penalized_poly, loess, quant_reg, goldindec
+from metabolabpy.nmr.phase3 import phase3
 
 try:
     import pygamma as pg
@@ -483,8 +484,7 @@ class NmrData:
         x_axis = range(npts)
         ph0 = fit_parameters[0]
         ph1 = fit_parameters[1]
-        spc = np.copy(self.phase3(spc, float(ph0), float(ph1), len(spc)))
-        spc = np.copy(spc.real) - jbcd(spc.real, alpha=0.1, beta=10, gamma=15, beta_mult=0.98, gamma_mult=0.94)[0]
+        spc = np.copy(phase3(spc, float(ph0), float(ph1), len(spc)))
         spc_1 = np.copy(np.gradient(spc.real))
         gamma = 1.0 / np.sum(np.abs(spc.real))
         h_i = np.abs(spc_1.real) / np.sum(np.abs(spc_1.real))
@@ -1054,7 +1054,7 @@ class NmrData:
     def phase(self, ph0, ph1, npts):
         ph0 = -ph0 * math.pi / 180.0
         ph1 = -ph1 * math.pi / 180.0
-        t = complex()
+        #t = complex()
         frac = np.linspace(0, 1, npts)
         ph = ph0 + frac * ph1
         self.spc[0] = np.cos(ph) * self.spc[0].real + np.sin(ph) * self.spc[0].imag + 1j * (
@@ -1106,20 +1106,20 @@ class NmrData:
         self.spc = np.copy(mat.real)
         # end phase2d
 
-    #@jit(nopython=True)
-    def phase3(self, mat, ph0, ph1, npts):
-        ph0_1 = -ph0 * math.pi / 180.0
-        ph1_1 = -ph1 * math.pi / 180.0
-        t = complex()
-        for k in range(int(npts)):
-            frac = float(k) / float(npts)
-            ph = ph0_1 + frac * ph1_1
-            t = complex(math.cos(ph) * mat[k].real + math.sin(ph) * mat[k].imag,
-                        -math.sin(ph) * mat[k].real + math.cos(ph) * mat[k].imag)
-            mat[k] = t
-
-        return mat
-        # end phase3
+    #@njit
+    #def phase3(self, mat, ph0, ph1, npts):
+    #    ph0_1 = -ph0 * math.pi / 180.0
+    #    ph1_1 = -ph1 * math.pi / 180.0
+    #    t = complex()
+    #    for k in range(int(npts)):
+    #        frac = float(k) / float(npts)
+    #        ph = ph0_1 + frac * ph1_1
+    #        t = complex(math.cos(ph) * mat[k].real + math.sin(ph) * mat[k].imag,
+    #                    -math.sin(ph) * mat[k].real + math.cos(ph) * mat[k].imag)
+    #        mat[k] = t
+    #
+    #    return mat
+    #    # end phase3
 
     def pick_local_opt(self, start=[0, 0]):
         start_h1 = len(self.spc[0]) - self.ppm2points(start[0], 0) - 1
