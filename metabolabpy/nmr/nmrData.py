@@ -26,10 +26,11 @@ import multiprocessing as mp
 import re
 from pybaselines.whittaker import airpls, arpls, asls, aspls, derpsalsa, drpls, iarpls, iasls, psalsa
 from pybaselines.morphological import mpls, mor, imor, mormol, amormol, rolling_ball, mwmv, tophat, mpspline, jbcd
-from pybaselines.smooth import noise_median, snip, swima, ipsa, ria
+from pybaselines.smooth import noise_median, swima, ipsa, ria
 from pybaselines.classification import dietrich, golotvin, std_distribution, fastchrom, cwt_br, fabc
 from pybaselines.misc import interp_pts, beads
 from pybaselines.polynomial import poly, modpoly, imodpoly, penalized_poly, loess, quant_reg, goldindec
+from pybaselines import Baseline
 from metabolabpy.nmr.phase3 import phase3
 
 try:
@@ -322,7 +323,7 @@ class NmrData:
         return fid
         # end apodise
 
-    def autobaseline1d(self, lam=1e6, alg='jbcd', max_iter=50, alpha=0.1, beta=10, gamma=15, beta_mult=0.98, gamma_mult=0.94, half_window=None):
+    def autobaseline1d(self, lam=1e6, alg='rolling_ball', max_iter=50, alpha=0.1, beta=10, gamma=15, beta_mult=0.98, gamma_mult=0.94, half_window=4096, quantile=0.3, poly_order=4, smooth_half_window=16, add_ext=2):
         spc = self.spc[0].real
         self.proc.autobaseline_alg = alg
         self.proc.autobaseline_lam = lam
@@ -333,8 +334,18 @@ class NmrData:
         self.proc.autobaseline_beta_mult = beta_mult
         self.proc.autobaseline_gamma_mult = gamma_mult
         self.proc.autobaseline_half_window = half_window
+        self.proc.autobaseline_quantile = quantile
+        self.proc.autobaseline_poly_order = poly_order
+        self.proc.autobaseline_smooth_half_window = smooth_half_window
+        self.proc.autobaseline_add_ext = add_ext
+
+        if alg == 'irsqr':
+            baseline_fitter = Baseline(spc, check_finite=False)
+            baseline, params = baseline_fitter.irsqr(spc, lam=lam, quantile=quantile) # poly_order=poly_order, method='imodpoly')
         if alg == 'airpls':
-            baseline = airpls(spc, lam=lam, max_iter=max_iter)
+            baseline_fitter = Baseline(spc, check_finite=False)
+            baseline, params = baseline_fitter.airpls(spc, 1e5)  # poly_order=poly_order, method='imodpoly')
+            #baseline = airpls(spc, lam=lam, max_iter=max_iter)
         elif alg == 'arpls':
             baseline = arpls(spc, lam=lam, max_iter=max_iter)
         elif alg == 'asls':
@@ -354,15 +365,15 @@ class NmrData:
         elif alg == 'mpls':
             baseline = mpls(spc)
         elif alg == 'mor':
-            baseline = mor(spc)
+            baseline = mor(spc, half_window=half_window)
         elif alg == 'imor':
-            baseline = imor(spc)
+            baseline = imor(spc, half_window=half_window)
         elif alg == 'mormol':
-            baseline = mormol(spc)
+            baseline = mormol(spc, half_window=half_window, smooth_half_window=smooth_half_window, extrapolate_window=(half_window + add_ext))
         elif alg == 'amormol':
-            baseline = amormol(spc)
+            baseline = amormol(spc, half_window=half_window, smooth_half_window=smooth_half_window, extrapolate_window=(half_window + add_ext))
         elif alg == 'rolling_ball':
-            baseline = rolling_ball(spc)
+            baseline = rolling_ball(spc, half_window=half_window, smooth_half_window=smooth_half_window)
         elif alg == 'mwmv':
             baseline = mwmv(spc)
         elif alg == 'tophat':
@@ -374,7 +385,15 @@ class NmrData:
         elif alg == 'noise_median':
             baseline = noise_median(spc)
         elif alg == 'snip':
-            baseline = snip(spc)
+            print('111111')
+            baseline_fitter = Baseline(spc, check_finite=False)
+            print('222222')
+            baseline, params = baseline_fitter.snip(spc, 32, decreasing=True, extrapolating_window=34, smooth_window=8)
+            print(f'len(spc): {len(spc)}, len(baseline): {len(baseline)}')
+        elif alg == 'adaptive_minimax':
+            baseline_fitter = Baseline(spc, check_finite=False)
+            poly_order = 4
+            baseline, params = baseline_fitter.adaptive_minmax(spc, poly_order=poly_order, method='imodpoly')
         elif alg == 'swima':
             baseline = swima(spc)
         elif alg == 'ipsa':
@@ -402,7 +421,10 @@ class NmrData:
         elif alg == 'penalized_poly':
             baseline = penalized_poly(spc)
         elif alg == 'quant_reg':
-            baseline = quant_reg(spc)
+            baseline_fitter = Baseline(spc, check_finite=False)
+            poly_order = 4
+            baseline, params = baseline_fitter.quant_reg(spc, poly_order=poly_order, quantile=quantile)
+            #baseline = quant_reg(spc)
         elif alg == 'goldindec':
             baseline = goldindec(spc)
         else:
@@ -1249,7 +1271,9 @@ class NmrData:
                                 max_iter=self.proc.autobaseline_max_iter, alpha=self.proc.autobaseline_alpha,
                                 beta=self.proc.autobaseline_beta, gamma=self.proc.autobaseline_gamma,
                                 beta_mult=self.proc.autobaseline_beta_mult, gamma_mult=self.proc.autobaseline_gamma_mult,
-                                half_window=self.proc.autobaseline_half_window)
+                                half_window=self.proc.autobaseline_half_window, quantile=self.autobaseline_quantile,
+                                poly_order=self.autobaseline_poly_order, smooth_half_window=self.autobaseline_smooth_half_window,
+                                add_ext=self.autobaseline_add_ext)
         # end proc_spc1d
 
     def proc_spc2d(self, test_quad_2d=False, no_abs=False):
@@ -2252,14 +2276,27 @@ class NmrData:
         # end tiltj_res
 
     def water_supp(self, fid):
-        if (self.proc.water_suppression == 1):
+        if self.proc.water_suppression == 1:
             fid = self.conv(fid)
 
-        if (self.proc.water_suppression == 2):
+        if self.proc.water_suppression == 2:
             fid = self.smo(fid)
+
+        if self.proc.water_suppression == 3:
+            fid = self.wavewat(fid)
 
         return fid
         # end water_supp
+
+    def wavewat(self, fid):
+        x = np.linspace(0, len(fid) - 1, len(fid))
+        f0 = np.copy(fid)
+        fid = np.roll(fid, math.floor(-self.acq.group_delay))
+        pp = np.polyfit(x, fid, self.proc.poly_order)
+        fid = fid - np.polyval(pp, x)
+        fid = np.roll(fid, math.ceil(self.acq.group_delay))
+        return fid
+        # end wavewat
 
     def zero_fill(self, fid, dim=0):
         fid1 = np.zeros(self.proc.n_points[dim], dtype='complex')

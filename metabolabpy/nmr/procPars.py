@@ -101,6 +101,10 @@ class ProcPars:
         self.autobaseline_beta_mult = 0.98
         self.autobaseline_gamma_mult = 0.94
         self.autobaseline_half_window = None
+        self.autobaseline_quantile = 0.3
+        self.autobaseline_poly_order = 4
+        self.autobaseline_smooth_half_window = 32
+        self.autobaseline_add_ext = 2
         # end __init__
 
     def __str__(self):  # pragma: no cover

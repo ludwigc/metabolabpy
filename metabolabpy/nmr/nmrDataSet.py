@@ -125,10 +125,10 @@ class NmrDataSet:
         return r_string
         # end __str__
 
-    def autobaseline1d(self, alg='jbcd', lam=1000000, max_iter=50,alpha=0.1, beta=10, gamma=15, beta_mult=0.98, gamma_mult=0.94, half_window=None):
+    def autobaseline1d(self, alg='rolling_ball', lam=1000000, max_iter=50,alpha=0.1, beta=10, gamma=15, beta_mult=0.98, gamma_mult=0.94, half_window=4096, quantile=0.3, poly_order=4, smooth_half_window=16, add_ext=2):
         if len(self.nmrdat) > 0:
             if len(self.nmrdat[self.s]) > 0:
-                self.nmrdat[self.s][self.e].autobaseline1d(lam=lam, alg=alg, max_iter=max_iter, alpha=alpha, beta=beta, gamma=gamma, beta_mult=beta_mult, gamma_mult=gamma_mult, half_window=half_window)
+                self.nmrdat[self.s][self.e].autobaseline1d(lam=lam, alg=alg, max_iter=max_iter, alpha=alpha, beta=beta, gamma=gamma, beta_mult=beta_mult, gamma_mult=gamma_mult, half_window=half_window, quantile=quantile, poly_order=poly_order, smooth_half_window=smooth_half_window, add_ext=add_ext)
 
         # end autobaseline1d
 
