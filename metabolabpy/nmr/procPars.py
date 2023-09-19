@@ -105,6 +105,9 @@ class ProcPars:
         self.autobaseline_poly_order = 4
         self.autobaseline_smooth_half_window = 32
         self.autobaseline_add_ext = 2
+        self.ww_start = 9
+        self.ww_zf = 16
+        self.ww_wavelet = 'rbio6.8'
         # end __init__
 
     def __str__(self):  # pragma: no cover

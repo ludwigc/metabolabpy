@@ -32,6 +32,7 @@ from pybaselines.misc import interp_pts, beads
 from pybaselines.polynomial import poly, modpoly, imodpoly, penalized_poly, loess, quant_reg, goldindec
 from pybaselines import Baseline
 from metabolabpy.nmr.phase3 import phase3
+import pywt
 
 try:
     import pygamma as pg
@@ -1271,9 +1272,9 @@ class NmrData:
                                 max_iter=self.proc.autobaseline_max_iter, alpha=self.proc.autobaseline_alpha,
                                 beta=self.proc.autobaseline_beta, gamma=self.proc.autobaseline_gamma,
                                 beta_mult=self.proc.autobaseline_beta_mult, gamma_mult=self.proc.autobaseline_gamma_mult,
-                                half_window=self.proc.autobaseline_half_window, quantile=self.autobaseline_quantile,
-                                poly_order=self.autobaseline_poly_order, smooth_half_window=self.autobaseline_smooth_half_window,
-                                add_ext=self.autobaseline_add_ext)
+                                half_window=self.proc.autobaseline_half_window, quantile=self.proc.autobaseline_quantile,
+                                poly_order=self.proc.autobaseline_poly_order, smooth_half_window=self.proc.autobaseline_smooth_half_window,
+                                add_ext=self.proc.autobaseline_add_ext)
         # end proc_spc1d
 
     def proc_spc2d(self, test_quad_2d=False, no_abs=False):
@@ -2289,12 +2290,21 @@ class NmrData:
         # end water_supp
 
     def wavewat(self, fid):
-        x = np.linspace(0, len(fid) - 1, len(fid))
-        f0 = np.copy(fid)
-        fid = np.roll(fid, math.floor(-self.acq.group_delay))
-        pp = np.polyfit(x, fid, self.proc.poly_order)
-        fid = fid - np.polyval(pp, x)
-        fid = np.roll(fid, math.ceil(self.acq.group_delay))
+        gd = int(self.acq.group_delay)
+        fid = np.copy(self.fid[0])
+        fid -= fid[-1]
+        npts = len(fid)
+        npts2 = self.proc.ww_zf * npts
+        fida = np.zeros(2*npts2, dtype='complex128')
+        fida[npts2:npts2 + npts - gd] = fid[gd:]
+        fida[npts2 - npts +gd:npts2] = np.flip(fid[gd:])
+        fid2 = pywt.mra(data=fida, wavelet=self.proc.ww_wavelet, transform='dwt')
+        fid3 = np.zeros(2*npts2, dtype='complex128')
+        n_mra = len(fid2)
+        for k in range(self.proc.ww_start, n_mra):
+            fid3 += fid2[k]
+
+        fid[gd:] = np.copy(fid3[npts2:npts2 + npts - gd])
         return fid
         # end wavewat
 
