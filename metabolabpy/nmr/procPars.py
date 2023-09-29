@@ -30,7 +30,7 @@ class ProcPars:
         self.ssb = np.array([0.0, 0.0, 0.0])
         self.axis_nucleus = np.array(['      ', '      ', '      '], dtype='str')
         self.aunmp = str('')
-        self.poly_order = 4
+        self.poly_order = 24
         self.water_suppression = 0
         self.gibbs = np.array([True, True, False])
         self.conv_extrapolation_size = np.array([32, 0, 0])
@@ -92,22 +92,41 @@ class ProcPars:
             "Wavewat": 3
         }
         self.data_type = ''
-        self.autobaseline_alg = 'jbcd'
-        self.autobaseline_lam = 1e6
+        self.autobaseline_alg = 'rolling_ball'
+        self.autobaseline_lam = 1e5
         self.autobaseline_max_iter = 50
         self.autobaseline_alpha = 0.1
         self.autobaseline_beta = 10
         self.autobaseline_gamma = 15
         self.autobaseline_beta_mult = 0.98
         self.autobaseline_gamma_mult = 0.94
-        self.autobaseline_half_window = None
+        self.autobaseline_half_window = 4096
         self.autobaseline_quantile = 0.3
         self.autobaseline_poly_order = 4
-        self.autobaseline_smooth_half_window = 32
+        self.autobaseline_smooth_half_window = 16
         self.autobaseline_add_ext = 2
         self.ww_start = 9
         self.ww_zf = 16
-        self.ww_wavelet = 'rbio6.8'
+        self.ww_wavelet_type = 'db'
+        self.ww_wavelet_type_number = '10'
+        self.ww_wavelet_number = 11
+        self.wavelet_names = ['bior', 'coif', 'db', 'dmey', 'haar', 'rbio', 'sym']
+        self.wavelet_numbers = {
+            'bior': ['1.1', '1.3', '1.5', '2.2', '2.4', '2.6', '2.8', '3.1', '3.3', '3.5', '3.7', '3.9', '4.4', '5.5',
+                     '6.8'], 'cgau': ['1', '2', '3', '4', '5', '6', '7', '8'],
+            'coif': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17'],
+            'db': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18',
+                   '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35',
+                   '36', '37', '38'], 'dmey': [''], 'haar': [''],
+            'rbio': ['1.1', '1.3', '1.5', '2.2', '2.4', '2.6', '2.8', '3.1', '3.3', '3.5', '3.7', '3.9', '4.4', '5.5',
+                     '6.8'],
+            'sym': ['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+                    '20']}
+        self.wavelet_default = {'bior': 11, 'coif': 11, 'db': 9, 'dmey': 0,
+                                'haar': 0, 'rbio': 11, 'sym': 7}
+        self.wavelet_start_default = {'bior': 9, 'coif': 7, 'db': 9, 'dmey': 7,
+                                'haar': 7, 'rbio': 9, 'sym': 9}
+
         # end __init__
 
     def __str__(self):  # pragma: no cover

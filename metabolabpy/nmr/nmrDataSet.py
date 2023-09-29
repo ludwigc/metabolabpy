@@ -51,6 +51,24 @@ class NmrDataSet:
         self.hsqc_spin_sys_connected = True
         self.data_set_name = ''
         self.data_set_number = ''
+        self.baseline_algs = ['irsqr', 'arpls', 'asls', 'aspls', 'derpsalsa', 'drpls', 'iarpls', 'iasls', 'psalsa', 'mpls',
+                         'mor', 'imor', 'mormol', 'amormol', 'rolling_ball', 'mwmv', 'tophat', 'mpspline', 'jbcd',
+                         'noise_median', 'snip', 'adaptive_minimax', 'swima', 'ipsa', 'ria', 'dietrich',
+                         'std_distribution', 'fastchrom', 'cwt_br', 'fabc', 'beads', 'poly', 'modpoly', 'imodpoly',
+                         'penalized_poly', 'quant_reg', 'goldindec', ]
+        self.default_baseline_alg = 'rolling_ball'
+        self.default_lam = 1e5
+        self.default_max_iter = 50
+        self.default_alpha = 0.1
+        self.default_beta = 10
+        self.default_gamma = 15
+        self.default_beta_mult = 0.98
+        self.default_gamma_mult = 0.94
+        self.default_half_window = 4096
+        self.default_smooth_half_window = 16
+        self.default_quantile = 0.3
+        self.default_poly_order = 4
+        self.default_add_ext = 2
         # end __init__
 
     def add_peak(self, start_end=np.array([], dtype='float64'), peak_label=''):

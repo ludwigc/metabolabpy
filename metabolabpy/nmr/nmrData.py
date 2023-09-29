@@ -343,7 +343,7 @@ class NmrData:
         if alg == 'irsqr':
             baseline_fitter = Baseline(spc, check_finite=False)
             baseline, params = baseline_fitter.irsqr(spc, lam=lam, quantile=quantile) # poly_order=poly_order, method='imodpoly')
-        if alg == 'airpls':
+        if alg == 'irsqr':
             baseline_fitter = Baseline(spc, check_finite=False)
             baseline, params = baseline_fitter.airpls(spc, 1e5)  # poly_order=poly_order, method='imodpoly')
             #baseline = airpls(spc, lam=lam, max_iter=max_iter)
@@ -386,11 +386,8 @@ class NmrData:
         elif alg == 'noise_median':
             baseline = noise_median(spc)
         elif alg == 'snip':
-            print('111111')
             baseline_fitter = Baseline(spc, check_finite=False)
-            print('222222')
             baseline, params = baseline_fitter.snip(spc, 32, decreasing=True, extrapolating_window=34, smooth_window=8)
-            print(f'len(spc): {len(spc)}, len(baseline): {len(baseline)}')
         elif alg == 'adaptive_minimax':
             baseline_fitter = Baseline(spc, check_finite=False)
             poly_order = 4
@@ -810,7 +807,7 @@ class NmrData:
                 win[k] = math.cos((math.pi * (k - ws2)) / (2 * ws2 + 2))
                 s_win += win[k]
 
-        fid2 = np.convolve(win, fid) / s_win
+        fid2 = np.convolve(fid, win) / s_win
         # Extrapolation of first sw2 data points
         idx = np.linspace(2 * ws2 - 1, 0, 2 * ws2, dtype='int')
         idx2 = np.linspace(0, 2 * ws2 - 1, 2 * ws2, dtype='int')
@@ -1279,6 +1276,12 @@ class NmrData:
 
     def proc_spc2d(self, test_quad_2d=False, no_abs=False):
         fid = np.copy(self.fid)
+        if self.proc.n_points[0] < len(fid[0]):
+            self.proc.n_points[0] = len(fid[0])
+
+        if self.proc.n_points[1] < len(fid):
+            self.proc.n_points[1] = len(fid)
+
         if self.proc.mult_factor[0] == 0:
             self.proc.mult_factor[0] = self.proc.n_points[0] / len(self.fid[0])
 
@@ -2298,7 +2301,8 @@ class NmrData:
         fida = np.zeros(2*npts2, dtype='complex128')
         fida[npts2:npts2 + npts - gd] = fid[gd:]
         fida[npts2 - npts +gd:npts2] = np.flip(fid[gd:])
-        fid2 = pywt.mra(data=fida, wavelet=self.proc.ww_wavelet, transform='dwt')
+        ww_wavelet = self.proc.ww_wavelet_type + self.proc.ww_wavelet_type_number
+        fid2 = pywt.mra(data=fida, wavelet=ww_wavelet, transform='dwt')
         fid3 = np.zeros(2*npts2, dtype='complex128')
         n_mra = len(fid2)
         for k in range(self.proc.ww_start, n_mra):
