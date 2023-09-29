@@ -193,7 +193,11 @@ class AcqPars:
         except:
             pass
 
-        self.temperature = float(self.reg_ex.temperature.findall(self.acqus_text)[0])
+        try:
+            self.temperature = float(self.reg_ex.temperature.findall(self.acqus_text)[0])
+        except:
+            self.temperature = 300
+
         dd = self.reg_ex.cnst.search(self.acqus_text)
         dd = self.acqus_text[dd.span()[0]:]
         dd = dd[dd.find('\n') + 1:]

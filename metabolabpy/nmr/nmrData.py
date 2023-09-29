@@ -343,7 +343,7 @@ class NmrData:
         if alg == 'irsqr':
             baseline_fitter = Baseline(spc, check_finite=False)
             baseline, params = baseline_fitter.irsqr(spc, lam=lam, quantile=quantile) # poly_order=poly_order, method='imodpoly')
-        if alg == 'irsqr':
+        if alg == 'airpls':
             baseline_fitter = Baseline(spc, check_finite=False)
             baseline, params = baseline_fitter.airpls(spc, 1e5)  # poly_order=poly_order, method='imodpoly')
             #baseline = airpls(spc, lam=lam, max_iter=max_iter)
