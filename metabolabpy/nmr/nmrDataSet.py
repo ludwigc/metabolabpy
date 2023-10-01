@@ -237,6 +237,7 @@ class NmrDataSet:
     def bucket_spectra(self):
         self.pp.bucket_points = np.diff(self.nmrdat[self.s][self.e].ppm2points([0.0, self.pp.bucket_ppm]))
         idx1 = np.arange(len(self.nmrdat[self.s][0].ppm1))
+        print(f'self.pp.bucket_points: {self.pp.bucket_points}')
         idx2 = idx1[::int(self.pp.bucket_points)]
         idx2 = np.append(idx2, len(idx1))
         ppm = np.array([])

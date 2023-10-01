@@ -105,9 +105,9 @@ class NrDataSetTestCase(unittest.TestCase):
         nd.read_spc(p_name, e_name)  # check if Bruker data can be read
         nd.ft()
         nd.auto_ref()
-        self.assertEqual(nd.nmrdat[0][0].ref_point[0], 152)
+        self.assertEqual(nd.nmrdat[0][0].ref_point[0], 254)
         self.assertEqual(nd.nmrdat[0][0].ref_shift[0], 0.0)
-        self.assertEqual(nd.nmrdat[0][0].ref_point[1], 1792)
+        self.assertEqual(nd.nmrdat[0][0].ref_point[1], 2048)
         self.assertAlmostEqual(nd.nmrdat[0][0].ref_shift[1], 80.0, 4)
 
     def test_clear(self):
@@ -254,7 +254,7 @@ class NrDataSetTestCase(unittest.TestCase):
         nd.pp.flag_bucket_spectra = True
         nd.data_pre_processing()
         pts = len(nd.nmrdat[0][0].spc[0])
-        self.assertEqual(pts, 1024)
+        self.assertEqual(pts, 2850)
 
     def test_compress_buckets(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set

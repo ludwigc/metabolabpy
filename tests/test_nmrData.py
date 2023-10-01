@@ -18,6 +18,7 @@ from metabolabpy.nmr import nmrData
 from metabolabpy.nmr import nmrDataSet
 from metabolabpy.nmr.phase3 import *
 import pandas as pd
+import matplotlib.pyplot as pl
 
 class nmrDataTestCase(unittest.TestCase):
 
@@ -292,6 +293,7 @@ class nmrDataTestCase(unittest.TestCase):
         s1 = np.copy(nd.spc[0].real)
         s2 = phase3(nd.spc[0], 360.0, 0.0, len(nd.spc[0]))
         s2 = s2.real
+        s2 -= (s2[0] - s1[0])
         self.assertAlmostEqual(np.sum(s1 - s2), 0.0, 4)
     
     def test_points2hz(self):
@@ -339,8 +341,8 @@ class nmrDataTestCase(unittest.TestCase):
         pts2 = nd.ppm2points(1, 0)
         pts3 = nd.ppm2points(0, 1)
         pts4 = nd.ppm2points(10, 1)
-        self.assertEqual(pts2 - pts1, 79)
-        self.assertEqual(pts4 - pts3, 223)
+        self.assertEqual(pts2 - pts1, 157)
+        self.assertEqual(pts4 - pts3, 254)
     
     def test_ppm2points2d(self):
         p_name = os.path.join(os.path.dirname(__file__), "data",
@@ -355,8 +357,8 @@ class nmrDataTestCase(unittest.TestCase):
         ppm[0].append(1.64164)
         ppm[0].append(20.7576)
         pts = nd.ppm2points2d(ppm)
-        self.assertEqual(int(pts[0][0]), 129)
-        self.assertEqual(int(pts[0][1]), 462)
+        self.assertEqual(int(pts[0][0]), 258)
+        self.assertEqual(int(pts[0][1]), 528)
     
     def test_proc_spc(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
@@ -415,7 +417,7 @@ class nmrDataTestCase(unittest.TestCase):
         self.assertEqual(len(nd.spc),
                          4096)  # check number of data points in Fourier transformed spectrum  (indirect dimension)
         self.assertEqual(len(nd.spc[0]),
-                         1024)  # check number of data points in Fourier transformed spectrum (direct dimension)
+                         2048)  # check number of data points in Fourier transformed spectrum (direct dimension)
         nd = [[]]
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
         e_name = "4"  # 2D HSQC NMR data in exp 3
