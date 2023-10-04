@@ -85,11 +85,11 @@ class ProcPars:
             0: "None",
             1: "Conv",
             2: "Poly",
-            3: "Wavewat",
+            3: "WaveWat",
             "None": 0,
             "Conv": 1,
             "Poly": 2,
-            "Wavewat": 3
+            "WaveWat": 3
         }
         self.data_type = ''
         self.autobaseline_alg = 'rolling_ball'

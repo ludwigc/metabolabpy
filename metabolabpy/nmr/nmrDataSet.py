@@ -237,8 +237,7 @@ class NmrDataSet:
     def bucket_spectra(self):
         self.pp.bucket_points = np.diff(self.nmrdat[self.s][self.e].ppm2points([0.0, self.pp.bucket_ppm]))
         idx1 = np.arange(len(self.nmrdat[self.s][0].ppm1))
-        print(f'self.pp.bucket_points: {self.pp.bucket_points}')
-        idx2 = idx1[::int(self.pp.bucket_points)]
+        idx2 = idx1[::int(self.pp.bucket_points[0])]
         idx2 = np.append(idx2, len(idx1))
         ppm = np.array([])
         for k in range(len(idx2) - 1):
@@ -1572,6 +1571,15 @@ class NmrDataSet:
         self.plot_spc()
         # end select_plot_clear
 
+    def set_autobaseline(self, autobaseline=False):
+        n_exp = len(self.nmrdat[self.s])
+        for k in range(n_exp):
+            self.nmrdat[self.s][k].proc.autobaseline = autobaseline
+
+        return "set_autobaseline"
+
+        # set_autobaseline
+
     def set_loadings_from_excel(self, file_name='', worksheet='', columns=['']): # pragma: no cover
         if len(file_name) == 0:
             return
@@ -1728,9 +1736,16 @@ class NmrDataSet:
 
     def set_window_type(self, wt):
         n_exp = len(self.nmrdat[self.s])
+        wt2 = []
+        for k in range(len(wt)):
+            if isinstance(wt[0], int):
+                wt2.append(wt[k])
+            else:
+                wt2.append(self.nmrdat[self.s][self.e].proc.window_functions[wt[k]])
+
         for k in range(n_exp):
-            for l in range(len(wt)):
-                self.nmrdat[self.s][k].proc.window_type[l] = wt[l]
+            for l in range(len(wt2)):
+                self.nmrdat[self.s][k].proc.window_type[l] = wt2[l]
 
         return "set_window_type"
 
