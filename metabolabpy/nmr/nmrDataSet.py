@@ -1366,7 +1366,19 @@ class NmrDataSet:
         nd1.data_set_name = data_set_name
         nd1.data_set_number = data_set_number
         nd1.read_spc()
-        self.nmrdat[self.s].append(nd1)
+        if nd1.acq.pul_prog_name.find('stddiff') > 0:
+            nd2 = nd.NmrData()
+            nd2.data_set_name = data_set_name
+            nd2.data_set_number = data_set_number
+            nd2.read_spc()
+            nd1.dim = 1
+            nd2.dim = 1
+            nd1.fid = np.copy(np.delete(nd1.fid, 1, 0))
+            nd2.fid = np.copy(np.delete(nd2.fid, 0, 0))
+            self.nmrdat[self.s].append(nd1)
+            self.nmrdat[self.s].append(nd2)
+        else:
+            self.nmrdat[self.s].append(nd1)
         # end read_spc
 
     def read_spcs(self, data_path, data_exp, dataset=1):
