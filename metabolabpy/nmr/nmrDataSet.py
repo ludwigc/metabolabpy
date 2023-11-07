@@ -69,6 +69,20 @@ class NmrDataSet:
         self.default_quantile = 0.3
         self.default_poly_order = 4
         self.default_add_ext = 2
+        self.int1 = 0.0
+        self.int2 = 0.0
+        self.int3 = 0.0
+        self.print_colours = []
+        self.print_neg_colours = []
+        self.background_colour = []
+        self.foreground_colour = []
+        if self.cf.mode == 'light':
+            self.background_colour = (255 / 255, 255 / 255, 255 / 255)
+            self.foreground_colour = (0 / 255, 0 / 255, 0 / 255)
+        else:
+            self.background_colour = (42 / 255, 42 / 255, 42 / 255)
+            self.foreground_colour = (255 / 255, 255 / 255, 255 / 255)
+
         # end __init__
 
     def add_peak(self, start_end=np.array([], dtype='float64'), peak_label=''):
@@ -791,6 +805,106 @@ class NmrDataSet:
         url = "https://ludwigc.github.io/metabolabpy"
         webbrowser.open(url, new=2)
         # end help
+
+    def init_print_colours(self):
+        self.cf.read_config()
+        if self.cf.print_light_mode == False:
+            self.int1 = 1.0
+            self.int2 = 0.6
+            self.int3 = 0.3
+        else:
+            self.int1 = 0.4
+            self.int2 = 0.8
+            self.int3 = 0.5
+
+        int1 = self.int1
+        int2 = self.int2
+        int3 = self.int3
+        light_neg_diff = 0.5
+        dark_neg_diff = 0.2
+        if self.cf.print_light_mode == False:
+            self.print_colours = [(int1, int1, 0.0),
+                                 (0.0, int1, int1),
+                                 (int1, 0.0, int1),
+                                 (int2, int2, int1),
+                                 (int1, int2, int2),
+                                 (int2, int1, int2),
+                                 (int1, int1, int3),
+                                 (int2, int3, int3),
+                                 (int3, int2, int3),
+                                 (int3, int2, int2),
+                                 (int2, int2, int3),
+                                 (int2, int3, int2)]
+
+            int1 = self.int1 - dark_neg_diff
+            int2 = self.int2 - dark_neg_diff
+            int3 = self.int3 - dark_neg_diff
+            int1 = max(int1, 0.0)
+            int2 = max(int2, 0.0)
+            int3 = max(int3, 0.0)
+            self.print_neg_colours = [(int1, int1, 0.0),
+                                 (0.0, int1, int1),
+                                 (int1, 0.0, int1),
+                                 (int2, int2, int1),
+                                 (int1, int2, int2),
+                                 (int2, int1, int2),
+                                 (int1, int1, int3),
+                                 (int2, int3, int3),
+                                 (int3, int2, int3),
+                                 (int3, int2, int2),
+                                 (int2, int2, int3),
+                                 (int2, int3, int2)]
+
+        else:
+            self.print_colours = [(0.0, 0.0, int1),
+                                 (int1, 0.0, 0.0),
+                                 (0.0, int1, 0.0),
+                                 (0.0, int1, int1),
+                                 (int1, int1, 0.0),
+                                 (int1, 0.0, int1),
+                                 (int3, int3, int2),
+                                 (int2, int3, int3),
+                                 (int3, int2, int3),
+                                 (int3, int2, int2),
+                                 (int2, int2, int3),
+                                 (int2, int3, int2)]
+
+            int1 = self.int1 + light_neg_diff
+            int2 = self.int2 + light_neg_diff
+            int3 = self.int3 + light_neg_diff
+            int1 = min(int1, 1.0)
+            int2 = min(int2, 1.0)
+            int3 = min(int3, 1.0)
+            self.print_neg_colours = [(light_neg_diff, light_neg_diff, int1),
+                                 (int1, light_neg_diff, light_neg_diff),
+                                 (light_neg_diff, int1, light_neg_diff),
+                                 (light_neg_diff, int1, int1),
+                                 (int1, int1, light_neg_diff),
+                                 (int1, light_neg_diff, int1),
+                                 (int3, int3, int2),
+                                 (int2, int3, int3),
+                                 (int3, int2, int3),
+                                 (int3, int2, int2),
+                                 (int2, int2, int3),
+                                 (int2, int3, int2)]
+
+
+        self.std_pos_col1 = (self.cf.pos_col10, self.cf.pos_col11, self.cf.pos_col12)
+        self.std_neg_col1 = (self.cf.neg_col10, self.cf.neg_col11, self.cf.neg_col12)
+        self.std_pos_col2 = (self.cf.pos_col20, self.cf.pos_col21, self.cf.pos_col22)
+        self.std_neg_col2 = (self.cf.neg_col20, self.cf.neg_col21, self.cf.neg_col22)
+        if self.cf.print_light_mode == False:
+            self.print_pos_col_rgb = self.std_pos_col2
+            self.print_neg_col_rgb = self.std_neg_col2
+            self.print_background_colour = (42 / 255, 42 / 255, 42 / 255)
+            self.print_foreground_colour = (255 / 255, 255 / 255, 255 / 255)
+        else:
+            self.print_pos_col_rgb = self.std_pos_col1
+            self.print_neg_col_rgb = self.std_neg_col1
+            self.print_background_colour = (255 / 255, 255 / 255, 255 / 255)
+            self.print_foreground_colour = (0 / 255, 0 / 255, 0 / 255)
+
+        # end init_print_colours
 
     def iter_all_strings(self):
         for size in itertools.count(1):

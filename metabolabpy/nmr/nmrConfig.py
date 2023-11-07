@@ -27,11 +27,31 @@ class NmrConfig:
         self.neg_col22 = 0.8
         self.mode = 'system'
         self.current_directory = ''
+        self.print_top_axis = True
+        self.print_right_axis = True
+        self.print_left_axis = True
+        self.print_bottom_axis = True
+        self.print_background = True
+        self.print_light_mode = True
+        self.print_dataset_colours = False
+        self.print_standard_colours = True
+        self.print_spc_linewidth = 2
+        self.print_axes_linewidth = 2
+        self.print_ticks_font_size = 10
+        self.print_label_font_size = 12
 
     def make_config(self):
         config = configparser.ConfigParser()
         auto_plot = 'yes' if self.auto_plot is True else 'no'
         keep_zoom = 'yes' if self.keep_zoom is True else 'no'
+        print_top_axis = 'yes' if self.print_top_axis is True else 'no'
+        print_right_axis = 'yes' if self.print_right_axis is True else 'no'
+        print_left_axis = 'yes' if self.print_left_axis is True else 'no'
+        print_bottom_axis = 'yes' if self.print_bottom_axis is True else 'no'
+        print_background = 'yes' if self.print_background is True else 'no'
+        print_light_mode = 'yes' if self.print_light_mode is True else 'no'
+        print_dataset_colours = 'yes' if self.print_dataset_colours is True else 'no'
+        print_standard_colours = 'yes' if self.print_standard_colours is True else 'no'
         config['GUI'] = {'auto_plot': auto_plot,
                          'keep_zoom': keep_zoom,
                          'font_size': str(self.font_size),
@@ -50,6 +70,18 @@ class NmrConfig:
                           'neg_col21': self.neg_col21,
                           'neg_col22': self.neg_col22}
         config['System'] = {'current_directory': self.current_directory}
+        config['Print'] = {'print_top_axis': print_top_axis,
+                           'print_right_axis': print_right_axis,
+                           'print_left_axis': print_left_axis,
+                           'print_bottom_axis': print_bottom_axis,
+                           'print_background': print_background,
+                           'print_light_mode': print_light_mode,
+                           'print_dataset_colours': print_dataset_colours,
+                           'print_standard_colours': print_standard_colours,
+                           'print_spc_linewidth': self.print_spc_linewidth,
+                           'print_axes_linewidth': self.print_axes_linewidth,
+                           'print_ticks_font_size': self.print_ticks_font_size,
+                           'print_label_font_size': self.print_label_font_size}
         return config
 
     def save_config(self):
@@ -91,6 +123,42 @@ class NmrConfig:
 
     def set_phase_reference_colour(self, value):
         self.phase_reference_colour = value
+
+    def set_print_top_axis(self, value):
+        self.print_top_axis = True if value == "yes" else False
+
+    def set_print_right_axis(self, value):
+        self.print_right_axis = True if value == "yes" else False
+
+    def set_print_left_axis(self, value):
+        self.print_left_axis = True if value == "yes" else False
+
+    def set_print_bottom_axis(self, value):
+        self.print_bottom_axis = True if value == "yes" else False
+
+    def set_print_background(self, value):
+        self.print_background = True if value == "yes" else False
+
+    def set_print_light_mode(self, value):
+        self.print_light_mode = True if value == "yes" else False
+
+    def set_print_dataset_colours(self, value):
+        self.print_dataset_colours = True if value == "yes" else False
+
+    def set_print_standard_colours(self, value):
+        self.print_standard_colours = True if value == "yes" else False
+
+    def set_print_spc_linewidth(self, value):
+        self.print_spc_linewidth = int(value)
+
+    def set_print_axes_linewidth(self, value):
+        self.print_axes_linewidth = int(value)
+
+    def set_print_ticks_font_size(self, value):
+        self.print_ticks_font_size = int(value)
+
+    def set_print_label_font_size(self, value):
+        self.print_label_font_size = int(value)
 
     def set_pos_col10(self, value):
         self.pos_col10 = float(value)
