@@ -26,4 +26,7 @@ msg = self.nd.auto_ref_all()                                       # automatical
 self.nd.pjres(2, 'skyline')                                        # calculate skyline projection in data set 2
 self.nd.s = 1                                                      # change to data set 2
 self.nd.e = 0                                                      # change to experiment 1 in data set 2
-self.plot_spc()                                                    # plot first projected Jres spectrum
+zoom_checked = self.w.keepZoom.isChecked()
+self.w.keepZoom.setChecked(False)
+self.plot_spc()
+self.w.keepZoom.setChecked(zoom_checked)

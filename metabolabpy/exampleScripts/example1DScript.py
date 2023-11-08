@@ -11,4 +11,7 @@ msg = self.nd.ft_all()							# Fourier Transform all NMR spectra
 msg = self.nd.auto_ref_all()						# automatically reference to TMSP
 self.nd.e = 0						 		# make first spectrum the current experiment
 self.set_ph_ref_exp(1)							# select reference spectrum for manual phase correction
+zoom_checked = self.w.keepZoom.isChecked()
+self.w.keepZoom.setChecked(False)
 self.plot_spc()
+self.w.keepZoom.setChecked(zoom_checked)

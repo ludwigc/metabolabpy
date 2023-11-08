@@ -11,4 +11,7 @@ for k in range(lds):									#
 
 self.nd.s = 0										# make first data set current data set
 self.nd.e = 0										# make first experiment current experiment
+zoom_checked = self.w.keepZoom.isChecked()
+self.w.keepZoom.setChecked(False)
 self.plot_spc()
+self.w.keepZoom.setChecked(zoom_checked)
