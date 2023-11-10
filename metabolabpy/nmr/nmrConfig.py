@@ -37,6 +37,7 @@ class NmrConfig:
         self.print_standard_colours = True
         self.print_stacked_plot = False
         self.print_auto_scale = False
+        self.print_stacked_plot_repeat_axes = False
         self.print_spc_linewidth = 2
         self.print_axes_linewidth = 2
         self.print_ticks_font_size = 10
@@ -55,6 +56,7 @@ class NmrConfig:
         print_dataset_colours = 'yes' if self.print_dataset_colours is True else 'no'
         print_standard_colours = 'yes' if self.print_standard_colours is True else 'no'
         print_stacked_plot = 'yes' if self.print_stacked_plot is True else 'no'
+        print_stacked_plot_repeat_axes = 'yes' if self.print_stacked_plot is True else 'no'
         print_auto_scale = 'yes' if self.print_auto_scale is True else 'no'
         config['GUI'] = {'auto_plot': auto_plot,
                          'keep_zoom': keep_zoom,
@@ -87,6 +89,7 @@ class NmrConfig:
                            'print_ticks_font_size': self.print_ticks_font_size,
                            'print_label_font_size': self.print_label_font_size,
                            'print_stacked_plot': print_stacked_plot,
+                           'print_stacked_plot_repeat_axes': print_stacked_plot_repeat_axes,
                            'print_auto_scale': print_auto_scale}
         return config
 
@@ -156,6 +159,9 @@ class NmrConfig:
 
     def set_print_stacked_plot(self, value):
         self.print_stacked_plot = True if value == "yes" else False
+
+    def set_print_stacked_plot_repeat_axes(self, value):
+        self.print_stacked_plotrepeat_axes = True if value == "yes" else False
 
     def set_print_auto_scale(self, value):
         self.print_auto_scale = True if value == "yes" else False

@@ -72,6 +72,7 @@ class NmrDataSet:
         self.int1 = 0.0
         self.int2 = 0.0
         self.int3 = 0.0
+        self.int4 = 0.0
         self.print_colours = []
         self.print_neg_colours = []
         self.background_colour = []
@@ -812,18 +813,21 @@ class NmrDataSet:
             self.int1 = 1.0
             self.int2 = 0.6
             self.int3 = 0.3
+            self.int4 = 0.8
         else:
             self.int1 = 0.4
             self.int2 = 0.8
             self.int3 = 0.5
+            self.int4 = 0.1
 
         int1 = self.int1
         int2 = self.int2
         int3 = self.int3
+        int4 = self.int4
         light_neg_diff = 0.5
         dark_neg_diff = 0.2
         if self.cf.print_light_mode == False:
-            self.print_colours = [(int1, int1, 0.0),
+            self.print_colours = [(int4, int4, int1),
                                  (0.0, int1, int1),
                                  (int1, 0.0, int1),
                                  (int2, int2, int1),
@@ -842,7 +846,7 @@ class NmrDataSet:
             int1 = max(int1, 0.0)
             int2 = max(int2, 0.0)
             int3 = max(int3, 0.0)
-            self.print_neg_colours = [(int1, int1, 0.0),
+            self.print_neg_colours = [(int2, int2, int1),
                                  (0.0, int1, int1),
                                  (int1, 0.0, int1),
                                  (int2, int2, int1),
