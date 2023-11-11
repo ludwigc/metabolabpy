@@ -42,7 +42,10 @@ class NmrConfig:
         self.print_axes_linewidth = 2
         self.print_ticks_font_size = 10
         self.print_label_font_size = 12
-
+        self.print_nmr_spectrum_aspect_ratio = 'auto'
+        self.print_hsqc_peak_aspect_ratio = 1.33
+        self.print_hsqc_multiplet_aspect_ratio = 1.33
+    
     def make_config(self):
         config = configparser.ConfigParser()
         auto_plot = 'yes' if self.auto_plot is True else 'no'
@@ -90,7 +93,11 @@ class NmrConfig:
                            'print_label_font_size': self.print_label_font_size,
                            'print_stacked_plot': print_stacked_plot,
                            'print_stacked_plot_repeat_axes': print_stacked_plot_repeat_axes,
-                           'print_auto_scale': print_auto_scale}
+                           'print_auto_scale': print_auto_scale,
+                           'print_nmr_spectrum_aspect_ratio': str(self.print_nmr_spectrum_aspect_ratio),
+                           'print_hsqc_peak_aspect_ratio': str(self.print_hsqc_peak_aspect_ratio),
+                           'print_multiplet_peak_aspect_ratio': str(self.print_hsqc_multiplet_aspect_ratio)
+                           }
         return config
 
     def save_config(self):
@@ -177,6 +184,24 @@ class NmrConfig:
 
     def set_print_label_font_size(self, value):
         self.print_label_font_size = int(value)
+
+    def set_print_nmr_spectrum_aspect_ratio(self, value):
+        if value != 'auto':
+            self.print_nmr_spectrum_aspect_ratio = float(value)
+        else:
+            self.print_nmr_spectrum_aspect_ratio = value
+
+    def set_print_hsqc_peak_aspect_ratio(self, value):
+        if value != 'auto':
+            self.print_hsqc_peak_aspect_ratio = float(value)
+        else:
+            self.print_hsqc_peak_aspect_ratio = value
+
+    def set_print_multiplet_peak_aspect_ratio(self, value):
+        if value != 'auto':
+            self.print_multiplet_peak_aspect_ratio = value
+        else:
+            self.print_multiplet_peak_aspect_ratio = float(value)
 
     def set_pos_col10(self, value):
         self.pos_col10 = float(value)
