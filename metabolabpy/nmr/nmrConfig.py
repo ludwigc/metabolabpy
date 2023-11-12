@@ -38,6 +38,7 @@ class NmrConfig:
         self.print_stacked_plot = False
         self.print_auto_scale = False
         self.print_stacked_plot_repeat_axes = False
+        self.print_label = False
         self.print_spc_linewidth = 2
         self.print_axes_linewidth = 2
         self.print_ticks_font_size = 10
@@ -59,8 +60,9 @@ class NmrConfig:
         print_dataset_colours = 'yes' if self.print_dataset_colours is True else 'no'
         print_standard_colours = 'yes' if self.print_standard_colours is True else 'no'
         print_stacked_plot = 'yes' if self.print_stacked_plot is True else 'no'
-        print_stacked_plot_repeat_axes = 'yes' if self.print_stacked_plot is True else 'no'
+        print_stacked_plot_repeat_axes = 'yes' if self.print_stacked_plot_repeat_axes is True else 'no'
         print_auto_scale = 'yes' if self.print_auto_scale is True else 'no'
+        print_label = 'yes' if self.print_label is True else 'no'
         config['GUI'] = {'auto_plot': auto_plot,
                          'keep_zoom': keep_zoom,
                          'font_size': str(self.font_size),
@@ -96,7 +98,8 @@ class NmrConfig:
                            'print_auto_scale': print_auto_scale,
                            'print_nmr_spectrum_aspect_ratio': str(self.print_nmr_spectrum_aspect_ratio),
                            'print_hsqc_peak_aspect_ratio': str(self.print_hsqc_peak_aspect_ratio),
-                           'print_multiplet_peak_aspect_ratio': str(self.print_hsqc_multiplet_aspect_ratio)
+                           'print_multiplet_peak_aspect_ratio': str(self.print_hsqc_multiplet_aspect_ratio),
+                           'print_label': print_label
                            }
         return config
 
@@ -168,7 +171,10 @@ class NmrConfig:
         self.print_stacked_plot = True if value == "yes" else False
 
     def set_print_stacked_plot_repeat_axes(self, value):
-        self.print_stacked_plotrepeat_axes = True if value == "yes" else False
+        self.print_stacked_plot_repeat_axes = True if value == "yes" else False
+
+    def set_print_label(self, value):
+        self.print_label = True if value == "yes" else False
 
     def set_print_auto_scale(self, value):
         self.print_auto_scale = True if value == "yes" else False
@@ -187,21 +193,21 @@ class NmrConfig:
 
     def set_print_nmr_spectrum_aspect_ratio(self, value):
         if value == 'auto' or value == 'a4_landscape' or value == 'a4_portrait':
-            self.print_nmr_spectrum_aspect_ratio = value
+           self.print_nmr_spectrum_aspect_ratio = value
         else:
             self.print_nmr_spectrum_aspect_ratio = float(value)
 
     def set_print_hsqc_peak_aspect_ratio(self, value):
         if value == 'auto' or value == 'a4_landscape' or value == 'a4_portrait':
-            self.print_nmr_spectrum_aspect_ratio = value
+            self.print_hsqc_peak_aspect_ratio = value
         else:
-            self.print_nmr_spectrum_aspect_ratio = float(value)
+            self.print_hsqc_peak_aspect_ratio = float(value)
 
     def set_print_multiplet_peak_aspect_ratio(self, value):
         if value == 'auto' or value == 'a4_landscape' or value == 'a4_portrait':
-            self.print_nmr_spectrum_aspect_ratio = value
+            self.print_multiplet_peak_aspect_ratio = value
         else:
-            self.print_nmr_spectrum_aspect_ratio = float(value)
+            self.print_multiplet_peak_aspect_ratio = float(value)
 
     def set_pos_col10(self, value):
         self.pos_col10 = float(value)
