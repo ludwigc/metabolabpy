@@ -45,7 +45,7 @@ class NmrConfig:
         self.print_nmr_spectrum_aspect_ratio = 'auto'
         self.print_hsqc_peak_aspect_ratio = 1.33
         self.print_hsqc_multiplet_aspect_ratio = 1.33
-    
+
     def make_config(self):
         config = configparser.ConfigParser()
         auto_plot = 'yes' if self.auto_plot is True else 'no'
@@ -186,22 +186,22 @@ class NmrConfig:
         self.print_label_font_size = int(value)
 
     def set_print_nmr_spectrum_aspect_ratio(self, value):
-        if value != 'auto':
-            self.print_nmr_spectrum_aspect_ratio = float(value)
-        else:
+        if value == 'auto' or value == 'a4_landscape' or value == 'a4_portrait':
             self.print_nmr_spectrum_aspect_ratio = value
+        else:
+            self.print_nmr_spectrum_aspect_ratio = float(value)
 
     def set_print_hsqc_peak_aspect_ratio(self, value):
-        if value != 'auto':
-            self.print_hsqc_peak_aspect_ratio = float(value)
+        if value == 'auto' or value == 'a4_landscape' or value == 'a4_portrait':
+            self.print_nmr_spectrum_aspect_ratio = value
         else:
-            self.print_hsqc_peak_aspect_ratio = value
+            self.print_nmr_spectrum_aspect_ratio = float(value)
 
     def set_print_multiplet_peak_aspect_ratio(self, value):
-        if value != 'auto':
-            self.print_multiplet_peak_aspect_ratio = value
+        if value == 'auto' or value == 'a4_landscape' or value == 'a4_portrait':
+            self.print_nmr_spectrum_aspect_ratio = value
         else:
-            self.print_multiplet_peak_aspect_ratio = float(value)
+            self.print_nmr_spectrum_aspect_ratio = float(value)
 
     def set_pos_col10(self, value):
         self.pos_col10 = float(value)
