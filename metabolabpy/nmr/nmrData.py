@@ -738,6 +738,8 @@ class NmrData:
         if (self.dim == 1):
             if (tmsp == True):
                 self.ref_point[0] = self.ppm2points(0.0, 0)
+                if self.ref_point[0] < 0 or self.ref_point[0] > len(self.spc[0]):
+                    return
                 self.ref_shift[0] = 0.0
                 pts = self.ppm2points(np.array([-self.ref_tmsp_range, self.ref_tmsp_range]), 0)
                 npts = len(self.spc[0])
