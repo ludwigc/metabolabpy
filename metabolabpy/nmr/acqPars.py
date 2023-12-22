@@ -134,37 +134,37 @@ class AcqPars:
         try:
             self.sfo2 = float(self.reg_ex.sfo2.findall(self.acqus_text)[0])
         except:
-            self.sfo1 = float(self.reg_ex.sfo2i.findall(self.acqus_text)[0])
+            self.sfo2 = float(self.reg_ex.sfo2i.findall(self.acqus_text)[0])
 
         try:
             self.sfo3 = float(self.reg_ex.sfo3.findall(self.acqus_text)[0])
         except:
-            self.sfo1 = float(self.reg_ex.sfo3i.findall(self.acqus_text)[0])
+            self.sfo3 = float(self.reg_ex.sfo3i.findall(self.acqus_text)[0])
 
         try:
             self.sfo4 = float(self.reg_ex.sfo4.findall(self.acqus_text)[0])
         except:
-            self.sfo1 = float(self.reg_ex.sfo4i.findall(self.acqus_text)[0])
+            self.sfo4 = float(self.reg_ex.sfo4i.findall(self.acqus_text)[0])
 
         try:
             self.sfo5 = float(self.reg_ex.sfo5.findall(self.acqus_text)[0])
         except:
-            self.sfo1 = float(self.reg_ex.sfo5i.findall(self.acqus_text)[0])
+            self.sfo5 = float(self.reg_ex.sfo5i.findall(self.acqus_text)[0])
 
         try:
             self.sfo6 = float(self.reg_ex.sfo6.findall(self.acqus_text)[0])
         except:
-            self.sfo1 = float(self.reg_ex.sfo6i.findall(self.acqus_text)[0])
+            self.sfo6 = float(self.reg_ex.sfo6i.findall(self.acqus_text)[0])
 
         try:
             self.sfo7 = float(self.reg_ex.sfo7.findall(self.acqus_text)[0])
         except:
-            self.sfo1 = float(self.reg_ex.sfo7i.findall(self.acqus_text)[0])
+            self.sfo7 = float(self.reg_ex.sfo7i.findall(self.acqus_text)[0])
 
         try:
             self.sfo8 = float(self.reg_ex.sfo8.findall(self.acqus_text)[0])
         except:
-            self.sfo1 = float(self.reg_ex.sfo8i.findall(self.acqus_text)[0])
+            self.sfo8 = float(self.reg_ex.sfo8i.findall(self.acqus_text)[0])
 
         self.bf1 = float(self.reg_ex.bf1.findall(self.acqus_text)[0])
         self.bf2 = float(self.reg_ex.bf2.findall(self.acqus_text)[0])
