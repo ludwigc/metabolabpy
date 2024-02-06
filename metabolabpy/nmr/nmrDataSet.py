@@ -369,7 +369,10 @@ class NmrDataSet:
         if self.pp.flag_scale_spectra == True:
             self.scale_spectra()
             if self.pp.export_method == 0 and self.pp.flag_export_data_set == True:
-                self.export_data_set('pqn_normalised')
+                if self.pp.scale_pqn:
+                    self.export_data_set('pqn_normalised')
+                else:
+                    self.export_data_set('tsa_normalised')
 
         spc = np.zeros(len(self.nmrdat[self.s][0].spc[0]))
         n_spc = len(self.nmrdat[self.s])
@@ -387,6 +390,9 @@ class NmrDataSet:
 
         for k in range(len(self.nmrdat[self.s])):
             self.nmrdat[self.s][k].spc[0][idx] = np.zeros(len(idx))
+
+        if self.pp.avoid_negative_values and self.pp.flag_export_data_set:
+            self.export_data_set('avoid_negative_values')
 
         if self.pp.flag_variance_stabilisation == True:
             self.variance_stabilisation()
@@ -456,9 +462,13 @@ class NmrDataSet:
                 self.wb = Workbook()
                 self.wb.remove(self.wb.active)
                 ws_bucket_spectra = self.wb.create_sheet("bucket_spectra")
-                ws_pqn_normalised = self.wb.create_sheet("pqn_normalised")
-                ws_pareto_scaled = self.wb.create_sheet("pareto_scaled")
+                if self.pp.scale_pqn:
+                    ws_pqn_normalised = self.wb.create_sheet("pqn_normalised")
+                else:
+                    ws_pqn_normalised = self.wb.create_sheet("tsa_normalised")
+
                 ws_avoid_negative_values = self.wb.create_sheet("avoid_negative_values")
+                ws_pareto_scaled = self.wb.create_sheet("pareto_scaled")
                 ws_sample_meta = self.wb.create_sheet("sample_meta")
                 ws_variable_meta = self.wb.create_sheet("variable_meta")
                 self.wb["variable_meta"]["A1"] = 'id'
@@ -532,7 +542,11 @@ class NmrDataSet:
                             categories[title[:idx2].strip()] = []
                             title = title[idx+1:]
 
-                    categories['pqn_coeff'] = []
+                    if self.pp.scale_pqn:
+                        categories['pqn_coeff'] = []
+                    else:
+                        categories['tsa_coeff'] = []
+
                     excel_cols = []
                     for ss in itertools.islice(self.iter_all_strings(), len(categories)):
                         excel_cols.append(ss)
@@ -544,7 +558,7 @@ class NmrDataSet:
 
                     for k in range(len(self.pp.plot_select)):
                         for ss in categories.keys():
-                            if ss == "pqn_coeff":
+                            if ss == "pqn_coeff" or ss == "tsa_coeff":
                                 categories[ss].append(self.pp.spc_scale[self.pp.plot_select[k]])
                             else:
                                 idx = self.nmrdat[self.s][self.pp.plot_select[k]].title.find(ss)
@@ -572,8 +586,16 @@ class NmrDataSet:
                         self.wb["variable_meta"]["A" + str(k+2)] = p_str1 + p_str2
                         self.wb["variable_meta"]["B" + str(k+2)] = ppm_vect[spc_selected[k]]
                         self.wb["variable_meta"]["C" + str(k+2)] = bin_range[spc_selected[k]]
-                        self.wb["variable_meta"]["D" + str(k+2)] = ppm_vect[spc_selected[k]] - delta_ppm
-                        self.wb["variable_meta"]["E" + str(k+2)] = ppm_vect[spc_selected[k]] + delta_ppm
+                        if k > 0 and k < (len(ppm_vect) - 1):
+                            if spc_selected[k] - spc_selected[k - 1] > 1 and spc_selected[k+1] - spc_selected[k] > 1:
+                                self.wb["variable_meta"]["D" + str(k+2)] = ppm_vect[spc_selected[k + 1] - 1] - delta_ppm
+                                self.wb["variable_meta"]["E" + str(k+2)] = ppm_vect[spc_selected[k - 1] + 1] + delta_ppm
+                            else:
+                                self.wb["variable_meta"]["D" + str(k + 2)] = ppm_vect[spc_selected[k]] - delta_ppm
+                                self.wb["variable_meta"]["E" + str(k + 2)] = ppm_vect[spc_selected[k]] + delta_ppm
+                        else:
+                            self.wb["variable_meta"]["D" + str(k+2)] = ppm_vect[spc_selected[k]] - delta_ppm
+                            self.wb["variable_meta"]["E" + str(k+2)] = ppm_vect[spc_selected[k]] + delta_ppm
 
                     self.wb.save(f_name)
                     self.wb = []
@@ -1570,9 +1592,10 @@ class NmrDataSet:
                     scale[k] = np.sum(self.nmrdat[self.s][k].spc[0]).real
 
             for k in range(n_spc):
-                self.nmrdat[self.s][k].spc[0] /= np.sum(self.nmrdat[self.s][k].spc[0]).real
+                spc_sum = np.sum(self.nmrdat[self.s][k].spc[0]).real
+                self.nmrdat[self.s][k].spc[0] /= spc_sum
                 self.nmrdat[self.s][k].spc[0] *= np.max(scale)
-                self.pp.spc_scale[k] = np.sum(self.nmrdat[self.s][k].spc[0]).real/np.max(scale)
+                self.pp.spc_scale[k] = spc_sum/np.max(scale)
 
         # end scale_spectra
 
