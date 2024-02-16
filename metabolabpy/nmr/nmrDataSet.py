@@ -37,9 +37,11 @@ class NmrDataSet:
         self.cf = nmrConfig.NmrConfig()
         self.cf.read_config()
         self.spcpl = []
+        self.tmsp_conc = 0.5
         self.ver = ml_version.__version__
         self.int_all_exps = True
         self.int_all_data_sets = False
+        self.quantify = True
         self.export_peak_excel = True
         self.export_peak_file = 'concentrations.xlsx'
         self.export_peak_path = os.path.expanduser('~')
@@ -77,6 +79,7 @@ class NmrDataSet:
         self.print_neg_colours = []
         self.background_colour = []
         self.foreground_colour = []
+        self.internal_std = 'TMSP'
         if self.cf.mode == 'light':
             self.background_colour = (255 / 255, 255 / 255, 255 / 255)
             self.foreground_colour = (0 / 255, 0 / 255, 0 / 255)
@@ -99,14 +102,14 @@ class NmrDataSet:
             if self.int_all_exps:
                 exps = range(len(self.nmrdat[k]))
             else:
-                exps = self.e
+                exps = [self.e]
 
             for l in exps:
                 self.nmrdat[k][l].add_peak(start_end, peak_label)
 
         # end add_peak
 
-    def set_peak(self, start_peak, end_peak, peak_label):
+    def set_peak(self, start_peak, end_peak, peak_label, n_protons):
         if self.int_all_data_sets:
             ds = range(len(self.nmrdat))
         else:
@@ -119,7 +122,7 @@ class NmrDataSet:
                 exps = [self.e]
 
             for l in exps:
-                self.nmrdat[k][l].set_peak(start_peak, end_peak, peak_label)
+                self.nmrdat[k][l].set_peak(start_peak, end_peak, peak_label, n_protons)
 
         # end add_peak
 
@@ -980,6 +983,11 @@ class NmrDataSet:
         self.cmd_idx = cur_pars[7]
         self.script = cur_pars[8]
         self.console = cur_pars[9]
+        try:
+            self.tmsp_conc = cur_pars[10]
+        except:
+            self.tmsp_conc = 0.5
+
         for k in range(len(l_dir)):
             if os.path.isdir(os.path.join(data_set_name, l_dir[k])):
                 data_sets = np.append(data_sets, l_dir[k])
@@ -1508,7 +1516,7 @@ class NmrDataSet:
         f_name = os.path.join(data_set_name, 'curPars.dat')
         f = open(f_name, 'wb')
         pickle.dump([self.file_format_version, self.s, self.e, self.pp, self.deselect, self.deselect2, self.cmd_buffer,
-                     self.cmd_idx, self.script, self.console], f)
+                     self.cmd_idx, self.script, self.console, self.tmsp_conc], f)
         f.close()
         for k in range(len(self.nmrdat)):
             setPath = os.path.join(data_set_name, str(k + 1))

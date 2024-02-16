@@ -58,6 +58,7 @@ class NmrData:
         self.peak_max_ppm = np.array([], dtype='float64')
         self.peak_max_points = np.array([], dtype='int')
         self.peak_label = np.array([], dtype='str')
+        self.n_protons = np.array([], dtype='str')
         self.dim = 0
         self.title = np.array([], dtype='str')
         self.orig_data_set = str('')
@@ -204,7 +205,7 @@ class NmrData:
 
         # end add_baseline_points
 
-    def add_peak(self, start_end=np.array([], dtype='float64'), peak_label=''):
+    def add_peak(self, start_end=np.array([], dtype='float64'), peak_label='', n_protons=1):
         if len(start_end) > 0:
             start_peak = int(1e4 * self.points2ppm(self.ppm2points(max(start_end), 0), 0)) / 1e4
             end_peak = int(1e4 * self.points2ppm(self.ppm2points(min(start_end), 0), 0)) / 1e4
@@ -215,6 +216,7 @@ class NmrData:
             self.start_peak_points = np.append(self.start_peak_points, start_peak_points)
             self.end_peak_points = np.append(self.end_peak_points, end_peak_points)
             self.peak_label = np.append(self.peak_label, peak_label)
+            self.n_protons = np.append(self.n_protons, n_protons)
             npts = len(self.spc[0])
             spc = self.spc[0][npts - start_peak_points:npts - end_peak_points].real
             max_pos = np.where(spc == np.max(spc))[0][0] + 1
@@ -232,10 +234,11 @@ class NmrData:
             self.peak_max_points = self.peak_max_points[sort_idx]
             self.peak_max_ppm = self.peak_max_ppm[sort_idx]
             self.peak_int = self.peak_int[sort_idx]
+            self.n_protons = self.n_protons[sort_idx]
 
         # end add_peak
 
-    def set_peak(self, start_peak, end_peak, peak_label):
+    def set_peak(self, start_peak, end_peak, peak_label, n_protons):
         self.start_peak = np.array([], dtype='float64')
         self.end_peak = np.array([], dtype='float64')
         self.peak_label = np.array([], dtype='str')
@@ -245,8 +248,9 @@ class NmrData:
         self.peak_max_ppm = np.array([], dtype='float64')
         self.peak_max_points = np.array([], dtype='int')
         self.peak_int = np.array([], dtype='float64')
+        self.n_protons = np.array([], dtype='float64')
         for k in range(len(start_peak)):
-            self.add_peak(np.array([start_peak[k], end_peak[k]]), peak_label[k])
+            self.add_peak(np.array([start_peak[k], end_peak[k]]), peak_label[k], n_protons[k])
 
         # end set_peak
 
