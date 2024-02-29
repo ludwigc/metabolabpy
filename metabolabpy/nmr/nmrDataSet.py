@@ -418,6 +418,16 @@ class NmrDataSet:
 
         # end exclude_region
 
+    def export_bruker_1d(self, path_name='', scale_factor=-1):
+        if len(path_name) == 0:
+            return
+
+        n_exps = len(self.nmrdat[self.s])
+        for k in range(n_exps):
+            self.nmrdat[self.s][k].export_bruker_1d(path_name, str(10*(k + 1)), scale_factor)
+
+        # end export_bruker_1d
+
     def export_hsqc_data(self, excel_name=''):
         n_cols = 7
         if len(excel_name) == 0:
