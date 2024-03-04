@@ -1,4 +1,4 @@
-msg = self.clear()                                                 # clear memory
+kz = self.clear()                                                 # clear memory
 data_path = 'Replace with directory containing Bruker data'        # select directory containing bruker data, interactive for file dialog
 data_sets = []                                                     # add comma separated list of experiment numbers (e.g. [1, 2, 3])
 self.read_spcs([data_path], data_sets)                             # reading Bruker spectra
@@ -26,7 +26,4 @@ msg = self.nd.auto_ref_all()                                       # automatical
 self.nd.pjres(2, 'skyline')                                        # calculate skyline projection in data set 2
 self.nd.s = 1                                                      # change to data set 2
 self.nd.e = 0                                                      # change to experiment 1 in data set 2
-zoom_checked = self.w.keepZoom.isChecked()
-self.w.keepZoom.setChecked(False)
-self.plot_spc()
-self.w.keepZoom.setChecked(zoom_checked)
+self.plot_spc(keep_zoom=kz)

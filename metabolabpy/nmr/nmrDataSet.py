@@ -1608,9 +1608,13 @@ class NmrDataSet:
         # end scale_spectra
 
     def segmental_alignment(self):
-        seg_start = self.nmrdat[self.s][0].ppm2points(self.pp.seg_start, 0)
-        seg_end = self.nmrdat[self.s][0].ppm2points(self.pp.seg_end, 0)
-        npts = len(self.nmrdat[self.s][0].spc[0])
+        if self.pp.seg_align_ref_spc > 0:
+            kk = self.pp.seg_align_ref_spc - 1
+        else:
+            kk = 0
+        seg_start = self.nmrdat[self.s][kk].ppm2points(self.pp.seg_start, 0)
+        seg_end = self.nmrdat[self.s][kk].ppm2points(self.pp.seg_end, 0)
+        npts = len(self.nmrdat[self.s][kk].spc[0])
         n_spc = len(self.nmrdat[self.s])
         exclude_start = np.zeros((len(seg_start), n_spc))
         exclude_end = np.zeros((len(seg_start), n_spc))
@@ -1750,6 +1754,7 @@ class NmrDataSet:
         try:
             xls = pd.ExcelFile(file_name)
         except:
+            print('Filename not found')
             return
 
         try:

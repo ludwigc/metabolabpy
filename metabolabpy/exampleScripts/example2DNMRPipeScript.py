@@ -1,4 +1,4 @@
-msg = self.clear()
+kz = self.clear()
 data_path = 'Replace with directory containing Bruker and NMRPipe processed data'	# select directory containing bruker data, interactive for file dialog
 data_sets = []										# add comma separated list of experiment numbers (e.g. [1, 2, 3])
 proc_data_name = 'test.dat'								# name of NMRPipe processed data file (resides in e.g. 1.proc)
@@ -11,7 +11,4 @@ for k in range(lds):									#
 
 self.nd.s = 0										# make first data set current data set
 self.nd.e = 0										# make first experiment current experiment
-zoom_checked = self.w.keepZoom.isChecked()
-self.w.keepZoom.setChecked(False)
-self.plot_spc()
-self.w.keepZoom.setChecked(zoom_checked)
+self.plot_spc(keep_zoom=kz)
