@@ -1,4 +1,4 @@
-kz = self.clear()
+kz = self.clear(True)
 data_path = 'Replace with directory containing Bruker data'		# select directory containing bruker data, interactive for file dialog
 data_sets = []								# add comma separated list of experiment numbers (e.g. [1, 2, 3])
 self.read_spcs([data_path],data_sets)				# reading Bruker spectra

@@ -1,4 +1,4 @@
-kz = self.clear()
+kz = self.clear(True)
 data_path = 'Replace with directory containing Bruker and NMRPipe processed data'	# select directory containing bruker data, interactive for file dialog
 data_sets = []										# add comma separated list of experiment numbers (e.g. [1, 2, 3])
 proc_data_name = 'test.dat'								# name of NMRPipe processed data file (resides in e.g. 1.proc)
