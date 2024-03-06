@@ -599,16 +599,16 @@ class NmrDataSet:
                         self.wb["variable_meta"]["A" + str(k+2)] = p_str1 + p_str2
                         self.wb["variable_meta"]["B" + str(k+2)] = ppm_vect[spc_selected[k]]
                         self.wb["variable_meta"]["C" + str(k+2)] = bin_range[spc_selected[k]]
-                        if k > 0 and k < (len(ppm_vect) - 1):
+                        if k > 0 and k < len(spc_selected) - 1:
                             if spc_selected[k] - spc_selected[k - 1] > 1 and spc_selected[k+1] - spc_selected[k] > 1:
-                                self.wb["variable_meta"]["D" + str(k+2)] = ppm_vect[spc_selected[k + 1] - 1] - delta_ppm
-                                self.wb["variable_meta"]["E" + str(k+2)] = ppm_vect[spc_selected[k - 1] + 1] + delta_ppm
+                                self.wb["variable_meta"]["D" + str(k + 2)] = ppm_vect[spc_selected[k + 1] - 1] - delta_ppm
+                                self.wb["variable_meta"]["E" + str(k + 2)] = ppm_vect[spc_selected[k - 1] + 1] + delta_ppm
                             else:
                                 self.wb["variable_meta"]["D" + str(k + 2)] = ppm_vect[spc_selected[k]] - delta_ppm
                                 self.wb["variable_meta"]["E" + str(k + 2)] = ppm_vect[spc_selected[k]] + delta_ppm
                         else:
-                            self.wb["variable_meta"]["D" + str(k+2)] = ppm_vect[spc_selected[k]] - delta_ppm
-                            self.wb["variable_meta"]["E" + str(k+2)] = ppm_vect[spc_selected[k]] + delta_ppm
+                            self.wb["variable_meta"]["D" + str(k + 2)] = ppm_vect[spc_selected[k]] - delta_ppm
+                            self.wb["variable_meta"]["E" + str(k + 2)] = ppm_vect[spc_selected[k]] + delta_ppm
 
                     self.wb.save(f_name)
                     self.wb = []
