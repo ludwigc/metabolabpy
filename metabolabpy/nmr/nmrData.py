@@ -77,6 +77,7 @@ class NmrData:
         self.ref_point = np.array([0, 0, 0], dtype='int')
         self.refsw = np.array([0, 0, 0], dtype='float64')
         self.ref_tmsp_range = 0.3  # [ppm]
+        self.ref = 'auto'
         self.apc = apcbc.Apcbc()
         self.projected_j_res = False
         self.orig_j_res_set = -1
@@ -716,42 +717,43 @@ class NmrData:
         # end autopick_hsqc
 
     def auto_ref(self, tmsp=True):
-        if self.acq.o1 == 0:
-            self.ref_shift[0] = 4.76
-        else:
-            self.ref_shift[0] = self.acq.o1 / self.acq.bf1
+        if self.ref == 'auto':
+            if self.acq.o1 == 0:
+                self.ref_shift[0] = 4.76
+            else:
+                self.ref_shift[0] = self.acq.o1 / self.acq.bf1
 
-        self.ref_point[0] = int(len(self.spc[0]) / 2)
-        if (self.dim == 2):
-            self.ref_shift[1] = (self.acq.spc_frequency[1] + self.acq.spc_offset[1]) / self.acq.spc_frequency[1] - 1.0
-            self.ref_point[1] = int(len(self.spc) / 2)
-            if (tmsp == True):
-                self.ref_point[0] = self.ppm2points(0.0, 0)
-                self.ref_shift[0] = 0.0
-                pts = self.ppm2points(np.array([-self.ref_tmsp_range, self.ref_tmsp_range]), 0)
-                npts = len(self.spc[0])
-                r = np.arange(npts - max(pts), npts - min(pts))
-                spc = np.sum(self.spc, 0)
-                spc = spc[r].real
-                ref_p = np.where(spc == np.amax(spc))
-                self.ref_point[0] -= ref_p[0][0] - int((max(pts) - min(pts)) / 2) + 1
+            self.ref_point[0] = int(len(self.spc[0]) / 2)
+            if (self.dim == 2):
+                self.ref_shift[1] = (self.acq.spc_frequency[1] + self.acq.spc_offset[1]) / self.acq.spc_frequency[1] - 1.0
+                self.ref_point[1] = int(len(self.spc) / 2)
+                if (tmsp == True):
+                    self.ref_point[0] = self.ppm2points(0.0, 0)
+                    self.ref_shift[0] = 0.0
+                    pts = self.ppm2points(np.array([-self.ref_tmsp_range, self.ref_tmsp_range]), 0)
+                    npts = len(self.spc[0])
+                    r = np.arange(npts - max(pts), npts - min(pts))
+                    spc = np.sum(self.spc, 0)
+                    spc = spc[r].real
+                    ref_p = np.where(spc == np.amax(spc))
+                    self.ref_point[0] -= ref_p[0][0] - int((max(pts) - min(pts)) / 2) + 1
 
-            self.proc.ref_point[0] = self.ref_point[0]
-            self.proc.ref_point[1] = self.ref_point[1]
+                self.proc.ref_point[0] = self.ref_point[0]
+                self.proc.ref_point[1] = self.ref_point[1]
 
-        if (self.dim == 1):
-            if (tmsp == True):
-                self.ref_point[0] = self.ppm2points(0.0, 0)
-                if self.ref_point[0] < 0 or self.ref_point[0] > len(self.spc[0]):
-                    return
-                self.ref_shift[0] = 0.0
-                pts = self.ppm2points(np.array([-self.ref_tmsp_range, self.ref_tmsp_range]), 0)
-                npts = len(self.spc[0])
-                r = np.arange(npts - max(pts), npts - min(pts))
-                r = np.copy(r[np.where(r < len(self.spc[0]))])
-                spc = self.spc[0][r].real
-                ref_p = np.where(spc == np.amax(spc))
-                self.ref_point[0] -= ref_p[0][0] - int((max(pts) - min(pts)) / 2) + 1
+            if (self.dim == 1):
+                if (tmsp == True):
+                    self.ref_point[0] = self.ppm2points(0.0, 0)
+                    if self.ref_point[0] < 0 or self.ref_point[0] > len(self.spc[0]):
+                        return
+                    self.ref_shift[0] = 0.0
+                    pts = self.ppm2points(np.array([-self.ref_tmsp_range, self.ref_tmsp_range]), 0)
+                    npts = len(self.spc[0])
+                    r = np.arange(npts - max(pts), npts - min(pts))
+                    r = np.copy(r[np.where(r < len(self.spc[0]))])
+                    spc = self.spc[0][r].real
+                    ref_p = np.where(spc == np.amax(spc))
+                    self.ref_point[0] -= ref_p[0][0] - int((max(pts) - min(pts)) / 2) + 1
 
         self.calc_ppm()
 
@@ -1696,6 +1698,15 @@ class NmrData:
                 f.close()
 
         # end read_spc
+
+    def set_auto_ref(self, ref='auto'):
+        self.ref = ref
+
+    def set_autobaseline(self, autobaseline=False):
+        for k in range(len(self.nmrdat[self.s])):
+            self.nmrdat[self.s][k].proc.autobaseline = autobaseline
+
+        # end set_autobaseline
 
     def set_title_information(self, xls=pd.DataFrame(), excel_name='', pos_label='', rack_label='', replace_orig_title=False, c_dict=[]):
         if len(xls) == 0 or len(pos_label) == 0 or len(rack_label) == 0 or len(excel_name) == 0:

@@ -832,7 +832,7 @@ class NmrDataSet:
         for k in range(n_exp):
             self.e = k
             self.ft()
-
+        #
         self.e = orig_exp
         return "Finished ft_all"
         # end ft_all
@@ -1484,6 +1484,7 @@ class NmrDataSet:
 
             self.nmrdat[s][k].ref_point[0] = len(self.nmrdat[s][k].spc[0]) - ref_point - 1
             self.nmrdat[s][k].ref_shift[0] = new_ppm
+            self.nmrdat[s][k].ref = 'manual'
             self.nmrdat[s][k].calc_ppm()
         # end reference1d_all
 
