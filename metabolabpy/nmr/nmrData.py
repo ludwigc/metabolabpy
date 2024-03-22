@@ -285,11 +285,11 @@ class NmrData:
 
         if self.proc.window_type[dim] == 1:  # exponential window
             t = (np.linspace(0.0, len(fid) - 1, len(fid)) - group_delay) / sw_h
-            wdwf = np.exp(-lb * t)
+            wdwf = np.exp(-2 * np.pi * lb * t)
 
         if self.proc.window_type[dim] == 2:  # gaussian window
             t = (np.linspace(0.0, len(fid) - 1 - group_delay, len(fid))) / sw_h
-            wdwf = np.exp(-lb * 2 * math.pi * t - 2 * math.pi * (t ** 2) / ((2 * math.pi * gb * len(fid) / sw_h)))
+            wdwf = np.exp(-lb * 2 * math.pi * t - lb * 2 * math.pi * (t ** 2) / (2 * math.pi * gb * len(fid) / sw_h))
 
         if self.proc.window_type[dim] == 3:  # sine window
             if self.acq.fn_mode == 1 or self.acq.fn_mode == 2:
@@ -1219,6 +1219,9 @@ class NmrData:
         if dim == 1:
             if self.acq.manufacturer == 'Bruker':
                 sfo = self.proc.sf[1]
+                if sfo == 0.0:
+                    sfo = self.acq.sfo2
+
             else:
                 sfo = self.acq.sfo2
 

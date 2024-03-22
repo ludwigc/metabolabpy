@@ -16,6 +16,7 @@ import metabolabpy.__init__ as ml_version  # pragma: no cover
 import shutil  # pragma: no cover
 import pandas as pd  # pragma: no cover
 import darkdetect  # pragma: no cover
+import mat73
 
 
 class NmrDataSet:
@@ -1229,6 +1230,47 @@ class NmrDataSet:
         self.cf.current_directory = data_set_name
         self.cf.save_config()
         # end load
+
+
+    def load_mat(self, file_name):
+        self.clear()
+        m = mat73.loadmat(file_name)
+        for exp in len(m['NMRDAT']['ACQUSText']):
+            nd1 = nd.NmrData()
+            acqus = m['NMRDAT']['ACQUSText'][exp][0]
+            nd1.acq.acqus_text += acqus[0][0]
+            for idx in range(1, len(acqus)):
+                if acqus[idx][0].find('##') > -1:
+                    nd1.acq.acqus_text += '\n'
+                else:
+                    nd1.acq.acqus_text += ' '
+
+                nd1.acq.acqus_text += acqus[idx][0]
+
+            if hasattr(m['NMRDAT']['ACQU2SText'], 'keys'):
+                acqu2s = m['NMRDAT']['ACQU2SText'][exp][0]
+                nd1.acq.acqu2s_text += acqu2s[0][0]
+                for idx in range(1, len(acqu2s)):
+                    if acqu2s[idx][0].find('##') > -1:
+                        nd1.acq.acqu2s_text += '\n'
+                    else:
+                        nd1.acq.acqu2s_text += ' '
+
+                    nd1.acq.acqu2s_text += acqu2s[idx][0]
+
+            if hasattr(m['NMRDAT']['ACQU3SText'], 'keys'):
+                acqu3s = m['NMRDAT']['ACQU3SText'][exp][0]
+                nd1.acq.acqu3s_text += acqu3s[0][0]
+                for idx in range(1, len(acqu3s)):
+                    if acqu3s[idx][0].find('##') > -1:
+                        nd1.acq.acqu3s_text += '\n'
+                    else:
+                        nd1.acq.acqu3s_text += ' '
+
+                    nd1.acq.acqu3s_text += acqu3s[idx][0]
+
+
+
 
     def noise_filtering(self):
         val = self.pp.noise_threshold * self.pp.std_val
