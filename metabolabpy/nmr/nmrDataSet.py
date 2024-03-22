@@ -1257,6 +1257,9 @@ class NmrDataSet:
             return
 
         m = mat73.loadmat(file_name)
+        if 'NMRDAT' not in m.keys():
+            return
+
         self.clear()
         self.s = 0
         self.e = 0
