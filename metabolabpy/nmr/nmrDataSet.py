@@ -54,11 +54,12 @@ class NmrDataSet:
         self.hsqc_spin_sys_connected = True
         self.data_set_name = ''
         self.data_set_number = ''
-        self.baseline_algs = ['irsqr', 'arpls', 'asls', 'aspls', 'derpsalsa', 'drpls', 'iarpls', 'iasls', 'psalsa', 'mpls',
-                         'mor', 'imor', 'mormol', 'amormol', 'rolling_ball', 'mwmv', 'tophat', 'mpspline', 'jbcd',
-                         'noise_median', 'snip', 'adaptive_minimax', 'swima', 'ipsa', 'ria', 'dietrich',
-                         'std_distribution', 'fastchrom', 'cwt_br', 'fabc', 'beads', 'poly', 'modpoly', 'imodpoly',
-                         'penalized_poly', 'quant_reg', 'goldindec', ]
+        self.baseline_algs = ['irsqr', 'arpls', 'asls', 'aspls', 'derpsalsa', 'drpls', 'iarpls', 'iasls', 'psalsa',
+                              'mpls',
+                              'mor', 'imor', 'mormol', 'amormol', 'rolling_ball', 'mwmv', 'tophat', 'mpspline', 'jbcd',
+                              'noise_median', 'snip', 'adaptive_minimax', 'swima', 'ipsa', 'ria', 'dietrich',
+                              'std_distribution', 'fastchrom', 'cwt_br', 'fabc', 'beads', 'poly', 'modpoly', 'imodpoly',
+                              'penalized_poly', 'quant_reg', 'goldindec', ]
         self.default_baseline_alg = 'rolling_ball'
         self.default_lam = 1e5
         self.default_max_iter = 50
@@ -162,10 +163,15 @@ class NmrDataSet:
         return r_string
         # end __str__
 
-    def autobaseline1d(self, alg='rolling_ball', lam=1000000, max_iter=50,alpha=0.1, beta=10, gamma=15, beta_mult=0.98, gamma_mult=0.94, half_window=4096, quantile=0.3, poly_order=4, smooth_half_window=16, add_ext=2):
+    def autobaseline1d(self, alg='rolling_ball', lam=1000000, max_iter=50, alpha=0.1, beta=10, gamma=15, beta_mult=0.98,
+                       gamma_mult=0.94, half_window=4096, quantile=0.3, poly_order=4, smooth_half_window=16, add_ext=2):
         if len(self.nmrdat) > 0:
             if len(self.nmrdat[self.s]) > 0:
-                self.nmrdat[self.s][self.e].autobaseline1d(lam=lam, alg=alg, max_iter=max_iter, alpha=alpha, beta=beta, gamma=gamma, beta_mult=beta_mult, gamma_mult=gamma_mult, half_window=half_window, quantile=quantile, poly_order=poly_order, smooth_half_window=smooth_half_window, add_ext=add_ext)
+                self.nmrdat[self.s][self.e].autobaseline1d(lam=lam, alg=alg, max_iter=max_iter, alpha=alpha, beta=beta,
+                                                           gamma=gamma, beta_mult=beta_mult, gamma_mult=gamma_mult,
+                                                           half_window=half_window, quantile=quantile,
+                                                           poly_order=poly_order, smooth_half_window=smooth_half_window,
+                                                           add_ext=add_ext)
 
         # end autobaseline1d
 
@@ -300,7 +306,8 @@ class NmrDataSet:
         # end compress_buckets
 
     def create_titles(self, xls=[], dataset_label='', pos_label='', rack_label='', replace_title=False, excel_name=''):
-        if len(xls) == 0 or len(dataset_label) == 0 or len(pos_label) == 0 or len(rack_label) == 0 or len(excel_name) == 0:
+        if len(xls) == 0 or len(dataset_label) == 0 or len(pos_label) == 0 or len(rack_label) == 0 or len(
+                excel_name) == 0:
             return
 
         if len(self.nmrdat[self.s]) == 0:
@@ -312,10 +319,11 @@ class NmrDataSet:
                 c_dict[str(xls[rack_label][k]) + " " + str(xls[pos_label][k])] = k
 
         for k in range(len(self.nmrdat[self.s])):
-            self.nmrdat[self.s][k].create_title(xls, dataset_label, pos_label, rack_label, replace_title, c_dict, excel_name)
+            self.nmrdat[self.s][k].create_title(xls, dataset_label, pos_label, rack_label, replace_title, c_dict,
+                                                excel_name)
 
         # end create_titles
-    
+
     def data_pre_processing(self):
         self.pp.spc_scale = np.ones(len(self.nmrdat[self.s]))
         if not self.nmrdat[self.s][0].projected_j_res:
@@ -425,7 +433,7 @@ class NmrDataSet:
 
         n_exps = len(self.nmrdat[self.s])
         for k in range(n_exps):
-            self.nmrdat[self.s][k].export_bruker_1d(path_name, str(10*(k + 1)), scale_factor)
+            self.nmrdat[self.s][k].export_bruker_1d(path_name, str(10 * (k + 1)), scale_factor)
 
         # end export_bruker_1d
 
@@ -440,28 +448,39 @@ class NmrDataSet:
         for k in self.nmrdat[self.s][self.e].hsqc.hsqc_data.keys():
             wb.create_sheet(k)
             letters = []
-            for s in itertools.islice(self.iter_all_strings(), n_cols*n_exp):
+            for s in itertools.islice(self.iter_all_strings(), n_cols * n_exp):
                 letters.append(s)
 
             for l in range(n_exp):
-                wb[k][letters[0 + l*n_cols] + "1"] = "Dataset." + str(l)
-                wb[k][letters[1 + l*n_cols] + "1"] = "Experiment." + str(l)
-                wb[k][letters[2 + l*n_cols] + "1"] = "Remote." + str(l)
-                wb[k][letters[3 + l*n_cols] + "1"] = "Multiplet." + str(l)
-                wb[k][letters[4 + l*n_cols] + "1"] = "Percentages." + str(l)
-                wb[k][letters[5 + l*n_cols] + "1"] = "Intensity." + str(l)
-                wb[k][letters[6 + l*n_cols] + "1"] = "HSQC." + str(l)
-                wb[k][letters[0 + l*n_cols] + "2"] = str(self.s + 1)
-                wb[k][letters[1 + l*n_cols] + "2"] = str(l + 1)
-                wb[k][letters[6 + l*n_cols] + "2"] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].hsqc).replace('[', '').replace(']', '')
-                wb[k][letters[6 + l*n_cols] + "3"] = "n_bonds: " + str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].n_bonds)
+                wb[k][letters[0 + l * n_cols] + "1"] = "Dataset." + str(l)
+                wb[k][letters[1 + l * n_cols] + "1"] = "Experiment." + str(l)
+                wb[k][letters[2 + l * n_cols] + "1"] = "Remote." + str(l)
+                wb[k][letters[3 + l * n_cols] + "1"] = "Multiplet." + str(l)
+                wb[k][letters[4 + l * n_cols] + "1"] = "Percentages." + str(l)
+                wb[k][letters[5 + l * n_cols] + "1"] = "Intensity." + str(l)
+                wb[k][letters[6 + l * n_cols] + "1"] = "HSQC." + str(l)
+                wb[k][letters[0 + l * n_cols] + "2"] = str(self.s + 1)
+                wb[k][letters[1 + l * n_cols] + "2"] = str(l + 1)
+                wb[k][letters[6 + l * n_cols] + "2"] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].hsqc).replace('[',
+                                                                                                                  '').replace(
+                    ']', '')
+                wb[k][letters[6 + l * n_cols] + "3"] = "n_bonds: " + str(
+                    self.nmrdat[self.s][l].hsqc.hsqc_data[k].n_bonds)
                 offset = 0
                 for m in range(len(self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems)):
-                    wb[k][letters[5 + l*n_cols] + str(offset + 2)] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].intensities[m])
+                    wb[k][letters[5 + l * n_cols] + str(offset + 2)] = str(
+                        self.nmrdat[self.s][l].hsqc.hsqc_data[k].intensities[m])
                     for n in range(len(self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems[m]['contribution'])):
-                        wb[k][letters[2 + l*n_cols] + str(offset + 2)] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems[m]['c13_idx'][0]).replace('[', '').replace(']', '')
-                        wb[k][letters[3 + l*n_cols] + str(offset + 2)] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems[m]['c13_idx'][n]).replace('[', '').replace(']', '')
-                        wb[k][letters[4 + l*n_cols] + str(offset + 2)] = str(self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems[m]['contribution'][n])
+                        wb[k][letters[2 + l * n_cols] + str(offset + 2)] = str(
+                            self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems[m]['c13_idx'][0]).replace('[',
+                                                                                                            '').replace(
+                            ']', '')
+                        wb[k][letters[3 + l * n_cols] + str(offset + 2)] = str(
+                            self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems[m]['c13_idx'][n]).replace('[',
+                                                                                                            '').replace(
+                            ']', '')
+                        wb[k][letters[4 + l * n_cols] + str(offset + 2)] = str(
+                            self.nmrdat[self.s][l].hsqc.hsqc_data[k].spin_systems[m]['contribution'][n])
                         offset += 1
 
         wb.save(excel_name)
@@ -543,7 +562,8 @@ class NmrDataSet:
                             p_str2 = "P{:.3f}".format(ppm_vect[spc_selected[k]])
                             self.wb[cmd_name]["A" + str(k + 2)] = p_str1 + p_str2
                             for l in range(len(self.pp.plot_select)):
-                                self.wb[cmd_name][col_string[l + 1] + str(k + 2)] = self.nmrdat[self.s][self.pp.plot_select[l]].spc[0][spc_selected[k]].real
+                                self.wb[cmd_name][col_string[l + 1] + str(k + 2)] = \
+                                self.nmrdat[self.s][self.pp.plot_select[l]].spc[0][spc_selected[k]].real
 
                 else:
                     categories = {}
@@ -554,7 +574,7 @@ class NmrDataSet:
                         if idx > -1:
                             idx2 = title.find(':')
                             categories[title[:idx2].strip()] = []
-                            title = title[idx+1:]
+                            title = title[idx + 1:]
 
                     if self.pp.scale_pqn:
                         categories['pqn_coeff'] = []
@@ -579,7 +599,7 @@ class NmrDataSet:
                                 tmp_string = self.nmrdat[self.s][self.pp.plot_select[k]].title[idx:]
                                 idx2 = tmp_string.find(':')
                                 idx3 = tmp_string.find('\n')
-                                categories[ss].append(tmp_string[idx2+1:idx3])
+                                categories[ss].append(tmp_string[idx2 + 1:idx3])
 
                     ctr2 = 2
                     for k in range(len(self.pp.plot_select)):
@@ -591,19 +611,21 @@ class NmrDataSet:
                         ctr2 += 1
 
                     ppm_vect = self.nmrdat[self.s][self.pp.plot_select[0]].ppm1
-                    delta_ppm = 0.5*(ppm_vect[0] - ppm_vect[1])
+                    delta_ppm = 0.5 * (ppm_vect[0] - ppm_vect[1])
                     bin_range = np.linspace(1, len(ppm_vect), len(ppm_vect), dtype=int)
                     spc_selected = np.where(self.nmrdat[self.s][self.pp.plot_select[0]].spc[0] != 0)[0]
                     for k in range(len(spc_selected)):
                         p_str1 = "B{0:0=3d}".format(bin_range[spc_selected[k]])
                         p_str2 = "P{:.3f}".format(ppm_vect[spc_selected[k]])
-                        self.wb["variable_meta"]["A" + str(k+2)] = p_str1 + p_str2
-                        self.wb["variable_meta"]["B" + str(k+2)] = ppm_vect[spc_selected[k]]
-                        self.wb["variable_meta"]["C" + str(k+2)] = bin_range[spc_selected[k]]
+                        self.wb["variable_meta"]["A" + str(k + 2)] = p_str1 + p_str2
+                        self.wb["variable_meta"]["B" + str(k + 2)] = ppm_vect[spc_selected[k]]
+                        self.wb["variable_meta"]["C" + str(k + 2)] = bin_range[spc_selected[k]]
                         if k > 0 and k < len(spc_selected) - 1:
-                            if spc_selected[k] - spc_selected[k - 1] > 1 and spc_selected[k+1] - spc_selected[k] > 1:
-                                self.wb["variable_meta"]["D" + str(k + 2)] = ppm_vect[spc_selected[k + 1] - 1] - delta_ppm
-                                self.wb["variable_meta"]["E" + str(k + 2)] = ppm_vect[spc_selected[k - 1] + 1] + delta_ppm
+                            if spc_selected[k] - spc_selected[k - 1] > 1 and spc_selected[k + 1] - spc_selected[k] > 1:
+                                self.wb["variable_meta"]["D" + str(k + 2)] = ppm_vect[
+                                                                                 spc_selected[k + 1] - 1] - delta_ppm
+                                self.wb["variable_meta"]["E" + str(k + 2)] = ppm_vect[
+                                                                                 spc_selected[k - 1] + 1] + delta_ppm
                             else:
                                 self.wb["variable_meta"]["D" + str(k + 2)] = ppm_vect[spc_selected[k]] - delta_ppm
                                 self.wb["variable_meta"]["E" + str(k + 2)] = ppm_vect[spc_selected[k]] + delta_ppm
@@ -864,17 +886,17 @@ class NmrDataSet:
         dark_neg_diff = 0.2
         if self.cf.print_light_mode == False:
             self.print_colours = [(int4, int4, int1),
-                                 (0.0, int1, int1),
-                                 (int1, 0.0, int1),
-                                 (int2, int2, int1),
-                                 (int1, int2, int2),
-                                 (int2, int1, int2),
-                                 (int1, int1, int3),
-                                 (int2, int3, int3),
-                                 (int3, int2, int3),
-                                 (int3, int2, int2),
-                                 (int2, int2, int3),
-                                 (int2, int3, int2)]
+                                  (0.0, int1, int1),
+                                  (int1, 0.0, int1),
+                                  (int2, int2, int1),
+                                  (int1, int2, int2),
+                                  (int2, int1, int2),
+                                  (int1, int1, int3),
+                                  (int2, int3, int3),
+                                  (int3, int2, int3),
+                                  (int3, int2, int2),
+                                  (int2, int2, int3),
+                                  (int2, int3, int2)]
 
             int1 = self.int1 - dark_neg_diff
             int2 = self.int2 - dark_neg_diff
@@ -883,31 +905,31 @@ class NmrDataSet:
             int2 = max(int2, 0.0)
             int3 = max(int3, 0.0)
             self.print_neg_colours = [(int2, int2, int1),
-                                 (0.0, int1, int1),
-                                 (int1, 0.0, int1),
-                                 (int2, int2, int1),
-                                 (int1, int2, int2),
-                                 (int2, int1, int2),
-                                 (int1, int1, int3),
-                                 (int2, int3, int3),
-                                 (int3, int2, int3),
-                                 (int3, int2, int2),
-                                 (int2, int2, int3),
-                                 (int2, int3, int2)]
+                                      (0.0, int1, int1),
+                                      (int1, 0.0, int1),
+                                      (int2, int2, int1),
+                                      (int1, int2, int2),
+                                      (int2, int1, int2),
+                                      (int1, int1, int3),
+                                      (int2, int3, int3),
+                                      (int3, int2, int3),
+                                      (int3, int2, int2),
+                                      (int2, int2, int3),
+                                      (int2, int3, int2)]
 
         else:
             self.print_colours = [(0.0, 0.0, int1),
-                                 (int1, 0.0, 0.0),
-                                 (0.0, int1, 0.0),
-                                 (0.0, int1, int1),
-                                 (int1, int1, 0.0),
-                                 (int1, 0.0, int1),
-                                 (int3, int3, int2),
-                                 (int2, int3, int3),
-                                 (int3, int2, int3),
-                                 (int3, int2, int2),
-                                 (int2, int2, int3),
-                                 (int2, int3, int2)]
+                                  (int1, 0.0, 0.0),
+                                  (0.0, int1, 0.0),
+                                  (0.0, int1, int1),
+                                  (int1, int1, 0.0),
+                                  (int1, 0.0, int1),
+                                  (int3, int3, int2),
+                                  (int2, int3, int3),
+                                  (int3, int2, int3),
+                                  (int3, int2, int2),
+                                  (int2, int2, int3),
+                                  (int2, int3, int2)]
 
             int1 = self.int1 + light_neg_diff
             int2 = self.int2 + light_neg_diff
@@ -916,18 +938,17 @@ class NmrDataSet:
             int2 = min(int2, 1.0)
             int3 = min(int3, 1.0)
             self.print_neg_colours = [(light_neg_diff, light_neg_diff, int1),
-                                 (int1, light_neg_diff, light_neg_diff),
-                                 (light_neg_diff, int1, light_neg_diff),
-                                 (light_neg_diff, int1, int1),
-                                 (int1, int1, light_neg_diff),
-                                 (int1, light_neg_diff, int1),
-                                 (int3, int3, int2),
-                                 (int2, int3, int3),
-                                 (int3, int2, int3),
-                                 (int3, int2, int2),
-                                 (int2, int2, int3),
-                                 (int2, int3, int2)]
-
+                                      (int1, light_neg_diff, light_neg_diff),
+                                      (light_neg_diff, int1, light_neg_diff),
+                                      (light_neg_diff, int1, int1),
+                                      (int1, int1, light_neg_diff),
+                                      (int1, light_neg_diff, int1),
+                                      (int3, int3, int2),
+                                      (int2, int3, int3),
+                                      (int3, int2, int3),
+                                      (int3, int2, int2),
+                                      (int2, int2, int3),
+                                      (int2, int3, int2)]
 
         self.std_pos_col1 = (self.cf.pos_col10, self.cf.pos_col11, self.cf.pos_col12)
         self.std_neg_col1 = (self.cf.neg_col10, self.cf.neg_col11, self.cf.neg_col12)
@@ -1172,10 +1193,10 @@ class NmrDataSet:
                             hp = nd2.hsqc
                             for kkk in hp.__dict__.keys():
                                 if hasattr(h, kkk):
-                                    #if kkk != 'hsqc_data':
+                                    # if kkk != 'hsqc_data':
                                     exec('hp.' + kkk + '=h.' + kkk)
                                     #
-                                    #else:
+                                    # else:
                                     #    hd = h.hsqc_data
                                     #    hdp = hp.hsqc_data
                                     #    for kkkk in hdp.__dict__.keys():
@@ -1231,21 +1252,37 @@ class NmrDataSet:
         self.cf.save_config()
         # end load
 
+    def load_mat(self, file_name=''):
+        if len(file_name) == 0:
+            return
 
-    def load_mat(self, file_name):
-        self.clear()
         m = mat73.loadmat(file_name)
-        for exp in len(m['NMRDAT']['ACQUSText']):
+        self.clear()
+        self.s = 0
+        self.e = 0
+        for exp in range(len(m['NMRDAT']['ACQUSText'])):
             nd1 = nd.NmrData()
             acqus = m['NMRDAT']['ACQUSText'][exp][0]
             nd1.acq.acqus_text += acqus[0][0]
+            counter = -1
             for idx in range(1, len(acqus)):
                 if acqus[idx][0].find('##') > -1:
+                    counter = -1
+                    nd1.acq.acqus_text += '\n'
+                    nd1.acq.acqus_text += acqus[idx][0]
+                elif acqus[idx][0].find('(') > -1 and acqus[idx][0].find('(') > -1:
+                    counter = 0
+                    nd1.acq.acqus_text += ' '
+                    nd1.acq.acqus_text += acqus[idx][0]
                     nd1.acq.acqus_text += '\n'
                 else:
+                    if counter > -1:
+                        counter += 1
                     nd1.acq.acqus_text += ' '
-
-                nd1.acq.acqus_text += acqus[idx][0]
+                    nd1.acq.acqus_text += acqus[idx][0]
+                    if counter > 32:
+                        nd1.acq.acqus_text += '\n'
+                        counter = 0
 
             if hasattr(m['NMRDAT']['ACQU2SText'], 'keys'):
                 acqu2s = m['NMRDAT']['ACQU2SText'][exp][0]
@@ -1269,8 +1306,165 @@ class NmrDataSet:
 
                     nd1.acq.acqu3s_text += acqu3s[idx][0]
 
+            nd1.acq.parse_reg_ex()
+            if nd1.acq.group_delay == 0.0:
+                nd1.acq.set_group_delay()
 
+            nd1.acq.sfo2 = nd1.acq.bf2 + nd1.acq.o2 / 1000000.0
+            procs = m['NMRDAT']['PROCSText'][exp][0]
+            nd1.proc.procs_text += procs[0][0]
+            for idx in range(1, len(procs)):
+                if procs[idx][0].find('##') > -1:
+                    nd1.proc.procs_text += '\n'
+                else:
+                    nd1.proc.procs_text += ' '
 
+                nd1.proc.procs_text += procs[idx][0]
+
+            if hasattr(m['NMRDAT']['PROC2SText'], 'keys'):
+                proc2s = m['NMRDAT']['PROC2SText'][exp][0]
+                nd1.proc.proc2s_text += proc2s[0][0]
+                for idx in range(1, len(proc2s)):
+                    if proc2s[idx][0].find('##') > -1:
+                        nd1.proc.proc2s_text += '\n'
+                    else:
+                        nd1.proc.proc2s_text += ' '
+
+                    nd1.proc.proc2s_text += proc2s[idx][0]
+
+            if hasattr(m['NMRDAT']['PROC3SText'], 'keys'):
+                proc3s = m['NMRDAT']['PROC3SText'][exp][0]
+                nd1.proc.proc3s_text += proc3s[0][0]
+                for idx in range(1, len(proc3s)):
+                    if proc3s[idx][0].find('##') > -1:
+                        nd1.proc.proc3s_text += '\n'
+                    else:
+                        nd1.proc.proc3s_text += ' '
+
+                    nd1.proc.proc3s_text += proc3s[idx][0]
+
+            nd1.proc.parse_reg_ex()
+            if nd1.proc.axis_nucleus[1] != 'off':
+                nd1.display.y_label = nd1.proc.axis_nucleus[1]
+
+            nd1.orig_data_set = m['NMRDAT']['NAME'][exp]
+            nd1.title = m['NMRDAT']['COMMENT'][exp]
+            if m['NMRDAT']['ACQUS'][exp]['DIM'][0] == 1:
+                npts1 = 1
+                npts2 = len(m['NMRDAT']['MAT'][exp])
+                fidpts1 = 1
+                fidpts2 = len(m['NMRDAT']['SER'][exp])
+                nd1.acq.n_data_points[0] = fidpts2
+                nd1.fid = np.resize(nd1.fid, (fidpts1, fidpts2))
+                nd1.spc = np.resize(nd1.spc, (npts1, npts2))
+                nd1.fid[0] = m['NMRDAT']['SER'][exp]
+                nd1.spc[0] = m['NMRDAT']['MAT'][exp]
+                nd1.dim = 1
+                nd1.ref_shift[0] = m['NMRDAT']['PROC'][exp]['REF'][0][0]
+                nd1.ref_point[0] = npts2 - m['NMRDAT']['PROC'][exp]['REF'][0][1]
+                nd1.proc.n_points[0] = npts2
+                nd1.proc.ph0[0] = (-float(m['NMRDAT']['PROC'][exp]['PH0'][0]) - 90.0) % 360.0
+                nd1.proc.ph1[0] = -float(m['NMRDAT']['PROC'][exp]['PH1'][0])
+                nd1.proc.lb[0] = float(m['NMRDAT']['PROC'][exp]['LB'][0])
+                nd1.proc.gb[0] = float(m['NMRDAT']['PROC'][exp]['GB'][0])
+                nd1.proc.ssb[0] = float(m['NMRDAT']['PROC'][exp]['SSB'][0])
+            else:
+                npts1 = len(m['NMRDAT']['MAT'][exp])
+                npts2 = len(m['NMRDAT']['MAT'][exp][0])
+                fidpts1 = len(m['NMRDAT']['SER'][exp])
+                fidpts2 = len(m['NMRDAT']['SER'][exp][0])
+                nd1.acq.n_data_points[0] = fidpts2
+                nd1.acq.n_data_points[1] = fidpts1
+                nd1.fid = np.resize(nd1.fid, (fidpts1, fidpts2))
+                nd1.spc = np.resize(nd1.spc, (npts1, npts2))
+                nd1.fid = m['NMRDAT']['SER'][exp]
+                nd1.spc = m['NMRDAT']['MAT'][exp]
+                nd1.dim = 2
+                nd1.ref_shift[0] = m['NMRDAT']['PROC'][exp]['REF'][0][0]
+                nd1.ref_point[0] = npts2 - m['NMRDAT']['PROC'][exp]['REF'][0][1]
+                nd1.ref_shift[1] = m['NMRDAT']['PROC'][exp]['REF'][1][0]
+                nd1.ref_point[1] = npts1 - m['NMRDAT']['PROC'][exp]['REF'][1][1]
+                nd1.proc.n_points[0] = npts2
+                nd1.proc.n_points[1] = npts1
+                nd1.acq.sw_h[0] = float(m['NMRDAT']['PROC'][exp]['REF'][0][3])
+                nd1.acq.sw_h[1] = float(m['NMRDAT']['ACQUS'][exp]['SW_h'][1])
+                nd1.proc.ph0[0] = (-float(m['NMRDAT']['PROC'][exp]['PH0'][0]) - 90.0) % 360.0
+                nd1.proc.ph1[0] = -float(m['NMRDAT']['PROC'][exp]['PH1'][0])
+                nd1.proc.ph0[1] = -float(m['NMRDAT']['PROC'][exp]['PH0'][1])
+                nd1.proc.ph1[1] = -float(m['NMRDAT']['PROC'][exp]['PH1'][1])
+                nd1.proc.lb[0] = float(m['NMRDAT']['PROC'][exp]['LB'][0])
+                nd1.proc.gb[0] = float(m['NMRDAT']['PROC'][exp]['GB'][0])
+                nd1.proc.ssb[0] = float(m['NMRDAT']['PROC'][exp]['SSB'][0])
+                nd1.proc.lb[1] = float(m['NMRDAT']['PROC'][exp]['LB'][1])
+                nd1.proc.gb[1] = float(m['NMRDAT']['PROC'][exp]['GB'][1])
+                nd1.proc.ssb[1] = float(m['NMRDAT']['PROC'][exp]['SSB'][1])
+
+            nd1.proc.sw_h = np.copy(nd1.acq.sw_h)
+            nd1.acq.manufacturer = 'Bruker'
+            nd1.calc_ppm()
+            if hasattr(m['metaboSpc'], 'keys'):
+                if type(m['metaboSpc']['baseline']['spline']['baseline_points']) == np.ndarray:
+                    nd1.spline_baseline.linear_spline = int(m['metaboSpc']['baseline']['spline']['linear_points'])
+                    nd1.spline_baseline.average_points = int(
+                        m['metaboSpc']['baseline']['spline']['baseline_average_points'])
+                    nd1.spline_baseline.baseline_points = nd1.points2ppm(
+                        npts2 - np.array(m['metaboSpc']['baseline']['spline']['baseline_points'], dtype=int))
+                    nd1.add_baseline_points()
+
+            self.nmrdat[self.s].append(nd1)
+
+        if hasattr(m['metaboSpc'], 'keys'):
+            if type(m['metaboSpc']['exclude']['start']) == np.ndarray:
+                try:
+                    self.pp.exclude_start = np.sort(np.round(1e4 * np.array(m['metaboSpc']['exclude']['stop'])) / 1e4)
+                    self.pp.exclude_end = np.sort(np.round(1e4 * np.array(m['metaboSpc']['exclude']['start'])) / 1e4)
+                except:
+                    self.pp.exclude_start = np.round(1e4 * np.array(m['metaboSpc']['exclude']['stop'])) / 1e4
+                    self.pp.exclude_end = np.round(1e4 * np.array(m['metaboSpc']['exclude']['start'])) / 1e4
+
+            if type(m['metaboSpc']['compress1']['start']) == np.ndarray:
+                try:
+                    self.pp.seg_start = np.sort(np.round(1e4 * np.array(m['metaboSpc']['compress1']['stop'])) / 1e4)
+                    self.pp.seg_end = np.sort(np.round(1e4 * np.array(m['metaboSpc']['compress1']['start'])) / 1e4)
+                except:
+                    self.pp.seg_start = np.round(1e4 * np.array([m['metaboSpc']['compress1']['stop']])) / 1e4
+                    self.pp.seg_end = np.round(1e4 * np.array([m['metaboSpc']['compress1']['start']])) / 1e4
+
+            if type(m['metaboSpc']['noiseFilter']['threshold']) == np.ndarray:
+                self.pp.noise_threshold = float(m['metaboSpc']['noiseFilter']['threshold'])
+                self.pp.noise_start = float(m['metaboSpc']['noiseFilter']['regEnd'])
+                self.pp.noise_end = float(m['metaboSpc']['noiseFilter']['regStart'])
+
+            if type(m['metaboSpc']['bucket']['bucketSizePoints']) == np.ndarray:
+                self.pp.bucket_points = float(m['metaboSpc']['bucket']['bucketSizePoints'])
+                ppm_per_point = abs(nd1.ppm1[0] - nd1.ppm1[1])
+                bucket_points = self.pp.bucket_points
+                bucket_ppm = np.round(1e4 * bucket_points * ppm_per_point) / 1e4
+                self.pp.bucket_points = bucket_points
+                self.pp.bucket_ppm = bucket_ppm
+
+            if type(m['metaboSpc']['compress2']['start']) == np.ndarray:
+                try:
+                    self.pp.compress_start = np.sort(
+                        np.round(1e4 * np.array(m['metaboSpc']['compress2']['stop'])) / 1e4)
+                    self.pp.compress_end = np.sort(np.round(1e4 * np.array(m['metaboSpc']['compress2']['start'])) / 1e4)
+                except:
+                    self.pp.compress_start = np.round(1e4 * np.array([m['metaboSpc']['compress2']['stop']])) / 1e4
+                    self.pp.compress_end = np.round(1e4 * np.array([m['metaboSpc']['compress2']['start']])) / 1e4
+
+            if type(m['metaboSpc']['scale2']['pqn']) == np.ndarray:
+                if float(m['metaboSpc']['scale2']['pqn']) == 1.0:
+                    self.pp.scale_pqn = True
+                else:
+                    self.pp.scale_pqn = False
+
+            self.pp.auto_scaling = bool(m['metaboSpc']['advancedScale']['use_autoscale'])
+            self.pp.pareto_scaling = bool(m['metaboSpc']['advancedScale']['use_paretoscale'])
+            self.pp.g_log_transform = bool(m['metaboSpc']['advancedScale']['use_glogscale'])
+            self.pp.var_lambda = float(m['metaboSpc']['advancedScale']['lambda'])
+            self.pp.var_y0 = float(m['metaboSpc']['advancedScale']['glog_minlev'])
+            self.reset_data_pre_processing()
+        # end load_mat
 
     def noise_filtering(self):
         val = self.pp.noise_threshold * self.pp.std_val
@@ -1471,7 +1665,7 @@ class NmrDataSet:
 
     # end read_spcs
 
-    def read_title_file_information_excel(self, file_name = ''):
+    def read_title_file_information_excel(self, file_name=''):
         if len(file_name) == 0:
             return
 
@@ -1485,8 +1679,8 @@ class NmrDataSet:
         nd1.data_set_number = data_set_number
         nd1.read_spc()
         nd1.read_pipe_2d(data_set_name + os.sep + data_set_number + '.proc', proc_data_name)
-        nd1.acq.sw[0] = nd1.acq.sw[0]*len(nd1.spc[0])/2**math.ceil(math.log(len(nd1.spc[0]),2))
-        nd1.acq.sw_h[0] = nd1.acq.sw_h[0]*len(nd1.spc[0])/2**math.ceil(math.log(len(nd1.spc[0]),2))
+        nd1.acq.sw[0] = nd1.acq.sw[0] * len(nd1.spc[0]) / 2 ** math.ceil(math.log(len(nd1.spc[0]), 2))
+        nd1.acq.sw_h[0] = nd1.acq.sw_h[0] * len(nd1.spc[0]) / 2 ** math.ceil(math.log(len(nd1.spc[0]), 2))
         nd1.calc_ppm()
         self.nmrdat[self.s].append(nd1)
         # end read_spc
@@ -1511,14 +1705,16 @@ class NmrDataSet:
 
             ref_point = len(self.nmrdat[s][k].spc[0]) - self.nmrdat[s][k].ppm2points(old_ppm) - 1
             diff_pts = np.linspace(-1, 1, 3, dtype=int)
-            ref_pts = ref_point*np.ones(3, dtype=int) + diff_pts
+            ref_pts = ref_point * np.ones(3, dtype=int) + diff_pts
             found_maximum = False
             while not found_maximum:
                 if find_maximum:
-                    max_idx = np.where(self.nmrdat[s][k].spc[0][ref_pts] == np.max(self.nmrdat[s][k].spc[0][ref_pts]))[0][0]
+                    max_idx = \
+                    np.where(self.nmrdat[s][k].spc[0][ref_pts] == np.max(self.nmrdat[s][k].spc[0][ref_pts]))[0][0]
                 else:
-                    max_idx = np.where(self.nmrdat[s][k].spc[0][ref_pts] == np.min(self.nmrdat[s][k].spc[0][ref_pts]))[0][0]
-                    
+                    max_idx = \
+                    np.where(self.nmrdat[s][k].spc[0][ref_pts] == np.min(self.nmrdat[s][k].spc[0][ref_pts]))[0][0]
+
                 ref_point += diff_pts[max_idx]
                 ref_pts = ref_point * np.ones(3, dtype=int) + diff_pts
                 if max_idx == 1:
@@ -1656,7 +1852,7 @@ class NmrDataSet:
                 spc_sum = np.sum(self.nmrdat[self.s][k].spc[0]).real
                 self.nmrdat[self.s][k].spc[0] /= spc_sum
                 self.nmrdat[self.s][k].spc[0] *= np.max(scale)
-                self.pp.spc_scale[k] = spc_sum/np.max(scale)
+                self.pp.spc_scale[k] = spc_sum / np.max(scale)
 
         # end scale_spectra
 
@@ -1768,14 +1964,14 @@ class NmrDataSet:
 
     # end segmental_alignment
 
-    def select_plot_all(self): # pragma: no cover
+    def select_plot_all(self):  # pragma: no cover
         for k in range(len(self.nmrdat[self.s])):
             self.nmrdat[self.s][k].display.display_spc = True
 
         self.plot_spc()
         # end select_plot_all
 
-    def select_plot_clear(self): # pragma: no cover
+    def select_plot_clear(self):  # pragma: no cover
         for k in range(len(self.nmrdat[self.s])):
             self.nmrdat[self.s][k].display.display_spc = False
 
@@ -1791,7 +1987,7 @@ class NmrDataSet:
 
         # set_autobaseline
 
-    def set_loadings_from_excel(self, file_name='', worksheet='', columns=['']): # pragma: no cover
+    def set_loadings_from_excel(self, file_name='', worksheet='', columns=['']):  # pragma: no cover
         if len(file_name) == 0:
             return
 
@@ -1830,13 +2026,14 @@ class NmrDataSet:
             self.nmrdat[s][k].ppm1 = np.resize(self.nmrdat[s][self.e].ppm1, (len(self.nmrdat[self.s][self.e].ppm1)))
             self.nmrdat[s][k].ppm1 = np.copy(self.nmrdat[self.s][self.e].ppm1)
             self.nmrdat[s][k].spc = np.resize(self.nmrdat[s][self.e].spc,
-                                                    (1, len(self.nmrdat[self.s][self.e].spc[0])))
+                                              (1, len(self.nmrdat[self.s][self.e].spc[0])))
             self.nmrdat[s][k].ref_shift = self.nmrdat[self.s][self.e].ref_shift
             self.nmrdat[s][k].ref_point = self.nmrdat[self.s][self.e].ref_point
-            self.nmrdat[s][k].ref_point[0] = np.where(np.abs(self.nmrdat[s][k].ppm1) == np.min(np.abs(self.nmrdat[s][k].ppm1)))[0][0]
+            self.nmrdat[s][k].ref_point[0] = \
+            np.where(np.abs(self.nmrdat[s][k].ppm1) == np.min(np.abs(self.nmrdat[s][k].ppm1)))[0][0]
             self.nmrdat[s][k].spc[0][select] = np.copy(df[columns[k]])
             self.nmrdat[s][k].title = 'Loadings from ' + columns[k] + '\n'
-            m0 = np.max(self.nmrdat[s][k].spc[0].real)*0.001
+            m0 = np.max(self.nmrdat[s][k].spc[0].real) * 0.001
             r2 = 0.001
             self.nmrdat[s][k].add_tmsp(m0, r2)
 
@@ -1933,7 +2130,9 @@ class NmrDataSet:
                 c_dict[str(xls[rack_label][k]) + " " + str(xls[pos_label][k])] = k
 
         for k in range(len(self.nmrdat[self.s])):
-            self.nmrdat[self.s][k].set_title_information(xls=xls, excel_name=excel_name, pos_label=pos_label, rack_label=rack_label, c_dict=c_dict, replace_orig_title=replace_orig_title)
+            self.nmrdat[self.s][k].set_title_information(xls=xls, excel_name=excel_name, pos_label=pos_label,
+                                                         rack_label=rack_label, c_dict=c_dict,
+                                                         replace_orig_title=replace_orig_title)
 
         # end set_title_information
 
@@ -1985,7 +2184,8 @@ class NmrDataSet:
     def spline_correct(self):
         if len(self.nmrdat[self.s][self.e].spline_baseline.baseline_points) > 0:
             for k in range(len(self.nmrdat[self.s])):
-                self.nmrdat[self.s][k].spline_baseline.baseline_points = self.nmrdat[self.s][self.e].spline_baseline.baseline_points
+                self.nmrdat[self.s][k].spline_baseline.baseline_points = self.nmrdat[self.s][
+                    self.e].spline_baseline.baseline_points
                 self.nmrdat[self.s][k].corr_spline_baseline()
 
     def variance_stabilisation(self):
