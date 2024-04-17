@@ -73,8 +73,8 @@ class NmrData:
         self.title = str('Empty NMR data set')
         self.pulse_program = str('')
         self.window_function = {'none': 0, 'exponential': 1, 'gaussian': 2, 'sine': 3, 'qsine': 4, 'sem': 5}
-        self.ref_shift = np.array([0, 0, 0], dtype='float64')
-        self.ref_point = np.array([0, 0, 0], dtype='int')
+        self.ref_shift = np.copy(np.array([0, 0, 0], dtype='float64'))
+        self.ref_point = np.copy(np.array([0, 0, 0], dtype='int'))
         self.refsw = np.array([0, 0, 0], dtype='float64')
         self.ref_tmsp_range = 0.3  # [ppm]
         self.ref = 'auto'
@@ -271,9 +271,9 @@ class NmrData:
     def add_tmsp(self, m0=1, r2=1):
         npts = len(self.spc[0])
         tsp_frq = - 2 * math.pi * self.ref_point[0] / npts + math.pi
-        t = np.linspace(0, npts - 1, npts);
-        tsp_fid = m0 * np.exp(t * (1j * tsp_frq - r2));
-        spc = fftshift(fft(tsp_fid));
+        t = np.linspace(0, npts - 1, npts)
+        tsp_fid = m0 * np.exp(t * (1j * tsp_frq - r2))
+        spc = fftshift(fft(tsp_fid))
         self.spc[0] += spc.real
         # end add_tmsp
 
@@ -285,7 +285,8 @@ class NmrData:
 
         if self.proc.window_type[dim] == 1:  # exponential window
             t = (np.linspace(0.0, len(fid) - 1, len(fid)) - group_delay) / sw_h
-            wdwf = np.exp(-2 * np.pi * lb * t)
+            wdwf = np.exp(-lb * t)
+            #wdwf = np.exp(-2 * np.pi * lb * t)
 
         if self.proc.window_type[dim] == 2:  # gaussian window
             t = (np.linspace(0.0, len(fid) - 1 - group_delay, len(fid))) / sw_h

@@ -17,6 +17,8 @@ import shutil  # pragma: no cover
 import pandas as pd  # pragma: no cover
 import darkdetect  # pragma: no cover
 import mat73
+from copy import copy
+import gc
 
 
 class NmrDataSet:
@@ -220,6 +222,7 @@ class NmrDataSet:
 
     def auto_ref(self, tmsp=True):
         if self.nmrdat[self.s][self.e].dim == 1:
+            self.nmrdat[self.s][self.e].ref = 'auto'
             self.nmrdat[self.s][self.e].auto_ref(tmsp)
             # self.nmrdat[self.s][self.e].setRef(np.array([0.0]), np.array([14836]))
 
@@ -1264,6 +1267,7 @@ class NmrDataSet:
         self.s = 0
         self.e = 0
         for exp in range(len(m['NMRDAT']['ACQUSText'])):
+            gc.collect()
             nd1 = nd.NmrData()
             acqus = m['NMRDAT']['ACQUSText'][exp][0]
             nd1.acq.acqus_text += acqus[0][0]
@@ -1363,8 +1367,10 @@ class NmrDataSet:
                 nd1.fid[0] = m['NMRDAT']['SER'][exp]
                 nd1.spc[0] = m['NMRDAT']['MAT'][exp]
                 nd1.dim = 1
-                nd1.ref_shift[0] = m['NMRDAT']['PROC'][exp]['REF'][0][0]
-                nd1.ref_point[0] = npts2 - m['NMRDAT']['PROC'][exp]['REF'][0][1]
+                nd1.ref_shift[0] = copy(m['NMRDAT']['PROC'][exp]['REF'][0][0])
+                nd1.ref_point[0] = npts2 - copy(m['NMRDAT']['PROC'][exp]['REF'][0][1])
+                # deref ???
+                # https://stackoverflow.com/questions/15011674/is-it-possible-to-dereference-variable-ids
                 nd1.proc.n_points[0] = npts2
                 nd1.proc.ph0[0] = (-float(m['NMRDAT']['PROC'][exp]['PH0'][0]) - 90.0) % 360.0
                 nd1.proc.ph1[0] = -float(m['NMRDAT']['PROC'][exp]['PH1'][0])
@@ -1383,10 +1389,10 @@ class NmrDataSet:
                 nd1.fid = m['NMRDAT']['SER'][exp]
                 nd1.spc = m['NMRDAT']['MAT'][exp]
                 nd1.dim = 2
-                nd1.ref_shift[0] = m['NMRDAT']['PROC'][exp]['REF'][0][0]
-                nd1.ref_point[0] = npts2 - m['NMRDAT']['PROC'][exp]['REF'][0][1]
-                nd1.ref_shift[1] = m['NMRDAT']['PROC'][exp]['REF'][1][0]
-                nd1.ref_point[1] = npts1 - m['NMRDAT']['PROC'][exp]['REF'][1][1]
+                nd1.ref_shift[0] = copy(m['NMRDAT']['PROC'][exp]['REF'][0][0])
+                nd1.ref_point[0] = npts2 - np.copy(m['NMRDAT']['PROC'][exp]['REF'][0][1])
+                nd1.ref_shift[1] = copy(m['NMRDAT']['PROC'][exp]['REF'][1][0])
+                nd1.ref_point[1] = npts1 - np.copy(m['NMRDAT']['PROC'][exp]['REF'][1][1])
                 nd1.proc.n_points[0] = npts2
                 nd1.proc.n_points[1] = npts1
                 nd1.acq.sw_h[0] = float(m['NMRDAT']['PROC'][exp]['REF'][0][3])
@@ -1506,7 +1512,7 @@ class NmrDataSet:
             self.nmrdat[set - 1][k].ppm1 = np.copy(self.nmrdat[self.s][k].ppm1)
             self.nmrdat[set - 1][k].spc = np.resize(self.nmrdat[set - 1][k].spc,
                                                     (1, len(self.nmrdat[self.s][k].spc[0])))
-            self.nmrdat[set - 1][k].ref_shift = self.nmrdat[self.s][k].ref_shift
+            self.nmrdat[set - 1][k].ref_shift = copy(self.nmrdat[self.s][k].ref_shift)
             self.nmrdat[set - 1][k].ref_point = self.nmrdat[self.s][k].ref_point
             self.nmrdat[set - 1][k].title = "pJres spectrum\n" + self.nmrdat[self.s][k].title
             self.nmrdat[set - 1][k].pjres_mode = mode
@@ -1724,7 +1730,7 @@ class NmrDataSet:
                     found_maximum = True
 
             self.nmrdat[s][k].ref_point[0] = len(self.nmrdat[s][k].spc[0]) - ref_point - 1
-            self.nmrdat[s][k].ref_shift[0] = new_ppm
+            self.nmrdat[s][k].ref_shift[0] = copy(new_ppm)
             self.nmrdat[s][k].ref = 'manual'
             self.nmrdat[s][k].calc_ppm()
         # end reference1d_all
@@ -2030,9 +2036,9 @@ class NmrDataSet:
             self.nmrdat[s][k].ppm1 = np.copy(self.nmrdat[self.s][self.e].ppm1)
             self.nmrdat[s][k].spc = np.resize(self.nmrdat[s][self.e].spc,
                                               (1, len(self.nmrdat[self.s][self.e].spc[0])))
-            self.nmrdat[s][k].ref_shift = self.nmrdat[self.s][self.e].ref_shift
+            self.nmrdat[s][k].ref_shift = copy(self.nmrdat[self.s][self.e].ref_shift)
             self.nmrdat[s][k].ref_point = self.nmrdat[self.s][self.e].ref_point
-            self.nmrdat[s][k].ref_point[0] = \
+            self.nmrdat[s][k].ref_point[0] = len(self.nmrdat[s][k].ppm1) - \
             np.where(np.abs(self.nmrdat[s][k].ppm1) == np.min(np.abs(self.nmrdat[s][k].ppm1)))[0][0]
             self.nmrdat[s][k].spc[0][select] = np.copy(df[columns[k]])
             self.nmrdat[s][k].title = 'Loadings from ' + columns[k] + '\n'
@@ -2179,8 +2185,8 @@ class NmrDataSet:
         for k in range(len(self.nmrdat[self.s])):
             shift_delta = self.nmrdat[self.s][k].ref_point[0] - self.nmrdat[self.s][0].ref_point[0]
             self.nmrdat[self.s][k].spc[0] = np.roll(self.nmrdat[self.s][k].spc[0], shift_delta)
-            self.nmrdat[self.s][k].ppm1 = self.nmrdat[self.s][0].ppm1
-            self.nmrdat[self.s][k].ref_shift = self.nmrdat[self.s][0].ref_shift
+            self.nmrdat[self.s][k].ppm1 = copy(self.nmrdat[self.s][0].ppm1)
+            self.nmrdat[self.s][k].ref_shift = copy(self.nmrdat[self.s][0].ref_shift)
 
     # end shift_ref
 
