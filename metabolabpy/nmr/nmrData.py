@@ -31,8 +31,9 @@ from pybaselines.classification import dietrich, golotvin, std_distribution, fas
 from pybaselines.misc import interp_pts, beads
 from pybaselines.polynomial import poly, modpoly, imodpoly, penalized_poly, loess, quant_reg, goldindec
 from pybaselines import Baseline
-from metabolabpy.nmr.phase3 import phase3
+from metabolabpy.nmr.phase3 import phase3 #, objective_function, penalty_function
 import pywt
+from scipy.stats import linregress
 
 try:
     import pygamma as pg
@@ -285,8 +286,7 @@ class NmrData:
 
         if self.proc.window_type[dim] == 1:  # exponential window
             t = (np.linspace(0.0, len(fid) - 1, len(fid)) - group_delay) / sw_h
-            wdwf = np.exp(-lb * t)
-            #wdwf = np.exp(-2 * np.pi * lb * t)
+            wdwf = np.exp(-2 * np.pi * lb * t)
 
         if self.proc.window_type[dim] == 2:  # gaussian window
             t = (np.linspace(0.0, len(fid) - 1 - group_delay, len(fid))) / sw_h
@@ -481,7 +481,213 @@ class NmrData:
         return 1.0
         # end autobaseline2d
 
-    def autophase1d(self, gamma_factor=1.0):
+    #@njit
+    def objective_function(self, phase, spc, start_peak, end_peak):
+        ph0 = phase[0] * math.pi / 180.0
+        ph1 = phase[1] * math.pi / 180.0
+        npts = len(spc)
+        phase_row = ph0 + np.linspace(0, npts - 1, npts) * ph1 / (npts - 1)
+        spc2 = np.zeros(len(spc), dtype=complex)
+        spc2.real = np.copy(spc.real * np.cos(phase_row) - spc.imag * np.sin(phase_row))
+        spc2.imag = np.copy(spc.real * np.sin(phase_row) + spc.imag * np.cos(phase_row))
+        of = np.zeros(len(start_peak))
+        max_components = 7
+        ddiff = int((max_components - 1) / 2)
+        for k in range(len(of)):
+            if end_peak[k] - start_peak[k] > max_components:
+                of[k] = np.abs(np.sum(spc2[start_peak[k]:start_peak[k] + ddiff].real) - np.sum(
+                    spc2[end_peak[k] - ddiff:end_peak[k]].real))
+
+        return np.sum(of)
+        # end objective_function
+
+    #@njit
+    def penalty_function(self, phase, start_peak, end_peak, spc):
+        ph0 = phase[0] * math.pi / 180.0
+        ph1 = phase[1] * math.pi / 180.0
+        npts = len(spc)
+        phase_row = ph0 + np.linspace(0, npts - 1, npts) * ph1 / (npts - 1)
+        spc2 = np.zeros(npts, dtype=complex)
+        spc2.real = np.copy(spc.real * np.cos(phase_row) - spc.imag * np.sin(phase_row))
+        spc2.imag = np.copy(spc.real * np.sin(phase_row) + spc.imag * np.cos(phase_row))
+        pf = 0.0
+        for k in range(len(start_peak)):
+            npts2 = end_peak[k] - start_peak[k]
+            baseline = np.linspace(spc2[start_peak[k]].real, spc2[end_peak[k]].real, npts2)
+            spc2[start_peak[k]:end_peak[k]].real -= baseline
+            pf += np.sum((spc2[start_peak[k]:end_peak[k]].real - np.abs(spc2[start_peak[k]:end_peak[k]].real)) ** 2)
+
+        return pf
+        # end penalty_function
+
+    def objective_function1(self, phase, spc, start_peak, end_peak):
+        ph0 = phase[0] * math.pi / 180.0
+        ph1 = phase[1] * math.pi / 180.0
+        npts = len(spc)
+        phase_row = ph0 + np.linspace(0, npts - 1, npts) * ph1 / (npts - 1)
+        spc2 = np.zeros(len(spc), dtype=complex)
+        spc2.real = np.copy(spc.real * np.cos(phase_row) - spc.imag * np.sin(phase_row))
+        spc2.imag = np.copy(spc.real * np.sin(phase_row) + spc.imag * np.cos(phase_row))
+        of = np.zeros(len(start_peak))
+        max_components = 7
+        ddiff = int((max_components - 1) / 2)
+        for k in range(len(of)):
+            if end_peak[k] - start_peak[k] > max_components:
+                of[k] = np.abs(np.sum(spc2[start_peak[k]:start_peak[k] + ddiff].real) - np.sum(
+                    spc2[end_peak[k] - ddiff:end_peak[k]].real))
+
+        return np.sum(of), spc2
+        # end objective_function
+
+    #@njit
+    def penalty_function1(self, phase, start_peak, end_peak, spc):
+        ph0 = phase[0] * math.pi / 180.0
+        ph1 = phase[1] * math.pi / 180.0
+        npts = len(spc)
+        phase_row = ph0 + np.linspace(0, npts - 1, npts) * ph1 / (npts - 1)
+        spc2 = np.zeros(npts, dtype=complex)
+        spc2.real = np.copy(spc.real * np.cos(phase_row) - spc.imag * np.sin(phase_row))
+        spc2.imag = np.copy(spc.real * np.sin(phase_row) + spc.imag * np.cos(phase_row))
+        pf = 0.0
+        for k in range(len(start_peak)):
+            npts2 = end_peak[k] - start_peak[k]
+            baseline = np.linspace(spc2[start_peak[k]].real, spc2[end_peak[k]].real, npts2)
+            spc2[start_peak[k]:end_peak[k]].real -= baseline
+            pf += np.sum((spc2[start_peak[k]:end_peak[k]].real - np.abs(spc2[start_peak[k]:end_peak[k]].real)) ** 2)
+
+        return pf, spc2
+        # end penalty_function
+
+    def autophase1d(self):
+        self.proc.ph0[0] = 0.0
+        self.proc.ph1[0] = 0.0
+        n_points = self.proc.n_points[0]
+        water_suppression = self.proc.water_suppression
+        window_type = self.proc.window_type[0]
+        autobaseline = self.proc.autobaseline
+        self.proc.autobaseline = False
+        self.proc.n_points[0] = 131072
+        self.proc.water_suppression = 0
+        self.proc.window_type[0] = 0
+        self.proc_spc1d()
+        spc = np.copy(self.spc[0])
+        spc2 = np.zeros(len(spc), dtype=complex)
+        spc2.real = signal.cwt(spc.real, signal.ricker, [1])
+        spc2.imag = signal.cwt(spc.imag, signal.ricker, [1])
+        spc2a = np.abs(spc2)
+        num_windows = 1024
+        len_window = int(len(spc) / num_windows)
+        K = 20
+        width = 128
+        std_vals = np.zeros(num_windows)
+        std_vals2 = np.zeros(num_windows)
+        mmax = np.max(spc2a)
+        mmax2 = np.max(spc.real)
+        for k in range(num_windows):
+            std_vals[k] = np.std(spc2a[k * len_window:(k + 1) * len_window].real)
+
+        noise_val = np.min(std_vals)
+        is_baseline = np.ones(len(spc), dtype=int)
+        for k in range(len(spc) - 3 * len_window):
+            mid_point = int(k + 3 * len_window / 2)
+            range_low = int(mid_point - len_window / 2)
+            range_high = int(mid_point + len_window / 2)
+            height = np.max(spc2a[range_low:range_high]) - np.min(spc2a[range_low:range_high])
+            if height >= K * noise_val:
+                is_baseline[mid_point - width:mid_point + width] = np.zeros(width * 2)
+
+        is_baseline[int(len(spc) / 2 - 0.03 * len(spc)):int(len(spc) / 2 + 0.03 * len(spc))] = np.ones(
+            2 * int(0.03 * len(spc)) + 1)
+        is_baseline1 = np.copy(is_baseline)
+        is_baseline1[int(len(spc) / 2 - 0.03 * len(spc)):int(len(spc) / 2 + 0.03 * len(spc))] = np.zeros(
+            2 * int(0.03 * len(spc)) + 1)
+        start_peak = np.where(np.diff(is_baseline) == -1)[0]
+        end_peak = np.where(np.diff(is_baseline) == 1)[0]
+        max_peaks = 1000
+        if len(start_peak) > max_peaks:
+            start_peak = np.copy(np.delete(start_peak, range(int(max_peaks / 2), len(start_peak) - int(max_peaks / 2))))
+            end_peak = np.copy(np.delete(end_peak, range(int(max_peaks / 2), len(end_peak) - int(max_peaks / 2))))
+
+        pos_peaks = np.zeros(len(start_peak))
+        start_pars = [0.0, 0.0]
+        par_eval = self.fit_phase(start_pars, spc, start_peak, end_peak)
+        print(f'par_eval(1): {par_eval.x}')
+        self.proc.ph0[0] += par_eval.x[0]
+        self.proc.ph1[0] += par_eval.x[1]
+        self.proc_spc1d()
+        spc = np.copy(self.spc[0])
+        for k in range(len(pos_peaks)):
+            if np.max(spc[start_peak[k]:end_peak[k]].real) == np.max(np.abs(spc[start_peak[k]:end_peak[k]].real)):
+                pos_peaks[k] = 1
+
+        pos_peaks_percentage = 100.0 * pos_peaks.sum() / len(pos_peaks)
+        if pos_peaks_percentage < 50.0:
+            self.proc.ph0[0] += 180.0
+            self.proc.ph0[0] %= 360.0
+
+        self.proc_spc1d()
+        spc = np.copy(self.spc[0])
+        mmax2 = np.max(spc.real)
+        for k in range(num_windows):
+            std_vals2[k] = np.std(spc[k * len_window:(k + 1) * len_window].real)
+
+        noise_val2 = np.min(std_vals2)
+        mid_pos = np.zeros(len(start_peak))
+        max_val = np.zeros(len(start_peak))
+        left_val = np.zeros(len(start_peak))
+        right_val = np.zeros(len(start_peak))
+        for k in range(len(start_peak)):
+            mid_pos[k] = np.median(range(start_peak[k], end_peak[k]))
+            max_val[k] = np.max(spc[start_peak[k]:end_peak[k]].real)
+            left_val[k] = spc[start_peak[k]].real
+            right_val[k] = spc[end_peak[k]].real
+
+        max_noise = 8.0
+        selection = np.where((left_val + right_val) / (2 * noise_val2) < max_noise)[0]
+        print(selection)
+        if len(selection) >= 2 and (
+                np.max(end_peak[selection]) < len(spc) / 2 or np.min(start_peak[selection]) > len(spc) / 2):
+            max_noise *= 2
+            selection = np.where((left_val + right_val) / (2 * noise_val2) < max_noise)[0]
+
+        if len(selection) < 2 or (
+                np.max(end_peak[selection]) < len(spc) / 2 or np.min(start_peak[selection]) > len(spc) / 2):
+            max_noise = 40.0
+            selection = np.where((left_val + right_val) / (2 * noise_val2) < max_noise)[0]
+
+        print(selection)
+        #phase = [0.0, 0.0]
+        if len(selection) > 1:
+            print(end_peak[selection])
+            start_peak2 = np.copy(start_peak[selection])
+            end_peak2 = np.copy(end_peak[selection])
+            par_eval = self.fit_pf(start_pars, spc, start_peak2, end_peak2)
+            print(f'par_eval(2): {par_eval.x}')
+            self.proc.ph0[0] += par_eval.x[0]
+            self.proc.ph1[0] += par_eval.x[1]
+
+        self.proc.ph0[0] += 180.0
+        self.proc.ph0[0] %= 360.0
+        self.proc.ph0[0] -= 180.0
+        self.proc.n_points[0] = n_points
+        self.proc.water_suppression = water_suppression
+        self.proc.window_type[0] = window_type
+        self.proc.autobaseline = autobaseline
+        self.proc_spc1d()
+        # end autophase1d
+
+    def fit_phase(self, phase, spc, start_peak, end_peak):
+        eval_parameters = optimize.minimize(self.objective_function, phase, method='Powell',
+                                            args=(spc, start_peak, end_peak))
+        return eval_parameters
+        # end fit_phase
+
+    def fit_pf(self, phase, spc, start_peak, end_peak):
+        par_eval = np.zeros(2)
+        par_eval = optimize.minimize(self.penalty_function, phase, method='Powell', args=(start_peak, end_peak, spc))
+        return par_eval
+
+    def autophase1d1(self, gamma_factor=1.0):
         self.proc.ph0[0] = 0
         self.proc.ph1[0] = 0
         self.proc_spc1d()
@@ -492,7 +698,7 @@ class NmrData:
         self.proc.ph0[0] = e_pars[0]
         self.proc.ph1[0] = e_pars[1]
         self.proc_spc1d()
-        # end autophase1d
+        # end autophase1d1
 
     def autophase1d_exclude_water(self, delta_sw=-1):
         self.exclude_water = True
@@ -532,7 +738,7 @@ class NmrData:
         self.exclude_water = False
         # end autophase1d_exclude_water
 
-    def autophase1d1(self):
+    def autophase1d1(self, auto_ref=True):
         spc = self.spc[0]
         self.apc.npts = len(spc)
         scale_fact = np.max(np.abs(spc))
@@ -554,7 +760,9 @@ class NmrData:
         self.proc.ph0[0] += par_eval[0] * self.apc.m_fact0
         self.proc.ph1[0] += par_eval[1] * self.apc.m_fact1
         self.apc.correct_baseline = 1
-        self.auto_ref()
+        if auto_ref:
+            self.auto_ref()
+
         self.proc_spc1d()
         self.baseline1d()
         # end autophase1d1
