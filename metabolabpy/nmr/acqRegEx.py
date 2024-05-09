@@ -56,6 +56,7 @@ class AcqRegEx:
         self.pul_prog = re.compile(r'##\$PULPROG= (.+)')
         self.aunm = re.compile(r'##\$AUNM= (.+)')
         self.autopos = re.compile(r'##\$AUTOPOS= (.+)')
+        self.holder = re.compile(r'##\$HOLDER= (\d+)')
         self.nucleus = re.compile(r'##\$NUC\d= (.+)')
         self.nucleus_index = re.compile(r'##\$NUC(\d)=.+')
         self.instrument = re.compile(r'##\$INSTRUM= (.+)')

@@ -41,6 +41,7 @@ class AcqPars:
         self.o6 = 0.0
         self.o7 = 0.0
         self.o8 = 0.0
+        self.holder = 0
         self.n_data_points = np.array([0, 0, 0], dtype='int')
         self.aq_mode = 0
         self.decim = 0
@@ -210,6 +211,11 @@ class AcqPars:
             self.autopos = self.reg_ex.autopos.findall(self.acqus_text)[0]
         except:
             self.autopos = 'N/A'
+
+        try:
+            self.holder = self.reg_ex.holder.findall(self.acqus_text)[0]
+        except:
+            self.holder = -1
 
         self.instrument = self.reg_ex.instrument.findall(self.acqus_text)[0]
         self.data_type = int(self.reg_ex.data_type.findall(self.acqus_text)[0])

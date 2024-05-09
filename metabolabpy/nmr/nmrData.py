@@ -115,6 +115,7 @@ class NmrData:
         self.delta_sw = 1.0
         self.auto_pos_re = re.compile(r'[A-Z]\d+')
         self.rack_num_re = re.compile(r'<\d+')
+        self.nmr_col = {'0': 'A', '1': 'B', '2': 'C', '3': 'D', '4': 'E', '5': 'F', '6': 'G', '7': 'H'}
         if 'pygamma' in sys.modules:
             self.has_pg = True
         else:
@@ -1049,8 +1050,16 @@ class NmrData:
 
         get_auto_pos = re.compile(r'[A-Z]\d+')
         get_rack_num = re.compile(r'<\d+')
-        pos = get_auto_pos.findall(self.acq.autopos)[0]
-        rack = get_rack_num.findall(self.acq.autopos)[0][1:]
+        try:
+            pos = get_auto_pos.findall(self.acq.autopos)[0]
+            rack = get_rack_num.findall(self.acq.autopos)[0][1:]
+        except:
+            rack = str(int(int(self.acq.holder) / 100))
+            pos = int(self.acq.holder) - int(rack)*100 - 1
+            pos_char = self.nmr_col[str(pos % 8)]
+            pos_no = str(int(str(oct(pos))[2]) + 1)
+            pos = pos_char + pos_no
+
         if not replace_title:
             title = self.title
         else:
