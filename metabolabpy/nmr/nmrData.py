@@ -1057,7 +1057,8 @@ class NmrData:
             rack = str(int(int(self.acq.holder) / 100))
             pos = int(self.acq.holder) - int(rack)*100 - 1
             pos_char = self.nmr_col[str(pos % 8)]
-            pos_no = str(int(str(oct(pos))[2]) + 1)
+            pos_no = str(int(pos / 8) + 1)
+
             pos = pos_char + pos_no
 
         if not replace_title:
