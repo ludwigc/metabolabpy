@@ -559,7 +559,7 @@ class NmrData:
         return pf, spc2
         # end penalty_function
 
-    def autophase1d(self):
+    def autophase1d(self, width=128, num_windows=1024, max_peaks=1000, noise_fact=20):
         self.proc.ph0[0] = 0.0
         self.proc.ph1[0] = 0.0
         n_points = self.proc.n_points[0]
@@ -576,10 +576,10 @@ class NmrData:
         spc2.real = signal.cwt(spc.real, signal.ricker, [1])
         spc2.imag = signal.cwt(spc.imag, signal.ricker, [1])
         spc2a = np.abs(spc2)
-        num_windows = 1024
+        #num_windows = 1024
         len_window = int(len(spc) / num_windows)
-        K = 20
-        width = 128
+        #K = 20
+        #width = 128
         std_vals = np.zeros(num_windows)
         std_vals2 = np.zeros(num_windows)
         mmax = np.max(spc2a)
@@ -594,7 +594,7 @@ class NmrData:
             range_low = int(mid_point - len_window / 2)
             range_high = int(mid_point + len_window / 2)
             height = np.max(spc2a[range_low:range_high]) - np.min(spc2a[range_low:range_high])
-            if height >= K * noise_val:
+            if height >= noise_fact * noise_val:
                 is_baseline[mid_point - width:mid_point + width] = np.zeros(width * 2)
 
         is_baseline[int(len(spc) / 2 - 0.03 * len(spc)):int(len(spc) / 2 + 0.03 * len(spc))] = np.ones(
@@ -604,7 +604,7 @@ class NmrData:
             2 * int(0.03 * len(spc)) + 1)
         start_peak = np.where(np.diff(is_baseline) == -1)[0]
         end_peak = np.where(np.diff(is_baseline) == 1)[0]
-        max_peaks = 1000
+        #max_peaks = 1000
         if len(start_peak) > max_peaks:
             start_peak = np.copy(np.delete(start_peak, range(int(max_peaks / 2), len(start_peak) - int(max_peaks / 2))))
             end_peak = np.copy(np.delete(end_peak, range(int(max_peaks / 2), len(end_peak) - int(max_peaks / 2))))
@@ -645,7 +645,7 @@ class NmrData:
 
         max_noise = 8.0
         selection = np.where((left_val + right_val) / (2 * noise_val2) < max_noise)[0]
-        print(selection)
+        #print(selection)
         if len(selection) >= 2 and (
                 np.max(end_peak[selection]) < len(spc) / 2 or np.min(start_peak[selection]) > len(spc) / 2):
             max_noise *= 2
@@ -656,7 +656,7 @@ class NmrData:
             max_noise = 40.0
             selection = np.where((left_val + right_val) / (2 * noise_val2) < max_noise)[0]
 
-        print(selection)
+        #print(selection)
         #phase = [0.0, 0.0]
         if len(selection) > 1:
             print(end_peak[selection])

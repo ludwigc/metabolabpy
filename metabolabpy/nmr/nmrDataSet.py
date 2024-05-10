@@ -188,19 +188,19 @@ class NmrDataSet:
         return "Finished autobaseline1d_all"
         # end autobaseline1d_all
 
-    def autophase1d(self):
+    def autophase1d(self, width=128, num_windows=1024, max_peaks=1000, noise_fact=20):
         if len(self.nmrdat) > 0:
             if len(self.nmrdat[self.s]) > 0:
-                self.nmrdat[self.s][self.e].autophase1d()
+                self.nmrdat[self.s][self.e].autophase1d(width, num_windows, max_peaks, noise_fact)
 
         # end autophase1d
 
-    def autophase1d_all(self):
+    def autophase1d_all(self, width=128, num_windows=1024, max_peaks=1000, noise_fact=20):
         n_exp = len(self.nmrdat[self.s])
         orig_exp = self.e
         for k in range(n_exp):
             self.e = k
-            self.autophase1d()
+            self.autophase1d(width, num_windows, max_peaks, noise_fact)
 
         self.e = orig_exp
         return "Finished autophase1d_all"
