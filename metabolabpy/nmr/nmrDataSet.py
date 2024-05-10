@@ -115,14 +115,25 @@ class NmrDataSet:
 
     def autophase1d_bl(self, upper_min=10.0, lower_max=-0.5):
         ref_spc_no = self.nmrdat[0][0].display.ph_ref_exp - 1
-        print(f'ref_spc_no: {ref_spc_no}')
         if ref_spc_no == -1:
             return
 
         if self.e != ref_spc_no:
             ref_spc = np.copy(self.nmrdat[self.s][ref_spc_no].spc[0])
             self.nmrdat[self.s][self.e].autophase1d_bl(upper_min, lower_max, ref_spc)
+            self.auto_ref()
 
+
+    def autophase1d_bl_all(self, upper_min=10.0, lower_max=-0.5):
+        ref_spc_no = self.nmrdat[self.s][0].display.ph_ref_exp - 1
+        if ref_spc_no == -1:
+            return
+
+        for k in range(len(self.nmrdat[self.s])):
+            if k != ref_spc_no:
+                ref_spc = np.copy(self.nmrdat[self.s][ref_spc_no].spc[0])
+                self.nmrdat[self.s][k].autophase1d_bl(upper_min, lower_max, ref_spc)
+                self.nmrdat[self.s][k].auto_ref()
 
     def set_peak(self, start_peak, end_peak, peak_label, n_protons):
         if self.int_all_data_sets:
@@ -2155,24 +2166,6 @@ class NmrDataSet:
                 else:
                     self.nmrdat[k][l].display.pos_col_rgb = std_pos_col1
                     self.nmrdat[k][l].display.neg_col_rgb = std_neg_col1
-
-    def set_title_information(self, rack_label='', pos_label='', data_path='', excel_name='', replace_orig_title=False):
-        if len(rack_label) == 0 or len(pos_label) == 0 or len(data_path) == 0 or len(excel_name) == 0:
-            return
-
-        f_name = os.path.join(data_path, excel_name)
-        xls = pd.read_excel(f_name)
-        c_dict = {}
-        for k in range(len(xls[pos_label])):
-            if str(xls[pos_label][k]) != 'nan':
-                c_dict[str(xls[rack_label][k]) + " " + str(xls[pos_label][k])] = k
-
-        for k in range(len(self.nmrdat[self.s])):
-            self.nmrdat[self.s][k].set_title_information(xls=xls, excel_name=excel_name, pos_label=pos_label,
-                                                         rack_label=rack_label, c_dict=c_dict,
-                                                         replace_orig_title=replace_orig_title)
-
-        # end set_title_information
 
     def set_water_suppression(self, ws='None'):
         n_exp = len(self.nmrdat[self.s])

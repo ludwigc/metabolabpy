@@ -31,7 +31,7 @@ from pybaselines.classification import dietrich, golotvin, std_distribution, fas
 from pybaselines.misc import interp_pts, beads
 from pybaselines.polynomial import poly, modpoly, imodpoly, penalized_poly, loess, quant_reg, goldindec
 from pybaselines import Baseline
-from metabolabpy.nmr.phase3 import phase3 #, objective_function, penalty_function
+from metabolabpy.nmr.phase3 import phase3, phase3a #, objective_function, penalty_function
 import pywt
 from scipy.stats import linregress
 
@@ -565,6 +565,8 @@ class NmrData:
             return
 
         phase = [0.0, 0.0]
+        self.autophase1d()
+        self.auto_ref()
         eval_parameters = optimize.minimize(self.autophase1d_bl_fct, phase, method='Powell',
                                         args=(upper_min, lower_max, ref_spc))
 
@@ -572,21 +574,19 @@ class NmrData:
         self.proc.ph1[0] += eval_parameters.x[1]
         self.proc_spc1d()
 
-    def autophase1d_bl_fct(self, fit_pars, upper_min=10.0, lower_max=-0.5, ref_spc=[]):
+    def autophase1d_bl_fct(self, phase, upper_min=10.0, lower_max=-0.5, ref_spc=[]):
         if len(ref_spc) == 0:
+            print('not optimised')
             return
 
-        ph0 = fit_pars[0]
-        ph1 = fit_pars[1]
         spc = np.copy(self.spc[0])
-        spc = phase3(spc, ph0, ph1, len(spc))
+        spc = np.copy(phase3a(spc, phase[0], phase[1], len(spc)))
         idx_upper = np.where(self.ppm1 > upper_min)[0]
         idx_lower = np.where(self.ppm1 < lower_max)[0]
-        sigma = 0
-        sigma += np.sum(np.abs(spc[idx_upper].real - ref_spc[idx_upper].real))
-        sigma += np.sum(np.abs(spc[idx_lower].real - ref_spc[idx_lower].real))
-        print(f'sigma: {sigma}')
-        return sigma
+        dd1 = np.sum(np.abs(spc[idx_upper].real - ref_spc[idx_upper].real))
+        dd2 = np.sum(np.abs(spc[idx_lower].real - ref_spc[idx_lower].real))
+        chi2 = dd1 + dd2
+        return chi2
 
 
     def autophase1d(self, width=128, num_windows=1024, max_peaks=1000, noise_fact=20):
@@ -606,10 +606,7 @@ class NmrData:
         spc2.real = signal.cwt(spc.real, signal.ricker, [1])
         spc2.imag = signal.cwt(spc.imag, signal.ricker, [1])
         spc2a = np.abs(spc2)
-        #num_windows = 1024
         len_window = int(len(spc) / num_windows)
-        #K = 20
-        #width = 128
         std_vals = np.zeros(num_windows)
         std_vals2 = np.zeros(num_windows)
         mmax = np.max(spc2a)
@@ -634,7 +631,6 @@ class NmrData:
             2 * int(0.03 * len(spc)) + 1)
         start_peak = np.where(np.diff(is_baseline) == -1)[0]
         end_peak = np.where(np.diff(is_baseline) == 1)[0]
-        #max_peaks = 1000
         if len(start_peak) > max_peaks:
             start_peak = np.copy(np.delete(start_peak, range(int(max_peaks / 2), len(start_peak) - int(max_peaks / 2))))
             end_peak = np.copy(np.delete(end_peak, range(int(max_peaks / 2), len(end_peak) - int(max_peaks / 2))))
@@ -675,7 +671,6 @@ class NmrData:
 
         max_noise = 8.0
         selection = np.where((left_val + right_val) / (2 * noise_val2) < max_noise)[0]
-        #print(selection)
         if len(selection) >= 2 and (
                 np.max(end_peak[selection]) < len(spc) / 2 or np.min(start_peak[selection]) > len(spc) / 2):
             max_noise *= 2
@@ -686,8 +681,6 @@ class NmrData:
             max_noise = 40.0
             selection = np.where((left_val + right_val) / (2 * noise_val2) < max_noise)[0]
 
-        #print(selection)
-        #phase = [0.0, 0.0]
         if len(selection) > 1:
             print(end_peak[selection])
             start_peak2 = np.copy(start_peak[selection])
@@ -1966,48 +1959,6 @@ class NmrData:
             self.nmrdat[self.s][k].proc.autobaseline = autobaseline
 
         # end set_autobaseline
-
-    def set_title_information(self, xls=pd.DataFrame(), excel_name='', pos_label='', rack_label='', replace_orig_title=False, c_dict=[]):
-        if len(xls) == 0 or len(pos_label) == 0 or len(rack_label) == 0 or len(excel_name) == 0:
-             return
-
-        if replace_orig_title:
-            orig_title = ''
-        else:
-            orig_title = self.title
-
-        try:
-            pos = get_auto_pos.findall(self.acq.autopos)[0]
-            rack = get_rack_num.findall(self.acq.autopos)[0][1:]
-        except:
-            rack = str(int(int(self.acq.holder) / 100))
-            pos = int(self.acq.holder) - int(rack)*100 - 1
-            pos_char = self.nmr_col[str(pos % 8)]
-            pos_no = str(int(pos / 8) + 1)
-
-            pos = pos_char + pos_no
-
-        if len(c_dict) == 0:
-            c_dict = {}
-            for k in range(len(xls[pos_label])):
-                if str(xls[pos_label][k]) != 'nan':
-                    c_dict[str(xls[rack_label][k]) + " " + str(xls[pos_label][k])] = k
-
-        line_number = c_dict[rack + " " + pos]
-        title = ''
-        title += f'Excel File : {excel_name}\n'
-        title += f'Excel Line Number : {line_number + 2}\n'
-        title += f'acqus AUTOPOS : {rack} {pos}\n'
-        for col in xls.columns:
-            if col == 'number':
-                title += f'{col} : {int(xls[col][line_numer])}\n'
-            else:
-                title += f'{col} : {xls[col][line_number]}\n'
-
-        title += '\n'
-        title += orig_title
-        self.title = title
-        # end set_title_information
 
     def set_ref(self, ref_shift, ref_point):
         for k in range(len(ref_shift)):
