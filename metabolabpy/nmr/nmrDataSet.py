@@ -113,6 +113,17 @@ class NmrDataSet:
 
         # end add_peak
 
+    def autophase1d_bl(self, upper_min=10.0, lower_max=-0.5):
+        ref_spc_no = self.nmrdat[0][0].display.ph_ref_exp - 1
+        print(f'ref_spc_no: {ref_spc_no}')
+        if ref_spc_no == -1:
+            return
+
+        if self.e != ref_spc_no:
+            ref_spc = np.copy(self.nmrdat[self.s][ref_spc_no].spc[0])
+            self.nmrdat[self.s][self.e].autophase1d_bl(upper_min, lower_max, ref_spc)
+
+
     def set_peak(self, start_peak, end_peak, peak_label, n_protons):
         if self.int_all_data_sets:
             ds = range(len(self.nmrdat))
@@ -319,7 +330,10 @@ class NmrDataSet:
         c_dict = {}
         for k in range(len(xls[pos_label])):
             if str(xls[pos_label][k]) != 'nan':
-                c_dict[str(xls[rack_label][k]) + " " + str(xls[pos_label][k])] = k
+                if not xls[dataset_label][k] in c_dict.keys():
+                    c_dict[xls[dataset_label][k]] = {}
+
+                c_dict[xls[dataset_label][k]][str(xls[rack_label][k]) + " " + str(xls[pos_label][k])] = k
 
         for k in range(len(self.nmrdat[self.s])):
             self.nmrdat[self.s][k].create_title(xls, dataset_label, pos_label, rack_label, replace_title, c_dict,

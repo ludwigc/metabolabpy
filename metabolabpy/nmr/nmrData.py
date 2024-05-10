@@ -559,6 +559,36 @@ class NmrData:
         return pf, spc2
         # end penalty_function
 
+
+    def autophase1d_bl(self, upper_min=10.0, lower_max=-0.5, ref_spc=[]):
+        if len(ref_spc) == 0:
+            return
+
+        phase = [0.0, 0.0]
+        eval_parameters = optimize.minimize(self.autophase1d_bl_fct, phase, method='Powell',
+                                        args=(upper_min, lower_max, ref_spc))
+
+        self.proc.ph0[0] += eval_parameters.x[0]
+        self.proc.ph1[0] += eval_parameters.x[1]
+        self.proc_spc1d()
+
+    def autophase1d_bl_fct(self, fit_pars, upper_min=10.0, lower_max=-0.5, ref_spc=[]):
+        if len(ref_spc) == 0:
+            return
+
+        ph0 = fit_pars[0]
+        ph1 = fit_pars[1]
+        spc = np.copy(self.spc[0])
+        spc = phase3(spc, ph0, ph1, len(spc))
+        idx_upper = np.where(self.ppm1 > upper_min)[0]
+        idx_lower = np.where(self.ppm1 < lower_max)[0]
+        sigma = 0
+        sigma += np.sum(np.abs(spc[idx_upper].real - ref_spc[idx_upper].real))
+        sigma += np.sum(np.abs(spc[idx_lower].real - ref_spc[idx_lower].real))
+        print(f'sigma: {sigma}')
+        return sigma
+
+
     def autophase1d(self, width=128, num_windows=1024, max_peaks=1000, noise_fact=20):
         self.proc.ph0[0] = 0.0
         self.proc.ph1[0] = 0.0
@@ -1065,9 +1095,16 @@ class NmrData:
             title = self.title
         else:
             title = ''
-            
-        #print(c_dict)
-        line_no = c_dict[rack + " " + pos]
+
+        dsl = ''
+        for k in c_dict.keys():
+            if k in self.orig_data_set:
+                dsl = k
+
+        if len(dsl) == 0:
+            return
+
+        line_no = c_dict[dsl][rack + " " + pos]
         title += f'Excel File : {excel_name}\n'
         title += f'Excel Line Number : {line_no + 2}\n'
         title += f'acqus AUTOPOS : {rack} {pos}\n'
@@ -1939,8 +1976,17 @@ class NmrData:
         else:
             orig_title = self.title
 
-        pos = self.auto_pos_re.findall(self.acq.autopos)[0]
-        rack = self.rack_num_re.findall(self.acq.autopos)[0][1:]
+        try:
+            pos = get_auto_pos.findall(self.acq.autopos)[0]
+            rack = get_rack_num.findall(self.acq.autopos)[0][1:]
+        except:
+            rack = str(int(int(self.acq.holder) / 100))
+            pos = int(self.acq.holder) - int(rack)*100 - 1
+            pos_char = self.nmr_col[str(pos % 8)]
+            pos_no = str(int(pos / 8) + 1)
+
+            pos = pos_char + pos_no
+
         if len(c_dict) == 0:
             c_dict = {}
             for k in range(len(xls[pos_label])):
