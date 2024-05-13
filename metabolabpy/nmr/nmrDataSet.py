@@ -83,6 +83,7 @@ class NmrDataSet:
         self.print_neg_colours = []
         self.background_colour = []
         self.foreground_colour = []
+        self.plot_index = {}
         self.internal_std = 'TMSP'
         if self.cf.mode == 'light':
             self.background_colour = (255 / 255, 255 / 255, 255 / 255)
@@ -120,6 +121,10 @@ class NmrDataSet:
 
         if self.e != ref_spc_no:
             ref_spc = np.copy(self.nmrdat[self.s][ref_spc_no].spc[0])
+            self.nmrdat[self.s][self.e].proc.ph0[0] = self.nmrdat[self.s][ref_spc_no].proc.ph0[0]
+            self.nmrdat[self.s][self.e].proc.ph1[0] = self.nmrdat[self.s][ref_spc_no].proc.ph1[0]
+            self.nmrdat[self.s][self.e].proc_spc1d()
+            self.nmrdat[self.s][self.e].auto_ref()
             self.nmrdat[self.s][self.e].autophase1d_bl(upper_min, lower_max, ref_spc)
             self.auto_ref()
 
@@ -132,6 +137,10 @@ class NmrDataSet:
         for k in range(len(self.nmrdat[self.s])):
             if k != ref_spc_no:
                 ref_spc = np.copy(self.nmrdat[self.s][ref_spc_no].spc[0])
+                self.nmrdat[self.s][k].proc.ph0[0] = self.nmrdat[self.s][ref_spc_no].proc.ph0[0]
+                self.nmrdat[self.s][k].proc.ph1[0] = self.nmrdat[self.s][ref_spc_no].proc.ph1[0]
+                self.nmrdat[self.s][k].proc_spc1d()
+                self.nmrdat[self.s][k].auto_ref()
                 self.nmrdat[self.s][k].autophase1d_bl(upper_min, lower_max, ref_spc)
                 self.nmrdat[self.s][k].auto_ref()
 

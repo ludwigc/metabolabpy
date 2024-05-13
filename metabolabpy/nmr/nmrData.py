@@ -116,6 +116,9 @@ class NmrData:
         self.auto_pos_re = re.compile(r'[A-Z]\d+')
         self.rack_num_re = re.compile(r'<\d+')
         self.nmr_col = {'0': 'A', '1': 'B', '2': 'C', '3': 'D', '4': 'E', '5': 'F', '6': 'G', '7': 'H'}
+        self.plot_legend = False
+        self.legend_label = ''
+        self.legend_handle = []
         if 'pygamma' in sys.modules:
             self.has_pg = True
         else:
@@ -560,21 +563,40 @@ class NmrData:
         # end penalty_function
 
 
-    def autophase1d_bl(self, upper_min=10.0, lower_max=-0.5, ref_spc=[]):
+    def autophase1d_bl(self, upper_min=10.0, lower_max=-0.5, ref_spc=[], run_compare=False):
         if len(ref_spc) == 0:
             return
 
         phase = [0.0, 0.0]
-        self.autophase1d()
+        #self.autophase1d()
+        pars0 = [self.proc.ph0[0], self.proc.ph1[0]]
         self.auto_ref()
         eval_parameters = optimize.minimize(self.autophase1d_bl_fct, phase, method='Powell',
                                         args=(upper_min, lower_max, ref_spc))
 
-        self.proc.ph0[0] += eval_parameters.x[0]
-        self.proc.ph1[0] += eval_parameters.x[1]
+        pars1 = [eval_parameters.x[0], eval_parameters.x[1]]
+        error1 = self.autophase1d_bl_fct(pars1, upper_min, lower_max, ref_spc)
+        if run_compare:
+            self.autophase1d1()
+            self.auto_ref()
+            eval_parameters = optimize.minimize(self.autophase1d_bl_fct, phase, method='Powell',
+                                                args=(upper_min, lower_max, ref_spc))
+
+            pars2 = [eval_parameters.x[0], eval_parameters.x[1]]
+            error2 = self.autophase1d_bl_fct(pars1, upper_min, lower_max, ref_spc)
+            if error1 < error2:
+                self.proc.ph0[0] = pars0[0] + pars1[0]
+                self.proc.ph1[0] = pars0[1] + pars1[1]
+            else:
+                self.proc.ph0[0] += pars2[0]
+                self.proc.ph1[0] += pars2[1]
+        else:
+            self.proc.ph0[0] += pars1[0]
+            self.proc.ph1[0] += pars1[1]
+
         self.proc_spc1d()
 
-    def autophase1d_bl_fct(self, phase, upper_min=10.0, lower_max=-0.5, ref_spc=[]):
+    def autophase1d_bl_fct(self, phase, upper_min=10.0, lower_max=-0.5, ref_spc=[], left_only=False):
         if len(ref_spc) == 0:
             print('not optimised')
             return
@@ -585,7 +607,11 @@ class NmrData:
         idx_lower = np.where(self.ppm1 < lower_max)[0]
         dd1 = np.sum(np.abs(spc[idx_upper].real - ref_spc[idx_upper].real))
         dd2 = np.sum(np.abs(spc[idx_lower].real - ref_spc[idx_lower].real))
-        chi2 = dd1 + dd2
+        if left_only:
+            chi2 = dd1
+        else:
+            chi2 = dd1 + dd2
+
         return chi2
 
 
