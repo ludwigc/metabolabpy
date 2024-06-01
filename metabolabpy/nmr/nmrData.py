@@ -595,6 +595,16 @@ class NmrData:
             self.proc.ph1[0] += pars1[1]
 
         self.proc_spc1d()
+        print(self.proc.window_type[0])
+        if self.invert_spc():
+            self.proc.ph0[0] += 180.0
+            self.proc.ph0[0] %= 360.0
+            self.proc.ph0[0] += 180.0
+            self.proc.ph0[0] %= 360.0
+            self.proc.ph0[0] -= 180.0
+
+        self.proc_spc1d()
+        self.auto_ref()
 
     def autophase1d_bl_fct(self, phase, upper_min=10.0, lower_max=-0.5, ref_spc=[], left_only=False):
         if len(ref_spc) == 0:
@@ -615,7 +625,7 @@ class NmrData:
         return chi2
 
 
-    def autophase1d(self, width=128, num_windows=1024, max_peaks=1000, noise_fact=20):
+    def autophase1d(self, width=128, num_windows=1024, max_peaks=1000, noise_fact=10):
         self.proc.ph0[0] = 0.0
         self.proc.ph1[0] = 0.0
         n_points = self.proc.n_points[0]
@@ -642,13 +652,20 @@ class NmrData:
 
         noise_val = np.min(std_vals)
         is_baseline = np.ones(len(spc), dtype=int)
-        for k in range(len(spc) - 3 * len_window):
-            mid_point = int(k + 3 * len_window / 2)
-            range_low = int(mid_point - len_window / 2)
-            range_high = int(mid_point + len_window / 2)
-            height = np.max(spc2a[range_low:range_high]) - np.min(spc2a[range_low:range_high])
-            if height >= noise_fact * noise_val:
-                is_baseline[mid_point - width:mid_point + width] = np.zeros(width * 2)
+        npts_isbl = np.sum(is_baseline)
+        kk = 1
+        while np.sum(is_baseline) == npts_isbl:
+            kk += 1
+            for k in range(len(spc) - 3 * len_window):
+                mid_point = int(k + 3 * len_window / 2)
+                range_low = int(mid_point - len_window / 2)
+                range_high = int(mid_point + len_window / 2)
+                height = np.max(spc2a[range_low:range_high]) - np.min(spc2a[range_low:range_high])
+                if height >= noise_fact * noise_val:
+                    is_baseline[mid_point - width:mid_point + width] = np.zeros(width * 2)
+                    #print(f'width: {width}')
+
+            noise_fact /= 2
 
         is_baseline[int(len(spc) / 2 - 0.03 * len(spc)):int(len(spc) / 2 + 0.03 * len(spc))] = np.ones(
             2 * int(0.03 * len(spc)) + 1)
@@ -664,7 +681,6 @@ class NmrData:
         pos_peaks = np.zeros(len(start_peak))
         start_pars = [0.0, 0.0]
         par_eval = self.fit_phase(start_pars, spc, start_peak, end_peak)
-        print(f'par_eval(1): {par_eval.x}')
         self.proc.ph0[0] += par_eval.x[0]
         self.proc.ph1[0] += par_eval.x[1]
         self.proc_spc1d()
@@ -712,7 +728,6 @@ class NmrData:
             start_peak2 = np.copy(start_peak[selection])
             end_peak2 = np.copy(end_peak[selection])
             par_eval = self.fit_pf(start_pars, spc, start_peak2, end_peak2)
-            print(f'par_eval(2): {par_eval.x}')
             self.proc.ph0[0] += par_eval.x[0]
             self.proc.ph1[0] += par_eval.x[1]
 
@@ -725,6 +740,27 @@ class NmrData:
         self.proc.autobaseline = autobaseline
         self.proc_spc1d()
         # end autophase1d
+
+    def invert_spc(self, width=128, num_windows=1024, max_peaks=1000, noise_fact=20):
+        n_points = self.proc.n_points[0]
+        water_suppression = self.proc.water_suppression
+        window_type = self.proc.window_type[0]
+        autobaseline = self.proc.autobaseline
+        self.proc.autobaseline = False
+        self.proc.n_points[0] = 131072
+        self.proc.water_suppression = 0
+        self.proc.window_type[0] = 0
+        self.proc_spc1d()
+        result = False
+        if np.max(np.abs(self.spc[0].real)) != np.max(self.spc[0].real):
+            result = True
+
+        self.proc.autobaseline = autobaseline
+        self.proc.n_points[0] = n_points
+        self.proc.water_suppression = water_suppression
+        self.proc.window_type[0] = window_type
+        return result
+        # end invert_spc
 
     def fit_phase(self, phase, spc, start_peak, end_peak):
         eval_parameters = optimize.minimize(self.objective_function, phase, method='Powell',

@@ -1,7 +1,7 @@
 #on arm: sudo apt install python3-pyside2*
 #on arm then the rest with sudo apt install python3-...
-numpy==1.26.4
-scipy
+numpy
+scipy==1.13.1
 matplotlib
 pandas
 numba
