@@ -2107,7 +2107,9 @@ class NmrData:
 
             h1_pts = len(self.spc[0]) - self.ppm2points(h1_pos, 0) - 1
             c13_pts = len(self.spc) - self.ppm2points(c13_pos, 1) - 1
-            intensity = abs(np.max(np.transpose(self.spc)[h1_pts][c13_range]) / np.max(sim_spc[0].real))
+            max_idx = np.where(sim_spc[0].real == np.max(sim_spc[0].real))[0][0]
+            spc_max = np.max(np.transpose(self.spc).real[h1_pts][[max_idx - 1, max_idx, max_idx + 1]])
+            intensity = spc_max / sim_spc[0].real[max_idx]
             self.hsqc.hsqc_data[self.hsqc.cur_metabolite].intensities[self.hsqc.cur_peak - 1] = intensity
 
         self.hsqc.hsqc_data[self.hsqc.cur_metabolite].sim_spc[self.hsqc.cur_peak - 1] = sim_spc[0].real
@@ -2236,6 +2238,10 @@ class NmrData:
                 len(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_offset'])):
             contribution.append(
                 self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['contribution'][k])
+
+        if contribution[0] == 100.0:
+            for k in range(len(contribution)):
+                contribution[k] = 100.0 / len(contribution)
 
         if self.hsqc.fit_zero_percentages == False:
             c13_offset = np.array(c13_offset)[np.where(np.array(contribution) != 0)]
