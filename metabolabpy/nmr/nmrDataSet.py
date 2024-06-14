@@ -1325,71 +1325,94 @@ class NmrDataSet:
                         nd1.acq.acqus_text += '\n'
                         counter = 0
 
-            if hasattr(m['NMRDAT']['ACQU2SText'], 'keys'):
-                acqu2s = m['NMRDAT']['ACQU2SText'][exp][0]
-                nd1.acq.acqu2s_text += acqu2s[0][0]
-                for idx in range(1, len(acqu2s)):
-                    if acqu2s[idx][0].find('##') > -1:
-                        nd1.acq.acqu2s_text += '\n'
-                    else:
-                        nd1.acq.acqu2s_text += ' '
+            try:
+                if hasattr(m['NMRDAT']['ACQU2SText'], 'keys'):
+                    acqu2s = m['NMRDAT']['ACQU2SText'][exp][0]
+                    nd1.acq.acqu2s_text += acqu2s[0][0]
+                    for idx in range(1, len(acqu2s)):
+                        if acqu2s[idx][0].find('##') > -1:
+                            nd1.acq.acqu2s_text += '\n'
+                        else:
+                            nd1.acq.acqu2s_text += ' '
 
-                    nd1.acq.acqu2s_text += acqu2s[idx][0]
+                        nd1.acq.acqu2s_text += acqu2s[idx][0]
+            except:
+                pass
 
-            if hasattr(m['NMRDAT']['ACQU3SText'], 'keys'):
-                acqu3s = m['NMRDAT']['ACQU3SText'][exp][0]
-                nd1.acq.acqu3s_text += acqu3s[0][0]
-                for idx in range(1, len(acqu3s)):
-                    if acqu3s[idx][0].find('##') > -1:
-                        nd1.acq.acqu3s_text += '\n'
-                    else:
-                        nd1.acq.acqu3s_text += ' '
+            try:
+                if hasattr(m['NMRDAT']['ACQU3SText'], 'keys'):
+                    acqu3s = m['NMRDAT']['ACQU3SText'][exp][0]
+                    nd1.acq.acqu3s_text += acqu3s[0][0]
+                    for idx in range(1, len(acqu3s)):
+                        if acqu3s[idx][0].find('##') > -1:
+                            nd1.acq.acqu3s_text += '\n'
+                        else:
+                            nd1.acq.acqu3s_text += ' '
 
-                    nd1.acq.acqu3s_text += acqu3s[idx][0]
+                        nd1.acq.acqu3s_text += acqu3s[idx][0]
+            except:
+                pass
 
             nd1.acq.parse_reg_ex()
             if nd1.acq.group_delay == 0.0:
-                nd1.acq.set_group_delay()
+                if copy(m['NMRDAT']['ACQUS'][exp]['GRPDLY'][0]) + 0 == 0:
+                    nd1.acq.set_group_delay()
+                else:
+                    nd1.acq.group_delay = copy(m['NMRDAT']['ACQUS'][exp]['GRPDLY'][0]) + 0
 
             nd1.acq.sfo2 = nd1.acq.bf2 + nd1.acq.o2 / 1000000.0
-            procs = m['NMRDAT']['PROCSText'][exp][0]
-            nd1.proc.procs_text += procs[0][0]
-            for idx in range(1, len(procs)):
-                if procs[idx][0].find('##') > -1:
-                    nd1.proc.procs_text += '\n'
-                else:
-                    nd1.proc.procs_text += ' '
 
-                nd1.proc.procs_text += procs[idx][0]
-
-            if hasattr(m['NMRDAT']['PROC2SText'], 'keys'):
-                proc2s = m['NMRDAT']['PROC2SText'][exp][0]
-                nd1.proc.proc2s_text += proc2s[0][0]
-                for idx in range(1, len(proc2s)):
-                    if proc2s[idx][0].find('##') > -1:
-                        nd1.proc.proc2s_text += '\n'
+            try:
+                procs = m['NMRDAT']['PROCSText'][exp][0]
+                nd1.proc.procs_text += procs[0][0]
+                for idx in range(1, len(procs)):
+                    if procs[idx][0].find('##') > -1:
+                        nd1.proc.procs_text += '\n'
                     else:
-                        nd1.proc.proc2s_text += ' '
+                        nd1.proc.procs_text += ' '
 
-                    nd1.proc.proc2s_text += proc2s[idx][0]
+                    nd1.proc.procs_text += procs[idx][0]
+            except:
+                pass
 
-            if hasattr(m['NMRDAT']['PROC3SText'], 'keys'):
-                proc3s = m['NMRDAT']['PROC3SText'][exp][0]
-                nd1.proc.proc3s_text += proc3s[0][0]
-                for idx in range(1, len(proc3s)):
-                    if proc3s[idx][0].find('##') > -1:
-                        nd1.proc.proc3s_text += '\n'
-                    else:
-                        nd1.proc.proc3s_text += ' '
+            try:
+                if hasattr(m['NMRDAT']['PROC2SText'], 'keys'):
+                    proc2s = m['NMRDAT']['PROC2SText'][exp][0]
+                    nd1.proc.proc2s_text += proc2s[0][0]
+                    for idx in range(1, len(proc2s)):
+                        if proc2s[idx][0].find('##') > -1:
+                            nd1.proc.proc2s_text += '\n'
+                        else:
+                            nd1.proc.proc2s_text += ' '
 
-                    nd1.proc.proc3s_text += proc3s[idx][0]
+                        nd1.proc.proc2s_text += proc2s[idx][0]
+            except:
+                pass
 
-            nd1.proc.parse_reg_ex()
+            try:
+                if hasattr(m['NMRDAT']['PROC3SText'], 'keys'):
+                    proc3s = m['NMRDAT']['PROC3SText'][exp][0]
+                    nd1.proc.proc3s_text += proc3s[0][0]
+                    for idx in range(1, len(proc3s)):
+                        if proc3s[idx][0].find('##') > -1:
+                            nd1.proc.proc3s_text += '\n'
+                        else:
+                            nd1.proc.proc3s_text += ' '
+
+                        nd1.proc.proc3s_text += proc3s[idx][0]
+            except:
+                pass
+            try:
+                nd1.proc.parse_reg_ex()
+            except:
+                pass
+            
             if nd1.proc.axis_nucleus[1] != 'off':
                 nd1.display.y_label = nd1.proc.axis_nucleus[1]
 
             nd1.orig_data_set = m['NMRDAT']['NAME'][exp]
-            nd1.title = m['NMRDAT']['COMMENT'][exp]
+            nd1.title = copy(m['NMRDAT']['COMMENT'][exp])
+            nd1.title_orig = copy(m['NMRDAT']['COMMENT'][exp])
             if m['NMRDAT']['ACQUS'][exp]['DIM'][0] == 1:
                 npts1 = 1
                 npts2 = len(m['NMRDAT']['MAT'][exp])
@@ -1473,10 +1496,12 @@ class NmrDataSet:
                     self.pp.seg_start = np.round(1e4 * np.array([m['metaboSpc']['compress1']['stop']])) / 1e4
                     self.pp.seg_end = np.round(1e4 * np.array([m['metaboSpc']['compress1']['start']])) / 1e4
 
-            if type(m['metaboSpc']['noiseFilter']['threshold']) == np.ndarray:
-                self.pp.noise_threshold = float(m['metaboSpc']['noiseFilter']['threshold'])
-                self.pp.noise_start = float(m['metaboSpc']['noiseFilter']['regEnd'])
-                self.pp.noise_end = float(m['metaboSpc']['noiseFilter']['regStart'])
+
+            if 'noiseFilter' in m['metaboSpc'].keys():
+                if type(m['metaboSpc']['noiseFilter']['threshold']) == np.ndarray:
+                    self.pp.noise_threshold = float(m['metaboSpc']['noiseFilter']['threshold'])
+                    self.pp.noise_start = float(m['metaboSpc']['noiseFilter']['regEnd'])
+                    self.pp.noise_end = float(m['metaboSpc']['noiseFilter']['regStart'])
 
             if type(m['metaboSpc']['bucket']['bucketSizePoints']) == np.ndarray:
                 self.pp.bucket_points = float(m['metaboSpc']['bucket']['bucketSizePoints'])
@@ -1769,7 +1794,7 @@ class NmrDataSet:
             self.nmrdat[s][k].calc_ppm()
         # end reference1d_all
 
-    def reset_data_pre_processing(self):
+    def reset_data_pre_processing(self, autoref=True):
         if not self.nmrdat[self.s][0].projected_j_res:
             self.ft_all()
             if self.nmrdat[self.s][0].proc.autobaseline:
@@ -1777,7 +1802,9 @@ class NmrDataSet:
             else:
                 self.baseline1d_all()
 
-            self.auto_ref_all()
+            if autoref:
+                self.auto_ref_all()
+
             self.shift_ref()
             if len(self.nmrdat[self.s][self.e].spline_baseline.baseline_points) > 0:
                 for k in range(len(self.nmrdat[self.s])):
@@ -1795,6 +1822,25 @@ class NmrDataSet:
             self.e = e
 
         # end reset_data_pre_processing
+
+    def reshape_title(self, n_rows=2):
+        return_text = self.nmrdat[self.s][self.e].reshape_title(n_rows)
+        return return_text
+        # end reshape_title
+
+    def reshape_titles(self, n_rows=2):
+        all_fine = True
+        for k in range(len(self.nmrdat[self.s])):
+            if k == self.e:
+                print_text = True
+            else:
+                print_text = False
+
+            return_text = self.nmrdat[self.s][k].reshape_title(n_rows=n_rows, print_text=print_text, exp=k)
+            if return_text != 'Succesfully reshaped title':
+                all_fine = False
+
+        return all_fine
 
     def save(self, data_set_name):
         if len(data_set_name) == 0:
@@ -2150,6 +2196,16 @@ class NmrDataSet:
         return "set_ph1"
 
     # end set_ph1
+
+    def set_n_points(self, n_points):
+        n_exp = len(self.nmrdat[self.s])
+        for k in range(n_exp):
+            for l in range(len(n_points)):
+                self.nmrdat[self.s][k].proc.n_points[l] = n_points[l]
+
+        return "set_n_points"
+
+    # end set_n_points
 
     def set_ssb(self, ssb):
         n_exp = len(self.nmrdat[self.s])

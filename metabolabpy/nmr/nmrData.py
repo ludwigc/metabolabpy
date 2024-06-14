@@ -33,6 +33,7 @@ from pybaselines.polynomial import poly, modpoly, imodpoly, penalized_poly, loes
 from pybaselines import Baseline
 from metabolabpy.nmr.phase3 import phase3, phase3a #, objective_function, penalty_function
 import pywt
+from copy import copy
 from scipy.stats import linregress
 
 try:
@@ -72,6 +73,7 @@ class NmrData:
         self.data_set_name = ''
         self.data_set_number = ''
         self.title = str('Empty NMR data set')
+        self.title_orig = ''
         self.pulse_program = str('')
         self.window_function = {'none': 0, 'exponential': 1, 'gaussian': 2, 'sine': 3, 'qsine': 4, 'sem': 5}
         self.ref_shift = np.copy(np.array([0, 0, 0], dtype='float64'))
@@ -2012,6 +2014,44 @@ class NmrData:
                 f.close()
 
         # end read_spc
+
+    def reshape_title(self, n_rows=2, print_text=True, exp=-1):
+        if len(self.title_orig) == 0:
+            self.title_orig = copy(self.title)
+
+        len_title = int(len(self.title_orig))
+        n_rows = int(n_rows)
+        n_cols = int(len_title / n_rows)
+        return_text = ''
+        if n_cols * n_rows != len_title:
+            if exp > -1:
+                return_text += f'\n================================================\n'
+                return_text += f'Experiment: {exp + 1}\n'
+
+            return_text += f'Incompatible number of rows ({n_rows})\n'
+            return_text += f'Possible row values (<100) are:\n'
+            return_text += '-------------------------------\n'
+            for k in range(2, 100):
+                if len_title/k == int(len_title/k):
+                    return_text += f'n_rows = {k}\n'
+
+            print(return_text)
+
+            return return_text
+
+        return_text += 'Succesfully reshaped title'
+        tt = np.array(list(self.title_orig))
+        tt = np.copy(np.reshape(tt, (n_cols, n_rows)).transpose())
+        self.title = ''
+        for k in range(n_rows):
+            self.title += "".join(tt[k])
+            self.title += '\n'
+
+        if print_text:
+            print(return_text)
+
+        return return_text
+    # end reshape_title
 
     def set_auto_ref(self, ref='auto'):
         self.ref = ref
