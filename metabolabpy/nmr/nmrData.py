@@ -826,7 +826,7 @@ class NmrData:
         self.exclude_water = False
         # end autophase1d_exclude_water
 
-    def autophase1d1(self, auto_ref=True):
+    def autophase1d1a(self, auto_ref=True):
         spc = self.spc[0]
         self.apc.npts = len(spc)
         scale_fact = np.max(np.abs(spc))

@@ -19,6 +19,8 @@ import darkdetect  # pragma: no cover
 import mat73
 from copy import copy
 import gc
+from scipy.io import loadmat
+
 
 
 class NmrDataSet:
@@ -226,6 +228,13 @@ class NmrDataSet:
 
         # end autophase1d
 
+    def autophase1d1(self, gamma_factor=1.0):
+        if len(self.nmrdat) > 0:
+            if len(self.nmrdat[self.s]) > 0:
+                self.nmrdat[self.s][self.e].autophase1d1(gamma_factor=gamma_factor)
+
+        # end autophase1d
+
     def autophase1d_all(self, width=128, num_windows=1024, max_peaks=1000, noise_fact=20):
         n_exp = len(self.nmrdat[self.s])
         orig_exp = self.e
@@ -235,6 +244,17 @@ class NmrDataSet:
 
         self.e = orig_exp
         return "Finished autophase1d_all"
+        # end autophase1d_all
+
+    def autophase1d1_all(self, gamma_factor=1.0):
+        n_exp = len(self.nmrdat[self.s])
+        orig_exp = self.e
+        for k in range(n_exp):
+            self.e = k
+            self.autophase1d1(gamma_factor=gamma_factor)
+
+        self.e = orig_exp
+        return "Finished autophase1d1_all"
         # end autophase1d_all
 
     def autophase1d_exclude_water(self, delta_sw=-1):
@@ -1406,7 +1426,7 @@ class NmrDataSet:
                 nd1.proc.parse_reg_ex()
             except:
                 pass
-            
+
             if nd1.proc.axis_nucleus[1] != 'off':
                 nd1.display.y_label = nd1.proc.axis_nucleus[1]
 
