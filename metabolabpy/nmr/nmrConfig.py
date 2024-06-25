@@ -13,6 +13,7 @@ class NmrConfig:
         self.home_dir = os.path.expanduser('~')
         self.config_file = os.path.join(self.home_dir, self.f_name)
         self.value = ""
+        self.plot_legend = False
         self.pos_col10 = 0.0
         self.pos_col11 = 0.0
         self.pos_col12 = 1.0
@@ -51,6 +52,7 @@ class NmrConfig:
         config = configparser.ConfigParser()
         auto_plot = 'yes' if self.auto_plot is True else 'no'
         keep_zoom = 'yes' if self.keep_zoom is True else 'no'
+        plot_legend = 'yes' if self.plot_legend is True else 'no'
         print_top_axis = 'yes' if self.print_top_axis is True else 'no'
         print_right_axis = 'yes' if self.print_right_axis is True else 'no'
         print_left_axis = 'yes' if self.print_left_axis is True else 'no'
@@ -79,7 +81,8 @@ class NmrConfig:
                           'pos_col22': self.pos_col22,
                           'neg_col20': self.neg_col20,
                           'neg_col21': self.neg_col21,
-                          'neg_col22': self.neg_col22}
+                          'neg_col22': self.neg_col22,
+                          'plot_legend': plot_legend}
         config['System'] = {'current_directory': self.current_directory}
         config['Print'] = {'print_top_axis': print_top_axis,
                            'print_right_axis': print_right_axis,
@@ -122,6 +125,7 @@ class NmrConfig:
                 local_var = l
                 local_var = local_var.replace("autoplot", "auto_plot")
                 local_var = local_var.replace("keepzoom", "keep_zoom")
+                local_var = local_var.replace("plotlegend", "plot_legend")
                 local_var = local_var.replace("fontsize", "font_size")
                 local_var = local_var.replace("phasereferencecolour", "phase_reference_colour")
                 local_var = local_var.replace("poscol", "pos_col")
@@ -136,6 +140,9 @@ class NmrConfig:
 
     def set_keep_zoom(self, value):
         self.keep_zoom = True if value == "yes" else False
+
+    def set_plot_legend(self, value):
+        self.plot_legend = True if value == "yes" else False
 
     def set_font_size(self, value):
         self.font_size = float(value)
