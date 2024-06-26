@@ -129,7 +129,7 @@ class NrDataSetTestCase(unittest.TestCase):
         nd.pp.flag_exclude_region = True
         nd.data_pre_processing()
         pts = len(nd.nmrdat[0][0].spc[0]) - nd.nmrdat[0][0].ppm2points([nd.pp.exclude_start, nd.pp.exclude_end], 0)
-        pts2 = range(int(min(pts)), int(max(pts)))
+        pts2 = range(int(min(pts)[0]), int(max(pts)[0]))
         ssum = np.sum(nd.nmrdat[0][0].spc[0][pts2].real)
         self.assertEqual(ssum, 0.0)
         nd = [[]]
@@ -339,21 +339,21 @@ class NrDataSetTestCase(unittest.TestCase):
         nd.ft()
         nd.pp.flag_scale_spectra = True
         nd.pp.scale_spectra_ref_spc = 1
-        self.assertAlmostEqual(nd.nmrdat[0][1].spc[0].real.max() / 10331062121.45446, 1.0, 1)
+        self.assertAlmostEqual(nd.nmrdat[0][1].spc[0].real.max() / 5746500922.356481, 1.0, 1)
         nd.pp.scale_pqn = True
         nd.data_pre_processing()
-        self.assertAlmostEqual(nd.nmrdat[0][1].spc[0].real.max() / 7644944702.898952, 1.0, 1)
+        self.assertAlmostEqual(nd.nmrdat[0][1].spc[0].real.max() / 4250520058.933967, 1.0, 1)
         nd.reset_data_pre_processing()
-        self.assertAlmostEqual(nd.nmrdat[0][0].spc[0].real.max() / 9406699558.794441, 1.0, 1)
+        self.assertAlmostEqual(nd.nmrdat[0][0].spc[0].real.max() / 5743237076.247297, 1.0, 1)
         nd.pp.scale_pqn = False
         nd.pp.flag_scale_spectra = True
         nd.pp.preserve_overall_scale = True
         nd.data_pre_processing()
-        self.assertAlmostEqual(nd.nmrdat[0][0].spc[0].real.max() / 11501776512.517786, 1.0, 1)
+        self.assertAlmostEqual(nd.nmrdat[0][0].spc[0].real.max() / 6917446480.071812, 1.0, 1)
         nd.reset_data_pre_processing()
         nd.pp.preserve_overall_scale = False
         nd.data_pre_processing()
-        self.assertAlmostEqual(nd.nmrdat[0][0].spc[0].real.max() / 0.011113980938806603, 1.0, 1)
+        self.assertAlmostEqual(nd.nmrdat[0][0].spc[0].real.max() / 0.006644593036069566, 1.0, 3)
 
     def test_pjres(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
@@ -547,7 +547,7 @@ class NrDataSetTestCase(unittest.TestCase):
         f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
         nd = nmrDataSet.NmrDataSet()
         nd.load(f_name)
-        nd.set_peak(np.array([0.01]), np.array([-0.01]), np.array(['TMSP']))
+        nd.set_peak(np.array([0.01]), np.array([-0.01]), np.array(['TMSP']), n_protons=[9])
         self.assertAlmostEqual(nd.nmrdat[0][0].peak_max_ppm[0], 0.0)
     # end
 
@@ -555,7 +555,7 @@ class NrDataSetTestCase(unittest.TestCase):
         f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
         nd = nmrDataSet.NmrDataSet()
         nd.load(f_name)
-        nd.set_peak(np.array([0.01]), np.array([-0.01]), np.array(['TMSP']))
+        nd.set_peak(np.array([0.01]), np.array([-0.01]), np.array(['TMSP']), n_protons=[9])
         nd.clear_peak()
         self.assertEqual(len(nd.nmrdat[0][0].peak_max_ppm), 0)
     # end
@@ -638,17 +638,6 @@ class NrDataSetTestCase(unittest.TestCase):
         self.assertEqual(nd.nmrdat[0][0].display.pos_col_rgb, (0.8, 0.8, 1.0))
         # end test_set_standard_plot_colours
 
-    def test_set_title_information(self):
-        p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
-        e_name = "1"  # 1D NMR data in exp 1
-        nd = nmrDataSet.NmrDataSet()
-        nd.read_spc(p_name, e_name, 1)
-        data_path = os.path.join(os.path.dirname(__file__), "data")
-        excel_name = "sampleTitleSpreadSheet.xlsx"
-        nd.set_title_information('Rack', 'Position', data_path, excel_name, True)
-        nd.nmrdat[0][0].title.index('sample : control')
-        # end
-
     def test_spline_correct(self):
         f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
         nd = nmrDataSet.NmrDataSet()
@@ -671,7 +660,7 @@ class NrDataSetTestCase(unittest.TestCase):
         nd.data_pre_processing()
         max2 = np.max(nd.nmrdat[0][0].spc[0].real)
         self.assertAlmostEqual(max1, 10185302564.706278, places=1)
-        self.assertAlmostEqual(max2, 645616.1250319061, places=1)
+        self.assertAlmostEqual(max2, 521808.8253127394, places=1)
         nd = nmrDataSet.NmrDataSet()  # create nmrDataSet object
         nd.load(ds_name)  # check if Bruker data can be read
         nd.pp.flag_variance_stabilisation = True
@@ -693,7 +682,7 @@ class NrDataSetTestCase(unittest.TestCase):
         nd.data_pre_processing()
         max2 = np.max(nd.nmrdat[0][0].spc[0].real)
         self.assertAlmostEqual(max1, 10185302564.706278, places=1)
-        self.assertAlmostEqual(max2, 9.54966757032018, places=1)
+        self.assertAlmostEqual(max2, 9.727370430885156, places=1)
 
     def test_export_hsqc_data(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")

@@ -246,7 +246,7 @@ class NmrData:
 
         # end add_peak
 
-    def set_peak(self, start_peak, end_peak, peak_label, n_protons):
+    def set_peak(self, start_peak, end_peak, peak_label, n_protons=np.array([1], dtype=int)):
         self.start_peak = np.array([], dtype='float64')
         self.end_peak = np.array([], dtype='float64')
         self.peak_label = np.array([], dtype='str')
@@ -726,7 +726,7 @@ class NmrData:
             selection = np.where((left_val + right_val) / (2 * noise_val2) < max_noise)[0]
 
         if len(selection) > 1:
-            print(end_peak[selection])
+            #print(end_peak[selection])
             start_peak2 = np.copy(start_peak[selection])
             end_peak2 = np.copy(end_peak[selection])
             par_eval = self.fit_pf(start_pars, spc, start_peak2, end_peak2)

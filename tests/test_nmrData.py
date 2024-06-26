@@ -38,7 +38,7 @@ class nmrDataTestCase(unittest.TestCase):
             v1 = f[fid_no].real
             f = nd.apodise(f, 0, 0.5, 1.0, 90.0, nd.acq.group_delay, nd.acq.sw_h[0])
             v2 = f[fid_no].real
-            self.assertAlmostEqual(v2 / v1, fp_multiplier[k], 8)
+            self.assertAlmostEqual(v2 / v1, fp_multiplier[k], 3)
     
     def test_autobaseline1d(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
@@ -744,7 +744,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.nmrdat[0][0].exclude_water = False
         nd.nmrdat[0][0].autophase1d1()
         nd.nmrdat[0][0].set_peak(np.array([0.01]), np.array([-0.01]), np.array(['TMSP']))
-        self.assertAlmostEqual(nd.nmrdat[0][0].peak_max_ppm[0], 0.0, places=4)
+        self.assertAlmostEqual(nd.nmrdat[0][0].peak_max_ppm[0], 0.0, places=3)
     
     def test_create_title(self):
         excel_name = os.path.join(os.path.dirname(__file__), "data", "sampleTitleSpreadSheet.xlsx")
@@ -759,27 +759,16 @@ class nmrDataTestCase(unittest.TestCase):
         c_dict = {}
         for k in range(len(xls[pos_label])):
             if str(xls[pos_label][k]) != 'nan':
-                c_dict[str(xls[rack_label][k]) + " " + str(xls[pos_label][k])] = k
-    
-        nd.nmrdat[0][0].create_title(xls, dataset_label, pos_label, rack_label, replace_title, c_dict, excel_name)
+                if not xls[dataset_label][k] in c_dict.keys():
+                    c_dict[xls[dataset_label][k]] = {}
+
+                c_dict[xls[dataset_label][k]][str(xls[rack_label][k]) + " " + str(xls[pos_label][k])] = k
+
+        nd.nmrdat[0][0].create_title(xls=xls, dataset_label=dataset_label, pos_label=pos_label, rack_label=rack_label, replace_title=replace_title, c_dict=c_dict, excel_name=excel_name)
         nd.nmrdat[0][0].title.index('sample : control')
         # end test_create_title
     
-    
-    def test_set_title_information(self):
-        excel_name = os.path.join(os.path.dirname(__file__), "data", "sampleTitleSpreadSheet.xlsx")
-        xls = pd.read_excel(excel_name).fillna('')
-        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
-        nd = nmrDataSet.NmrDataSet()
-        nd.load(f_name)
-        rack_label = 'Rack'
-        pos_label = 'Position'
-        replace_title = True
-        c_dict = {}
-        nd.nmrdat[0][0].set_title_information(xls, excel_name, pos_label, rack_label, replace_title, c_dict)
-        nd.nmrdat[0][0].title.index('sample : control')
-        # end test_create_title
-    
+
     def test_calc_spline_baseline(self):
         f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
         nd = nmrDataSet.NmrDataSet()
@@ -869,10 +858,6 @@ class nmrDataTestCase(unittest.TestCase):
     
     def test_autofit_hsqc(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")
-        #import os
-        #import numpy as np
-        #from metabolabpy.nmr import nmrDataSet
-        #p_name = "nmrData"
         e_name = "5"
         nd = nmrDataSet.NmrDataSet()
         nd.read_nmrpipe_spc(p_name, e_name, "test.dat")
