@@ -1739,9 +1739,13 @@ class NmrData:
         return fid
         # end quad_2d
 
-    def read_pipe_2d(self, p_name, f_name):
+    def read_pipe_2d(self, p_name, f_name, ft_dir=''):
         npd = nmrpipeData.NmrPipeData()
-        npd.read_pipe(p_name, f_name)
+        if len(ft_dir) == 0:
+            npd.read_pipe(p_name, f_name)
+        else:
+            npd.read_pipe(p_name + os.sep + ft_dir, f_name)
+
         self.spc = npd.spc
         self.proc.sw_h[0] = npd.fdf2sw
         self.ref_shift[0] = npd.fdf2orig / self.acq.sfo1

@@ -4,6 +4,7 @@ NMRPipe processed spectrum class
 
 import os
 import numpy as np
+import re
 
 
 class NmrPipeData:
@@ -200,11 +201,15 @@ class NmrPipeData:
         # end read_header
 
     def read_pipe(self, p_name, f_name):
+        spc3d = re.compile('.+\d+.+')
         f_name2 = p_name + os.sep + f_name
         f = open(f_name2, 'rb')
         self.header = np.resize(self.header, 512)
         self.header = np.fromfile(f, dtype=np.float32, count=512)
         self.read_header()
+        if len(spc3d.findall(f_name)) > 0:
+            self.x_size = self.fdspecnum
+            
         self.spc = np.resize(self.spc, (int(self.x_size), int(self.y_size)))
         spc = np.array([[]], dtype='float64')
         spc = np.fromfile(f, dtype=np.float32, count=int(self.x_size * self.y_size))

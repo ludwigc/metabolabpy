@@ -1307,6 +1307,12 @@ class NmrDataSet:
 
         self.cf.current_directory = data_set_name
         self.cf.save_config()
+        if len(self.nmrdat) - 1 < self.s:
+            self.s = 0
+
+        if len(self.nmrdat[self.s]) - 1< self.e:
+            self.e = 0
+
         # end load
 
     def load_mat(self, file_name=''):
@@ -1760,27 +1766,27 @@ class NmrDataSet:
         xls = pd.read_excel(file_name).fillna('')
         return xls
 
-    def read_nmrpipe_spc(self, data_set_name, data_set_number, proc_data_name='test.dat'):
+    def read_nmrpipe_spc(self, data_set_name, data_set_number, proc_data_name='test.dat', ft_dir=''):
         self.e = len(self.nmrdat[self.s])
         nd1 = nd.NmrData()
         nd1.data_set_name = data_set_name
         nd1.data_set_number = data_set_number
         nd1.read_spc()
-        nd1.read_pipe_2d(data_set_name + os.sep + data_set_number + '.proc', proc_data_name)
+        nd1.read_pipe_2d(data_set_name + os.sep + data_set_number + '.proc', proc_data_name, ft_dir)
         nd1.acq.sw[0] = nd1.acq.sw[0] * len(nd1.spc[0]) / 2 ** math.ceil(math.log(len(nd1.spc[0]), 2))
         nd1.acq.sw_h[0] = nd1.acq.sw_h[0] * len(nd1.spc[0]) / 2 ** math.ceil(math.log(len(nd1.spc[0]), 2))
         nd1.calc_ppm()
         self.nmrdat[self.s].append(nd1)
         # end read_spc
 
-    def read_nmrpipe_spcs(self, data_path, data_exp, proc_data_name='test.dat'):
+    def read_nmrpipe_spcs(self, data_path, data_exp, proc_data_name='test.dat', ft_dir=''):
         if len(data_exp) > 1:
             for k in range(len(data_exp)):
-                self.read_nmrpipe_spc(data_path[0], str(data_exp[k]), proc_data_name)
+                self.read_nmrpipe_spc(data_path[0], str(data_exp[k]), proc_data_name, ft_dir)
 
         else:
             for k in range(len(data_path)):
-                self.read_nmrpipe_spc(data_path[k], str(data_exp[0]), proc_data_name)
+                self.read_nmrpipe_spc(data_path[k], str(data_exp[0]), proc_data_name, ft_dir)
 
     # end read_spcs
 
