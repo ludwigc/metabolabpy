@@ -373,7 +373,7 @@ class NmrDataSet:
                 if not xls[dataset_label][k] in c_dict.keys():
                     c_dict[xls[dataset_label][k]] = {}
 
-                c_dict[xls[dataset_label][k]][str(xls[rack_label][k]) + " " + str(xls[pos_label][k])] = k
+                c_dict[xls[dataset_label][k]][str(xls[rack_label][k]).replace(' ','') + " " + str(xls[pos_label][k]).replace(' ','')] = k
 
         for k in range(len(self.nmrdat[self.s])):
             self.nmrdat[self.s][k].create_title(xls, dataset_label, pos_label, rack_label, replace_title, c_dict,
@@ -1966,8 +1966,12 @@ class NmrDataSet:
             for k in range(n_spc):
                 spc_sum = np.sum(self.nmrdat[self.s][k].spc[0]).real
                 self.nmrdat[self.s][k].spc[0] /= spc_sum
-                self.nmrdat[self.s][k].spc[0] *= np.max(scale)
-                self.pp.spc_scale[k] = spc_sum / np.max(scale)
+                if self.pp.scale_spectra_ref_spc > 0:
+                    self.nmrdat[self.s][k].spc[0] *= scale[self.pp.scale_spectra_ref_spc - 1]
+                    self.pp.spc_scale[k] = spc_sum / scale[self.pp.scale_spectra_ref_spc - 1]
+                else:
+                    self.nmrdat[self.s][k].spc[0] *= np.max(scale)
+                    self.pp.spc_scale[k] = spc_sum / np.max(scale)
 
         # end scale_spectra
 
