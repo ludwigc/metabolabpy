@@ -273,7 +273,7 @@ class NmrDataSet:
 
     def auto_ref(self, tmsp=True):
         if self.nmrdat[self.s][self.e].dim == 1:
-            self.nmrdat[self.s][self.e].ref = 'auto'
+            #self.nmrdat[self.s][self.e].ref = 'auto'
             self.nmrdat[self.s][self.e].auto_ref(tmsp)
             # self.nmrdat[self.s][self.e].setRef(np.array([0.0]), np.array([14836]))
 
