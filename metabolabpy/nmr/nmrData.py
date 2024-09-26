@@ -277,7 +277,8 @@ class NmrData:
 
     def add_tmsp(self, m0=1, r2=1):
         npts = len(self.spc[0])
-        tsp_frq = - 2 * math.pi * self.ref_point[0] / npts + math.pi
+        tsp_point = self.ppm2points(0.0)
+        tsp_frq = - 2 * math.pi * tsp_point / npts + math.pi
         t = np.linspace(0, npts - 1, npts)
         tsp_fid = m0 * np.exp(t * (1j * tsp_frq - r2))
         spc = fftshift(fft(tsp_fid))

@@ -116,6 +116,12 @@ class NmrDataSet:
 
         # end add_peak
 
+    def add_tmsp(self, m0=1, r2=1):
+        for k in range(len(self.nmrdat[self.s])):
+            self.nmrdat[self.s][k].add_tmsp(m0=m0, r2=r2)
+
+    # end add_tmsp
+
     def autophase1d_bl(self, upper_min=10.0, lower_max=-0.5):
         ref_spc_no = self.nmrdat[0][0].display.ph_ref_exp - 1
         if ref_spc_no == -1:
