@@ -1132,22 +1132,29 @@ class NmrData:
         return fid
         # end conv
 
-    def create_title(self, xls=[], dataset_label='', pos_label='', rack_label='', replace_title=False, c_dict={}, excel_name=''):
-        if len(xls) == 0 or len(dataset_label) == 0 or len(pos_label) == 0 or len(rack_label) == 0 or len(c_dict) == 0 or len(excel_name) == 0:
+    def create_title(self, xls=[], dataset_label='', pos_label='', rack_label='', replace_title=False, c_dict={}, excel_name='', autosampler='SampleJet'):
+        if len(xls) == 0 or len(dataset_label) == 0 or len(pos_label) == 0 or len(c_dict) == 0 or len(excel_name) == 0:
             return
 
-        get_auto_pos = re.compile(r'[A-Z]\d+')
-        get_rack_num = re.compile(r'<\d+')
-        try:
-            pos = get_auto_pos.findall(self.acq.autopos)[0]
-            rack = get_rack_num.findall(self.acq.autopos)[0][1:]
-        except:
-            rack = str(int(int(self.acq.holder) / 100))
-            pos = int(self.acq.holder) - int(rack)*100 - 1
-            pos_char = self.nmr_col[str(pos % 8)]
-            pos_no = str(int(pos / 8) + 1)
+        if len(rack_label) == 0 and autosampler == 'SampleJet':
+            return
 
-            pos = pos_char + pos_no
+        if autosampler == 'SampleJet':
+            get_auto_pos = re.compile(r'[A-Z]\d+')
+            get_rack_num = re.compile(r'<\d+')
+            try:
+                pos = get_auto_pos.findall(self.acq.autopos)[0]
+                rack = get_rack_num.findall(self.acq.autopos)[0][1:]
+            except:
+                rack = str(int(int(self.acq.holder) / 100))
+                pos = int(self.acq.holder) - int(rack)*100 - 1
+                pos_char = self.nmr_col[str(pos % 8)]
+                pos_no = str(int(pos / 8) + 1)
+
+                pos = pos_char + pos_no
+        else:
+            pos_no = os.path.split(self.orig_data_set)[1]
+            pos = pos_no
 
         if not replace_title:
             title = self.title
@@ -1162,10 +1169,18 @@ class NmrData:
         if len(dsl) == 0:
             return
 
-        line_no = c_dict[dsl][rack + " " + pos]
+        if autosampler == 'SampleJet':
+            line_no = c_dict[dsl][rack + " " + pos]
+        else:
+            line_no = c_dict[dsl][str(pos)]
+
         title += f'Excel File : {excel_name}\n'
         title += f'Excel Line Number : {line_no + 2}\n'
-        title += f'acqus AUTOPOS : {rack} {pos}\n'
+        if autosampler == 'SampleJet':
+            title += f'acqus AUTOPOS : {rack} {pos}\n'
+
+        title += f'autosampler : {autosampler}\n'
+
         for col in xls.columns:
             if col == 'number':
                 title += f'{col} : {int(xls[col][line_no])}\n'

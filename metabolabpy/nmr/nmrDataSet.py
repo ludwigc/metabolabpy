@@ -365,9 +365,12 @@ class NmrDataSet:
 
         # end compress_buckets
 
-    def create_titles(self, xls=[], dataset_label='', pos_label='', rack_label='', replace_title=False, excel_name=''):
-        if len(xls) == 0 or len(dataset_label) == 0 or len(pos_label) == 0 or len(rack_label) == 0 or len(
+    def create_titles(self, xls=[], dataset_label='', pos_label='', rack_label='', replace_title=False, excel_name='', autosampler='SampleJet'):
+        if len(xls) == 0 or len(dataset_label) == 0 or len(pos_label) == 0 or len(
                 excel_name) == 0:
+            return
+
+        if len(rack_label) == 0 and autosampler == 'SampleJet':
             return
 
         if len(self.nmrdat[self.s]) == 0:
@@ -379,11 +382,14 @@ class NmrDataSet:
                 if not xls[dataset_label][k] in c_dict.keys():
                     c_dict[xls[dataset_label][k]] = {}
 
-                c_dict[xls[dataset_label][k]][str(xls[rack_label][k]).replace(' ','') + " " + str(xls[pos_label][k]).replace(' ','')] = k
+                if autosampler == 'SampleJet':
+                    c_dict[xls[dataset_label][k]][str(xls[rack_label][k]).replace(' ','') + " " + str(xls[pos_label][k]).replace(' ','')] = k
+                else:
+                    c_dict[xls[dataset_label][k]][str(xls[pos_label][k]).replace(' ','')] = k
 
         for k in range(len(self.nmrdat[self.s])):
             self.nmrdat[self.s][k].create_title(xls, dataset_label, pos_label, rack_label, replace_title, c_dict,
-                                                excel_name)
+                                                excel_name, autosampler)
 
         # end create_titles
 
