@@ -16,3 +16,6 @@ pywavelets
 #on arm: then install with : pip3 install metabolabpy --no-deps
 pygamma # needs python 3.9
 mat73
+# on windows, if ssl certificates do not work:
+# conda config --set ssl_verify false
+# to disable them
