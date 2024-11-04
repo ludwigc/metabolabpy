@@ -341,6 +341,30 @@ class NmrDataSet:
         self.pp.bucket_points = 1
         # end bucket_spectra
 
+    def check_file(self, data_set_name=''):
+        if len(data_set_name) == 0:
+            msg = 'file name empty'
+            return msg
+
+        nda = self.load2(data_set_name)
+        ds = []
+        exps = []
+        for k in range(len(nda)):
+            exps.append([])
+            for l in range(len(nda[k])):
+                if len(nda[k][k].spc[0]) == 0 or len(nda[k][l].fid[0]) == 0:
+                    ds.append(k)
+                    exps[k].append(l)
+
+        ds = list(set(ds))
+        msg = ''
+        for k in range(len(ds)):
+            for l in range(len(exps[ds[k]])):
+                msg += f'File: {data_set_name}, Dataset: {ds[k] + 1}, experiment: {exps[ds[k]][l] + 1} not a valid dataset\n'
+
+        return msg
+        # end check_file
+
     def clear(self):
         self.nmrdat = [[]]
         self.s = 0
@@ -1326,6 +1350,291 @@ class NmrDataSet:
             self.e = 0
 
         # end load
+
+    def load2(self, data_set_name):
+        data_sets = np.array([])
+        l_dir = os.listdir(data_set_name)
+        cur_data_not_found = True
+        for k in range(len(l_dir)):
+            if l_dir[k] == 'curPars.dat':
+                cur_data_not_found = False
+
+        if cur_data_not_found:
+            return
+
+        f_name = os.path.join(data_set_name, 'curPars.dat')
+        f = open(f_name, 'rb')
+        cur_pars = pickle.load(f)
+        f.close()
+        self.file_format_version = cur_pars[0]
+        self.s = cur_pars[1]
+        self.e = cur_pars[2]
+        # self.pp = cur_pars[3]
+        c = cur_pars[3]
+        for k in self.pp.__dict__.keys():
+            if k != 'cf':
+                k2 = k
+                str_idx = k2.find('_')
+                while str_idx != -1:
+                    str_letter = k2[str_idx + 1]
+                    k2 = k2.replace(k2[str_idx:str_idx + 2], str_letter.upper())
+                    str_idx = k2.find('_')
+
+                if hasattr(c, k):
+                    exec('self.pp.' + k + '=c.' + k)
+
+                if hasattr(c, k2):
+                    exec('self.pp.' + k + '=c.' + k2)
+
+        self.deselect = cur_pars[4]
+        self.deselect2 = cur_pars[5]
+        self.cmd_buffer = cur_pars[6]
+        self.cmd_idx = cur_pars[7]
+        self.script = cur_pars[8]
+        self.console = cur_pars[9]
+        try:
+            self.tmsp_conc = cur_pars[10]
+        except:
+            self.tmsp_conc = 0.5
+
+        for k in range(len(l_dir)):
+            if os.path.isdir(os.path.join(data_set_name, l_dir[k])):
+                data_sets = np.append(data_sets, l_dir[k])
+
+        data_sets = np.sort(data_sets)
+        data_set_exps = []
+        for k in range(len(data_sets)):
+            dir_name = os.listdir(os.path.join(data_set_name, data_sets[k]))
+            data_exps = np.array([])
+            for l in range(len(dir_name)):
+                if os.path.isdir(os.path.join(os.path.join(data_set_name, data_sets[k]), dir_name[l])):
+                    if (os.path.isfile(
+                            os.path.join(os.path.join(os.path.join(data_set_name, data_sets[k]), dir_name[l]),
+                                         'titleFile.txt')) and
+                            os.path.isfile(
+                                os.path.join(os.path.join(os.path.join(data_set_name, data_sets[k]), dir_name[l]),
+                                             'acqusText.txt')) and
+                            os.path.isfile(
+                                os.path.join(os.path.join(os.path.join(data_set_name, data_sets[k]), dir_name[l]),
+                                             'acqu2sText.txt')) and
+                            os.path.isfile(
+                                os.path.join(os.path.join(os.path.join(data_set_name, data_sets[k]), dir_name[l]),
+                                             'acqu3sText.txt')) and
+                            os.path.isfile(
+                                os.path.join(os.path.join(os.path.join(data_set_name, data_sets[k]), dir_name[l]),
+                                             'procsText.txt')) and
+                            os.path.isfile(
+                                os.path.join(os.path.join(os.path.join(data_set_name, data_sets[k]), dir_name[l]),
+                                             'proc2sText.txt')) and
+                            os.path.isfile(
+                                os.path.join(os.path.join(os.path.join(data_set_name, data_sets[k]), dir_name[l]),
+                                             'proc3sText.txt')) and
+                            os.path.isfile(
+                                os.path.join(os.path.join(os.path.join(data_set_name, data_sets[k]), dir_name[l]),
+                                             'nmrDataSet.dat'))):
+                        data_exps = np.append(data_exps, dir_name[l])
+
+            data_exps2 = []
+            for k in range(len(data_exps)):
+                try:
+                    data_exps2.append(int(data_exps[k]))
+                except:
+                    pass
+
+            data_exps2.sort()
+            data_exps = list(map(str, data_exps2))
+            data_set_exps.append(data_exps)
+
+        nda = []
+        for k in range(len(data_set_exps)):
+            nda.append([])
+            for l in range(len(data_set_exps[k])):
+                f_name = os.path.join(os.path.join(os.path.join(data_set_name, data_sets[k]), data_set_exps[k][l]),
+                                      'nmrDataSet.dat')
+                f = open(f_name, 'rb')
+                n = pickle.load(f)
+                f.close()
+                if hasattr(n, 'ver'):
+                    vver = ''
+                else:
+                    vver = '0.1'
+
+                nd2 = nd.NmrData()
+                # nd2.file_version = n.nmrdat[0][0].ver
+                for kk in nd2.__dict__.keys():
+                    if kk != 'acq' and kk != 'proc' and kk != 'display' and kk != 'apc' and kk != 'hsqc':
+                        kk2 = kk
+                        str_idx = kk2.find('_')
+                        while str_idx != -1:
+                            str_letter = kk2[str_idx + 1]
+                            kk2 = kk2.replace(kk2[str_idx:str_idx + 2], str_letter.upper())
+                            str_idx = kk2.find('_')
+
+                        if hasattr(n, kk):
+                            exec('nd2.' + kk + '=n.' + kk)
+
+                        if hasattr(n, kk2):
+                            exec('nd2.' + kk + '=n.' + kk2)
+
+                    elif kk == 'acq':
+                        if hasattr(n, kk):
+                            a = n.acq
+                            aq = nd2.acq
+                            for kkk in aq.__dict__.keys():
+                                if kkk != 'reg_ex':
+                                    kkk2 = kkk
+                                    str_idx = kkk2.find('_')
+                                    while str_idx != -1:
+                                        str_letter = kkk2[str_idx + 1]
+                                        kkk2 = kkk2.replace(kkk2[str_idx:str_idx + 2], str_letter.upper())
+                                        str_idx = kkk2.find('_')
+
+                                    if hasattr(a, kkk):
+                                        exec('aq.' + kkk + '=a.' + kkk)
+
+                                    if hasattr(a, kkk2):
+                                        exec('aq.' + kkk + '=a.' + kkk2)
+
+                                # else:
+                                #    try:
+                                #        r = a.reg_ex
+                                #    except:
+                                #        r = a.regEx
+                                #
+                                #    re = aq.reg_ex
+                                #    for kkkk in re.__dict__.keys():
+                                #        if hasattr(r, kkkk):
+                                #            exec('re.' + kkkk + '=r.' + kkkk)
+                                #
+                                #    aq.reg_ex = re
+
+                            nd2.acq = aq
+
+                    elif kk == 'proc':
+                        if hasattr(n, kk):
+                            p = n.proc
+                            pc = nd2.proc
+                            for kkk in pc.__dict__.keys():
+                                if kkk != 'reg_ex':
+                                    kkk2 = kkk
+                                    str_idx = kkk2.find('_')
+                                    while str_idx != -1:
+                                        str_letter = kkk2[str_idx + 1]
+                                        kkk2 = kkk2.replace(kkk2[str_idx:str_idx + 2], str_letter.upper())
+                                        str_idx = kkk2.find('_')
+
+                                    if hasattr(p, kkk):
+                                        exec('pc.' + kkk + '=p.' + kkk)
+
+                                    if hasattr(p, kkk2):
+                                        exec('pc.' + kkk + '=p.' + kkk2)
+
+                                else:
+                                    # try:
+                                    #    r = p.reg_ex
+                                    # except:
+                                    #    r = p.regEx
+                                    #
+                                    re = pc.reg_ex
+                                    # for kkkk in re.__dict__.keys():
+                                    #    if hasattr(r, kkkk):
+                                    #        exec('re.' + kkkk + '=r.' + kkkk)
+                                    #
+                                    # pc.reg_ex = re
+
+                            nd2.proc = pc
+
+                    elif kk == 'display':
+                        if hasattr(n, kk):
+                            d = n.display
+                            dp = nd2.display
+                            for kkk in dp.__dict__.keys():
+                                if hasattr(d, kkk):
+                                    exec('dp.' + kkk + '=d.' + kkk)
+
+                            nd2.display = dp
+
+                    elif kk == 'apc':
+                        if hasattr(n, kk):
+                            ab = n.apc
+                            ac = nd2.apc
+                            for kkk in ac.__dict__.keys():
+                                if hasattr(ab, kkk):
+                                    exec('ac.' + kkk + '=ab.' + kkk)
+
+                            nd2.apc = ac
+
+                    elif kk == 'hsqc':
+                        if hasattr(n, kk):
+                            h = n.hsqc
+                            hp = nd2.hsqc
+                            for kkk in hp.__dict__.keys():
+                                if hasattr(h, kkk):
+                                    # if kkk != 'hsqc_data':
+                                    exec('hp.' + kkk + '=h.' + kkk)
+                                    #
+                                    # else:
+                                    #    hd = h.hsqc_data
+                                    #    hdp = hp.hsqc_data
+                                    #    for kkkk in hdp.__dict__.keys():
+                                    #        if hasattr(hd, kkkk):
+                                    #            exec('hdp.' + kkkk + '=hd.' + kkkk)
+                                    #
+                                    #    hp.hsqc_data = hdp
+
+                            nd2.hsqc = hp
+
+                if vver == '0.1':
+                    nd2.ver = '0.1'
+
+                nda[k].append(nd2)
+                nd2 = []
+                f_name = os.path.join(os.path.join(os.path.join(data_set_name, data_sets[k]), data_set_exps[k][l]),
+                                      'titleFile.txt')
+                f = open(f_name, 'r')
+                nda[k][l].title = f.read()
+                f.close()
+                f_name = os.path.join(os.path.join(os.path.join(data_set_name, data_sets[k]), data_set_exps[k][l]),
+                                      'acqusText.txt')
+                f = open(f_name, 'r')
+                nda[k][l].acq.acqus_text = f.read()
+                f.close()
+                f_name = os.path.join(os.path.join(os.path.join(data_set_name, data_sets[k]), data_set_exps[k][l]),
+                                      'acqu2sText.txt')
+                f = open(f_name, 'r')
+                nda[k][l].acq.acqu2s_text = f.read()
+                f.close()
+                f_name = os.path.join(os.path.join(os.path.join(data_set_name, data_sets[k]), data_set_exps[k][l]),
+                                      'acqu3sText.txt')
+                f = open(f_name, 'r')
+                nda[k][l].acq.acqu3s_text = f.read()
+                f.close()
+                f_name = os.path.join(os.path.join(os.path.join(data_set_name, data_sets[k]), data_set_exps[k][l]),
+                                      'procsText.txt')
+                f = open(f_name, 'r')
+                nda[k][l].proc.procs_text = f.read()
+                f.close()
+                f_name = os.path.join(os.path.join(os.path.join(data_set_name, data_sets[k]), data_set_exps[k][l]),
+                                      'proc2sText.txt')
+                f = open(f_name, 'r')
+                nda[k][l].proc.proc2s_text = f.read()
+                f.close()
+                f_name = os.path.join(os.path.join(os.path.join(data_set_name, data_sets[k]), data_set_exps[k][l]),
+                                      'proc3sText.txt')
+                f = open(f_name, 'r')
+                nda[k][l].proc.proc3s_text = f.read()
+                f.close()
+
+        #self.cf.current_directory = data_set_name
+        #self.cf.save_config()
+        #if len(self.nmrdat) - 1 < self.s:
+        #    self.s = 0
+        #
+        #if len(self.nmrdat[self.s]) - 1< self.e:
+        #    self.e = 0
+
+        return nda
+        # end load2
 
     def load_mat(self, file_name=''):
         if len(file_name) == 0:
