@@ -1,0 +1,28 @@
+Name                   : 3-Phosphoenolpyruvic Acid
+AltName                : phosphoenolpyruvate
+Source                 : HMDB
+IUPAC                  : 2-(phosphonooxy)prop-2-enoic acid
+InChI_Identifier       : InChI=1S/C3H5O6P/c1-2(3(4)5)9-10(6,7)8/h1H2,(H,4,5)(H2,6,7,8)
+InChI_Key              : DTBNBXWJWCWCIK-UHFFFAOYSA-N
+SMILES                 : OC(=O)C(=C)OP(O)(O)=O
+Formula                : C3H5O6P
+Mass                   : 168.042
+pKa                    : 
+HMDB                   : HMDB00263
+SMPDB                  : SMP00040 SMP00045 SMP00060 SMP00128
+KEGG                   : map00010 map00520 map00620
+CHEBI                  : 44897
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003
+C13HSQC                : 0 0 1
+CO_HSQC                : 1 1 2
+C13Intensities         : 1 1 1
+H1Index                : 3;1;001 3;1;002
+N15Index               : 
+C13chemicalShift       : 180.0   180.0   103.059
+H1chemicalShift        : 5.366   5.178
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

@@ -1,0 +1,28 @@
+Name                   : 2-Amino-isobutyric Acid
+AltName                : butyrateisoamino2
+Source                 : HMDB
+IUPAC                  : 2-amino-2-methylpropanoic acid
+InChI_Identifier       : InChI=1S/C4H9NO2/c1-4(2,5)3(6)7/h5H2,1-2H3,(H,6,7)
+InChI_Key              : FUOOLUPWFVMBKG-UHFFFAOYSA-N
+SMILES                 : CC(C)(N)C(O)=O
+Formula                : C4H9NO2
+Mass                   : 103.1198
+pKa                    : 
+HMDB                   : HMDB01906
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 27971
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004
+C13HSQC                : 0 0 0 1
+CO_HSQC                : 1 0 0 2
+C13Intensities         : 1 0 0 1
+H1Index                : 4;6;001
+N15Index               : 
+C13chemicalShift       : 0            0            0       26.291
+H1chemicalShift        : 1.478
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

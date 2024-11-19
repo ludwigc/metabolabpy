@@ -754,6 +754,10 @@ class NmrData:
         self.proc.water_suppression = 0
         self.proc.window_type[0] = 0
         self.proc_spc1d()
+        min_point = 131072 - self.ppm2points(5.26)
+        max_point = 131072 - self.ppm2points(4.26)
+        self.spc[0][min_point:max_point] = np.zeros(max_point - min_point)
+        print(f'max_point: {max_point}, min_point: {min_point}, max_point - min_point: {max_point - min_point}')
         result = False
         if np.max(np.abs(self.spc[0].real)) != np.max(self.spc[0].real):
             result = True
@@ -1052,6 +1056,8 @@ class NmrData:
                     spc = self.spc[0][r].real
                     ref_p = np.where(spc == np.amax(spc))
                     self.ref_point[0] -= ref_p[0][0] - int((max(pts) - min(pts)) / 2) + 1
+                else:
+                    self.ref = 'manual'
 
         self.calc_ppm()
 

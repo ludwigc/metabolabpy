@@ -1,0 +1,28 @@
+Name                   : Acetoacetic Acid
+AltName                : acetoacetate
+Source                 : HMDB
+IUPAC                  : 3-oxobutanoic acid
+InChI_Identifier       : InChI=1S/C4H6O3/c1-3(5)2-4(6)7/h2H2,1H3,(H,6,7)
+InChI_Key              : WDJHALXBUFZDSR-UHFFFAOYSA-N
+SMILES                 : CC(=O)CC(O)=O
+Formula                : C4H6O3
+Mass                   : 102.0886
+pKa                    : 
+HMDB                   : HMDB00060
+SMPDB                  : SMP00006 SMP00008 SMP00032 SMP00071 SMP00073 SMP00456
+KEGG                   : map00072 map00280 map00350 map00360 map00650
+CHEBI                  : 15344
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004
+C13HSQC                : 0 1 0 1
+CO_HSQC                : 1 2 1 2
+C13Intensities         : 1 1 1 1
+H1Index                : 2;2;012 4;3;123
+N15Index               : 
+C13chemicalShift       : 180.0   56.187   180.0   32.246
+H1chemicalShift        : 3.432   2.271
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

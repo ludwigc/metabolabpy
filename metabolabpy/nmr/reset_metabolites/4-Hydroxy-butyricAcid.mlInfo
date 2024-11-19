@@ -1,0 +1,28 @@
+Name                   : 4-Hydroxy-butyric Acid
+AltName                : butyratehydroxy4
+Source                 : HMDB
+IUPAC                  : 4-hydroxybutanoic acid
+InChI_Identifier       : InChI=1S/C4H8O3/c5-3-1-2-4(6)7/h5H,1-3H2,(H,6,7)
+InChI_Key              : SJZRECIVHVDYJC-UHFFFAOYSA-N
+SMILES                 : OCCCC(O)=O
+Formula                : C4H8O3
+Mass                   : 104.1045
+pKa                    : 
+HMDB                   : HMDB00710
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 30830
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004
+C13HSQC                : 0 1 1 1
+CO_HSQC                : 1 2 2 2
+C13Intensities         : 1 1 1 1
+H1Index                : 2;2;012 3;2;012 4;2;012
+N15Index               : 
+C13chemicalShift       : 180.0   37.049   31.446   64.612
+H1chemicalShift        : 2.241   1.803    3.602
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

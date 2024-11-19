@@ -1,0 +1,28 @@
+Name                   : 1,3-Diaminopropane
+AltName                : propane1_3_diamino
+Source                 : HMDB
+IUPAC                  : propane-1,3-diamine
+InChI_Identifier       : InChI=1S/C3H10N2/c4-2-1-3-5/h1-5H2
+InChI_Key              : XFNJVJPLKCPIBV-UHFFFAOYSA-N
+SMILES                 : NCCCN
+Formula                : C3H10N2
+Mass                   : 74.1249
+pKa                    : 
+HMDB                   : HMDB00002
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 15725
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003
+C13HSQC                : 1 1 1
+CO_HSQC                : 2 2 2
+C13Intensities         : 1 1 1
+H1Index                : 3;4;001 2;2;001
+N15Index               : 
+C13chemicalShift       : 0        27.82        39.53
+H1chemicalShift        : 3.107       2.065
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

@@ -1,0 +1,28 @@
+Name                   : 3-Methyl-Glutaric Acid
+AltName                : glutaratemethyl3
+Source                 : HMDB
+IUPAC                  : 3-methylpentanedioic acid
+InChI_Identifier       : InChI=1S/C6H10O4/c1-4(2-5(7)8)3-6(9)10/h4H,2-3H2,1H3,(H,7,8)(H,9,10)
+InChI_Key              : XJMMNTGIMDZPMU-UHFFFAOYSA-N
+SMILES                 : CC(CC(O)=O)CC(O)=O
+Formula                : C6H10O4
+Mass                   : 146.1412
+pKa                    : 
+HMDB                   : HMDB00752
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 68566
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005 0;1;006
+C13HSQC                : 0 1 1 1 0 1
+CO_HSQC                : 1 2 2 2 1 2
+C13Intensities         : 1 1 1 1 1 1
+H1Index                : 2;2;001 2;2;002 3;1;000 4;2;001 4;2;002 6;3;123
+N15Index               : 
+C13chemicalShift       : 180.0   48.05   31.958   48.05   180.0   21.872
+H1chemicalShift        : 2.207   1.977   2.198    2.207   1.977   0.914
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

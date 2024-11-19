@@ -1,0 +1,28 @@
+Name                   : 3-Methoxytyramine
+AltName                : tyramine_3_methoxy
+Source                 : HMDB
+IUPAC                  : 4-(2-aminoethyl)-2-methoxyphenol
+InChI_Identifier       : InChI=1S/C9H13NO2/c1-12-9-6-7(4-5-10)2-3-8(9)11/h2-3,6,11H,4-5,10H2,1H3
+InChI_Key              : DIVQKHQLANKJQO-UHFFFAOYSA-N
+SMILES                 : COC1=C(O)C=CC(CCN)=C1
+Formula                : C9H13NO2
+Mass                   : 167.205
+pKa                    : 
+HMDB                   : HMDB00022
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 1582
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005 0;1;006 0;1;007 0;1;008 0;1;009
+C13HSQC                : 1 1 0 1 0 0 1 1 1
+CO_HSQC                : 0 0 0 0 0 0 0 0 0
+C13Intensities         : 1 1 0 1 0 0 1 1 1
+H1Index                : 1;2;012 2;2;012 4;1;000 7;1;000 8;1;000 9;3;123
+N15Index               : 
+C13chemicalShift       : 43.721  35.182  180.0  115.999  180.0  180.0  118.649  124.684  58.441
+H1chemicalShift        : 3.25    2.926   6.986  6.917    6.824  3.875
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

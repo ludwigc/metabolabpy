@@ -1,0 +1,28 @@
+Name                   : 2-aminoadipic Acid Iso 1
+AltName                : aminoadipate1
+Source                 : HMDB
+IUPAC                  : (2S)-2-aminohexanedioic acid
+InChI_Identifier       : InChI=1S/C6H11NO4/c7-4(6(10)11)2-1-3-5(8)9/h4H,1-3,7H2,(H,8,9)(H,10,11)/t4-/m0/s1
+InChI_Key              : OYIFNHCXNCRBQI-BYPYZUCNSA-N
+SMILES                 : N[C@@H](CCCC(O)=O)C(O)=O
+Formula                : C6H11NO4
+Mass                   : 161.1558
+pKa                    : 
+HMDB                   : HMDB00510
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 37023
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004
+C13HSQC                : 1 1 1 1
+CO_HSQC                : 0 0 0 0
+C13Intensities         : 1 1 1 1
+H1Index                : 1;1;000 2;1;000 3;1;000 4;1;000
+N15Index               : 
+C13chemicalShift       : 57.44       32.993       24.195       39.655
+H1chemicalShift        : 3.729       1.852       1.628       2.233
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

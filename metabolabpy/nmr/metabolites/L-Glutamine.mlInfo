@@ -19,10 +19,11 @@ CO_HSQC                : 0 0 0 0 0
 C13Intensities         : 0 1 1 1 0
 H1Index                : 2;1;000 3;2;001 4;2;001
 N15Index               : 2;1;000 5;1;000
-C13chemicalShift       : 179.575  56.418 28.499 33.2845 170.537
+C13chemicalShift       : 179.575  56.518 28.499 33.2845 170.537
 H1chemicalShift        :   3.834   2.179  2.421
 N15chemicalShift       :  40.929 108.164
 jCC                    : 1;2;52.732 2;3;34.7 3;4;34.7 4;5;47.4915
 jCH                    : 
 jCN                    : 
 jHH                    : 
+C13Offset              :

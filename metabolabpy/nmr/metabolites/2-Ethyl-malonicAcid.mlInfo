@@ -1,0 +1,28 @@
+Name                   : 2-Ethyl-malonic Acid
+AltName                : malonateethyl
+Source                 : HMDB
+IUPAC                  : 2-ethylpropanedioic acid
+InChI_Identifier       : InChI=1S/C5H8O4/c1-2-3(4(6)7)5(8)9/h3H,2H2,1H3,(H,6,7)(H,8,9)
+InChI_Key              : UKFXDFUAPNAMPJ-UHFFFAOYSA-N
+SMILES                 : CCC(C(O)=O)C(O)=O
+Formula                : C5H8O4
+Mass                   : 132.1146
+pKa                    : 
+HMDB                   : HMDB00622
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 741548
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005
+C13HSQC                : 0 1 0 1 1
+CO_HSQC                : 1 2 0 2 2
+C13Intensities         : 1 1 0 1 1
+H1Index                : 2;1;000 4;2;001 5;3;001
+N15Index               : 
+C13chemicalShift       : 0       62.309            0       26.137       14.547
+H1chemicalShift        : 2.999       1.714       0.867
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

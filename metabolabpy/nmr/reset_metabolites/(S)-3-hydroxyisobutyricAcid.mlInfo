@@ -1,0 +1,28 @@
+Name                   : (S)-3-hydroxyisobutyric Acid
+AltName                : butyrateiso_hydroxy3
+Source                 : HMDB
+IUPAC                  : (2S)-3-hydroxy-2-methylpropanoic acid
+InChI_Identifier       : InChI=1S/C4H8O3/c1-3(2-5)4(6)7/h3,5H,2H2,1H3,(H,6,7)/t3-/m0/s1
+InChI_Key              : DBXBTMSZEOQQDU-VKHMYHEASA-N
+SMILES                 : C[C@@H](CO)C(O)=O
+Formula                : C4H8O3
+Mass                   : 104.1045
+pKa                    : 
+HMDB                   : HMDB00023
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 37373
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004
+C13HSQC                : 
+CO_HSQC                : 
+C13Intensities         : 
+H1Index                : 2;1;000 3;2;012 4;3;123 
+N15Index               : 
+C13chemicalShift       : 180.0       47.445       67.395       16.601
+H1chemicalShift        : 2.650       3.684        1.092    
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

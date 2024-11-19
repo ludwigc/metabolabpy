@@ -1,0 +1,28 @@
+Name                   : 3-Hydroxy-Glutaric Acid
+AltName                : glutaratehydroxy3
+Source                 : HMDB
+IUPAC                  : 3-hydroxypentanedioic acid
+InChI_Identifier       : InChI=1S/C5H8O5/c6-3(1-4(7)8)2-5(9)10/h3,6H,1-2H2,(H,7,8)(H,9,10)
+InChI_Key              : ZQHYXNSQOIDNTL-UHFFFAOYSA-N
+SMILES                 : OC(CC(O)=O)CC(O)=O
+Formula                : C5H8O5
+Mass                   : 148.114
+pKa                    : 
+HMDB                   : HMDB00428
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005
+C13HSQC                : 0 1 1 1 0
+CO_HSQC                : 1 2 2 2 1
+C13Intensities         : 1 1 1 1 1
+H1Index                : 2;1;001 2;1;002 3;1;000 4;1;001 4;1;002 
+N15Index               : 
+C13chemicalShift       : 180.0   47.309  69.902  47.309  180.0
+H1chemicalShift        : 2.389   2.35    4.314   2.389   2.35
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

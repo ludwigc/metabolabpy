@@ -1,0 +1,28 @@
+Name                   : 2-Ketobutyric Acid
+AltName                : ketobutyrate_2
+Source                 : HMDB
+IUPAC                  : 2-oxobutanoic acid
+InChI_Identifier       : InChI=1S/C4H6O3/c1-2-3(5)4(6)7/h2H2,1H3,(H,6,7)
+InChI_Key              : TYEYBOSBBBHJIV-UHFFFAOYSA-N
+SMILES                 : CCC(=O)C(O)=O
+Formula                : C4H6O3
+Mass                   : 102.0886
+pKa                    : 
+HMDB                   : HMDB00005
+SMPDB                  : SMP00004 SMP00033 SMP00452 SMP00455
+KEGG                   : map00260 map00270
+CHEBI                  : 30831
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004
+C13HSQC                : 0 0 1 1
+CO_HSQC                : 1 1 2 2
+C13Intensities         : 1 1 1 1
+H1Index                : 3;2;001 4;3;001
+N15Index               : 
+C13chemicalShift       : 0            0        35.36         9.27
+H1chemicalShift        : 2.748       1.051
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

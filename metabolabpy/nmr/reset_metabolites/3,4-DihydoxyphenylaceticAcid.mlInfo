@@ -1,0 +1,28 @@
+Name                   : 3,4-Dihydoxyphenylacetic Acid
+AltName                : acetate34_dihydroxybenzene
+Source                 : HMDB
+IUPAC                  : 2-(3,4-dihydroxyphenyl)acetic acid
+InChI_Identifier       : InChI=1S/C8H8O4/c9-6-2-1-5(3-7(6)10)4-8(11)12/h1-3,9-10H,4H2,(H,11,12)
+InChI_Key              : CFFZDZCDUFSOFZ-UHFFFAOYSA-N
+SMILES                 : OC(=O)CC1=CC(O)=C(O)C=C1
+Formula                : C8H8O4
+Mass                   : 168.1467
+pKa                    : 
+HMDB                   : HMDB01336
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 41941
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005 0;1;006 0;1;007 0;1;008
+C13HSQC                : 0 1 0 1 0 0 1 1
+CO_HSQC                : 1 2 0 0 0 0 0 0
+C13Intensities         : 0 1 0 1 0 0 1 1
+H1Index                : 2;2;012 4;1;000 7;1;000 8;1;000
+N15Index               : 
+C13chemicalShift       : 0        46.178             0       119.549             0             0       118.882       124.124
+H1chemicalShift        : 3.389       6.804       6.852       6.703
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

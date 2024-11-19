@@ -1,0 +1,28 @@
+Name                   : 2-Hydroxy-butyric Acid
+AltName                : butyratehydroxy2
+Source                 : HMDB
+IUPAC                  : (2S)-2-hydroxybutanoic acid
+InChI_Identifier       : InChI=1S/C4H8O3/c1-2-3(5)4(6)7/h3,5H,2H2,1H3,(H,6,7)/t3-/m0/s1
+InChI_Key              : AFENDNXGAFYKQO-VKHMYHEASA-N
+SMILES                 : CC[C@H](O)C(O)=O
+Formula                : C4H8O3
+Mass                   : 104.105
+pKa                    : 
+HMDB                   : HMDB00008
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 50613
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004
+C13HSQC                : 0 1 1 1
+CO_HSQC                : 1 2 2 2
+C13Intensities         : 1 1 1 1
+H1Index                : 2;1;000 3;1;001 3;1;002 4;3;001
+N15Index               : 
+C13chemicalShift       : 0       76.173       29.813        11.31
+H1chemicalShift        : 3.992       1.722       1.649       0.887
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

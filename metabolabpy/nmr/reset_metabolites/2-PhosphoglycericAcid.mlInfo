@@ -1,0 +1,28 @@
+Name                   : 2-Phosphoglyceric Acid
+AltName                : glycerate_phospho2
+Source                 : HMDB
+IUPAC                  : 2-hydroxy-3-(phosphonooxy)propanoic acid
+InChI_Identifier       : InChI=1S/C3H7O7P/c4-2(3(5)6)1-10-11(7,8)9/h2,4H,1H2,(H,5,6)(H2,7,8,9)
+InChI_Key              : OSJPPGNTCRNQQC-UHFFFAOYSA-N
+SMILES                 : OC(COP(O)(O)=O)C(O)=O
+Formula                : C3H7O7P
+Mass                   : 186.0572
+pKa                    : 
+HMDB                   : HMDB00807
+SMPDB                  : SMP00004 SMP00039 SMP00040 SMP00128
+KEGG                   : map00010 map00260 map00561
+CHEBI                  : 17050
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003
+C13HSQC                : 0 1 1
+CO_HSQC                : 1 2 2
+C13Intensities         : 1 1 1
+H1Index                : 2;1;000 3;1;001 3;1;002
+N15Index               : 
+C13chemicalShift       : 0       75.685    69.389
+H1chemicalShift        : 4.19    4.013     3.875
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

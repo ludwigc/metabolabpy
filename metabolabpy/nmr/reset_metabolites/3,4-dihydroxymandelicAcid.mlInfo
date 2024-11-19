@@ -1,0 +1,28 @@
+Name                   : 3,4-dihydroxymandelic Acid
+AltName                : mandelate34_dihydroxy
+Source                 : HMDB
+IUPAC                  : 2-(3,4-dihydroxyphenyl)-2-hydroxyacetic acid
+InChI_Identifier       : InChI=1S/C8H8O5/c9-5-2-1-4(3-6(5)10)7(11)8(12)13/h1-3,7,9-11H,(H,12,13)
+InChI_Key              : RGHMISIYKIHAJW-UHFFFAOYSA-N
+SMILES                 : OC(C(O)=O)C1=CC=C(O)C(O)=C1
+Formula                : C8H8O5
+Mass                   : 184.1461
+pKa                    : 
+HMDB                   : HMDB01866
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 27637
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005 0;1;006 0;1;007 0;1;008
+C13HSQC                : 0 1 0 0 1 1 1 0
+CO_HSQC                : 0 0 0 0 0 0 2 1
+C13Intensities         : 0 1 0 0 1 1 1 1
+H1Index                : 2;1;000 5;1;000 6;1;000 7;1;000
+N15Index               : 
+C13chemicalShift       : 180.0      117.466  180.0 180.0 118.866 122.521 77.302 180.0
+H1chemicalShift        : 6.919      6.884       6.849     4.85
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

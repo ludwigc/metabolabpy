@@ -1,0 +1,28 @@
+Name                   : 3-Amino-butyric Acid
+AltName                : butyrateamino3
+Source                 : HMDB
+IUPAC                  : 3-aminobutanoic acid
+InChI_Identifier       : InChI=1S/C4H9NO2/c1-3(5)2-4(6)7/h3H,2,5H2,1H3,(H,6,7)
+InChI_Key              : OQEBBZSWEGYTPG-UHFFFAOYSA-N
+SMILES                 : CC(N)CC(O)=O
+Formula                : C4H9NO2
+Mass                   : 103.1198
+pKa                    : 
+HMDB                   : HMDB0031654
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 37081
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004
+C13HSQC                : 0 1 1 1
+CO_HSQC                : 1 2 2 2
+C13Intensities         : 1 1 1 1
+H1Index                : 2;2;012 3;1;000 4;3;123
+N15Index               : 
+C13chemicalShift       :180.0       43.526       48.226       20.573
+H1chemicalShift        : 2.499       3.618       1.326
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

@@ -1,0 +1,28 @@
+Name                   : 3-Iodotyrosine
+AltName                : tyrosine3_iodo
+Source                 : HMDB
+IUPAC                  : (2S)-2-amino-3-(4-hydroxy-3-iodophenyl)propanoic acid
+InChI_Identifier       : InChI=1S/C9H10INO3/c10-6-3-5(1-2-8(6)12)4-7(11)9(13)14/h1-3,7,12H,4,11H2,(H,13,14)/t7-/m0/s1
+InChI_Key              : UQTZMGFTRHFAAM-ZETCQYMHSA-N
+SMILES                 : N[C@@H](CC1=CC=C(O)C(I)=C1)C(O)=O
+Formula                : C9H10INO3
+Mass                   : 307.0851
+pKa                    : 
+HMDB                   : HMDB00021
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 27847
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005 0;1;006 0;1;007 0;1;008 0;1;009
+C13HSQC                : 0 1 1 0 1 0 0 1 1
+CO_HSQC                : 1 2 2 0 0 0 0 0 0
+C13Intensities         : 1 1 1 0 1 0 0 1 1
+H1Index                : 2;1;000 3;1;001 3;1;002 5;1;000 8;1;000 9;1;000
+N15Index               : 
+C13chemicalShift       : 180.0   58.826  37.711  180.0  142.431  170.0  180.0  118.529  133.519
+H1chemicalShift        : 3.904   3.141   2.979   7.667  6.882    7.139
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

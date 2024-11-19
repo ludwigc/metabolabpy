@@ -22,8 +22,8 @@ N15Index               :
 C13chemicalShift       : 180.0 53.0561 19.029
 H1chemicalShift        : 3.8203 1.49
 N15chemicalShift       : 
-jCC                    : 1;2;52.0897 2;3;34.8469 1;3;0.5
+jCC                    : 1;2;53.7897 2;3;34.8469
 jCH                    : 
 jCN                    : 
 jHH                    : 
-C13Offset              : 
+C13Offset              : 2;1;0.002 2;3;0.001 3;2;0.0005

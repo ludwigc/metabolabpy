@@ -1,0 +1,29 @@
+Name                   : 5-Aminolevulinic Acid
+AltName                : aminolevulinate_5
+Source                 : HMDB
+IUPAC                  : 5-amino-4-oxopentanoic acid
+InChI_Identifier       : InChI=1S/C5H9NO3/c6-3-4(7)1-2-5(8)9/h1-3,6H2,(H,8,9)
+InChI_Key              : ZGXJTSGNIOSYLO-UHFFFAOYSA-N
+SMILES                 : NCC(=O)CCC(O)=O
+Formula                : C5H9NO3
+Mass                   : 131.1299
+pKa                    : 
+HMDB                   : HMDB01149
+SMPDB                  : SMP00004 SMP00024
+KEGG                   : map00260 map00860
+CHEBI                  : 17549
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005
+C13HSQC                : 0 1 1 0 1
+CO_HSQC                : 1 2 2 1 2
+C13Intensities         : 1 1 1 1 1
+H1Index                : 2;2;012 3;2;012 5;2;012
+H1Index                : 1;2;001 3;2;001 4;2;001
+N15Index               : 
+C13chemicalShift       : 180.0   33.368   38.537   180.0   50.01
+H1chemicalShift        : 2.527   2.821    4.128 
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 

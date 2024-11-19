@@ -1,0 +1,28 @@
+Name                   : 3,3-Diiodo-L-tyrosine
+AltName                : tyrosine_L_35_diiodo
+Source                 : HMDB
+IUPAC                  : (2S)-2-amino-3-(4-hydroxy-3,5-diiodophenyl)propanoic acid
+InChI_Identifier       : InChI=1S/C9H9I2NO3/c10-5-1-4(2-6(11)8(5)13)3-7(12)9(14)15/h1-2,7,13H,3,12H2,(H,14,15)/t7-/m0/s1
+InChI_Key              : NYPYHUZRZVSYKL-ZETCQYMHSA-N
+SMILES                 : [H][C@](N)(CC1=CC(I)=C(O)C(I)=C1)C(O)=O
+Formula                : C9H9I2NO3
+Mass                   : 432.9816
+pKa                    : 
+HMDB                   : HMDB03474
+SMPDB                  : 
+KEGG                   : 
+CHEBI                  : 15768
+CID                    : 
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004
+C13HSQC                : 1 1 1 1
+CO_HSQC                : 0 0 0 0 
+C13Intensities         : 1 1 1 1
+H1Index                : 2;1;000 3;1;001 3;1;002 9;2;003
+N15Index               : 
+C13chemicalShift       : 0        55.112        34.523             0             0             0             0             0       139.753
+H1chemicalShift        : 3.366       2.962       2.756        7.62
+N15chemicalShift       : 
+jCC                    : 
+jCH                    : 
+jCN                    : 
+jHH                    : 
