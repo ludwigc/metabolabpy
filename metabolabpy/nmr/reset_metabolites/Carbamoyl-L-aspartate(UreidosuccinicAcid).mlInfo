@@ -13,14 +13,14 @@ SMPDB                  : SMP00046 SMP00067
 KEGG                   : map00240 map00250
 CHEBI                  : 15859
 CID                    : 
-C13Index               : 
-C13HSQC                : 
-CO_HSQC                : 
-C13Intensities         : 
+C13Index               : 0;1;001 0;1;002 0;1;003
+C13HSQC                : 0 1 1
+CO_HSQC                : 0 0 0
+C13Intensities         : 0 1 1
 H1Index                : 2;1;000 3;1;001 3;1;002
 N15Index               : 
-C13chemicalShift       : 0       56.141       42.911
-H1chemicalShift        : 4.237       2.681       2.459
+C13chemicalShift       : 180.0   56.141   42.911
+H1chemicalShift        : 4.237   2.681    2.459
 N15chemicalShift       : 
 jCC                    : 
 jCH                    : 

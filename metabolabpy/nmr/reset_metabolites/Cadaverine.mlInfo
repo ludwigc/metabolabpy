@@ -13,14 +13,14 @@ SMPDB                  :
 KEGG                   : 
 CHEBI                  : 18127
 CID                    : 
-C13Index               : 
-C13HSQC                : 
-CO_HSQC                : 
-C13Intensities         : 
-H1Index                : 5;4;001 4;4;001 3;2;001
+C13Index               : 0;1;001 0;1;002 0;1;003 0;1;004 0;1;005
+C13HSQC                : 1 1 1 1 1
+CO_HSQC                : 0 0 0 0 0
+C13Intensities         : 1 1 1 1 1
+H1Index                : 1;2;012 2;2;012 3;2;012 4;2;012 5;2;012
 N15Index               : 
-C13chemicalShift       : 0            0       25.904       32.864       42.825
-H1chemicalShift        : 2.68       1.496       1.349
+C13chemicalShift       : 42.825   32.864   25.904   32.864   42.825
+H1chemicalShift        : 2.68     1.496    1.349    1.496    2.68
 N15chemicalShift       : 
 jCC                    : 
 jCH                    : 
