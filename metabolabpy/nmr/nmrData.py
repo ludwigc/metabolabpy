@@ -231,7 +231,7 @@ class NmrData:
             self.peak_max = np.append(self.peak_max, np.max(spc))
             self.peak_max_points = np.append(self.peak_max_points, start_peak_points - max_pos)
             self.peak_max_ppm = np.append(self.peak_max_ppm, self.points2ppm(start_peak_points - max_pos))
-            self.peak_int = np.append(self.peak_int, sum(spc) - np.mean([spc[0], spc[-1]]))
+            self.peak_int = np.append(self.peak_int, sum(spc - np.mean([spc[0], spc[-1]])))
             sort_idx = np.argsort(self.start_peak)[::-1]
             self.start_peak = self.start_peak[sort_idx]
             self.end_peak = self.end_peak[sort_idx]
