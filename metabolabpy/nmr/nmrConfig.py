@@ -47,6 +47,7 @@ class NmrConfig:
         self.print_nmr_spectrum_aspect_ratio = 'auto'
         self.print_hsqc_peak_aspect_ratio = 1.33
         self.print_hsqc_multiplet_aspect_ratio = 1.33
+        self.local_baseline_correction = False
 
     def make_config(self):
         config = configparser.ConfigParser()
@@ -65,6 +66,7 @@ class NmrConfig:
         print_stacked_plot_repeat_axes = 'yes' if self.print_stacked_plot_repeat_axes is True else 'no'
         print_auto_scale = 'yes' if self.print_auto_scale is True else 'no'
         print_label = 'yes' if self.print_label is True else 'no'
+        local_baseline_correction = 'yes' if self.local_baseline_correction is True else 'no'
         config['GUI'] = {'auto_plot': auto_plot,
                          'keep_zoom': keep_zoom,
                          'font_size': str(self.font_size),
@@ -83,7 +85,8 @@ class NmrConfig:
                           'neg_col21': self.neg_col21,
                           'neg_col22': self.neg_col22,
                           'plot_legend': plot_legend}
-        config['System'] = {'current_directory': self.current_directory}
+        config['System'] = {'current_directory': self.current_directory,
+                            'local_baseline_correction': self.local_baseline_correction}
         config['Print'] = {'print_top_axis': print_top_axis,
                            'print_right_axis': print_right_axis,
                            'print_left_axis': print_left_axis,
@@ -130,6 +133,7 @@ class NmrConfig:
                 local_var = local_var.replace("phasereferencecolour", "phase_reference_colour")
                 local_var = local_var.replace("poscol", "pos_col")
                 local_var = local_var.replace("negcol", "neg_col")
+                local_var = local_var.replace("localbaselinecorrection", "local_baseline_correction")
                 self.set_values(local_var, config[k][l])
 
     def set_auto_plot(self, value):
@@ -254,6 +258,9 @@ class NmrConfig:
 
     def set_mode(self, value):
         self.mode = value
+
+    def set_local_baseline_correction(self, value):
+        self.local_baseline_correction = True if value == "True" else False
 
     def set_values(self, key, value):
         m_name = "self.set_" + key

@@ -3,6 +3,7 @@ from metabolabpy.nmr import acqPars
 from metabolabpy.nmr import procPars
 from metabolabpy.nmr import dispPars
 from metabolabpy.nmr import splineBaseline
+from metabolabpy.nmr import nmrConfig
 import os
 from scipy.fftpack import fft, ifft, fftshift
 from scipy.interpolate import CubicSpline
@@ -121,6 +122,8 @@ class NmrData:
         self.plot_legend = False
         self.legend_label = ''
         self.legend_handle = []
+        self.cf = nmrConfig.NmrConfig()
+        self.cf.read_config()
         if 'pygamma' in sys.modules:
             self.has_pg = True
         else:
@@ -228,10 +231,19 @@ class NmrData:
             npts = len(self.spc[0])
             spc = self.spc[0][npts - start_peak_points:npts - end_peak_points].real
             max_pos = np.where(spc == np.max(spc))[0][0] + 1
-            self.peak_max = np.append(self.peak_max, np.max(spc))
+            self.cf.read_config()
+            if self.cf.local_baseline_correction:
+                self.peak_max = np.append(self.peak_max, np.max(spc) - np.mean([spc[0], spc[-1]]))
+            else:
+                self.peak_max = np.append(self.peak_max, np.max(spc))
+
             self.peak_max_points = np.append(self.peak_max_points, start_peak_points - max_pos)
             self.peak_max_ppm = np.append(self.peak_max_ppm, self.points2ppm(start_peak_points - max_pos))
-            self.peak_int = np.append(self.peak_int, sum(spc - np.mean([spc[0], spc[-1]])))
+            if self.cf.local_baseline_correction:
+                self.peak_int = np.append(self.peak_int, sum(spc - np.mean([spc[0], spc[-1]])))
+            else:
+                self.peak_int = np.append(self.peak_int, sum(spc))
+
             sort_idx = np.argsort(self.start_peak)[::-1]
             self.start_peak = self.start_peak[sort_idx]
             self.end_peak = self.end_peak[sort_idx]
