@@ -128,13 +128,14 @@ class NmrDataSet:
             return
 
         if self.e != ref_spc_no:
+            self.nmrdat[self.s][ref_spc_no].proc_spc1d()
             ref_spc = np.copy(self.nmrdat[self.s][ref_spc_no].spc[0])
             self.nmrdat[self.s][self.e].proc.ph0[0] = self.nmrdat[self.s][ref_spc_no].proc.ph0[0]
             self.nmrdat[self.s][self.e].proc.ph1[0] = self.nmrdat[self.s][ref_spc_no].proc.ph1[0]
             self.nmrdat[self.s][self.e].proc_spc1d()
             self.nmrdat[self.s][self.e].auto_ref()
             self.nmrdat[self.s][self.e].autophase1d_bl(upper_min, lower_max, ref_spc)
-            self.auto_ref()
+            self.nmrdat[self.s][self.e].auto_ref()
 
 
     def autophase1d_bl_all(self, upper_min=10.0, lower_max=-0.5):
@@ -142,13 +143,14 @@ class NmrDataSet:
         if ref_spc_no == -1:
             return
 
+        self.nmrdat[self.s][ref_spc_no].proc_spc1d()
+        ref_spc = np.copy(self.nmrdat[self.s][ref_spc_no].spc[0])
         for k in range(len(self.nmrdat[self.s])):
             if k != ref_spc_no:
-                ref_spc = np.copy(self.nmrdat[self.s][ref_spc_no].spc[0])
                 self.nmrdat[self.s][k].proc.ph0[0] = self.nmrdat[self.s][ref_spc_no].proc.ph0[0]
                 self.nmrdat[self.s][k].proc.ph1[0] = self.nmrdat[self.s][ref_spc_no].proc.ph1[0]
-                self.nmrdat[self.s][k].proc_spc1d()
                 self.nmrdat[self.s][k].auto_ref()
+                self.nmrdat[self.s][k].proc_spc1d()
                 self.nmrdat[self.s][k].autophase1d_bl(upper_min, lower_max, ref_spc)
                 self.nmrdat[self.s][k].auto_ref()
 

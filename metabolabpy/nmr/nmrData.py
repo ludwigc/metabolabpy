@@ -582,9 +582,11 @@ class NmrData:
         if len(ref_spc) == 0:
             return
 
+        print('autophase1d_bl!!!!!!!')
         phase = [0.0, 0.0]
         #self.autophase1d()
         pars0 = [self.proc.ph0[0], self.proc.ph1[0]]
+        self.proc_spc1d()
         self.auto_ref()
         eval_parameters = optimize.minimize(self.autophase1d_bl_fct, phase, method='Powell',
                                         args=(upper_min, lower_max, ref_spc))
@@ -594,6 +596,7 @@ class NmrData:
         if run_compare:
             self.autophase1d1()
             self.auto_ref()
+            self.proc_spc1d()
             eval_parameters = optimize.minimize(self.autophase1d_bl_fct, phase, method='Powell',
                                                 args=(upper_min, lower_max, ref_spc))
 
@@ -609,8 +612,9 @@ class NmrData:
             self.proc.ph0[0] += pars1[0]
             self.proc.ph1[0] += pars1[1]
 
+        self.auto_ref()
         self.proc_spc1d()
-        print(self.proc.window_type[0])
+        #print(self.proc.window_type[0])
         if self.invert_spc():
             self.proc.ph0[0] += 180.0
             self.proc.ph0[0] %= 360.0
@@ -618,8 +622,8 @@ class NmrData:
             self.proc.ph0[0] %= 360.0
             self.proc.ph0[0] -= 180.0
 
-        self.proc_spc1d()
         self.auto_ref()
+        self.proc_spc1d()
 
     def autophase1d_bl_fct(self, phase, upper_min=10.0, lower_max=-0.5, ref_spc=[], left_only=False):
         if len(ref_spc) == 0:
@@ -796,6 +800,7 @@ class NmrData:
         self.proc.ph0[0] = 0
         self.proc.ph1[0] = 0
         self.proc_spc1d()
+        self.auto_ref()
         fit_parameters = [0.0, 0.0]
         spc = np.copy(self.spc[0])
         eval_parameters = optimize.minimize(self.autophase1d_fct, fit_parameters, method='Powell')
@@ -1031,6 +1036,9 @@ class NmrData:
         # end autopick_hsqc
 
     def auto_ref(self, tmsp=True):
+        if tmsp == True:
+            self.ref = 'auto'
+
         if self.ref == 'auto':
             if self.acq.o1 == 0:
                 self.ref_shift[0] = 4.76
@@ -1065,7 +1073,7 @@ class NmrData:
                     npts = len(self.spc[0])
                     r = np.arange(npts - max(pts), npts - min(pts))
                     r = np.copy(r[np.where(r < len(self.spc[0]))])
-                    spc = self.spc[0][r].real
+                    spc = np.abs(self.spc[0][r].real)
                     ref_p = np.where(spc == np.amax(spc))
                     self.ref_point[0] -= ref_p[0][0] - int((max(pts) - min(pts)) / 2) + 1
                 else:
