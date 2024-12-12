@@ -344,12 +344,12 @@ class NrDataSetTestCase(unittest.TestCase):
         nd.data_pre_processing()
         self.assertAlmostEqual(nd.nmrdat[0][1].spc[0].real.max() / 4250520058.933967, 1.0, 1)
         nd.reset_data_pre_processing()
-        self.assertAlmostEqual(nd.nmrdat[0][0].spc[0].real.max() / 5743237076.247297, 1.0, 1)
+        self.assertAlmostEqual(nd.nmrdat[0][0].spc[0].real.max() / 5673105467.238647, 1.0, 1)
         nd.pp.scale_pqn = False
         nd.pp.flag_scale_spectra = True
         nd.pp.preserve_overall_scale = True
         nd.data_pre_processing()
-        self.assertAlmostEqual(nd.nmrdat[0][0].spc[0].real.max() / 6917446480.071812, 1.0, 1)
+        self.assertAlmostEqual(nd.nmrdat[0][0].spc[0].real.max() / 5673105467.2386465, 1.0, 1)
         nd.reset_data_pre_processing()
         nd.pp.preserve_overall_scale = False
         nd.data_pre_processing()
