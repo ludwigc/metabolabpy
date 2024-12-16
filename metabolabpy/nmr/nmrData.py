@@ -582,7 +582,6 @@ class NmrData:
         if len(ref_spc) == 0:
             return
 
-        print('autophase1d_bl!!!!!!!')
         phase = [0.0, 0.0]
         #self.autophase1d()
         pars0 = [self.proc.ph0[0], self.proc.ph1[0]]
@@ -773,7 +772,6 @@ class NmrData:
         min_point = 131072 - self.ppm2points(5.26)
         max_point = 131072 - self.ppm2points(4.26)
         self.spc[0][min_point:max_point] = np.zeros(max_point - min_point)
-        print(f'max_point: {max_point}, min_point: {min_point}, max_point - min_point: {max_point - min_point}')
         result = False
         if np.max(np.abs(self.spc[0].real)) != np.max(self.spc[0].real):
             result = True
