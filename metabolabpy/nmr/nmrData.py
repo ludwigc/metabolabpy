@@ -124,6 +124,10 @@ class NmrData:
         self.legend_handle = []
         self.cf = nmrConfig.NmrConfig()
         self.cf.read_config()
+        self.seg_align_corr_before = []
+        self.seg_align_corr_after = []
+        self.seg_align_corr_ppm1 = []
+        self.seg_align_corr_ppm2 = []
         if 'pygamma' in sys.modules:
             self.has_pg = True
         else:

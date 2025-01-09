@@ -2326,6 +2326,10 @@ class NmrDataSet:
         pos_shift = np.zeros((n_spc, len(seg_start)))
         neg_shift = np.zeros((n_spc, len(seg_start)))
         for k in range(n_spc):
+            self.nmrdat[self.s][k].seg_align_corr_before = []
+            self.nmrdat[self.s][k].seg_align_corr_after = []
+            self.nmrdat[self.s][k].seg_align_corr_ppm1 = []
+            self.nmrdat[self.s][k].seg_align_corr_ppm2 = []
             if k != self.pp.seg_align_ref_spc - 1:
                 for l in range(len(seg_start)):
                     start_pts = npts - seg_end[l]
@@ -2339,9 +2343,13 @@ class NmrDataSet:
                     shifts = np.linspace(-max_shift, max_shift, 2 * max_shift + 1, dtype='int')
                     corr_vect = np.zeros(2 * max_shift + 1)
                     spc_shift = 0
+                    self.nmrdat[self.s][k].seg_align_corr_before.append(float(np.corrcoef(corr_spc1, corr_spc2)[0][1]))
                     for m in shifts:
                         corr_vect[m + max_shift] = np.corrcoef(corr_spc1, np.roll(corr_spc2, m))[0][1]
 
+                    self.nmrdat[self.s][k].seg_align_corr_after.append(float(corr_vect[np.where(corr_vect == np.max(corr_vect))[0][0]]))
+                    self.nmrdat[self.s][k].seg_align_corr_ppm1.append(float(self.pp.seg_start[l]))
+                    self.nmrdat[self.s][k].seg_align_corr_ppm2.append(float(self.pp.seg_end[l]))
                     max_corr_shifts = shifts[np.where(corr_vect == np.max(corr_vect))]
                     min_shift = np.where(np.abs(max_corr_shifts) == np.min(np.abs(max_corr_shifts)))
                     if np.max(corr_vect) > 0.8:
@@ -2365,6 +2373,13 @@ class NmrDataSet:
 
                         exclude_start[l][k] = ex_sta
                         exclude_end[l][k] = ex_end
+            else:
+                for l in range(len(seg_start)):
+                    self.nmrdat[self.s][k].seg_align_corr_before.append(1.0)
+                    self.nmrdat[self.s][k].seg_align_corr_after.append(1.0)
+                    self.nmrdat[self.s][k].seg_align_corr_ppm1.append(float(self.pp.seg_start[l]))
+                    self.nmrdat[self.s][k].seg_align_corr_ppm2.append(float(self.pp.seg_end[l]))
+
 
         ps = np.max(pos_shift, 0)
         ns = np.max(neg_shift, 0)
