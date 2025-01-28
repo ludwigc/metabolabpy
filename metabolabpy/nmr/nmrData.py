@@ -48,6 +48,7 @@ class NmrData:
 
     def __init__(self):
         self.fid = np.array([[]], dtype='complex')
+        self.fit_ph1 = True
         self.spc = np.array([[]], dtype='complex')
         self.ppm1 = np.array([], dtype='float64')
         self.ppm2 = np.array([], dtype='float64')
@@ -507,7 +508,11 @@ class NmrData:
     #@njit
     def objective_function(self, phase, spc, start_peak, end_peak):
         ph0 = phase[0] * math.pi / 180.0
-        ph1 = phase[1] * math.pi / 180.0
+        if self.cf.fit_ph1:
+            ph1 = phase[1] * math.pi / 180.0
+        else:
+            ph1 = 0.0
+
         npts = len(spc)
         phase_row = ph0 + np.linspace(0, npts - 1, npts) * ph1 / (npts - 1)
         spc2 = np.zeros(len(spc), dtype=complex)
@@ -527,7 +532,11 @@ class NmrData:
     #@njit
     def penalty_function(self, phase, start_peak, end_peak, spc):
         ph0 = phase[0] * math.pi / 180.0
-        ph1 = phase[1] * math.pi / 180.0
+        if self.cf.fit_ph1:
+            ph1 = phase[1] * math.pi / 180.0
+        else:
+            ph1 = 0.0
+
         npts = len(spc)
         phase_row = ph0 + np.linspace(0, npts - 1, npts) * ph1 / (npts - 1)
         spc2 = np.zeros(npts, dtype=complex)
@@ -545,7 +554,11 @@ class NmrData:
 
     def objective_function1(self, phase, spc, start_peak, end_peak):
         ph0 = phase[0] * math.pi / 180.0
-        ph1 = phase[1] * math.pi / 180.0
+        if self.cf.fit_ph1:
+            ph1 = phase[1] * math.pi / 180.0
+        else:
+            ph1 = 0.0
+
         npts = len(spc)
         phase_row = ph0 + np.linspace(0, npts - 1, npts) * ph1 / (npts - 1)
         spc2 = np.zeros(len(spc), dtype=complex)
@@ -565,7 +578,11 @@ class NmrData:
     #@njit
     def penalty_function1(self, phase, start_peak, end_peak, spc):
         ph0 = phase[0] * math.pi / 180.0
-        ph1 = phase[1] * math.pi / 180.0
+        if self.cf.fit_ph1:
+            ph1 = phase[1] * math.pi / 180.0
+        else:
+            ph1 = 0.0
+
         npts = len(spc)
         phase_row = ph0 + np.linspace(0, npts - 1, npts) * ph1 / (npts - 1)
         spc2 = np.zeros(npts, dtype=complex)
@@ -586,7 +603,11 @@ class NmrData:
         if len(ref_spc) == 0:
             return
 
-        phase = [0.0, 0.0]
+        if self.cf.fit_ph1:
+            phase = [0.0, 0.0]
+        else:
+            phase = [0.0]
+
         #self.autophase1d()
         pars0 = [self.proc.ph0[0], self.proc.ph1[0]]
         self.proc_spc1d()
@@ -594,7 +615,11 @@ class NmrData:
         eval_parameters = optimize.minimize(self.autophase1d_bl_fct, phase, method='Powell',
                                         args=(upper_min, lower_max, ref_spc))
 
-        pars1 = [eval_parameters.x[0], eval_parameters.x[1]]
+        if self.cf.fit_ph1:
+            pars1 = [eval_parameters.x[0], eval_parameters.x[1]]
+        else:
+            pars1 = [eval_parameters.x[0], 0.0]
+
         error1 = self.autophase1d_bl_fct(pars1, upper_min, lower_max, ref_spc)
         if run_compare:
             self.autophase1d1()
@@ -603,8 +628,12 @@ class NmrData:
             eval_parameters = optimize.minimize(self.autophase1d_bl_fct, phase, method='Powell',
                                                 args=(upper_min, lower_max, ref_spc))
 
-            pars2 = [eval_parameters.x[0], eval_parameters.x[1]]
-            error2 = self.autophase1d_bl_fct(pars1, upper_min, lower_max, ref_spc)
+            if self.cf.fit_ph1:
+                pars2 = [eval_parameters.x[0], eval_parameters.x[1]]
+            else:
+                pars2 = [eval_parameters.x[0], 0.0]
+
+            error2 = self.autophase1d_bl_fct(pars2, upper_min, lower_max, ref_spc)
             if error1 < error2:
                 self.proc.ph0[0] = pars0[0] + pars1[0]
                 self.proc.ph1[0] = pars0[1] + pars1[1]
@@ -634,7 +663,11 @@ class NmrData:
             return
 
         spc = np.copy(self.spc[0])
-        spc = np.copy(phase3a(spc, phase[0], phase[1], len(spc)))
+        if self.cf.fit_ph1:
+            spc = np.copy(phase3a(spc, phase[0], phase[1], len(spc)))
+        else:
+            spc = np.copy(phase3a(spc, phase[0], 0.0, len(spc)))
+
         idx_upper = np.where(self.ppm1 > upper_min)[0]
         idx_lower = np.where(self.ppm1 < lower_max)[0]
         dd1 = np.sum(np.abs(spc[idx_upper].real - ref_spc[idx_upper].real))
@@ -701,10 +734,16 @@ class NmrData:
             end_peak = np.copy(np.delete(end_peak, range(int(max_peaks / 2), len(end_peak) - int(max_peaks / 2))))
 
         pos_peaks = np.zeros(len(start_peak))
-        start_pars = [0.0, 0.0]
+        if self.cf.fit_ph1:
+            start_pars = [0.0, 0.0]
+        else:
+            start_pars = [0.0]
+
         par_eval = self.fit_phase(start_pars, spc, start_peak, end_peak)
         self.proc.ph0[0] += par_eval.x[0]
-        self.proc.ph1[0] += par_eval.x[1]
+        if self.cf.fit_ph1:
+            self.proc.ph1[0] += par_eval.x[1]
+
         self.proc_spc1d()
         spc = np.copy(self.spc[0])
         for k in range(len(pos_peaks)):
@@ -751,7 +790,8 @@ class NmrData:
             end_peak2 = np.copy(end_peak[selection])
             par_eval = self.fit_pf(start_pars, spc, start_peak2, end_peak2)
             self.proc.ph0[0] += par_eval.x[0]
-            self.proc.ph1[0] += par_eval.x[1]
+            if self.cf.fit_ph1:
+                self.proc.ph1[0] += par_eval.x[1]
 
         self.proc.ph0[0] += 180.0
         self.proc.ph0[0] %= 360.0
@@ -803,12 +843,18 @@ class NmrData:
         self.proc.ph1[0] = 0
         self.proc_spc1d()
         self.auto_ref()
-        fit_parameters = [0.0, 0.0]
+        if self.cf.fit_ph1:
+            fit_parameters = [0.0, 0.0]
+        else:
+            fit_parameters = [0.0]
+
         spc = np.copy(self.spc[0])
         eval_parameters = optimize.minimize(self.autophase1d_fct, fit_parameters, method='Powell')
         e_pars = np.array(eval_parameters.x).tolist()
         self.proc.ph0[0] = e_pars[0]
-        self.proc.ph1[0] = e_pars[1]
+        if self.cf.fit_ph1:
+            self.proc.ph1[0] = e_pars[1]
+
         self.proc_spc1d()
         # end autophase1d1
 
@@ -827,7 +873,11 @@ class NmrData:
         end_pts = int(npts/2 + npts * self.delta_sw / sw)
         x_axis = range(npts)
         ph0 = fit_parameters[0]
-        ph1 = fit_parameters[1]
+        if self.cf.fit_ph1:
+            ph1 = fit_parameters[1]
+        else:
+            ph1 = 0.0
+
         spc = np.copy(phase3(spc, float(ph0), float(ph1), len(spc)))
         spc_1 = np.copy(np.gradient(spc.real))
         gamma = 1.0 / np.sum(np.abs(spc.real))
@@ -2109,6 +2159,7 @@ class NmrData:
             self.nmrdat[self.s][k].proc.autobaseline = autobaseline
 
         # end set_autobaseline
+
 
     def set_ref(self, ref_shift, ref_point):
         for k in range(len(ref_shift)):

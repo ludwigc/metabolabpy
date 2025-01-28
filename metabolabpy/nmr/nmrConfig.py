@@ -13,6 +13,7 @@ class NmrConfig:
         self.home_dir = os.path.expanduser('~')
         self.config_file = os.path.join(self.home_dir, self.f_name)
         self.value = ""
+        self.fit_ph1 = True
         self.plot_legend = False
         self.pos_col10 = 0.0
         self.pos_col11 = 0.0
@@ -65,6 +66,7 @@ class NmrConfig:
         print_stacked_plot = 'yes' if self.print_stacked_plot is True else 'no'
         print_stacked_plot_repeat_axes = 'yes' if self.print_stacked_plot_repeat_axes is True else 'no'
         print_auto_scale = 'yes' if self.print_auto_scale is True else 'no'
+        fit_ph1 = 'no' if self.fit_ph1 is False else 'yes'
         print_label = 'yes' if self.print_label is True else 'no'
         local_baseline_correction = 'yes' if self.local_baseline_correction is True else 'no'
         config['GUI'] = {'auto_plot': auto_plot,
@@ -86,7 +88,8 @@ class NmrConfig:
                           'neg_col22': self.neg_col22,
                           'plot_legend': plot_legend}
         config['System'] = {'current_directory': self.current_directory,
-                            'local_baseline_correction': self.local_baseline_correction}
+                            'local_baseline_correction': local_baseline_correction,
+                            'fit_ph1': fit_ph1}
         config['Print'] = {'print_top_axis': print_top_axis,
                            'print_right_axis': print_right_axis,
                            'print_left_axis': print_left_axis,
@@ -259,8 +262,11 @@ class NmrConfig:
     def set_mode(self, value):
         self.mode = value
 
+    def set_fit_ph1(self, value):
+        self.fit_ph1 = False if value == "no" else True
+
     def set_local_baseline_correction(self, value):
-        self.local_baseline_correction = True if value == "True" else False
+        self.local_baseline_correction = True if value == "yes" else False
 
     def set_values(self, key, value):
         m_name = "self.set_" + key
