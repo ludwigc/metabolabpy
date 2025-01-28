@@ -605,11 +605,12 @@ class NmrData:
 
         if self.cf.fit_ph1:
             phase = [0.0, 0.0]
+            pars0 = [self.proc.ph0[0], self.proc.ph1[0]]
         else:
             phase = [0.0]
+            pars0 = [self.proc.ph0[0]]
 
         #self.autophase1d()
-        pars0 = [self.proc.ph0[0], self.proc.ph1[0]]
         self.proc_spc1d()
         self.auto_ref()
         eval_parameters = optimize.minimize(self.autophase1d_bl_fct, phase, method='Powell',

@@ -2511,6 +2511,15 @@ class NmrDataSet:
         self.e = old_exp
         # end set_loadings_from_excel
 
+    def set_fit_ph1(self, fit_ph1=True):
+        self.cf.fit_ph1 = fit_ph1
+        self.cf.save_config()
+        for k in range(len(self.nmrdat)):
+            for l in range(len(self.nmrdat[k])):
+                self.nmrdat[k][l].cf.read_config()
+
+    # end set_fit_ph1
+
     def set_gb(self, gb):
         n_exp = len(self.nmrdat[self.s])
         for k in range(n_exp):
