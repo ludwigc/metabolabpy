@@ -508,6 +508,9 @@ class NmrData:
     #@njit
     def objective_function(self, phase, spc, start_peak, end_peak):
         ph0 = phase[0] * math.pi / 180.0
+        if not hasattr(self.cf, 'fit_ph1'):
+            self.cf.read_config()
+
         if self.cf.fit_ph1:
             ph1 = phase[1] * math.pi / 180.0
         else:
@@ -532,6 +535,9 @@ class NmrData:
     #@njit
     def penalty_function(self, phase, start_peak, end_peak, spc):
         ph0 = phase[0] * math.pi / 180.0
+        if not hasattr(self.cf, 'fit_ph1'):
+            self.cf.read_config()
+
         if self.cf.fit_ph1:
             ph1 = phase[1] * math.pi / 180.0
         else:
@@ -554,6 +560,9 @@ class NmrData:
 
     def objective_function1(self, phase, spc, start_peak, end_peak):
         ph0 = phase[0] * math.pi / 180.0
+        if not hasattr(self.cf, 'fit_ph1'):
+            self.cf.read_config()
+
         if self.cf.fit_ph1:
             ph1 = phase[1] * math.pi / 180.0
         else:
@@ -578,6 +587,9 @@ class NmrData:
     #@njit
     def penalty_function1(self, phase, start_peak, end_peak, spc):
         ph0 = phase[0] * math.pi / 180.0
+        if not hasattr(self.cf, 'fit_ph1'):
+            self.cf.read_config()
+
         if self.cf.fit_ph1:
             ph1 = phase[1] * math.pi / 180.0
         else:
@@ -602,6 +614,9 @@ class NmrData:
     def autophase1d_bl(self, upper_min=10.0, lower_max=-0.5, ref_spc=[], run_compare=False):
         if len(ref_spc) == 0:
             return
+
+        if not hasattr(self.cf, 'fit_ph1'):
+            self.cf.read_config()
 
         if self.cf.fit_ph1:
             phase = [0.0, 0.0]
@@ -662,6 +677,9 @@ class NmrData:
         if len(ref_spc) == 0:
             print('not optimised')
             return
+
+        if not hasattr(self.cf, 'fit_ph1'):
+            self.cf.read_config()
 
         spc = np.copy(self.spc[0])
         if self.cf.fit_ph1:
@@ -735,6 +753,9 @@ class NmrData:
             end_peak = np.copy(np.delete(end_peak, range(int(max_peaks / 2), len(end_peak) - int(max_peaks / 2))))
 
         pos_peaks = np.zeros(len(start_peak))
+        if not hasattr(self.cf, 'fit_ph1'):
+            self.cf.read_config()
+
         if self.cf.fit_ph1:
             start_pars = [0.0, 0.0]
         else:
@@ -844,6 +865,9 @@ class NmrData:
         self.proc.ph1[0] = 0
         self.proc_spc1d()
         self.auto_ref()
+        if not hasattr(self.cf, 'fit_ph1'):
+            self.cf.read_config()
+
         if self.cf.fit_ph1:
             fit_parameters = [0.0, 0.0]
         else:
@@ -874,6 +898,9 @@ class NmrData:
         end_pts = int(npts/2 + npts * self.delta_sw / sw)
         x_axis = range(npts)
         ph0 = fit_parameters[0]
+        if not hasattr(self.cf, 'fit_ph1'):
+            self.cf.read_config()
+
         if self.cf.fit_ph1:
             ph1 = fit_parameters[1]
         else:
