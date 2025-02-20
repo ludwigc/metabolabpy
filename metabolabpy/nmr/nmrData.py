@@ -1116,7 +1116,7 @@ class NmrData:
         # end autopick_hsqc
 
     def auto_ref(self, tmsp=True):
-        if tmsp == True:
+        if tmsp == True and self.ref != 'manual':
             self.ref = 'auto'
 
         if self.ref == 'auto':
