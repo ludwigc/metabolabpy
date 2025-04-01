@@ -206,6 +206,31 @@ class NmrDataSet:
         return r_string
         # end __str__
 
+    def adaptive_lb(self):
+        lw = []
+        for k in range(len(self.nmrdat[self.s])):
+            lw.append(self.nmrdat[self.s][k].tmsp_linewidth)
+
+        if len(np.where(np.array(lw) == 0.0)[0]) > 0:
+            self.fit_tmsp_all()
+
+        lw = []
+        for k in range(len(self.nmrdat[self.s])):
+            lw.append(self.nmrdat[self.s][k].tmsp_linewidth)
+
+        lw = np.array(lw)
+        max_idx = np.where(lw == np.max(lw))[0][0]
+        max_lw = lw[max_idx]
+        max_lb = self.nmrdat[self.s][max_idx].proc.lb[0]
+        for k in range(len(self.nmrdat[self.s])):
+            self.nmrdat[self.s][k].proc.lb[0] = max_lb
+            tmsp_lw = self.nmrdat[self.s][k].tmsp_linewidth
+            if tmsp_lw != max_lw:
+                self.nmrdat[self.s][k].proc.lb[0] = max_lb * 1.11 * max_lw / tmsp_lw
+                self.nmrdat[self.s][k].proc_spc1d()
+
+    # end adaptive_lb
+
     def autobaseline1d(self, alg='rolling_ball', lam=1000000, max_iter=50, alpha=0.1, beta=10, gamma=15, beta_mult=0.98,
                        gamma_mult=0.94, half_window=4096, quantile=0.3, poly_order=4, smooth_half_window=16, add_ext=2):
         if len(self.nmrdat) > 0:
@@ -934,6 +959,19 @@ class NmrDataSet:
                     str(k + 1), scale_factor)
 
     # end export_data_set
+
+    def fit_tmsp(self):
+        self.nmrdat[self.s][self.e].fit_tmsp()
+        print(f'Fitting TMSP for dataset: {self.s + 1}, experiment: {self.e + 1}, TMSP linewidth: {self.nmrdat[self.s][self.e].tmsp_linewidth} Hz')
+
+    # end fit_tmsp
+
+    def fit_tmsp_all(self):
+        for k in range(len(self.nmrdat[self.s])):
+            self.nmrdat[self.s][k].fit_tmsp()
+            print(f'Fitting TMSP for dataset: {self.s + 1}, experiment: {k + 1}, TMSP linewidth: {self.nmrdat[self.s][k].tmsp_linewidth} Hz')
+
+        # end fit_tmsp_all
 
     def ft(self):
         if self.nmrdat[self.s][self.e].dim == 1:

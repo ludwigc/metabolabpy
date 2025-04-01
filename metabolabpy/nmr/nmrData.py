@@ -64,6 +64,10 @@ class NmrData:
         self.peak_label = np.array([], dtype='str')
         self.n_protons = np.array([], dtype='str')
         self.dim = 0
+        self.p_range = 0.01
+        self.tmsp_linewidth = 0.0
+        self.tmsp_offset = 0.0
+        self.temp_spc = np.array([], dtype='complex')
         self.title = np.array([], dtype='str')
         self.orig_data_set = str('')
         self.ph_corr_mode = 0
@@ -143,6 +147,73 @@ class NmrData:
         r_string += self.title
         return r_string
         # end __str__
+
+    def sim_tmsp(self, r2, offset):
+        #plot_area = np.sort(len(self.spc[0]) - self.ppm2points([self.p_range, -self.p_range]))
+        #int_tms = 1.0
+        r2_tms = 2 * np.pi * r2
+        ppmos_tms = offset
+        tms_range = [self.p_range, -self.p_range]
+        cs_tms = [0.000000000 + ppmos_tms]
+        nprot_tms = [1]
+        sys_tms = pg.spin_system(sum(nprot_tms))
+        sys_tms.Omega(self.acq.sfo1)
+        kk = 0
+        for k in range(len(nprot_tms)):
+            for l in range(nprot_tms[k]):
+                sys_tms.PPM(kk, cs_tms[k])
+                kk += 1
+
+        offset = -(self.ref_point[0] * (
+                    self.proc.sw_h[0] / self.acq.sfo1) /
+                   self.proc.n_points[0] + self.ref_shift[0] -
+                   self.proc.sw_h[0] / self.acq.sfo1) * self.acq.sfo1
+        sys_tms.offsetShifts(offset)
+        sw = self.ppm1[0] - self.ppm1[-1]
+        dt = 1 / self.proc.sw_h[0]
+        td = len(self.ppm1)
+        sigma0 = pg.sigma_eq(sys_tms)
+        H = pg.Hcs(sys_tms) + pg.HJ(sys_tms)
+        D = pg.Fm(sys_tms, "1H")
+        # acquire FIDs
+        fid = pg.row_vector(td)
+        for k in range(nprot_tms[0]):
+            sigma1 = pg.Iypuls(sys_tms, sigma0, k, 90.0)
+
+        fid = fid + pg.FID(pg.gen_op(sigma1), pg.gen_op(D), pg.gen_op(H), dt, td)
+        self.temp_spc = np.array([], dtype=complex)
+        self.temp_spc.resize(1, td)
+        for k in range(td):
+            self.temp_spc[0][k] = fid.getRe(k) - 1j * fid.getIm(k)
+            self.temp_spc[0][k] *= np.exp(-r2_tms * dt * k)
+
+        self.temp_spc = np.fft.fft(self.temp_spc[0])
+        self.temp_spc -= np.mean(self.temp_spc[0:100])
+        area_tms = np.sort(len(self.spc[0]) - self.ppm2points(tms_range))
+        int_tms = np.max(self.spc[0][area_tms[0]:area_tms[1]].real) / np.max(
+            self.temp_spc[area_tms[0]:area_tms[1]].real)
+        self.temp_spc *= int_tms
+        # end sim_tmsp
+
+    def fct_tmsp(self, pars):
+        r2 = pars[0]
+        offset = pars[1]
+        self.sim_tmsp(r2, offset)
+        tms_range = [self.p_range, -self.p_range]
+        area_tms = np.sort(len(self.spc[0]) - self.ppm2points(tms_range))
+        chi2 = np.sum(
+            (self.spc[0][area_tms[0]:area_tms[1]].real - self.temp_spc[area_tms[0]:area_tms[1]].real) ** 2)
+        # print(chi2)
+        return chi2
+        # end fct_tmsp
+
+    def fit_tmsp(self):
+        pars = [self.tmsp_linewidth, self.tmsp_offset]
+        eval_parameters = optimize.minimize(self.fct_tmsp, pars, method='Powell')
+        self.tmsp_linewidth = eval_parameters.x[0]
+        self.tmsp_offset = eval_parameters.x[1]
+        self.temp_spc = np.array([], dtype=complex)
+        # end fit_tmsp
 
     def acq_pars(self):
         a = self.acq
