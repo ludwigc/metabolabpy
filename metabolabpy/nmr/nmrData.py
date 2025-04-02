@@ -68,6 +68,7 @@ class NmrData:
         self.tmsp_linewidth = 0.0
         self.tmsp_offset = 0.0
         self.temp_spc = np.array([], dtype='complex')
+        self.temp_ppm1 = np.array([], dtype='float64')
         self.title = np.array([], dtype='str')
         self.orig_data_set = str('')
         self.ph_corr_mode = 0
@@ -149,11 +150,17 @@ class NmrData:
         # end __str__
 
     def sim_tmsp(self, r2, offset):
-        #plot_area = np.sort(len(self.spc[0]) - self.ppm2points([self.p_range, -self.p_range]))
-        #int_tms = 1.0
         r2_tms = 2 * np.pi * r2
         ppmos_tms = offset
         tms_range = [self.p_range, -self.p_range]
+        area_tms = np.sort(len(self.spc[0]) - self.ppm2points(tms_range))
+        self.temp_ppm1 = self.ppm1[area_tms[0]:area_tms[1]]
+        spc1 = self.spc[0][area_tms[0]:area_tms[1]].real
+        ref_point = np.where(spc1 == np.max(spc1))[0][0]
+        sw = self.temp_ppm1[0] - self.temp_ppm1[-1]
+        sw_h = self.acq.sfo1 * sw
+        n_points = len(spc1)
+        ref_shift = 0.0
         cs_tms = [0.000000000 + ppmos_tms]
         nprot_tms = [1]
         sys_tms = pg.spin_system(sum(nprot_tms))
@@ -164,14 +171,11 @@ class NmrData:
                 sys_tms.PPM(kk, cs_tms[k])
                 kk += 1
 
-        offset = -(self.ref_point[0] * (
-                    self.proc.sw_h[0] / self.acq.sfo1) /
-                   self.proc.n_points[0] + self.ref_shift[0] -
-                   self.proc.sw_h[0] / self.acq.sfo1) * self.acq.sfo1
+        offset = -(ref_point * (sw_h / self.acq.sfo1) / n_points + ref_shift - sw_h / self.acq.sfo1) * self.acq.sfo1
         sys_tms.offsetShifts(offset)
-        sw = self.ppm1[0] - self.ppm1[-1]
-        dt = 1 / self.proc.sw_h[0]
-        td = len(self.ppm1)
+        #sw = self.ppm1[0] - self.ppm1[-1]
+        dt = 1 / (2 * sw_h)
+        td = len(self.temp_ppm1)
         sigma0 = pg.sigma_eq(sys_tms)
         H = pg.Hcs(sys_tms) + pg.HJ(sys_tms)
         D = pg.Fm(sys_tms, "1H")
@@ -190,8 +194,7 @@ class NmrData:
         self.temp_spc = np.fft.fft(self.temp_spc[0])
         self.temp_spc -= np.mean(self.temp_spc[0:100])
         area_tms = np.sort(len(self.spc[0]) - self.ppm2points(tms_range))
-        int_tms = np.max(self.spc[0][area_tms[0]:area_tms[1]].real) / np.max(
-            self.temp_spc[area_tms[0]:area_tms[1]].real)
+        int_tms = np.max(self.spc[0][area_tms[0]:area_tms[1]].real) / np.max(self.temp_spc.real)
         self.temp_spc *= int_tms
         # end sim_tmsp
 
@@ -201,8 +204,8 @@ class NmrData:
         self.sim_tmsp(r2, offset)
         tms_range = [self.p_range, -self.p_range]
         area_tms = np.sort(len(self.spc[0]) - self.ppm2points(tms_range))
-        chi2 = np.sum(
-            (self.spc[0][area_tms[0]:area_tms[1]].real - self.temp_spc[area_tms[0]:area_tms[1]].real) ** 2)
+
+        chi2 = np.sum((self.spc[0][area_tms[0]:area_tms[1]].real - self.temp_spc.real) ** 2)
         # print(chi2)
         return chi2
         # end fct_tmsp
@@ -212,8 +215,27 @@ class NmrData:
         eval_parameters = optimize.minimize(self.fct_tmsp, pars, method='Powell')
         self.tmsp_linewidth = eval_parameters.x[0]
         self.tmsp_offset = eval_parameters.x[1]
-        self.temp_spc = np.array([], dtype=complex)
+        self.temp_spc  = np.array([], dtype='complex')
+        self.temp_ppm1 = np.array([], dtype='float64')
         # end fit_tmsp
+
+    def peakw_tmsp(self):
+        #window_type = self.proc.window_type[0]
+        #self.proc.window_type[0] = 0
+        #self.proc_spc1d()
+        tms_range = [self.p_range, -self.p_range]
+        tms_pts = np.sort(len(self.spc[0]) - self.ppm2points(tms_range))
+        spc = self.spc[0][tms_pts[0]:tms_pts[1]].real
+        ppm1 = self.ppm1[tms_pts[0]:tms_pts[1]]
+        max_pos = np.where(spc == np.max(spc))[0][0]
+        #self.proc.window_type[0] = window_type
+        #self.proc_spc1d()
+        min1 = np.min(np.abs(spc[:max_pos + 1] - np.max(spc) / 2))
+        min2 = np.min(np.abs(spc[max_pos:] - np.max(spc) / 2))
+        min_pos1 = np.where(np.abs(spc - np.max(spc) / 2) == min1)[0][0]
+        min_pos2 = np.where(np.abs(spc - np.max(spc) / 2) == min2)[0][0]
+        self.tmsp_linewidth = np.abs(ppm1[min_pos1]-ppm1[min_pos2])*self.acq.sfo1
+        # end peakw_tmsp
 
     def acq_pars(self):
         a = self.acq
@@ -381,11 +403,11 @@ class NmrData:
 
         if self.proc.window_type[dim] == 1:  # exponential window
             t = (np.linspace(0.0, len(fid) - 1, len(fid)) - group_delay) / sw_h
-            wdwf = np.exp(-2 * np.pi * lb * t)
+            wdwf = np.exp(-1 * np.pi * lb * t)
 
         if self.proc.window_type[dim] == 2:  # gaussian window
             t = (np.linspace(0.0, len(fid) - 1 - group_delay, len(fid))) / sw_h
-            wdwf = np.exp(-lb * 2 * math.pi * t - lb * 2 * math.pi * (t ** 2) / (2 * math.pi * gb * len(fid) / sw_h))
+            wdwf = np.exp(-lb * 1 * math.pi * t - lb * 1 * math.pi * (t ** 2) / (2 * math.pi * gb * len(fid) / sw_h))
 
         if self.proc.window_type[dim] == 3:  # sine window
             if self.acq.fn_mode == 1 or self.acq.fn_mode == 2:

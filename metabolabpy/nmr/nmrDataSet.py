@@ -219,6 +219,7 @@ class NmrDataSet:
             lw.append(self.nmrdat[self.s][k].tmsp_linewidth)
 
         lw = np.array(lw)
+        print(f'lw: {lw}')
         max_idx = np.where(lw == np.max(lw))[0][0]
         max_lw = lw[max_idx]
         max_lb = self.nmrdat[self.s][max_idx].proc.lb[0]
@@ -226,7 +227,7 @@ class NmrDataSet:
             self.nmrdat[self.s][k].proc.lb[0] = max_lb
             tmsp_lw = self.nmrdat[self.s][k].tmsp_linewidth
             if tmsp_lw != max_lw:
-                self.nmrdat[self.s][k].proc.lb[0] = max_lb * 1.11 * max_lw / tmsp_lw
+                self.nmrdat[self.s][k].proc.lb[0] = max_lb * 1.0 * max_lw / tmsp_lw
                 self.nmrdat[self.s][k].proc_spc1d()
 
     # end adaptive_lb
@@ -972,6 +973,17 @@ class NmrDataSet:
             print(f'Fitting TMSP for dataset: {self.s + 1}, experiment: {k + 1}, TMSP linewidth: {self.nmrdat[self.s][k].tmsp_linewidth} Hz')
 
         # end fit_tmsp_all
+
+    def peakw_tmsp(self):
+        self.nmrdat[self.s][self.e].peakw_tmsp()
+        print(f'Peak width for dataset: {self.s + 1}, experiment: {self.e + 1}, TMSP linewidth: {self.nmrdat[self.s][self.e].tmsp_linewidth} Hz')
+        # end peakw_tmsp
+
+    def peakw_tmsp_all(self):
+        for k in range(len(self.nmrdat[self.s])):
+            self.nmrdat[self.s][k].peakw_tmsp()
+            print(f'Peak width for dataset: {self.s + 1}, experiment: {k + 1}, TMSP linewidth: {self.nmrdat[self.s][k].tmsp_linewidth} Hz')
+        # end peakw_tmsp_all
 
     def ft(self):
         if self.nmrdat[self.s][self.e].dim == 1:
