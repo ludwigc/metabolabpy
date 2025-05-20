@@ -20,6 +20,7 @@ import metabolabpy.__init__ as ml_version
 from metabolabpy.nmr import nmrHsqc
 from sklearn.decomposition import FastICA, PCA
 from metabolabpy.nmr import hsqcData
+from metabolabpy.nmr import nmr1dData
 import sys
 import pandas as pd
 from numba import njit
@@ -67,6 +68,7 @@ class NmrData:
         self.p_range = 0.01
         self.tmsp_linewidth = 0.0
         self.tmsp_offset = 0.0
+        self.tmsp_mo = 1.0
         self.temp_spc = np.array([], dtype='complex')
         self.temp_ppm1 = np.array([], dtype='float64')
         self.title = np.array([], dtype='str')
@@ -109,6 +111,7 @@ class NmrData:
         self.outd = str('')
         self.ver = ml_version.__version__
         self.hsqc = nmrHsqc.NmrHsqc()
+        self.sim1d = nmr1dData.Nmr1dData()
         self.xsa = []
         self.ysa = []
         self.xst = []
@@ -150,6 +153,7 @@ class NmrData:
         # end __str__
 
     def sim_tmsp(self, r2, offset):
+        #r2_tms = r2
         r2_tms = 2 * np.pi * r2
         ppmos_tms = offset
         tms_range = [self.p_range, -self.p_range]
@@ -159,7 +163,9 @@ class NmrData:
         ref_point = np.where(spc1 == np.max(spc1))[0][0]
         sw = self.temp_ppm1[0] - self.temp_ppm1[-1]
         sw_h = self.acq.sfo1 * sw
+        #sw_h = self.acq.sfo1 * 2 * self.p_range
         n_points = len(spc1)
+        #print(f'n_points: {n_points}')
         ref_shift = 0.0
         cs_tms = [0.000000000 + ppmos_tms]
         nprot_tms = [1]
@@ -171,8 +177,8 @@ class NmrData:
                 sys_tms.PPM(kk, cs_tms[k])
                 kk += 1
 
-        offset = -(ref_point * (sw_h / self.acq.sfo1) / n_points + ref_shift - sw_h / self.acq.sfo1) * self.acq.sfo1
-        sys_tms.offsetShifts(offset)
+        #offset = -(ref_point * (sw_h / self.acq.sfo1) / n_points + ref_shift - sw_h / self.acq.sfo1) * self.acq.sfo1
+        #sys_tms.offsetShifts(offset)
         #sw = self.ppm1[0] - self.ppm1[-1]
         dt = 1 / (2 * sw_h)
         td = len(self.temp_ppm1)
@@ -191,30 +197,36 @@ class NmrData:
             self.temp_spc[0][k] = fid.getRe(k) - 1j * fid.getIm(k)
             self.temp_spc[0][k] *= np.exp(-r2_tms * dt * k)
 
-        self.temp_spc = np.fft.fft(self.temp_spc[0])
-        self.temp_spc -= np.mean(self.temp_spc[0:100])
-        area_tms = np.sort(len(self.spc[0]) - self.ppm2points(tms_range))
-        int_tms = np.max(self.spc[0][area_tms[0]:area_tms[1]].real) / np.max(self.temp_spc.real)
-        self.temp_spc *= int_tms
+        self.temp_spc = np.fft.fftshift(np.fft.fft(self.temp_spc[0]).real)
+        #print(f'max(self.temp_spc: {max(self.temp_spc)}')
+        self.temp_spc -= np.mean(self.temp_spc[0:2])
+        #print(f'max(self.temp_spc: {max(self.temp_spc)}')
+        #area_tms = np.sort(len(self.spc[0]) - self.ppm2points(tms_range))
+        #int_tms = np.max(self.spc[0][area_tms[0]:area_tms[1]].real) / np.max(self.temp_spc.real)
+        #self.temp_spc *= int_tms
         # end sim_tmsp
 
     def fct_tmsp(self, pars):
         r2 = pars[0]
         offset = pars[1]
+        m0 = pars[2]
         self.sim_tmsp(r2, offset)
         tms_range = [self.p_range, -self.p_range]
         area_tms = np.sort(len(self.spc[0]) - self.ppm2points(tms_range))
 
-        chi2 = np.sum((self.spc[0][area_tms[0]:area_tms[1]].real - self.temp_spc.real) ** 2)
-        # print(chi2)
+        chi2 = np.sum((self.spc[0][area_tms[0]:area_tms[1]].real - m0 * self.temp_spc.real) ** 2)
         return chi2
         # end fct_tmsp
 
     def fit_tmsp(self):
-        pars = [self.tmsp_linewidth, self.tmsp_offset]
+        tms_range = [self.p_range, -self.p_range]
+        area_tms = np.sort(len(self.spc[0]) - self.ppm2points(tms_range))
+        m0 = np.max(self.spc[0][area_tms[0]:area_tms[1]].real) / 25.0
+        pars = [1.0, 0.0, m0]
         eval_parameters = optimize.minimize(self.fct_tmsp, pars, method='Powell')
-        self.tmsp_linewidth = eval_parameters.x[0]
+        self.tmsp_linewidth = eval_parameters.x[0] # / (2 * np.pi)
         self.tmsp_offset = eval_parameters.x[1]
+        self.tmsp_m0 = eval_parameters.x[2]
         self.temp_spc  = np.array([], dtype='complex')
         self.temp_ppm1 = np.array([], dtype='float64')
         # end fit_tmsp
@@ -386,13 +398,10 @@ class NmrData:
         # end add_peak
 
     def add_tmsp(self, m0=1, r2=1):
-        npts = len(self.spc[0])
-        tsp_point = self.ppm2points(0.0)
-        tsp_frq = - 2 * math.pi * tsp_point / npts + math.pi
-        t = np.linspace(0, npts - 1, npts)
-        tsp_fid = m0 * np.exp(t * (1j * tsp_frq - r2))
-        spc = fftshift(fft(tsp_fid))
-        self.spc[0] += spc.real
+        tms_range = [self.p_range, -self.p_range]
+        area_tms = np.sort(len(self.spc[0]) - self.ppm2points(tms_range))
+        self.sim_tmsp(r2, 0.0)
+        self.spc[0][area_tms[0]:area_tms[1]] += m0 * self.temp_spc.real
         # end add_tmsp
 
     def apodise(self, fid, dim, lb, gb, ssb, group_delay, sw_h):
@@ -2809,6 +2818,10 @@ class NmrData:
                     t[k])
 
         return fid
+
+    def set_ref(self, ref_value='auto'):
+        self.ref = ref_value
+        # end set_ref
 
     def smo(self, fid):
         x = np.linspace(0, len(fid) - 1, len(fid))
