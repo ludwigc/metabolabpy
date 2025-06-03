@@ -65,7 +65,7 @@ class NmrData:
         self.peak_label = np.array([], dtype='str')
         self.n_protons = np.array([], dtype='str')
         self.dim = 0
-        self.p_range = 0.01
+        self.p_range = 0.05
         self.tmsp_linewidth = 0.0
         self.tmsp_offset = 0.0
         self.tmsp_mo = 1.0
@@ -206,36 +206,36 @@ class NmrData:
         #self.temp_spc *= int_tms
         # end sim_tmsp
 
-    def fct_tmsp(self, pars):
+    def fctlw(self, pars, ppm=0.0):
         r2 = pars[0]
         offset = pars[1]
         m0 = pars[2]
         self.sim_tmsp(r2, offset)
-        tms_range = [self.p_range, -self.p_range]
+        tms_range = [ppm + self.p_range, ppm - self.p_range]
         area_tms = np.sort(len(self.spc[0]) - self.ppm2points(tms_range))
 
         chi2 = np.sum((self.spc[0][area_tms[0]:area_tms[1]].real - m0 * self.temp_spc.real) ** 2)
         return chi2
         # end fct_tmsp
 
-    def fit_tmsp(self):
-        tms_range = [self.p_range, -self.p_range]
+    def fitlw(self, ppm=0.0):
+        tms_range = [ppm + self.p_range, ppm - self.p_range]
         area_tms = np.sort(len(self.spc[0]) - self.ppm2points(tms_range))
         m0 = np.max(self.spc[0][area_tms[0]:area_tms[1]].real) / 25.0
         pars = [1.0, 0.0, m0]
-        eval_parameters = optimize.minimize(self.fct_tmsp, pars, method='Powell')
+        eval_parameters = optimize.minimize(self.fctlw, pars, method='Powell', args=(ppm))
         self.tmsp_linewidth = eval_parameters.x[0] # / (2 * np.pi)
         self.tmsp_offset = eval_parameters.x[1]
         self.tmsp_m0 = eval_parameters.x[2]
         self.temp_spc  = np.array([], dtype='complex')
         self.temp_ppm1 = np.array([], dtype='float64')
-        # end fit_tmsp
+        # end fitlw
 
-    def peakw_tmsp(self):
+    def peakw(self, ppm=0.0):
         #window_type = self.proc.window_type[0]
         #self.proc.window_type[0] = 0
         #self.proc_spc1d()
-        tms_range = [self.p_range, -self.p_range]
+        tms_range = [ppm + self.p_range, ppm - self.p_range]
         tms_pts = np.sort(len(self.spc[0]) - self.ppm2points(tms_range))
         spc = self.spc[0][tms_pts[0]:tms_pts[1]].real
         ppm1 = self.ppm1[tms_pts[0]:tms_pts[1]]
@@ -247,7 +247,7 @@ class NmrData:
         min_pos1 = np.where(np.abs(spc - np.max(spc) / 2) == min1)[0][0]
         min_pos2 = np.where(np.abs(spc - np.max(spc) / 2) == min2)[0][0]
         self.tmsp_linewidth = np.abs(ppm1[min_pos1]-ppm1[min_pos2])*self.acq.sfo1
-        # end peakw_tmsp
+        # end peakw
 
     def acq_pars(self):
         a = self.acq

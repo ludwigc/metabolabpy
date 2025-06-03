@@ -961,32 +961,32 @@ class NmrDataSet:
 
     # end export_data_set
 
-    def fit_tmsp(self, message=True):
-        self.nmrdat[self.s][self.e].fit_tmsp()
+    def fitlw(self, ppm=0.0, message=True):
+        self.nmrdat[self.s][self.e].fitlw(ppm=ppm)
         if message:
-            print(f'Fitting TMSP for dataset: {self.s + 1}, experiment: {self.e + 1:03d}, TMSP linewidth: {self.nmrdat[self.s][self.e].tmsp_linewidth:4.3f} Hz, offset: {self.nmrdat[self.s][self.e].tmsp_offset:+4.4f}, M0: {self.nmrdat[self.s][self.e].tmsp_m0:4.2f}')
+            print(f'Fitting linewidth@{ppm:4.2f}ppm for dataset: {self.s + 1}, experiment: {self.e + 1:03d}, peak linewidth: {self.nmrdat[self.s][self.e].tmsp_linewidth:4.3f} Hz, offset: {self.nmrdat[self.s][self.e].tmsp_offset:+4.4f}, M0: {self.nmrdat[self.s][self.e].tmsp_m0:4.2f}')
 
     # end fit_tmsp
 
-    def fit_tmsp_all(self, message=True):
+    def fitlw_all(self, ppm=0.0, message=True):
         for k in range(len(self.nmrdat[self.s])):
-            self.nmrdat[self.s][k].fit_tmsp()
+            self.nmrdat[self.s][k].fitlw(ppm=ppm)
             if message:
-                print(f'Fitting TMSP for dataset: {self.s + 1}, experiment: {k + 1:03d}, TMSP linewidth: {self.nmrdat[self.s][k].tmsp_linewidth:4.3f} Hz, offset: {self.nmrdat[self.s][k].tmsp_offset:+4.4f}, M0: {self.nmrdat[self.s][k].tmsp_m0:4.2f}')
+                print(f'Fitting linewidth@{ppm:4.2f}ppm for dataset: {self.s + 1}, experiment: {k + 1:03d}, peak linewidth: {self.nmrdat[self.s][k].tmsp_linewidth:4.3f} Hz, offset: {self.nmrdat[self.s][k].tmsp_offset:+4.4f}, M0: {self.nmrdat[self.s][k].tmsp_m0:4.2f}')
 
         # end fit_tmsp_all
 
-    def peakw_tmsp(self, message=True):
-        self.nmrdat[self.s][self.e].peakw_tmsp()
+    def peakw(self, ppm=0.0, message=True):
+        self.nmrdat[self.s][self.e].peakw(ppm=ppm)
         if message:
-            print(f'Peak width for dataset: {self.s + 1}, experiment: {self.e + 1:03d}, TMSP linewidth: {self.nmrdat[self.s][self.e].tmsp_linewidth:4.3f} Hz')
+            print(f'Peak width@{ppm:4.2f}ppm for dataset: {self.s + 1}, experiment: {self.e + 1:03d}, peak linewidth: {self.nmrdat[self.s][self.e].tmsp_linewidth:4.3f} Hz')
         # end peakw_tmsp
 
-    def peakw_tmsp_all(self, message=True):
+    def peakw_all(self, ppm=0.0, message=True):
         for k in range(len(self.nmrdat[self.s])):
-            self.nmrdat[self.s][k].peakw_tmsp()
+            self.nmrdat[self.s][k].peakw(ppm=ppm)
             if message:
-                print(f'Peak width for dataset: {self.s + 1}, experiment: {k + 1:03d}, TMSP linewidth: {self.nmrdat[self.s][k].tmsp_linewidth:4.3f} Hz')
+                print(f'Peak width@{ppm:4.2f}ppm for dataset: {self.s + 1}, experiment: {k + 1:03d}, peak linewidth: {self.nmrdat[self.s][k].tmsp_linewidth:4.3f} Hz')
         # end peakw_tmsp_all
 
     def ft(self):
