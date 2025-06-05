@@ -58,6 +58,7 @@ class NmrDataSet:
         self.hsqc_spin_sys_connected = True
         self.data_set_name = ''
         self.data_set_number = ''
+        self.auto_add_tmsp_pp = False
         self.baseline_algs = ['irsqr', 'arpls', 'asls', 'aspls', 'derpsalsa', 'drpls', 'iarpls', 'iasls', 'psalsa',
                               'mpls',
                               'mor', 'imor', 'mormol', 'amormol', 'rolling_ball', 'mwmv', 'tophat', 'mpspline', 'jbcd',
@@ -2209,13 +2210,18 @@ class NmrDataSet:
             if autoref:
                 self.auto_ref_all()
 
-            self.shift_ref()
             if len(self.nmrdat[self.s][self.e].spline_baseline.baseline_points) > 0:
                 for k in range(len(self.nmrdat[self.s])):
-                    self.nmrdat[self.s][k].spline_baseline = self.nmrdat[self.s][self.e].spline_baseline
+                    #self.nmrdat[self.s][k].spline_baseline = self.nmrdat[self.s][self.e].spline_baseline
                     self.nmrdat[self.s][k].add_baseline_points()
                     self.nmrdat[self.s][k].corr_spline_baseline()
 
+            if self.auto_add_tmsp_pp:
+                for k in range(len(self.nmrdat[self.s])):
+                    if self.nmrdat[self.s][k].add_tmsp_m0 > 0.0 and self.nmrdat[self.s][k].add_tmsp_r2 > 0.0:
+                        self.nmrdat[self.s][k].add_tmsp(m0=self.nmrdat[self.s][k].add_tmsp_m0,r2=self.nmrdat[self.s][k].add_tmsp_r2)
+
+            self.shift_ref()
         else:
             s = self.s
             e = self.e
@@ -2489,6 +2495,10 @@ class NmrDataSet:
 
         self.plot_spc()
         # end select_plot_clear
+
+    def set_auto_add_tmsp_pp(self, auto_add_tmsp_pp=False):
+        self.auto_add_tmsp_pp = auto_add_tmsp_pp
+        # end set_auto_add_tmsp_pp
 
     def set_autobaseline(self, autobaseline=False):
         n_exp = len(self.nmrdat[self.s])

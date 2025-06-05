@@ -69,6 +69,8 @@ class NmrData:
         self.tmsp_linewidth = 0.0
         self.tmsp_offset = 0.0
         self.tmsp_mo = 1.0
+        self.add_tmsp_m0 = -1
+        self.add_tmsp_r2 = -1
         self.temp_spc = np.array([], dtype='complex')
         self.temp_ppm1 = np.array([], dtype='float64')
         self.title = np.array([], dtype='str')
@@ -402,6 +404,8 @@ class NmrData:
         area_tms = np.sort(len(self.spc[0]) - self.ppm2points(tms_range))
         self.sim_tmsp(r2, 0.0)
         self.spc[0][area_tms[0]:area_tms[1]] += m0 * self.temp_spc.real
+        self.add_tmsp_m0 = m0
+        self.add_tmsp_r2 = r2
         # end add_tmsp
 
     def apodise(self, fid, dim, lb, gb, ssb, group_delay, sw_h):
