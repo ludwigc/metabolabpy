@@ -1382,6 +1382,7 @@ class NmrData:
             return
 
         if autosampler == 'SampleJet':
+            print(f'keys: {c_dict[dsl].keys()}')
             line_no = c_dict[dsl][rack + " " + pos]
         else:
             line_no = c_dict[dsl][str(pos)]

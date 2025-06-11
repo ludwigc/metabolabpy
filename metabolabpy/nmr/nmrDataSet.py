@@ -456,6 +456,11 @@ class NmrDataSet:
                 self.baseline1d_all()
 
             self.auto_ref_all()
+            if self.auto_add_tmsp_pp:
+                for k in range(len(self.nmrdat[self.s])):
+                    if self.nmrdat[self.s][k].add_tmsp_m0 > 0.0 and self.nmrdat[self.s][k].add_tmsp_r2 > 0.0:
+                        self.nmrdat[self.s][k].add_tmsp(m0=self.nmrdat[self.s][k].add_tmsp_m0,r2=self.nmrdat[self.s][k].add_tmsp_r2)
+
             self.shift_ref()
 
         else:
