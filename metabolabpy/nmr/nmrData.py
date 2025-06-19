@@ -155,20 +155,13 @@ class NmrData:
         # end __str__
 
     def sim_tmsp(self, r2, offset):
-        #r2_tms = r2
         r2_tms = 2 * np.pi * r2
         ppmos_tms = offset
         tms_range = [self.p_range, -self.p_range]
         area_tms = np.sort(len(self.spc[0]) - self.ppm2points(tms_range))
         self.temp_ppm1 = self.ppm1[area_tms[0]:area_tms[1]]
-        spc1 = self.spc[0][area_tms[0]:area_tms[1]].real
-        ref_point = np.where(spc1 == np.max(spc1))[0][0]
         sw = self.temp_ppm1[0] - self.temp_ppm1[-1]
         sw_h = self.acq.sfo1 * sw
-        #sw_h = self.acq.sfo1 * 2 * self.p_range
-        n_points = len(spc1)
-        #print(f'n_points: {n_points}')
-        ref_shift = 0.0
         cs_tms = [0.000000000 + ppmos_tms]
         nprot_tms = [1]
         sys_tms = pg.spin_system(sum(nprot_tms))
@@ -179,9 +172,6 @@ class NmrData:
                 sys_tms.PPM(kk, cs_tms[k])
                 kk += 1
 
-        #offset = -(ref_point * (sw_h / self.acq.sfo1) / n_points + ref_shift - sw_h / self.acq.sfo1) * self.acq.sfo1
-        #sys_tms.offsetShifts(offset)
-        #sw = self.ppm1[0] - self.ppm1[-1]
         dt = 1 / (2 * sw_h)
         td = len(self.temp_ppm1)
         sigma0 = pg.sigma_eq(sys_tms)
@@ -200,12 +190,7 @@ class NmrData:
             self.temp_spc[0][k] *= np.exp(-r2_tms * dt * k)
 
         self.temp_spc = np.fft.fftshift(np.fft.fft(self.temp_spc[0]).real)
-        #print(f'max(self.temp_spc: {max(self.temp_spc)}')
         self.temp_spc -= np.mean(self.temp_spc[0:2])
-        #print(f'max(self.temp_spc: {max(self.temp_spc)}')
-        #area_tms = np.sort(len(self.spc[0]) - self.ppm2points(tms_range))
-        #int_tms = np.max(self.spc[0][area_tms[0]:area_tms[1]].real) / np.max(self.temp_spc.real)
-        #self.temp_spc *= int_tms
         # end sim_tmsp
 
     def fctlw(self, pars, ppm=0.0):
@@ -1757,6 +1742,8 @@ class NmrData:
         if dim == 0:
             sfo = self.acq.sfo1
             npts = int(len(self.spc[0]))
+            ref_point = []
+            ref_point.append(self.ref_point[dim] * npts / self.proc.n_points[0])
 
         if dim == 1:
             if self.acq.manufacturer == 'Bruker':
@@ -1768,8 +1755,9 @@ class NmrData:
                 sfo = self.acq.sfo2
 
             npts = int(len(self.spc))
+            ref_point = self.ref_point
 
-        points = np.round(((ppm - self.ref_shift[dim]) * (sfo / sw) + self.ref_point[dim] / (npts - 1)) * (npts - 1))
+        points = np.round(((ppm - self.ref_shift[dim]) * (sfo / sw) + ref_point[dim] / (npts - 1)) * (npts - 1))
         return points.astype(int)
         # end ppm2points
 
