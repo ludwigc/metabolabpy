@@ -2514,7 +2514,60 @@ class NmrDataSet:
 
         # set_autobaseline
 
-    def set_loadings_from_excel(self, file_name='', worksheet='', columns=[''], replace='', m0_factor=0.005, r2=0.0001):  # pragma: no cover
+    def set_loadings_from_csv(self, file_name='', replace='', m0_factor=0.005, r2=0.02):  # pragma: no cover
+        if len(file_name) == 0:
+            return
+
+        try:
+            df = pd.read_csv(file_name)
+        except:
+            print(f'Could not read file {file_name}')
+            return
+
+        self.nmrdat.append([])
+        n_sets = len(self.nmrdat)
+        old_exp = self.e
+        for k in range(len(self.nmrdat) - 1):
+            for l in range(len(self.nmrdat[self.s])):
+                self.nmrdat[k][l].display.display_spc = False
+
+        self.e = 0
+        s = n_sets - 1
+        if len(replace) == 0:
+            select = np.where(self.nmrdat[self.s][self.e].spc[0] != 0)[0]
+        else:
+            ppm1 = np.copy(self.nmrdat[self.s][self.e].ppm1)
+            ppm2 = df[df.keys()[0]]
+            select = np.zeros(len(ppm2), dtype=int)
+            for k in range(len(ppm2)):
+                mdiff = np.abs(ppm1 - float(ppm2[k].replace(replace, '')))
+                select[k] = np.where(mdiff == np.min(mdiff))[0][0]
+
+        for k in range(len(df.keys()) - 1):
+            nd1 = nd.NmrData()
+            self.nmrdat[s].append(nd1)
+            self.nmrdat[s][k].dim = 1
+            self.nmrdat[s][k].fid = np.copy(self.nmrdat[self.s][self.e].fid)
+            self.nmrdat[s][k].acq = self.nmrdat[self.s][self.e].acq
+            self.nmrdat[s][k].display = self.nmrdat[self.s][self.e].display
+            self.nmrdat[s][k].proc = self.nmrdat[self.s][self.e].proc
+            self.nmrdat[s][k].ppm1 = np.resize(self.nmrdat[s][self.e].ppm1, (len(self.nmrdat[self.s][self.e].ppm1)))
+            self.nmrdat[s][k].ppm1 = np.copy(self.nmrdat[self.s][self.e].ppm1)
+            self.nmrdat[s][k].spc = np.resize(self.nmrdat[s][self.e].spc,
+                                              (1, len(self.nmrdat[self.s][self.e].spc[0])))
+            self.nmrdat[s][k].ref_shift = copy(self.nmrdat[self.s][self.e].ref_shift)
+            self.nmrdat[s][k].ref_point = self.nmrdat[self.s][self.e].ref_point
+            self.nmrdat[s][k].ref_point[0] = len(self.nmrdat[s][k].ppm1) - \
+            np.where(np.abs(self.nmrdat[s][k].ppm1) == np.min(np.abs(self.nmrdat[s][k].ppm1)))[0][0]
+            self.nmrdat[s][k].spc[0][select] = np.copy(df[df.keys()[k + 1]])
+            self.nmrdat[s][k].title = 'Loadings from ' + df.keys()[k + 1] + '\n'
+            m0 = np.max(self.nmrdat[s][k].spc[0].real) * m0_factor
+            #self.nmrdat[s][k].add_tmsp(m0, r2)
+
+        self.e = old_exp
+        # end set_loadings_from_csv
+
+    def set_loadings_from_excel(self, file_name='', worksheet='', columns=[''], replace='', m0_factor=0.005, r2=1.0):  # pragma: no cover
         if len(file_name) == 0:
             return
 
