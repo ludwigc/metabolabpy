@@ -547,8 +547,8 @@ class NmrData:
         elif alg == 'goldindec':
             baseline = goldindec(spc)
         else:
-            self.proc.autobaseline_alg = 'iarpls'
-            baseline = iarpls(spc, lam=lam, max_iter=max_iter)
+            self.proc.autobaseline_alg = 'rolling_ball'
+            baseline = rolling_ball(spc, half_window=half_window, smooth_half_window=smooth_half_window)
 
         self.spc[0] = spc - baseline[0]
         self.baseline1d()
