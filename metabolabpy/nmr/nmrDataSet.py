@@ -245,12 +245,12 @@ class NmrDataSet:
 
         # end autobaseline1d
 
-    def autobaseline1d_all(self):
+    def autobaseline1d_all(self, alg='rolling_ball'):
         n_exp = len(self.nmrdat[self.s])
         orig_exp = self.e
         for k in range(n_exp):
             self.e = k
-            self.autobaseline1d()
+            self.autobaseline1d(alg=alg)
 
         self.e = orig_exp
         return "Finished autobaseline1d_all"
@@ -2208,7 +2208,7 @@ class NmrDataSet:
         if not self.nmrdat[self.s][0].projected_j_res:
             self.ft_all()
             if self.nmrdat[self.s][0].proc.autobaseline:
-                self.autobaseline1d_all()
+                self.autobaseline1d_all(alg=self.nmrdat[self.s][0].proc.autobaseline_alg)
             else:
                 self.baseline1d_all()
 
