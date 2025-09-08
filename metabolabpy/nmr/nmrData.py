@@ -377,6 +377,7 @@ class NmrData:
         self.start_peak_points = np.array([], dtype='int')
         self.end_peak_points = np.array([], dtype='int')
         self.peak_label = np.array([], dtype='str')
+        self.n_protons = np.array([], dtype='str')
         self.peak_max = np.array([], dtype='float64')
         self.peak_max_ppm = np.array([], dtype='float64')
         self.peak_max_points = np.array([], dtype='int')

@@ -2384,7 +2384,7 @@ class NmrDataSet:
 
             if self.pp.seg_align_ref_spc == 0:
                 ref_spc = np.mean(ref_spcs, 0)
-            else:
+            elif self.pp.seg_align_ref_spc == -1:
                 ref_spc = np.median(ref_spcs, 0)
 
             ref_spcs = np.array([[]])
@@ -2400,7 +2400,16 @@ class NmrDataSet:
                 for l in range(len(seg_start)):
                     start_pts = npts - seg_end[l]
                     end_pts = npts - seg_start[l]
-                    corr_spc1 = np.copy(ref_spc[start_pts:end_pts].real)
+                    if self.pp.seg_align_ref_spc == -2:
+                        n_max = np.array([])
+                        for m in range(n_spc):
+                            n_max = np.append(n_max, np.max(self.nmrdat[self.s][m].spc[0][start_pts:end_pts].real))
+
+                        max_spc = np.where(n_max == np.max(n_max))[0][0]
+                        corr_spc1 = np.copy(self.nmrdat[self.s][max_spc].spc[0][start_pts:end_pts].real)
+                    else:
+                        corr_spc1 = np.copy(ref_spc[start_pts:end_pts].real)
+
                     corr_spc2 = self.nmrdat[self.s][k].spc[0][start_pts:end_pts].real
                     max_shift = len(corr_spc1) - 1
                     zeros = np.zeros(len(corr_spc1))

@@ -18,7 +18,7 @@ class NmrPreProc:
         self.seg_end = np.array([])
         self.compress_start = np.array([])
         self.compress_end = np.array([])
-        self.seg_align_ref_spc = 1  # use first spectrum
+        self.seg_align_ref_spc = -2  # use maximum spectrum for each segment
         self.noise_threshold = 4.0  # times std of noise region
         self.noise_start = 10.0
         self.noise_end = 10.5
