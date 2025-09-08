@@ -97,7 +97,7 @@ class NmrDataSet:
 
         # end __init__
 
-    def add_peak(self, start_end=np.array([], dtype='float64'), peak_label=''):
+    def add_peak(self, start_end=np.array([], dtype='float64'), peak_label='', n_protons='1'):
         if len(start_end) != 2:
             return
 
@@ -113,7 +113,7 @@ class NmrDataSet:
                 exps = [self.e]
 
             for l in exps:
-                self.nmrdat[k][l].add_peak(start_end, peak_label)
+                self.nmrdat[k][l].add_peak(start_end, peak_label, n_protons)
 
         # end add_peak
 

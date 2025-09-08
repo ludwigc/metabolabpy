@@ -313,7 +313,7 @@ class NmrData:
 
         # end add_baseline_points
 
-    def add_peak(self, start_end=np.array([], dtype='float64'), peak_label='', n_protons=1):
+    def add_peak(self, start_end=np.array([], dtype='float64'), peak_label='', n_protons='1'):
         if len(start_end) > 0:
             start_peak = int(1e4 * self.points2ppm(self.ppm2points(max(start_end), 0), 0)) / 1e4
             end_peak = int(1e4 * self.points2ppm(self.ppm2points(min(start_end), 0), 0)) / 1e4
