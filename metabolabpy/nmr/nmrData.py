@@ -804,10 +804,8 @@ class NmrData:
         self.proc.window_type[0] = 0
         self.proc_spc1d()
         spc = np.copy(self.spc[0])
-        spc2 = np.zeros(len(spc), dtype=complex)
-        spc2.real = signal.cwt(spc.real, signal.ricker, [1])
-        spc2.imag = signal.cwt(spc.imag, signal.ricker, [1])
-        spc2a = np.abs(spc2)
+        spc2 = pywt.cwt(spc, 1, 'mexh')
+        spc2a = np.abs(spc2[0][0])
         len_window = int(len(spc) / num_windows)
         std_vals = np.zeros(num_windows)
         std_vals2 = np.zeros(num_windows)
