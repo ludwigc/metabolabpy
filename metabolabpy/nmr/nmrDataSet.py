@@ -97,6 +97,36 @@ class NmrDataSet:
 
         # end __init__
 
+    def save_peaks(self, file_name='peaks.xlsx'):
+        wb = Workbook()
+        wb.remove(wb.active)
+        l = "PeakList"
+        wb.create_sheet(l)
+        wb[l]["A1"] = "Start Peak"
+        wb[l]["B1"] = "End Peak"
+        wb[l]["C1"] = "Label"
+        wb[l]["D1"] = "# Protons"
+        for k in range(len(self.nmrdat[self.s][self.e].start_peak)):
+            wb[l]["A" + str(k + 2)] = self.nmrdat[self.s][self.e].start_peak[k]
+            wb[l]["B" + str(k + 2)] = self.nmrdat[self.s][self.e].end_peak[k]
+            wb[l]["C" + str(k + 2)] = self.nmrdat[self.s][self.e].peak_label[k]
+            wb[l]["D" + str(k + 2)] = self.nmrdat[self.s][self.e].n_protons[k]
+
+        wb.save(file_name)
+        # end save_peaks
+
+    def load_peaks(self, excel_file=''):
+        if len(excel_file) == 0:
+            return
+
+        xls = pd.read_excel(excel_file).fillna('')
+        self.clear_peak()
+        for k in range(len(xls['Start Peak'])):
+            self.add_peak(np.array([xls['Start Peak'][k], xls['End Peak'][k]]), xls['Label'][k], xls['# Protons'][k])
+
+        # end load_peaks
+
+
     def add_peak(self, start_end=np.array([], dtype='float64'), peak_label='', n_protons='1'):
         if len(start_end) != 2:
             return
