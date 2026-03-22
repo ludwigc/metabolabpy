@@ -8,8 +8,10 @@ import os
 from scipy.fftpack import fft, ifft, fftshift
 from scipy.interpolate import CubicSpline
 from scipy.interpolate import Rbf, InterpolatedUnivariateSpline
+from scipy.optimize import least_squares
 import math
 import matplotlib.pyplot as pl
+import matplotlib.pyplot as plt
 from scipy import signal
 import time
 from metabolabpy.nmr import nmrpipeData
@@ -37,6 +39,7 @@ from metabolabpy.nmr.phase3 import phase3, phase3a #, objective_function, penalt
 import pywt
 from copy import copy
 from scipy.stats import linregress
+import SLEEPY as sl
 
 try:
     import pygamma as pg
@@ -1576,6 +1579,7 @@ class NmrData:
         # end hilbert1
 
     def make_hsqc_spin_sys(self, c13_offset, idx=0):
+        jres = int(self.acq.cnst[18])
         c13_nc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_nc']
         c13_idx = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_idx']
         chem_shift = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_shifts']
@@ -1584,14 +1588,25 @@ class NmrData:
                 chem_shift[k][0] = np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak \
                                     - 1]) + c13_offset[k] / 1000.0
 
-        j_cc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['j_cc']
-        sys = pg.spin_system(sum(c13_nc[idx]))
-        sys.Omega(self.acq.sfo2)
+        j_cc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['j_cc']*jres
+        #sys = pg.spin_system(sum(c13_nc[idx]))
+        ###print(f'j_cc: {j_cc}, sum(c13_nc[{idx}]: {sum(c13_nc[idx])}')
+        #sys.Omega(self.acq.sfo2)
+        nucs = []
         for k in range(len(c13_nc[idx])):
-            sys.PPM(k, chem_shift[idx][k])
+            nucs.append('1H')
+
+        nucs[0] = '13C'
+        ###print(nucs)
+        sys = sl.ExpSys(Nucs=nucs, v0H=self.acq.sfo1)
+
+        for k in range(len(c13_nc[idx])):
+            sys.set_inter(Type='CS', i=k, ppm=chem_shift[idx][k])
+            #sys.PPM(k, chem_shift[idx][k])
 
         for k in range(len(j_cc[idx])):
-            sys.J(0, k + 1, j_cc[idx][k])
+            sys.set_inter(Type='J', i0=0, i1=k+1, J=j_cc[idx][k])
+            #sys.J(0, k + 1, j_cc[idx][k])
 
         return sys
         # end make_spin_sys
@@ -2311,9 +2326,9 @@ class NmrData:
         perc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['contribution']
         n_spin_sys = len(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_shifts'])
         intensity = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].intensities[self.hsqc.cur_peak - 1]
-        ref_shift2 = np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1])
-        ref_point2 = n_points - self.ppm2points(ref_shift2, 1) - 1
-        offset = (ref_point2 * (self.proc.sw_h[1] / self.acq.sfo2) / self.proc.n_points[1] + ref_shift2 - self.proc.sw_h[1] / self.acq.sfo2) * self.acq.sfo2
+        #ref_shift2 = np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1])
+        #ref_point2 = n_points - self.ppm2points(ref_shift2, 1) - 1
+        #offset = (ref_point2 * (self.proc.sw_h[1] / self.acq.sfo2) / self.proc.n_points[1] + ref_shift2 - self.proc.sw_h[1] / self.acq.sfo2) * self.acq.sfo2
         c13_centre = np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1])
         if self.hsqc.autoscale_j == True:
             scale = self.hsqc.j_scale
@@ -2338,21 +2353,34 @@ class NmrData:
             c13_range[0]]  # np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1])
         ref_point2 = 0  # n_points - self.ppm2points(ref_shift2, 1) - 1
         sw = abs(c13_beg_ppm - c13_end_ppm)
-        offset = (ref_point2 * sw / (2 * n_points) + ref_shift2 - sw) * self.acq.sfo2
+        offset = np.mean([c13_beg_ppm, c13_end_ppm]) #(ref_point2 * sw / (2 * n_points) + ref_shift2 - sw) * self.acq.sfo2
         sim_spc1 = np.resize(sim_spc1, (1, n_points))
+        ###print(f'n_spin_sys: {n_spin_sys}')
+        #print(f'c13_offset: {c13_offset}')
         for k in range(n_spin_sys):
             sys = self.make_hsqc_spin_sys(c13_offset, k)
-            sys.offsetShifts(offset)
+            #print(f'CS1: {sys.CS[0]["ppm"]}, CS2: {sys.CS[0]["ppm"] - offset}')
+            sys.CS[0]['ppm'] -= offset
+            ####print(f'CS2: {sys.CS[0]["ppm"]}')
+            #sys.offsetShifts(offset)
+            ####print(f'intensity: {intensity}')
             sim_spc1[0] += intensity * self.c13spc1d(sys, perc[k], angle=90.0, dly_n=0.0,
                                                     c13_range=[c13_range[0], c13_range[-1]],
-                                                    c13_sw=[c13_beg_ppm, c13_end_ppm]) / sum(c13_nc[k])
+                                                    c13_sw=[c13_beg_ppm, c13_end_ppm]) # / sum(c13_nc[k])
 
         sim_spc[0][c13_range] = sim_spc1[0]
+        ####print(f'sim_spc1[0]: {sim_spc1[0]}')
+        #print(f'intensity: {intensity}')
         if intensity == 1.0:
             spc_max = np.array([], dtype=complex)
             spin_number = self.hsqc.cur_peak
             hd = self.hsqc.hsqc_data[self.hsqc.cur_metabolite]
             h1_shift = hd.h1_shifts[spin_number - 1]
+            ####print(f'sim_spc[0]: {sim_spc[0]}')
+            ####print(f'np.max(sim_spc[0]): {np.max(sim_spc[0])}')
+            ####print(f'sum(sim_spc[0].real): {sum(sim_spc[0].real)}')
+            ####print(f'sum(sim_spc[0].imag): {sum(sim_spc[0].imag)}')
+            ####print(f'np.where(sim_spc[0] == np.max(sim_spc[0])): {np.where(sim_spc[0] == np.max(sim_spc[0]))}')
             max_idx = np.where(sim_spc[0] == np.max(sim_spc[0]))[0][0]
             h1_picked = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].h1_picked
             c13_picked = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked
@@ -2375,6 +2403,7 @@ class NmrData:
 
         self.hsqc.hsqc_data[self.hsqc.cur_metabolite].sim_spc[self.hsqc.cur_peak - 1] = sim_spc[0].real
         self.sim_hsqc_1d_calc_cod()
+        return sim_spc
         # end sim_hsqc_1d
 
     def sim_hsqc_1d_calc_cod(self):
@@ -2517,7 +2546,9 @@ class NmrData:
                 fit_parameters.append(contribution[k])
 
         eval_parameters = optimize.minimize(self.fct_hsqc_1d, fit_parameters, method='Powell')
-        # eval_parameters = optimize.leastsq(self.fct_hsqc_1d, fit_parameters, ftol=1e-12, xtol=1e-12, maxfev=1e10)
+        #eval_parameters = optimize.leastsq(self.fct_hsqc_1d, fit_parameters, ftol=1e-12, xtol=1e-12, maxfev=1e10)
+        #print(f'fit_parameters: {fit_parameters}')
+        #result = least_squares(fun=self.fct_hsqc_1d, x0=fit_parameters, method='trf')
         e_pars = np.array(eval_parameters.x).tolist()
         intensity = e_pars.pop(0)
         n_fit_parameters = len(e_pars)
@@ -2545,6 +2576,7 @@ class NmrData:
 
                 c13_offset[k] = round(c13_offset[k], 2)
 
+            #print(f'contribution: {contribution}')
             contribution = (np.array(contribution) * 100.0 / np.array(contribution).sum()).tolist()
             for k in range(len(contribution)):
                 contribution[k] = round(contribution[k], 3)
@@ -2639,15 +2671,16 @@ class NmrData:
         self.hsqc.autosim = autosim
         # end fit_hsqc_1d
 
-    def fct_hsqc_1d(self, fit_parameters=[]):
+    def fct_hsqc_1d(self, fit_parameters=[]): #, plot=False):
         n_fit_pars = len(fit_parameters)
         if n_fit_pars == 0:
             return []
 
+        #print(f'fit_pars: {fit_parameters}')
         intensity = fit_parameters[0]
         fit_parameters = fit_parameters[1:]
         n_fit_pars = len(fit_parameters)
-        #print(fit_parameters)
+        ###print(fit_parameters)
         if self.hsqc.fit_chemical_shifts and self.hsqc.fit_percentages:
             if self.hsqc.fit_zero_percentages:
                 c13_offset = fit_parameters[:int(n_fit_pars / 2)]
@@ -2709,13 +2742,16 @@ class NmrData:
         ref_shift2 = self.ppm2[c13_range[0]] #np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak - 1])
         ref_point2 = 0 #n_points - self.ppm2points(ref_shift2, 1) - 1
         sw = abs(c13_beg_ppm - c13_end_ppm)
-        offset = (ref_point2 * sw / (2*n_points) + ref_shift2 - sw) * self.acq.sfo2
+        offset = np.mean([c13_beg_ppm, c13_end_ppm])
+        #offset = (ref_point2 * sw / (2*n_points) + ref_shift2 - sw) * self.acq.sfo2
         sim_spc = np.zeros((1, n_points), dtype=complex)  # np.array([], dtype=complex)
         #sim_spc = np.resize(sim_spc, (1,n_points))
         for k in range(n_spin_sys):
             sys = self.make_hsqc_spin_sys(c13_offset, k)
-            sys.offsetShifts(offset)
-            sim_spc[0] += intensity * self.c13spc1d(sys, perc[k], angle=90.0, dly_n=0.0, c13_range=[c13_range[0], c13_range[-1]], c13_sw=[c13_beg_ppm, c13_end_ppm]) / sum(c13_nc[k])
+            sys.CS[0]['ppm'] -= offset
+            #sys.offsetShifts(offset)
+            ###print(f'intensity: {intensity}, perc[{k}]: {perc[k]}, sys: {sys}, c13_range: {[c13_range[0], c13_range[-1]]}, c13_sw: {[c13_beg_ppm, c13_end_ppm]}')
+            sim_spc[0] += intensity * self.c13spc1d(sys, perc[k], angle=90.0, dly_n=0.0, c13_range=[c13_range[0], c13_range[-1]], c13_sw=[c13_beg_ppm, c13_end_ppm]) #/ sum(c13_nc[k])
 
         spin_number = self.hsqc.cur_peak
         h1_picked = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].h1_picked
@@ -2733,8 +2769,19 @@ class NmrData:
 
         err = []
         for k in range(len(c13_range)):
-            err.append((sim_spc[0][k].real * intensity - self.spc[c13_range[k]][h1_pts].real) ** 2)
+            err.append((sim_spc[0][k].real - self.spc[c13_range[k]][h1_pts].real) ** 2)
 
+        #print(f'intensity: {intensity}')
+        #print(f'c13_range: {c13_range}, len(c13_range): {len(c13_range)}')
+        #print(f'len(self.spc): {len(self.spc)}, len(v2): {len(v2)}, len(sim_spc[0]: {len(sim_spc[0])}, len(spc2): {len(spc2)}')
+        #if plot:
+        #    pl.plot(sim_spc[0].real / 1000000)
+        #    pl.plot(v2)
+        #    #pl.plot(spc2)
+        #    pl.show()
+
+        ###print(f'fitting...')
+        #print(f'sigma = {np.array(err).sum()}')
         return np.array(err).sum()
         # end fct_hsqc_1d
 
@@ -2748,53 +2795,76 @@ class NmrData:
             npts = np.max(c13_range) - np.min(c13_range) + 1
             sw = (np.max(c13_sw) - np.min(c13_sw))*self.acq.sfo2
             td = int(npts / (2 * jres))
-            #print("npts: {}, sw: {}, td: {}".format(npts, sw, td))
 
-        jres_n = 1.0
-        for k in range(0, sys.spins() - 1):
-            for l in range(k + 1, sys.spins()):
-                if (sys.J(k, l) > 10000.0):
-                    sys.J(k, l, sys.J(k, l) * jres_n / 100000.0)
-                    sys.isotope(l, '15N')
-                else:
-                    sys.J(k, l, sys.J(k, l) * jres)
+        ###print("npts: {}, sw: {}, td: {}".format(npts, sw, td))
+        ###print(f'np.max(c13_sw) - np.min(c13_sw): {np.max(c13_sw) - np.min(c13_sw)}')
+        ###print(f'c13_sw: {c13_sw}')
+        #jres_n = 1.0
+        #for k in range(0, sys.spins() - 1):
+        #    for l in range(k + 1, sys.spins()):
+        #        if (sys.J(k, l) > 10000.0):
+        #            sys.J(k, l, sys.J(k, l) * jres_n / 100000.0)
+        #            sys.isotope(l, '15N')
+        #        else:
+        #            sys.J(k, l, sys.J(k, l) * jres)
 
         r2 = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].r2[self.hsqc.cur_peak - 1]
         echo_time = self.hsqc.echo_time / 1000.0
         dt = 1.0 / sw
-        sigma0 = pg.sigma_eq(sys)
-        H = pg.Hcs(sys) + pg.HJw(sys)
-        D = pg.Fm(sys, "1H")
-        fid = pg.row_vector(td)
-        sigma1 = pg.Iypuls(sys, sigma0, 0, 90.0)
-        sigma1 = pg.evolve(pg.gen_op(sigma1), pg.gen_op(H), dly_n / jres_n)
-        sigma1 = pg.Ixpuls(sys, sigma1, "1H", 180.0)
-        sigma1 = pg.Ixpuls(sys, sigma1, "15N", 180.0)
-        sigma1 = pg.evolve(pg.gen_op(sigma1), pg.gen_op(H), dly_n / jres_n)
-        sigma1 = pg.evolve(pg.gen_op(sigma1), pg.gen_op(H), echo_time / jres)
-        sigma1 = pg.Ixpuls(sys, sigma1, "1H", 180.0)
-        sigma1 = pg.evolve(pg.gen_op(sigma1), pg.gen_op(H), echo_time / jres)
-        fid = fid + pg.FID(pg.gen_op(sigma1), pg.gen_op(D), pg.gen_op(H), dt, td)
-        spc1 = np.zeros((1, td), dtype=complex)
-        #spc1.resize(1, td)
-        #spc = np.array([], dtype=complex)
+        ###print(f'dt: {dt}')
+        #sigma0 = pg.sigma_eq(sys)
+        #H = pg.Hcs(sys) + pg.HJw(sys)
+        #D = pg.Fm(sys, "1H")
+        #fid = pg.row_vector(td)
+        #sigma1 = pg.Iypuls(sys, sigma0, 0, 90.0)
+        #sigma1 = pg.evolve(pg.gen_op(sigma1), pg.gen_op(H), dly_n / jres_n)
+        #sigma1 = pg.Ixpuls(sys, sigma1, "1H", 180.0)
+        #sigma1 = pg.Ixpuls(sys, sigma1, "15N", 180.0)
+        #sigma1 = pg.evolve(pg.gen_op(sigma1), pg.gen_op(H), dly_n / jres_n)
+        #sigma1 = pg.evolve(pg.gen_op(sigma1), pg.gen_op(H), echo_time / jres)
+        #sigma1 = pg.Ixpuls(sys, sigma1, "1H", 180.0)
+        #sigma1 = pg.evolve(pg.gen_op(sigma1), pg.gen_op(H), echo_time / jres)
+        #fid = fid + pg.FID(pg.gen_op(sigma1), pg.gen_op(D), pg.gen_op(H), dt, td)
+        #spc1 = np.zeros((1, td), dtype=complex)
+        rho = sl.Rho(rho0='13Cx', detect='13Cm')
+        #rho.clear()
+        L = sl.Liouvillian(sys) #sl.Tools.SetupTumbling(sys, tc=1e-15, q=1)
+        v1 = 250000000
+        p1 = 1/v1/4
+        db = [0, v1, 0, 0]
+        ph = [0, 0, 0, 0]
+        ###print(f'echo_time: {echo_time}')
+        t = [0, echo_time, echo_time + 2*p1, 2*echo_time + 2*p1]
+        ###print(f't: {t}')
+        seq = L.Sequence(Dt=1e-100).add_channel('1H', t=t, v1=db, phase=ph).add_channel('13C', t=t, v1=db, phase=ph)
+        acq = L.Sequence(Dt=dt)
+        seq.U()*rho
+        rho.DetProp(acq, n=td)
+        fid = rho.I
+        #print(f'fid: {fid}')
         spc = np.zeros((1, npts), dtype=complex)
-        #spc.resize(1, npts)
         spc2 = np.zeros((1, npts), dtype=complex)
-        #spc2.resize(1, npts)
-        for k in range(td):
-            spc1[0][k] = fid.getRe(k) - 1j * fid.getIm(k)
-            spc1[0][k] *= np.exp(-r2 * dt * k)
+        #for k in range(td):
+        #    spc1[0][k] = fid.getRe(k) - 1j * fid.getIm(k)
+        #    spc1[0][k] *= np.exp(-r2 * dt * k)
 
         # print("maxFID: {}".format(np.max(spc1[0])))
-        spc1 = self.wdwf_qsin(spc1, angle)
         for k in range(td):
-            spc[0][k] = spc1[0][k]
+            fid[0][k] *= np.exp(-r2 * dt * k)
 
-        spc = np.fft.fft(spc[0])
+        fid = self.wdwf_qsin(fid, angle)
+        #print(f'fid2: {fid}')
+        for k in range(td):
+            spc[0][k] = fid[0][k]
+
+        #print(f'spc1: {spc}')
+        spc = np.fft.fftshift(np.fft.fft(spc))
+        #print(f'spc2: {spc}')
+        #pl.plot(spc[0].real)
+        #pl.show()
         # print("mmax: {}!".format(np.max(spc3.real)))
         for k in range(npts):
-            spc2[0][k] = spc[k] - spc[0]
+            spc2[0][k] = spc[0][k] - spc[0][0]
 
         spc2[0] = perc * spc2[0].real / 100.0
         # print("len(spc2): {}, len(spc2[0]): {}".format(len(spc2), len(spc2[0])))
