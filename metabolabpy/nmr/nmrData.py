@@ -41,10 +41,10 @@ from copy import copy
 from scipy.stats import linregress
 import SLEEPY as sl
 
-try:
-    import pygamma as pg
-except:
-    pass
+#try:
+#    import pygamma as pg
+#except:
+#    pass
 
 
 class NmrData:
@@ -165,35 +165,56 @@ class NmrData:
         self.temp_ppm1 = self.ppm1[area_tms[0]:area_tms[1]]
         sw = self.temp_ppm1[0] - self.temp_ppm1[-1]
         sw_h = self.acq.sfo1 * sw
+        print(f'sw: {sw}, sw_h: {sw_h}')
         cs_tms = [0.000000000 + ppmos_tms]
-        nprot_tms = [1]
-        sys_tms = pg.spin_system(sum(nprot_tms))
-        sys_tms.Omega(self.acq.sfo1)
-        kk = 0
-        for k in range(len(nprot_tms)):
-            for l in range(nprot_tms[k]):
-                sys_tms.PPM(kk, cs_tms[k])
-                kk += 1
-
-        dt = 1 / (2 * sw_h)
+        nprot_tms = 1
+        #midshift = np.mean([self.ppm1[0], self.ppm1[-1]])
+        nucs = ['1H']
+        sys = sl.ExpSys(Nucs=nucs, v0H = self.acq.sfo1)
+        sys.set_inter(Type='CS', i = 0, ppm = 0.0)
+        #sw = self.acq.sw_h[0]
+        #td = int(self.acq.n_data_points[0] * 2)
+        #npts = self.proc.n_points[0]
         td = len(self.temp_ppm1)
-        sigma0 = pg.sigma_eq(sys_tms)
-        H = pg.Hcs(sys_tms) + pg.HJ(sys_tms)
-        D = pg.Fm(sys_tms, "1H")
-        # acquire FIDs
-        fid = pg.row_vector(td)
-        for k in range(nprot_tms[0]):
-            sigma1 = pg.Iypuls(sys_tms, sigma0, k, 90.0)
-
-        fid = fid + pg.FID(pg.gen_op(sigma1), pg.gen_op(D), pg.gen_op(H), dt, td)
+        dt = 1 / (2 * sw_h)
+        rho = sl.Rho(rho0='1Hx', detect ='1Hm')
+        L = sl.Liouvillian(sys)
+        seq = L.Sequence(Dt=dt)
+        rho.DetProp(seq, n=td)
+        fid = rho.I
+        #print(f'fid: {fid}')
+        #sys_tms = pg.spin_system(sum(nprot_tms))
+        #sys_tms.Omega(self.acq.sfo1)
+        #kk = 0
+        #for k in range(len(nprot_tms)):
+        #    for l in range(nprot_tms[k]):
+        #        sys_tms.PPM(kk, cs_tms[k])
+        #        kk += 1
+        #
+        #dt = 1 / (2 * sw_h)
+        #td = len(self.temp_ppm1)
+        #sigma0 = pg.sigma_eq(sys_tms)
+        #H = pg.Hcs(sys_tms) + pg.HJ(sys_tms)
+        #D = pg.Fm(sys_tms, "1H")
+        ## acquire FIDs
+        #fid = pg.row_vector(td)
+        #for k in range(nprot_tms[0]):
+        #    sigma1 = pg.Iypuls(sys_tms, sigma0, k, 90.0)
+        #
+        #fid = fid + pg.FID(pg.gen_op(sigma1), pg.gen_op(D), pg.gen_op(H), dt, td)
         self.temp_spc = np.array([], dtype=complex)
         self.temp_spc.resize(1, td)
         for k in range(td):
-            self.temp_spc[0][k] = fid.getRe(k) - 1j * fid.getIm(k)
-            self.temp_spc[0][k] *= np.exp(-r2_tms * dt * k)
+            #    self.temp_spc[0][k] = fid.getRe(k) - 1j * fid.getIm(k)
+            self.temp_spc[0][k] += fid[0][k] * np.exp(-r2_tms * dt * k)
 
         self.temp_spc = np.fft.fftshift(np.fft.fft(self.temp_spc[0]).real)
+        #print(f'temp_spc: {self.temp_spc}')
+        #pl.plot(self.temp_ppm1, self.temp_spc)
         self.temp_spc -= np.mean(self.temp_spc[0:2])
+        #print(f'temp_spc: {self.temp_spc}')
+        #pl.plot(self.temp_ppm1, self.temp_spc)
+        #pl.show()
         # end sim_tmsp
 
     def fctlw(self, pars, ppm=0.0):
@@ -205,6 +226,7 @@ class NmrData:
         area_tms = np.sort(len(self.spc[0]) - self.ppm2points(tms_range))
 
         chi2 = np.sum((self.spc[0][area_tms[0]:area_tms[1]].real - m0 * self.temp_spc.real) ** 2)
+        #print(f'chi2: {chi2}')
         return chi2
         # end fct_tmsp
 
