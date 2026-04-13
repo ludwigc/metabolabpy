@@ -42,6 +42,7 @@ class ProcPars:
         self.sw_h = np.array([0.0, 0.0, 0.0])
         self.sf = np.array([0.0, 0.0, 0.0])
         self.fid_offset_correction = 0
+        self.offset = np.array([0.0, 0.0, 0.0])
         self.strip_start = 0
         self.strip_end = 0
         self.phase_inversion = True
@@ -136,6 +137,7 @@ class ProcPars:
     def parse_reg_ex(self):
         self.ph0[0] = float(self.reg_ex.ph0.findall(self.procs_text)[0][0])
         self.ph1[0] = float(self.reg_ex.ph1.findall(self.procs_text)[0][0])
+        self.offset[0] = float(self.reg_ex.offset.findall(self.procs_text)[0][0])
         self.n_points[0] = int(self.reg_ex.n_points.findall(self.procs_text)[0])
         self.lb[0] = float(self.reg_ex.lb.findall(self.procs_text)[0][0])
         self.gb[0] = float(self.reg_ex.gb.findall(self.procs_text)[0][0])

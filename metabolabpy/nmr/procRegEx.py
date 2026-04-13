@@ -9,7 +9,7 @@ class ProcRegEx:
 
     def __init__(self):
         self.aunmp = re.compile(r'##\$AUNMP= (.+)')
-        self.offset = re.compile(r'##\$OFFSET= (\d+(\.\d+)?)')
+        self.offset = re.compile(r'##\$OFFSET= (-?\d+(\.\d+)?)')
         self.ph0 = re.compile(r'##\$PHC0= (-?\d+(\.\d+)?)')
         self.ph1 = re.compile(r'##\$PHC1= (-?\d+(\.\d+)?)')
         self.n_points = re.compile(r'##\$SI= (\d+)')
