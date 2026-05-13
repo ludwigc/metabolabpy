@@ -299,6 +299,9 @@ class NmrData:
         # end add_baseline_points
 
     def add_peak(self, start_end=np.array([], dtype='float64'), peak_label='', n_protons='1'):
+        if self.ref == 'auto':
+            self.auto_ref()
+
         if len(start_end) > 0:
             start_peak = int(1e4 * self.points2ppm(self.ppm2points(max(start_end), 0), 0)) / 1e4
             end_peak = int(1e4 * self.points2ppm(self.ppm2points(min(start_end), 0), 0)) / 1e4
@@ -812,7 +815,6 @@ class NmrData:
                 height = np.max(spc2a[range_low:range_high]) - np.min(spc2a[range_low:range_high])
                 if height >= noise_fact * noise_val:
                     is_baseline[mid_point - width:mid_point + width] = np.zeros(width * 2)
-                    #print(f'width: {width}')
 
             noise_fact /= 2
 
