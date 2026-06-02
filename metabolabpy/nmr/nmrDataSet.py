@@ -19,6 +19,7 @@ import darkdetect  # pragma: no cover
 import mat73
 from copy import copy
 import gc
+import glob
 from scipy.io import loadmat
 
 
@@ -2180,7 +2181,21 @@ class NmrDataSet:
         xls = pd.read_excel(file_name).fillna('')
         return xls
 
-    def read_nmrpipe_spc(self, data_set_name, data_set_number, proc_data_name='test.dat', ft_dir=''):
+    def read_nmrpipe3d(self, data_path, data_exp, proc_data_name='test', ft_dir='ft', extension='.dat'):
+        print(f'path: {data_path}, exp: {data_exp}.proc, pname: {proc_data_name}, ft: {ft_dir}, ext: {extension}')
+        file_names = os.path.join(data_path, f'{data_exp}.proc', ft_dir, f'{proc_data_name}*{extension}')
+        n_files = len(glob.glob(file_names))
+        print(file_names)
+        print(f'n_files: {n_files}')
+        for k in range(n_files):
+            file_name = f'{proc_data_name}{(k+1):03d}{extension}'
+            self.read_nmrpipe_spc(data_path, data_exp, file_name, ft_dir)
+            self.nmrdat[self.s][k].dim = 3
+            if k > 0:
+                self.nmrdat[self.s][k].fid = np.array([[]], dtype='complex')
+    # end read_nmrpipe3d
+
+    def read_nmrpipe_spc(self, data_set_name, data_set_number, proc_data_name='test.dat', ft_dir='', dim=2):
         self.e = len(self.nmrdat[self.s])
         nd1 = nd.NmrData()
         nd1.data_set_name = data_set_name
