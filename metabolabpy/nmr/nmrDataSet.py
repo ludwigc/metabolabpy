@@ -29,6 +29,7 @@ class NmrDataSet:
     def __init__(self):
         self.__version__ = ml_version.__version__
         self.nmrdat = [[]]
+        self.ppm3 = np.array([])
         self.s = 0
         self.e = -1
         self.pp = npp.NmrPreProc()
@@ -202,6 +203,14 @@ class NmrDataSet:
                 self.nmrdat[k][l].set_peak(start_peak, end_peak, peak_label, n_protons)
 
         # end add_peak
+
+    def calc_ppm3(self):
+        sw = self.nmrdat[self.s][0].acq.sw[2]
+        n_points = len(self.nmrdat[self.s])
+        ref_point = self.nmrdat[self.s][0].ref_point[2]
+        ref_shift = self.nmrdat[self.s][0].ref_shift[2]
+        points = np.linspace(n_points-1, 0, n_points)
+        self.ppm3 = sw * (points - (n_points - ref_point - 1)) / (n_points - 1) + ref_shift
 
     def clear_peak(self):
         if self.int_all_data_sets:
@@ -2182,17 +2191,19 @@ class NmrDataSet:
         return xls
 
     def read_nmrpipe3d(self, data_path, data_exp, proc_data_name='test', ft_dir='ft', extension='.dat'):
-        print(f'path: {data_path}, exp: {data_exp}.proc, pname: {proc_data_name}, ft: {ft_dir}, ext: {extension}')
+        #print(f'path: {data_path}, exp: {data_exp}.proc, pname: {proc_data_name}, ft: {ft_dir}, ext: {extension}')
         file_names = os.path.join(data_path, f'{data_exp}.proc', ft_dir, f'{proc_data_name}*{extension}')
         n_files = len(glob.glob(file_names))
-        print(file_names)
-        print(f'n_files: {n_files}')
+        #print(file_names)
+        #print(f'n_files: {n_files}')
         for k in range(n_files):
             file_name = f'{proc_data_name}{(k+1):03d}{extension}'
             self.read_nmrpipe_spc(data_path, data_exp, file_name, ft_dir)
             self.nmrdat[self.s][k].dim = 3
             if k > 0:
                 self.nmrdat[self.s][k].fid = np.array([[]], dtype='complex')
+                self.nmrdat[self.s][k].hsqc = self.nmrdat[self.s][0].hsqc
+
     # end read_nmrpipe3d
 
     def read_nmrpipe_spc(self, data_set_name, data_set_number, proc_data_name='test.dat', ft_dir='', dim=2):
