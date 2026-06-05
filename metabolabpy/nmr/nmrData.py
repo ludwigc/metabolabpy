@@ -1,3 +1,5 @@
+from locale import normalize
+
 import numpy as np
 from metabolabpy.nmr import acqPars
 from metabolabpy.nmr import procPars
@@ -10,6 +12,13 @@ from scipy.interpolate import CubicSpline
 from scipy.interpolate import Rbf, InterpolatedUnivariateSpline
 from scipy.optimize import least_squares
 import math
+
+from scipy.stats import norm
+from scipy.signal import savgol_filter
+from scipy import sparse
+from scipy.sparse.linalg import spsolve
+from scipy.ndimage import binary_dilation
+
 import matplotlib.pyplot as pl
 import matplotlib.pyplot as plt
 from scipy import signal
@@ -2940,3 +2949,218 @@ class NmrData:
         fid1[:int(len(fid))] = fid
         return fid1
         # end zero_fill
+
+    def _calculate_mad_and_noise_estimate(self,data):
+        data = np.asarray(data)
+        median = np.median(data)
+        mad = np.median(np.abs(data - median))
+        sd = 1.4826 * mad
+    
+        return sd, mad
+    
+    def _als_baseline(self, y, lam=1e6, p=0.01, niter=15):
+
+        y = np.asarray(y, dtype=float)
+        L = len(y)
+        D = sparse.diags([1, -2, 1], [0, 1, 2], shape=(L - 2, L), format='csc')
+        H = lam * D.T @ D
+        w = np.ones(L)
+        baseline = y.copy()
+    
+        for _ in range(niter):
+            W = sparse.diags(w, format='csc')
+            baseline = spsolve(W + H, w * y)
+            w = np.where(y > baseline, p, 1.0 - p)
+        
+        return baseline
+    
+    def _enforce_min_spacing(self, points, min_spacing, end_regions):
+        
+        points = sorted(points, key=lambda p: p['global_idx'])
+        filtered = [points[0]]
+        for pt in points[1:]:
+            prev = filtered[-1]
+            
+            if abs(pt['ppm'] - prev['ppm']) < min_spacing:
+           
+                if pt['region'] in end_regions:
+                    filtered[-1] = pt   
+                         
+                elif prev['region'] not in end_regions and pt['height'] < prev['height']:
+                    filtered[-1] = pt
+                    
+            else:
+                filtered.append(pt)
+                
+        return filtered
+    
+    def _normalize(self, values):
+        
+        values = np.asarray(values, dtype=float)
+        mn, mx = values.min(), values.max()
+        if mx == mn:
+            return np.zeros_like(values)
+    
+        return (values - mn) / (mx - mn)
+    
+    def _get_flat_end_value(self, window_idx_list, spc, ppm_axis, highlight_mask, window_size, WINDOWS):
+
+        pts = []
+        for wi in window_idx_list:
+            s = wi * window_size
+            e = min((wi + 1) * window_size, len(spc))
+            region_mask = ~highlight_mask[s:e]
+            if np.any(region_mask):
+                pts.extend(spc[s:e][region_mask].tolist())
+        return np.median(pts) if pts else np.median(spc)
+    
+    def auto_add_baseline_points(self, WINDOWS = 64, FLOOR_PERCENTILE = 10, MIN_BASELINE_PTS = 5, MAX_PEAK_FRACTION = 0.5, END_WINDOW_COUNT = 2):
+        
+        ALS_LAM = 1e6
+        ALS_P = 0.01
+        ALS_NITER = 15
+        
+        average_points = self.spline_baseline.average_points
+        window_size = int(len(self.spc[0]) // WINDOWS)
+        spc_real = np.real(self.spc[0])
+        
+        baseline_est = self._als_baseline(spc_real, ALS_LAM, ALS_P, ALS_NITER)
+        residual = spc_real - baseline_est
+
+        noise_sd, noise_mad = self._calculate_mad_and_noise_estimate(residual)
+        min_baseline_points = MIN_BASELINE_PTS
+        
+        for sd_mult in [2.0, 2.5, 3.0, 3.5, 4.0]:
+            peak_threshold = sd_mult * noise_sd
+            raw_peak_mask = residual > peak_threshold
+
+            highlight_mask = binary_dilation(raw_peak_mask, structure=np.ones(2 * average_points + 1, dtype=bool))
+
+            mask_windows_test = np.array_split(highlight_mask, WINDOWS)
+            peak_frac_test = np.array([np.mean(w) for w in mask_windows_test])
+            n_viable = np.sum(peak_frac_test <= 0.5)
+            
+            if n_viable >= min_baseline_points:
+                print(f"  → Using SD multiplier {sd_mult}")
+                break
+            else:
+                print("  Warning: could not find enough baseline windows, using 4.0 SD")
+                
+        Q = FLOOR_PERCENTILE
+        l = np.array_split(spc_real, WINDOWS)
+
+        heights_array = np.empty(len(spc_real))
+        chunk_start = 0
+
+        for i, chunk in enumerate(l):
+            threshold = np.percentile(chunk, Q)
+            noise = max(np.abs(self._calculate_mad_and_noise_estimate(chunk)[0]), 1e-9)
+            start_ppm = self.ppm1[window_size * i]
+            end_ppm = self.ppm1[min((i + 1) * window_size, len(spc_real)) - 1]
+            heights_array[chunk_start:chunk_start + len(chunk)] = (chunk - threshold) / noise
+            chunk_start += len(chunk)
+            
+        # Calculate smoothed d1 w/ avg points through sav-gol
+
+        _wl = max(average_points if average_points % 2 == 1 else average_points + 1, 7)
+        d1v2 = np.abs(savgol_filter(spc_real, window_length=_wl, polyorder=3, deriv=1))
+        d1v2_normalized = self._normalize(d1v2)
+
+        d1_windows = np.array_split(d1v2_normalized, WINDOWS)
+        d1_avg_per_window = np.array([np.mean(w) for w in d1_windows])
+
+        mask_windows = np.array_split(highlight_mask, WINDOWS)
+        peak_fraction_per_window = np.array([np.mean(w) for w in mask_windows])
+
+
+        d1_threshold = np.median(d1_avg_per_window) + 0.5 * self._calculate_mad_and_noise_estimate(d1_avg_per_window)[1]
+        
+        valid_regions = [0, WINDOWS - 1]
+
+        for i in range(1, WINDOWS - 1):
+            too_many_peaks  = peak_fraction_per_window[i] > MAX_PEAK_FRACTION
+            high_derivative = d1_avg_per_window[i] > d1_threshold
+            
+            if not too_many_peaks and not high_derivative:
+                valid_regions.append(i)
+
+        valid_regions.sort()
+        print(f"Valid regions: {len(valid_regions)} / {WINDOWS} total")
+        
+        baseline_points = []
+        
+        for i in valid_regions:
+
+            region_start = i * window_size
+            region_end = min((i + 1) * window_size, len(heights_array))
+            region_idx = np.arange(region_start, region_end)
+
+            not_near_peak = ~highlight_mask[region_idx]
+
+            if not np.any(not_near_peak):
+
+                residuals_in_region = np.abs(residual[region_idx])
+                best_idx = region_idx[np.argmin(residuals_in_region)]
+
+            else:
+
+                candidate_idx = region_idx[not_near_peak]
+                candidate_heights = heights_array[candidate_idx]
+
+                q25 = np.percentile(candidate_heights, 25)
+                low_mask = candidate_heights <= q25
+                low_idx = candidate_idx[low_mask]
+                low_h = candidate_heights[low_mask]
+
+                median_low = np.median(low_h)
+                best_local = np.argmin(np.abs(low_h - median_low))
+                best_idx = low_idx[best_local]
+
+            baseline_points.append({
+                'global_idx' : int(best_idx),
+                'ppm'        : self.ppm1[best_idx],
+                'height'     : heights_array[best_idx],
+                'region'     : i,
+            })
+
+        print(f"Selected {len(baseline_points)} baseline points")
+        
+        min_spacing_ppm = (self.ppm1[0] - self.ppm1[-1]) / WINDOWS
+        baseline_points = self._enforce_min_spacing(baseline_points, min_spacing_ppm, end_regions={0, WINDOWS - 1})
+        
+        end_window_count = END_WINDOW_COUNT
+        
+        left_windows  = list(range(0, min(end_window_count, WINDOWS)))
+        right_windows = list(range(max(0, WINDOWS - end_window_count), WINDOWS))
+
+        left_flat  = self._get_flat_end_value(left_windows,  spc_real, self.ppm1, highlight_mask, window_size, WINDOWS)
+        right_flat = self._get_flat_end_value(right_windows, spc_real, self.ppm1, highlight_mask, window_size, WINDOWS)
+        
+        for p in baseline_points:
+            if p['region'] == 0:
+                s = 0
+                e = min(window_size, len(spc_real))
+                region_idx = np.arange(s, e)
+                not_near = ~highlight_mask[region_idx]
+                cand = region_idx[not_near] if np.any(not_near) else region_idx
+                best = cand[np.argmin(np.abs(spc_real[cand] - left_flat))]
+                p['global_idx'] = int(best)
+                p['ppm'] = self.ppm1[best]
+                p['height'] = heights_array[best]
+
+            elif p['region'] == WINDOWS - 1:
+                s = (WINDOWS - 1) * window_size
+                e = len(spc_real)
+                region_idx = np.arange(s, e)
+                not_near = ~highlight_mask[region_idx]
+                cand = region_idx[not_near] if np.any(not_near) else region_idx
+                best = cand[np.argmin(np.abs(spc_real[cand] - right_flat))]
+                p['global_idx'] = int(best)
+                p['ppm'] = self .ppm1[best]
+                p['height'] = heights_array[best]
+                
+        bp_ppms = [p['ppm'] for p in baseline_points]
+        
+        self.spline_baseline.baseline_points = np.array(bp_ppms)
+        self.add_baseline_points()
+        
