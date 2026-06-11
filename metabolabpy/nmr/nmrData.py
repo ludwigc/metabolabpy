@@ -1572,7 +1572,7 @@ class NmrData:
         # end hilbert1
 
     def make_hsqc_spin_sys(self, c13_offset, idx=0):
-        jres = int(self.acq.cnst[18])
+        jres = float(self.acq.cnst[18])
         c13_nc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_nc']
         c13_idx = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_idx']
         chem_shift = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['c13_shifts']
@@ -1581,25 +1581,19 @@ class NmrData:
                 chem_shift[k][0] = np.mean(self.hsqc.hsqc_data[self.hsqc.cur_metabolite].c13_picked[self.hsqc.cur_peak \
                                     - 1]) + c13_offset[k] / 1000.0
 
-        j_cc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['j_cc']*jres
-        #sys = pg.spin_system(sum(c13_nc[idx]))
-        ###print(f'j_cc: {j_cc}, sum(c13_nc[{idx}]: {sum(c13_nc[idx])}')
-        #sys.Omega(self.acq.sfo2)
+        j_cc = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].spin_systems[self.hsqc.cur_peak - 1]['j_cc']
         nucs = []
         for k in range(len(c13_nc[idx])):
             nucs.append('1H')
 
         nucs[0] = '13C'
-        ###print(nucs)
         sys = sl.ExpSys(Nucs=nucs, v0H=self.acq.sfo1)
 
         for k in range(len(c13_nc[idx])):
             sys.set_inter(Type='CS', i=k, ppm=chem_shift[idx][k])
-            #sys.PPM(k, chem_shift[idx][k])
 
         for k in range(len(j_cc[idx])):
-            sys.set_inter(Type='J', i0=0, i1=k+1, J=j_cc[idx][k])
-            #sys.J(0, k + 1, j_cc[idx][k])
+            sys.set_inter(Type='J', i0=0, i1=k+1, J=j_cc[idx][k]*jres)
 
         return sys
         # end make_spin_sys
@@ -2802,7 +2796,7 @@ class NmrData:
         #            sys.J(k, l, sys.J(k, l) * jres)
 
         r2 = self.hsqc.hsqc_data[self.hsqc.cur_metabolite].r2[self.hsqc.cur_peak - 1]
-        echo_time = self.hsqc.echo_time / 1000.0
+        echo_time = self.hsqc.echo_time / (jres * 1000.0)
         dt = 1.0 / sw
         ###print(f'dt: {dt}')
         #sigma0 = pg.sigma_eq(sys)
