@@ -49,6 +49,7 @@ import pywt
 from copy import copy
 from scipy.stats import linregress
 import SLEEPY as sl
+from scipy.interpolate import interp1d
 
 #try:
 #    import pygamma as pg
@@ -3157,4 +3158,70 @@ class NmrData:
         
         self.spline_baseline.baseline_points = np.array(bp_ppms)
         self.add_baseline_points()
+        
+    def _make_1d_from_2d(self, x, slice=0):
+        
+        obj = copy.deepcopy(x)
+        obj.spc = np.array([x.spc[slice].copy()])
+        obj.ppm1 = x.ppm1.copy()
+        obj.dim = 1
+
+        return obj
+    
+    def autospline_2d(self, min_separation=50, top_n=10, coverage_window=500):
+        
+        avmags = np.mean(np.abs(self.spc), axis=1)
+        ranked_rows = np.argsort(avmags)[::-1]
+        
+        chosen = []
+        
+        for row in ranked_rows:
+
+            if len(chosen) == 0 or np.all(np.abs(np.array(chosen) - row) > min_separation):
+                chosen.append(int(row))
+
+            if len(chosen) == top_n:
+                break
+            
+        n_rows = len(self.spc)
+        final_rows = chosen.copy()
+        
+        for start in range(0, n_rows, coverage_window):
+            end = min(start + coverage_window, n_rows)
+            
+            has_row = False
+
+            for row in final_rows:
+                if start <= row < end:
+                    has_row = True
+                    break
+
+            if not has_row:
+                block_rows = np.arange(start, end)
+                best_in_block = block_rows[np.argmax(avmags[block_rows])]
+                final_rows.append(int(best_in_block))
+                
+        final_rows = sorted(final_rows)
+        
+        baseline_rows = []
+        baseline_values = []
+        
+        for row in final_rows:
+            new = self._make_1d_from_2d(self, slice=row)
+            new.auto_add_baseline_points()
+            
+            if len(new.spline_baseline.baseline_points) >= 5:
+                baseline = np.asarray(new.calc_spline_baseline()).squeeze()
+                baseline_rows.append(row)
+                baseline_values.append(baseline)
+                
+        baseline_rows = np.array(baseline_rows)
+        baseline_values = np.vstack(baseline_values)
+        
+        f = interp1d(baseline_rows, baseline_values, axis=0, bounds_error=False, fill_value=(baseline_values[0], baseline_values[-1]))
+        full_baseline = f(np.arange(self.spc.shape[0]))
+        
+        self.spc = self.spc - full_baseline
+        
+        
         
