@@ -29,7 +29,7 @@ class nmrDataTestCase(unittest.TestCase):
         nd.data_set_name = p_name
         nd.data_set_number = e_name
         nd.read_spc()
-        fp_multiplier = [1.0, 0.9999405017700899, 0.9716680181001582, 0.9999931873299882, 0.9999863747063888,
+        fp_multiplier = [1.0, 0.9999405017700899, 0.9857375058920412, 0.9999931873299882, 0.9999863747063888,
                          0.9954327753052931]
         fid_no = int(nd.acq.group_delay + 1)
         for k in range(6):

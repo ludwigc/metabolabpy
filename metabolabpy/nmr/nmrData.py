@@ -2868,9 +2868,9 @@ class NmrData:
 
         return fid
 
-    def set_ref(self, ref_value='auto'):
-        self.ref = ref_value
-        # end set_ref
+    #def set_ref(self, ref_value='auto'):
+    #    self.ref = ref_value
+    #    # end set_ref
 
     def smo(self, fid):
         x = np.linspace(0, len(fid) - 1, len(fid))

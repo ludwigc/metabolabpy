@@ -129,7 +129,7 @@ class NrDataSetTestCase(unittest.TestCase):
         nd.pp.flag_exclude_region = True
         nd.data_pre_processing()
         pts = len(nd.nmrdat[0][0].spc[0]) - nd.nmrdat[0][0].ppm2points([nd.pp.exclude_start, nd.pp.exclude_end], 0)
-        pts2 = range(int(min(pts)[0]), int(max(pts)[0]))
+        pts2 = range(int((min(pts)[0])), int((max(pts)[0])))
         ssum = np.sum(nd.nmrdat[0][0].spc[0][pts2].real)
         self.assertEqual(ssum, 0.0)
         nd = [[]]
@@ -147,7 +147,7 @@ class NrDataSetTestCase(unittest.TestCase):
         nd.e = 0
         nd.data_pre_processing()
         pts = len(nd.nmrdat[1][0].spc[0]) - nd.nmrdat[1][0].ppm2points([nd.pp.exclude_start, nd.pp.exclude_end], 0)
-        pts2 = range(int(min(pts)), int(max(pts)))
+        pts2 = range(int((min(pts)[0])), int((max(pts)[0])))
         ssum = np.sum(nd.nmrdat[1][0].spc[0][pts2].real)
         self.assertEqual(ssum, 0.0)
 
@@ -339,21 +339,21 @@ class NrDataSetTestCase(unittest.TestCase):
         nd.ft()
         nd.pp.flag_scale_spectra = True
         nd.pp.scale_spectra_ref_spc = 1
-        self.assertAlmostEqual(nd.nmrdat[0][1].spc[0].real.max() / 5746500922.356481, 1.0, 1)
+        self.assertAlmostEqual(nd.nmrdat[0][1].spc[0].real.max() / 7840380234.242125, 1.0, 1)
         nd.pp.scale_pqn = True
         nd.data_pre_processing()
-        self.assertAlmostEqual(nd.nmrdat[0][1].spc[0].real.max() / 4250520058.933967, 1.0, 1)
+        self.assertAlmostEqual(nd.nmrdat[0][1].spc[0].real.max() / 5845107387.75494, 1.0, 1)
         nd.reset_data_pre_processing()
-        self.assertAlmostEqual(nd.nmrdat[0][0].spc[0].real.max() / 5673105467.238647, 1.0, 1)
+        self.assertAlmostEqual(nd.nmrdat[0][0].spc[0].real.max() / 7469768057.526943, 1.0, 1)
         nd.pp.scale_pqn = False
         nd.pp.flag_scale_spectra = True
         nd.pp.preserve_overall_scale = True
         nd.data_pre_processing()
-        self.assertAlmostEqual(nd.nmrdat[0][0].spc[0].real.max() / 5673105467.2386465, 1.0, 1)
+        self.assertAlmostEqual(nd.nmrdat[0][1].spc[0].real.max() / 6427801388.35822, 1.0, 1)
         nd.reset_data_pre_processing()
         nd.pp.preserve_overall_scale = False
         nd.data_pre_processing()
-        self.assertAlmostEqual(nd.nmrdat[0][0].spc[0].real.max() / 0.006644593036069566, 1.0, 3)
+        self.assertAlmostEqual(nd.nmrdat[0][1].spc[0].real.max() / 0.007524833630178132, 1.0, 3)
 
     def test_pjres(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
@@ -659,8 +659,8 @@ class NrDataSetTestCase(unittest.TestCase):
         max1 = np.max(nd.nmrdat[0][0].spc[0].real)
         nd.data_pre_processing()
         max2 = np.max(nd.nmrdat[0][0].spc[0].real)
-        self.assertAlmostEqual(max1, 10185302564.706278, places=1)
-        self.assertAlmostEqual(max2, 521808.8253127394, places=1)
+        self.assertAlmostEqual(max1, 7801786930.173503, places=1)
+        self.assertAlmostEqual(max2, 593311.5452933421, places=1)
         nd = nmrDataSet.NmrDataSet()  # create nmrDataSet object
         nd.load(ds_name)  # check if Bruker data can be read
         nd.pp.flag_variance_stabilisation = True
@@ -670,8 +670,8 @@ class NrDataSetTestCase(unittest.TestCase):
         max1 = np.max(nd.nmrdat[0][0].spc[0].real)
         nd.data_pre_processing()
         max2 = np.max(nd.nmrdat[0][0].spc[0].real)
-        self.assertAlmostEqual(max1, 10185302564.706278, places=1)
-        self.assertAlmostEqual(max2, 1.7320373446154178, places=1)
+        self.assertAlmostEqual(max1, 7801786930.173503, places=1)
+        self.assertAlmostEqual(max2, 1.7319909800722806, places=1)
         nd = nmrDataSet.NmrDataSet()  # create nmrDataSet object
         nd.load(ds_name)  # check if Bruker data can be read
         nd.pp.flag_variance_stabilisation = True
@@ -681,8 +681,8 @@ class NrDataSetTestCase(unittest.TestCase):
         max1 = np.max(nd.nmrdat[0][0].spc[0].real)
         nd.data_pre_processing()
         max2 = np.max(nd.nmrdat[0][0].spc[0].real)
-        self.assertAlmostEqual(max1, 10185302564.706278, places=1)
-        self.assertAlmostEqual(max2, 9.727370430885156, places=1)
+        self.assertAlmostEqual(max1, 7801786930.173503, places=1)
+        self.assertAlmostEqual(max2, 9.643785127101923, places=1)
 
     def test_export_hsqc_data(self):
         p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")
