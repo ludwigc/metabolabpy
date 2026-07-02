@@ -939,6 +939,34 @@ class nmrDataTestCase(unittest.TestCase):
         nd.nmrdat[0][0].fit_hsqc_1d()
         self.assertAlmostEqual(nd.nmrdat[0][0].hsqc.hsqc_data[metabolite_name].spin_systems[cur_peak - 1]['contribution'][0], 28.973, places=1)
         # end test_fit_hsqc_1d
+        
+    def test_auto_add_baseline_points(self):
+        p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        e_name = "1"  # 1D NMR data in exp 1
+        nd = nmrData.NmrData()
+        nd.data_set_name = p_name
+        nd.data_set_number = e_name
+        nd.read_spc()
+        nd.auto_add_baseline_points()
+        self.assertEqual(len(nd.spline_baseline.baseline_points), 21)  # check number of baseline points added
+        a = nd.spline_baseline.baseline_points
+        b = np.array([11.5933, 11.2304, 10.8091, 10.377,   9.8758,  9.6182,  9.0132,  7.7651,  7.5043, 7.0349,  6.5578,  6.3275,  5.7159,  5.245,   0.6663,  0.4427, -0.4462, -1.0715, -1.453,  -1.8276, -1.9927])
+        self.assertTrue(np.allclose(a, b, atol=1e-4))  # check if baseline points are correct
+        
+    def test_autospline_2d(self):
+        p_name = os.path.join(os.path.dirname(__file__), "data", "nmrData")  # directory of test data set
+        e_name = "2"  # 2D Jres NMR data in exp 2
+        nd = nmrData.NmrData()
+        nd.data_set_name = p_name
+        nd.data_set_number = e_name
+        nd.read_spc()
+        original_shape = nd.spc.shape
+        original_spc = nd.spc.copy()
+        nd.autospline_2d()
+        self.assertEqual(nd.spc.shape, original_shape)
+        self.assertTrue(np.all(np.isfinite(nd.spc)))
+        self.assertFalse(np.allclose(nd.spc, original_spc))
+        
 
 if __name__ == "__main__":
     unittest.main()
