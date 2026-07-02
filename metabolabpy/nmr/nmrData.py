@@ -2998,7 +2998,7 @@ class NmrData:
     
         return (values - mn) / (mx - mn)
     
-    def _get_flat_end_value(self, window_idx_list, spc, ppm_axis, highlight_mask, window_size, WINDOWS):
+    def _get_flat_end_value(self, window_idx_list, spc, ppm_axis, highlight_mask, window_size, windows):
 
         pts = []
         for wi in window_idx_list:
@@ -3009,21 +3009,21 @@ class NmrData:
                 pts.extend(spc[s:e][region_mask].tolist())
         return np.median(pts) if pts else np.median(spc)
     
-    def auto_add_baseline_points(self, WINDOWS = 64, FLOOR_PERCENTILE = 10, MIN_BASELINE_PTS = 5, MAX_PEAK_FRACTION = 0.5, END_WINDOW_COUNT = 2):
+    def auto_add_baseline_points(self, windows = 64, floor_percentile = 10, min_baseline_pts = 5, max_peak_fraction = 0.5, end_window_count = 2):
         
-        ALS_LAM = 1e6
-        ALS_P = 0.01
-        ALS_NITER = 15
+        als_lam = 1e6
+        als_p = 0.01
+        als_niter = 15
         
         average_points = self.spline_baseline.average_points
-        window_size = int(len(self.spc[0]) // WINDOWS)
+        window_size = int(len(self.spc[0]) // windows)
         spc_real = np.real(self.spc[0])
         
-        baseline_est = self._als_baseline(spc_real, ALS_LAM, ALS_P, ALS_NITER)
+        baseline_est = self._als_baseline(spc_real, als_lam, als_p, als_niter)
         residual = spc_real - baseline_est
 
         noise_sd, noise_mad = self._calculate_mad_and_noise_estimate(residual)
-        min_baseline_points = MIN_BASELINE_PTS
+        min_baseline_points = min_baseline_pts
         
         for sd_mult in [2.0, 2.5, 3.0, 3.5, 4.0]:
             peak_threshold = sd_mult * noise_sd
@@ -3031,18 +3031,18 @@ class NmrData:
 
             highlight_mask = binary_dilation(raw_peak_mask, structure=np.ones(2 * average_points + 1, dtype=bool))
 
-            mask_windows_test = np.array_split(highlight_mask, WINDOWS)
+            mask_windows_test = np.array_split(highlight_mask, windows)
             peak_frac_test = np.array([np.mean(w) for w in mask_windows_test])
             n_viable = np.sum(peak_frac_test <= 0.5)
             
             if n_viable >= min_baseline_points:
                 print(f"  → Using SD multiplier {sd_mult}")
                 break
-            else:
-                print("  Warning: could not find enough baseline windows, using 4.0 SD")
+        else:
+            print("  Warning: could not find enough baseline windows, using 4.0 SD")
                 
-        Q = FLOOR_PERCENTILE
-        l = np.array_split(spc_real, WINDOWS)
+        Q = floor_percentile
+        l = np.array_split(spc_real, windows)
 
         heights_array = np.empty(len(spc_real))
         chunk_start = 0
@@ -3061,26 +3061,26 @@ class NmrData:
         d1v2 = np.abs(savgol_filter(spc_real, window_length=_wl, polyorder=3, deriv=1))
         d1v2_normalized = self._normalize(d1v2)
 
-        d1_windows = np.array_split(d1v2_normalized, WINDOWS)
+        d1_windows = np.array_split(d1v2_normalized, windows)
         d1_avg_per_window = np.array([np.mean(w) for w in d1_windows])
 
-        mask_windows = np.array_split(highlight_mask, WINDOWS)
+        mask_windows = np.array_split(highlight_mask, windows)
         peak_fraction_per_window = np.array([np.mean(w) for w in mask_windows])
 
 
         d1_threshold = np.median(d1_avg_per_window) + 0.5 * self._calculate_mad_and_noise_estimate(d1_avg_per_window)[1]
         
-        valid_regions = [0, WINDOWS - 1]
+        valid_regions = [0, windows - 1]
 
-        for i in range(1, WINDOWS - 1):
-            too_many_peaks  = peak_fraction_per_window[i] > MAX_PEAK_FRACTION
+        for i in range(1, windows - 1):
+            too_many_peaks  = peak_fraction_per_window[i] > max_peak_fraction
             high_derivative = d1_avg_per_window[i] > d1_threshold
             
             if not too_many_peaks and not high_derivative:
                 valid_regions.append(i)
 
         valid_regions.sort()
-        print(f"Valid regions: {len(valid_regions)} / {WINDOWS} total")
+        print(f"Valid regions: {len(valid_regions)} / {windows} total")
         
         baseline_points = []
         
@@ -3120,16 +3120,16 @@ class NmrData:
 
         print(f"Selected {len(baseline_points)} baseline points")
         
-        min_spacing_ppm = (self.ppm1[0] - self.ppm1[-1]) / WINDOWS
-        baseline_points = self._enforce_min_spacing(baseline_points, min_spacing_ppm, end_regions={0, WINDOWS - 1})
+        min_spacing_ppm = (self.ppm1[0] - self.ppm1[-1]) / windows
+        baseline_points = self._enforce_min_spacing(baseline_points, min_spacing_ppm, end_regions={0, windows - 1})
         
-        end_window_count = END_WINDOW_COUNT
+        end_window_count = end_window_count
         
-        left_windows  = list(range(0, min(end_window_count, WINDOWS)))
-        right_windows = list(range(max(0, WINDOWS - end_window_count), WINDOWS))
+        left_windows  = list(range(0, min(end_window_count, windows)))
+        right_windows = list(range(max(0, windows - end_window_count), windows))
 
-        left_flat  = self._get_flat_end_value(left_windows,  spc_real, self.ppm1, highlight_mask, window_size, WINDOWS)
-        right_flat = self._get_flat_end_value(right_windows, spc_real, self.ppm1, highlight_mask, window_size, WINDOWS)
+        left_flat  = self._get_flat_end_value(left_windows,  spc_real, self.ppm1, highlight_mask, window_size, windows)
+        right_flat = self._get_flat_end_value(right_windows, spc_real, self.ppm1, highlight_mask, window_size, windows)
         
         for p in baseline_points:
             if p['region'] == 0:
@@ -3143,8 +3143,8 @@ class NmrData:
                 p['ppm'] = self.ppm1[best]
                 p['height'] = heights_array[best]
 
-            elif p['region'] == WINDOWS - 1:
-                s = (WINDOWS - 1) * window_size
+            elif p['region'] == windows - 1:
+                s = (windows - 1) * window_size
                 e = len(spc_real)
                 region_idx = np.arange(s, e)
                 not_near = ~highlight_mask[region_idx]
