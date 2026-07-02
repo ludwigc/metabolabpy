@@ -3161,7 +3161,8 @@ class NmrData:
         
     def _make_1d_from_2d(self, x, slice=0):
         
-        obj = copy.deepcopy(x)
+        from copy import deepcopy
+        obj = deepcopy(x)
         obj.spc = np.array([x.spc[slice].copy()])
         obj.ppm1 = x.ppm1.copy()
         obj.dim = 1
