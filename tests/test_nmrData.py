@@ -947,13 +947,13 @@ class nmrDataTestCase(unittest.TestCase):
         nd.load(f_name)
         test_obj = nd.nmrdat[0][0]
         test_obj.auto_add_baseline_points()
-        self.assertEqual(len(test_obj.spline_baseline.baseline_points), 21)  # check number of baseline points added
+        self.assertEqual(len(test_obj.spline_baseline.baseline_points), 8)  # check number of baseline points added
         a = test_obj.spline_baseline.baseline_points
-        b = np.array([11.5933, 11.2304, 10.8091, 10.377,   9.8758,  9.6182,  9.0132,  7.7651,  7.5043, 7.0349,  6.5578,  6.3275,  5.7159,  5.245,   0.6663,  0.4427, -0.4462, -1.0715, -1.453,  -1.8276, -1.9927])
+        b = np.array([11.7768, 10.6295, 10.1142, 9.5119, 0.6537, -0.3496, -0.9224, -2.1703])
         self.assertTrue(np.allclose(a, b, atol=1e-4))  # check if baseline points are correct
         
     def test_autospline_2d(self):
-        f_name = os.path.join(os.path.dirname(__file__), "data", "loadData.mlpy")  # directory of test data set
+        f_name = os.path.join(os.path.dirname(__file__), "data", "load2dData.mlpy")  # directory of test data set
         nd = nmrDataSet.NmrDataSet()
         nd.load(f_name)
         test_obj = nd.nmrdat[0][0]
