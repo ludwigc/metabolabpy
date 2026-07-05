@@ -184,8 +184,8 @@ class NmrData:
         seq = L.Sequence(Dt=dt)
         rho.DetProp(seq, n=td)
         fid = rho.I
-        self.temp_spc = np.array([], dtype=complex)
-        self.temp_spc.resize(1, td)
+        self.temp_spc = np.zeros((1, td), dtype=complex)
+        
         for k in range(td):
             self.temp_spc[0][k] += fid[0][k] * np.exp(-r2_tms * dt * k)
 
@@ -2456,24 +2456,27 @@ class NmrData:
         #print("max_dist: {}, dist_2d: {}, cod1: {}, cod: {}".format(max_dist, dist_2d, cod1, self.hsqc.hsqc_data[self.hsqc.cur_metabolite].cod[self.hsqc.cur_peak - 1]))
         # end sim_hsqc_1d_calc_cod
 
-    def calc_spline_baseline(self):
+    def calc_spline_baseline(self, linear=True):
         baseline_points = []
         baseline_points_pts = []
         baseline_values = []
         baseline_points.append(self.spline_baseline.baseline_points[0])
         baseline_points_pts.append(self.spline_baseline.baseline_points_pts[0])
         baseline_values.append(self.spline_baseline.baseline_values[0])
+        
         for k in range(len(self.spline_baseline.baseline_points_pts) - 1):
-            diff_pts = self.spline_baseline.baseline_points_pts[k+1] - self.spline_baseline.baseline_points_pts[k]
-            if diff_pts > self.spline_baseline.linear_spline:
-                n_pts = int(diff_pts / self.spline_baseline.linear_spline)
-                new_bsl = np.linspace(self.spline_baseline.baseline_points[k], self.spline_baseline.baseline_points[k+1], n_pts + 2)
-                new_bsl_pts = self.ppm2points(new_bsl)
-                new_bsl_vals = np.linspace(self.spline_baseline.baseline_values[k], self.spline_baseline.baseline_values[k+1], n_pts + 2)
-                for l in range(len(new_bsl) - 2):
-                    baseline_points.append(new_bsl[l + 1])
-                    baseline_points_pts.append(len(self.spc[0]) - new_bsl_pts[l+1])
-                    baseline_values.append(new_bsl_vals[l+1])
+            
+            if linear:
+                diff_pts = self.spline_baseline.baseline_points_pts[k+1] - self.spline_baseline.baseline_points_pts[k]
+                if diff_pts > self.spline_baseline.linear_spline:
+                    n_pts = int(diff_pts / self.spline_baseline.linear_spline)
+                    new_bsl = np.linspace(self.spline_baseline.baseline_points[k], self.spline_baseline.baseline_points[k+1], n_pts + 2)
+                    new_bsl_pts = self.ppm2points(new_bsl)
+                    new_bsl_vals = np.linspace(self.spline_baseline.baseline_values[k], self.spline_baseline.baseline_values[k+1], n_pts + 2)
+                    for l in range(len(new_bsl) - 2):
+                        baseline_points.append(new_bsl[l + 1])
+                        baseline_points_pts.append(len(self.spc[0]) - new_bsl_pts[l+1])
+                        baseline_values.append(new_bsl_vals[l+1])
 
             baseline_points.append(self.spline_baseline.baseline_points[k+1])
             baseline_points_pts.append(self.spline_baseline.baseline_points_pts[k+1])
