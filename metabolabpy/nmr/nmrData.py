@@ -3232,42 +3232,42 @@ class NmrData:
         
         self.spc = self.spc - full_baseline
         
-def _arpls_baseline(self, y, lam=1e10, ratio=1e-6, max_iter=50, diff_order=2):
+    def _arpls_baseline(self, y, lam=1e10, ratio=1e-6, max_iter=50, diff_order=2):
     
-    y = np.asarray(y, dtype=float)
-    n = y.size
+        y = np.asarray(y, dtype=float)
+        n = y.size
 
-    D = sparse.eye(n, format="csc")
-    for _ in range(diff_order):
-        D = D[1:] - D[:-1]
+        D = sparse.eye(n, format="csc")
+        for _ in range(diff_order):
+            D = D[1:] - D[:-1]
 
-    H = lam * (D.T @ D)
+        H = lam * (D.T @ D)
 
-    w = np.ones(n)
+        w = np.ones(n)
 
-    for _ in range(max_iter):
-        W = sparse.diags(w, 0, shape=(n, n), format="csc")
-        z = spsolve(W + H, w * y)
+        for _ in range(max_iter):
+            W = sparse.diags(w, 0, shape=(n, n), format="csc")
+            z = spsolve(W + H, w * y)
 
-        d = y - z
-        negative = d[d < 0]
+            d = y - z
+            negative = d[d < 0]
 
-        if negative.size < 5:
-            break
+            if negative.size < 5:
+                break
 
-        m = negative.mean()
-        s = negative.std()
+            m = negative.mean()
+            s = negative.std()
 
-        if s == 0:
-            break
+            if s == 0:
+                break
 
-        w_new = 1.0 / (1.0 + np.exp(2.0 * (d - (2.0 * s - m)) / s))
+            w_new = 1.0 / (1.0 + np.exp(2.0 * (d - (2.0 * s - m)) / s))
 
-        if np.linalg.norm(w_new - w) / np.linalg.norm(w) < ratio:
+            if np.linalg.norm(w_new - w) / np.linalg.norm(w) < ratio:
+                w = w_new
+                break
+
             w = w_new
-            break
 
-        w = w_new
-
-    return z        
+        return z        
         
