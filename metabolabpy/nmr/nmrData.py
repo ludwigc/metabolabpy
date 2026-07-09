@@ -2456,13 +2456,14 @@ class NmrData:
         #print("max_dist: {}, dist_2d: {}, cod1: {}, cod: {}".format(max_dist, dist_2d, cod1, self.hsqc.hsqc_data[self.hsqc.cur_metabolite].cod[self.hsqc.cur_peak - 1]))
         # end sim_hsqc_1d_calc_cod
 
-    def calc_spline_baseline(self, linear=True):
+    def calc_spline_baseline(self, linear=True, warped=False):
         baseline_points = []
         baseline_points_pts = []
         baseline_values = []
         baseline_points.append(self.spline_baseline.baseline_points[0])
         baseline_points_pts.append(self.spline_baseline.baseline_points_pts[0])
         baseline_values.append(self.spline_baseline.baseline_values[0])
+        
         
         for k in range(len(self.spline_baseline.baseline_points_pts) - 1):
             
@@ -2484,7 +2485,7 @@ class NmrData:
 
         baseline_points.reverse()
         baseline_values.reverse()
-        cs = CubicSpline(baseline_points, baseline_values,bc_type='natural')
+        cs = CubicSpline(baseline_points, baseline_values, bc_type='natural')
         #rbf = Rbf(baseline_points, baseline_values)
         #ius = InterpolatedUnivariateSpline(baseline_points, baseline_values)
         #baseline = ius(self.ppm1) #rbf(self.ppm1)
@@ -3012,15 +3013,19 @@ class NmrData:
                 pts.extend(spc[s:e][region_mask].tolist())
         return np.median(pts) if pts else np.median(spc)
     
-    def auto_add_baseline_points(self, windows = 64, floor_percentile = 10, min_baseline_pts = 5, max_peak_fraction = 0.5, end_window_count = 2):
-        
+    def auto_add_baseline_points(self, windows = 64, floor_percentile = 10, min_baseline_pts = 5, max_peak_fraction = 0.5, end_window_count = 2, warped=False):
+
         als_lam = 1e6
         als_p = 0.01
         als_niter = 15
         
         average_points = self.spline_baseline.average_points
         window_size = int(len(self.spc[0]) // windows)
+        
         spc_real = np.real(self.spc[0])
+        
+        if warped:
+            spc_real -= self._arpls_baseline(spc_real, lam=1e10)
         
         baseline_est = self._als_baseline(spc_real, als_lam, als_p, als_niter)
         residual = spc_real - baseline_est
@@ -3227,5 +3232,42 @@ class NmrData:
         
         self.spc = self.spc - full_baseline
         
-        
+def _arpls_baseline(self, y, lam=1e10, ratio=1e-6, max_iter=50, diff_order=2):
+    
+    y = np.asarray(y, dtype=float)
+    n = y.size
+
+    D = sparse.eye(n, format="csc")
+    for _ in range(diff_order):
+        D = D[1:] - D[:-1]
+
+    H = lam * (D.T @ D)
+
+    w = np.ones(n)
+
+    for _ in range(max_iter):
+        W = sparse.diags(w, 0, shape=(n, n), format="csc")
+        z = spsolve(W + H, w * y)
+
+        d = y - z
+        negative = d[d < 0]
+
+        if negative.size < 5:
+            break
+
+        m = negative.mean()
+        s = negative.std()
+
+        if s == 0:
+            break
+
+        w_new = 1.0 / (1.0 + np.exp(2.0 * (d - (2.0 * s - m)) / s))
+
+        if np.linalg.norm(w_new - w) / np.linalg.norm(w) < ratio:
+            w = w_new
+            break
+
+        w = w_new
+
+    return z        
         
