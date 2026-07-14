@@ -1444,6 +1444,11 @@ class NmrDataSet:
                 self.nmrdat[k][l].proc.proc3s_text = f.read()
                 f.close()
 
+        for k in range(len(self.nmrdat)):
+            if self.nmrdat[k][0].dim == 3:
+                self.s = k
+                self.calc_ppm3()
+
         self.cf.current_directory = data_set_name
         self.cf.save_config()
         if len(self.nmrdat) - 1 < self.s:
