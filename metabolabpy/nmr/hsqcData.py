@@ -13,6 +13,7 @@ class HsqcData:
         self.name = ''
         self.alt_name = ''
         self.source = ''
+        self.dim = 2
         self.iupac = ''
         self.inchi_identifier = ''
         self.inchi_key = ''
@@ -82,7 +83,7 @@ class HsqcData:
         return str_str
         # end __str__
 
-    def init_data(self, metabolite_information=''):
+    def init_data(self, metabolite_information='', dim=2):
         if metabolite_information == None:
             return
 
@@ -90,6 +91,7 @@ class HsqcData:
             return
 
         #print('Init data')
+        self.dim = dim
         idx1 = metabolite_information.find('Name')
         mi = metabolite_information[idx1:]
         idx1 = mi.find(':')
@@ -192,6 +194,7 @@ class HsqcData:
         mi = metabolite_information[idx1:]
         idx1 = mi.find(':')
         idx2 = mi.find('\n')
+        # XXX start here! XXX
         self.c13_intensities = np.array(mi[idx1 + 1:idx2].strip().split(), dtype='float64')
         idx1 = metabolite_information.find('C13HSQC')
         mi = metabolite_information[idx1:]

@@ -77,13 +77,13 @@ class NmrHsqc:
 
         # end set_metabolite_list
 
-    def set_metabolite_information(self, metabolite_name='', metabolite_information=''):
+    def set_metabolite_information(self, metabolite_name='', metabolite_information='', dim=2):
         if len(metabolite_name) == 0 or len(metabolite_information) == 0:
             return
 
         if metabolite_name not in self.hsqc_data.keys():
             self.hsqc_data[metabolite_name] = hsqcData.HsqcData()
-            self.hsqc_data[metabolite_name].init_data(metabolite_information)
+            self.hsqc_data[metabolite_name].init_data(metabolite_information, dim)
 
         # end set_metabolite_information
 
