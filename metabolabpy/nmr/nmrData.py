@@ -62,6 +62,10 @@ class NmrData:
 
     def __init__(self):
         self.fid = np.array([[]], dtype='complex')
+        self.stocsy_spc = np.array([], dtype='complex')
+        self.stocsy_corr_coeff = np.array([], dtype='float64')
+        self.stocsy_start_ppm = -999
+        self.stocsy_end_ppm = -999
         self.fit_ph1 = True
         self.spc = np.array([[]], dtype='complex')
         self.ppm1 = np.array([], dtype='float64')

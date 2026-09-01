@@ -47,6 +47,9 @@ class NmrDataSet:
         self.tmsp_conc = 0.5
         self.ver = ml_version.__version__
         self.int_all_exps = True
+        self.stocsy_ref_exp = -1
+        self.stocsy_start_ppm = 999
+        self.stocsy_end_ppm = -999
         self.int_all_data_sets = False
         self.quantify = True
         self.export_peak_excel = True
