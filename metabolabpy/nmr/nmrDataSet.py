@@ -2468,6 +2468,10 @@ class NmrDataSet:
                             n_max = np.append(n_max, np.max(self.nmrdat[self.s][m].spc[0][start_pts:end_pts].real))
 
                         max_spc = np.where(n_max == np.max(n_max))[0][0]
+                        seg_start = self.nmrdat[self.s][max_spc].ppm2points(self.pp.seg_start, 0)
+                        seg_end = self.nmrdat[self.s][max_spc].ppm2points(self.pp.seg_end, 0)
+                        start_pts = npts - seg_end[l]
+                        end_pts = npts - seg_start[l]
                         corr_spc1 = np.copy(self.nmrdat[self.s][max_spc].spc[0][start_pts:end_pts].real)
                     else:
                         corr_spc1 = np.copy(ref_spc[start_pts:end_pts].real)
