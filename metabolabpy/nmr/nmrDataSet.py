@@ -297,6 +297,28 @@ class NmrDataSet:
         return "Finished autobaseline1d_all"
         # end autobaseline1d_all
 
+    def auto_add_baseline_points(self, windows = 64, floor_percentile = 10, min_baseline_pts = 5, max_peak_fraction = 0.5, end_window_count = 2, warped=False):
+        if len(self.nmrdat) > 0:
+            if len(self.nmrdat[self.s]) > 0:
+                self.nmrdat[self.s][self.e].auto_add_baseline_points(windows, floor_percentile, min_baseline_pts, max_peak_fraction, end_window_count, warped)
+
+        # end auto_add_baseline_points
+
+
+    def auto_add_baseline_points_all(self, windows = 64, floor_percentile = 10, min_baseline_pts = 5, max_peak_fraction = 0.5, end_window_count = 2, warped=False):
+        n_exp = len(self.nmrdat[self.s])
+        orig_exp = self.e
+
+        for k in range(n_exp):
+            self.e = k
+            self.auto_add_baseline_points(windows, floor_percentile, min_baseline_pts, max_peak_fraction, end_window_count, warped)
+
+        self.e = orig_exp
+        return "Finished auto_add_baseline_points_all"
+
+        # end auto_add_baseline_points_all
+
+
     def autophase1d(self, width=128, num_windows=1024, max_peaks=1000, noise_fact=20):
         if len(self.nmrdat) > 0:
             if len(self.nmrdat[self.s]) > 0:
